@@ -16,7 +16,7 @@ class ViewsTestCase(TestCase):
         self.user = User.objects.create_user(**self.user_data)
         self.token = Token.objects.create(user=self.user)
         self.client.credentials(HTTP_AUTHORIZATION=f"Token {self.token.key}")
-        
+
     def test_signup_view(self):
         data = {
             "username": "newuser",
@@ -76,7 +76,7 @@ class ViewsTestCase(TestCase):
         self.assertEqual(response.data["message"], "ActivityTime deleted successfully")
 
     def test_insta_credential_view(self):
-        data = {'username': 'test_username', 'password': 'test_password'}
+        data = {"username": "test_username", "password": "test_password"}
         response = self.client.post("/userapi/insta-credential/", data)
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(response.data["username"], "test_username")
@@ -89,11 +89,8 @@ class ViewsTestCase(TestCase):
         self.assertEqual(response.data[0]["id"], insta_credential_id)
 
         response = self.client.put(
-            f"/userapi/insta-credential/{insta_credential_id}/", 
-            {
-                'username': 'updated_username',
-                'password': 'updated_password'
-            }
+            f"/userapi/insta-credential/{insta_credential_id}/",
+            {"username": "updated_username", "password": "updated_password"},
         )
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data["username"], "updated_username")
@@ -101,9 +98,13 @@ class ViewsTestCase(TestCase):
         self.assertEqual(response.data["user"], self.user.id)
         self.assertEqual(response.data["id"], insta_credential_id)
 
-        response = self.client.delete(f"/userapi/insta-credential/{insta_credential_id}/")
+        response = self.client.delete(
+            f"/userapi/insta-credential/{insta_credential_id}/"
+        )
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
-        self.assertEqual(response.data["message"], "Insta Credential deleted successfully")
+        self.assertEqual(
+            response.data["message"], "Insta Credential deleted successfully"
+        )
 
     def test_hashtag_view(self):
         data = {"hashtag": "test_hashtag"}
@@ -267,7 +268,6 @@ class ViewsTestCase(TestCase):
         response = self.client.delete(f"/userapi/stat/{stat_id}/")
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
         self.assertEqual(response.data["message"], "Stat deleted successfully")
-
 
 
 """

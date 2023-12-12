@@ -157,6 +157,7 @@ class ActivityTimeView(BaseAPIView):
                 {"message": f"Error: {e}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR
             )
 
+
 class InstaCredentialView(BaseAPIView):
     def get(self, request):
         try:
