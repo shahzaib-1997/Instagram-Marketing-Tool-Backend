@@ -1,3 +1,31 @@
+"""
+Module: urls
+
+This module defines the URL patterns for the userapi app.
+
+Usage:
+    These URL patterns are intended to be included in the Django project's main URL configuration (urls.py).
+    The patterns map various endpoints to corresponding views in the userapi.views module.
+
+Example:
+    >>> from django.urls import include, path
+    >>> from userapi import views
+
+    # Include the userapi URL patterns in the main URL configuration
+    >>> urlpatterns = [
+    ...     path("userapi/", include("userapi.urls")),
+    ... ]
+
+    # The userapi.urls module would contain patterns like:
+    >>> from django.urls import path
+    >>> from userapi import views
+
+    >>> urlpatterns = [
+    ...     path("signup/", views.SignupView.as_view()),
+    ...     path("login/", views.LoginView.as_view()),
+    ...     # ... other paths ...
+    ... ]
+"""
 from django.urls import path
 from userapi import views
 
