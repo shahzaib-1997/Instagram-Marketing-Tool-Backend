@@ -48,6 +48,15 @@ class ViewsTestCase(TestCase):
     #     response = requests.delete(f"{self.api_url}/profile/", headers=self.headers)
     #     self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
 
+    def test_password_change_view(self):
+        response = requests.post(
+            f"{self.api_url}/password-change/",
+            data={"new_password": "New_password1"},
+            headers=self.headers,
+        )
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.json()["message"], "Password changed successfully.")
+
     def test_activity_time_view(self):
         response = requests.post(f"{self.api_url}/activity-time/", headers=self.headers)
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
@@ -343,12 +352,12 @@ python manage.py test userapi.tests.test_views_requests
 
 Result:
 
-Found 14 test(s).                                                                                                               s_requests
+Found 15 test(s).
 Creating test database for alias 'default'...
 System check identified no issues (0 silenced).
-..............
+...............
 ----------------------------------------------------------------------
-Ran 14 tests in 102.353s
+Ran 15 tests in 101.362s
 
 OK
 Destroying test database for alias 'default'...

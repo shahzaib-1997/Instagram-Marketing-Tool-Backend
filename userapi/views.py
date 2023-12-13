@@ -3,7 +3,7 @@ from rest_framework.response import Response
 from rest_framework.authtoken.models import Token
 from django.shortcuts import get_object_or_404
 from django.contrib.auth.models import User
-from django.contrib.auth import authenticate
+from django.contrib.auth import authenticate, update_session_auth_hash
 from .dry import BaseAPIView, RenderAPIView, szr_val_save, add_user
 from .models import (
     ActivityTime,
@@ -19,6 +19,7 @@ from .models import (
     Action,
 )
 from .serializers import (
+    PasswordChangeSerializer,
     RegistrationSerializer,
     ProfileSerializer,
     ActivityTimeSerializer,
@@ -103,9 +104,31 @@ class ProfileView(BaseAPIView, RenderAPIView):
             user = request.user
             user.delete()
             return Response(
-                {"message": "User deleted successfully"},
+                {"message": "User deleted successfully."},
                 status=status.HTTP_204_NO_CONTENT,
             )
+        except Exception as e:
+            return Response(
+                {"message": f"Error: {e}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
+
+
+class PasswordChangeView(BaseAPIView, RenderAPIView):
+    def post(self, request):
+        serializer = PasswordChangeSerializer(
+            data=request.data, context={"request": request}
+        )
+        serializer.is_valid(raise_exception=True)
+
+        try:
+            user = request.user
+            new_password = serializer.validated_data["new_password"]
+
+            user.set_password(new_password)
+            user.save()
+
+            update_session_auth_hash(request, user)
+            return Response({"message": "Password changed successfully."})
         except Exception as e:
             return Response(
                 {"message": f"Error: {e}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR
@@ -149,7 +172,7 @@ class ActivityTimeView(BaseAPIView, RenderAPIView):
             activity_time = get_object_or_404(ActivityTime, pk=pk, user=request.user)
             activity_time.delete()
             return Response(
-                {"message": "ActivityTime deleted successfully"},
+                {"message": "ActivityTime deleted successfully."},
                 status=status.HTTP_204_NO_CONTENT,
             )
         except Exception as e:
@@ -199,7 +222,7 @@ class InstaCredentialView(BaseAPIView, RenderAPIView):
             )
             insta_credential.delete()
             return Response(
-                {"message": "Insta Credential deleted successfully"},
+                {"message": "Insta Credential deleted successfully."},
                 status=status.HTTP_204_NO_CONTENT,
             )
         except Exception as e:
@@ -245,7 +268,7 @@ class HashtagView(BaseAPIView, RenderAPIView):
             hashtag = get_object_or_404(Hashtag, pk=pk, user=request.user)
             hashtag.delete()
             return Response(
-                {"message": "Hashtag deleted successfully"},
+                {"message": "Hashtag deleted successfully."},
                 status=status.HTTP_204_NO_CONTENT,
             )
         except Exception as e:
@@ -291,7 +314,7 @@ class TargetUserView(BaseAPIView, RenderAPIView):
             target_user = get_object_or_404(TargetUser, pk=pk, user=request.user)
             target_user.delete()
             return Response(
-                {"message": "Target User deleted successfully"},
+                {"message": "Target User deleted successfully."},
                 status=status.HTTP_204_NO_CONTENT,
             )
         except Exception as e:
@@ -337,7 +360,7 @@ class PostView(BaseAPIView, RenderAPIView):
             post = get_object_or_404(Post, pk=pk, user=request.user)
             post.delete()
             return Response(
-                {"message": "Post deleted successfully"},
+                {"message": "Post deleted successfully."},
                 status=status.HTTP_204_NO_CONTENT,
             )
         except Exception as e:
@@ -383,7 +406,7 @@ class ReelView(BaseAPIView, RenderAPIView):
             reel = get_object_or_404(Reel, pk=pk, user=request.user)
             reel.delete()
             return Response(
-                {"message": "Reel deleted successfully"},
+                {"message": "Reel deleted successfully."},
                 status=status.HTTP_204_NO_CONTENT,
             )
         except Exception as e:
@@ -429,7 +452,7 @@ class ActivityLogView(BaseAPIView, RenderAPIView):
             activity_log = get_object_or_404(ActivityLog, pk=pk, user=request.user)
             activity_log.delete()
             return Response(
-                {"message": "Activity Log deleted successfully"},
+                {"message": "Activity Log deleted successfully."},
                 status=status.HTTP_204_NO_CONTENT,
             )
         except Exception as e:
@@ -475,7 +498,7 @@ class StatView(BaseAPIView, RenderAPIView):
             activity_log = get_object_or_404(Stat, pk=pk, user=request.user)
             activity_log.delete()
             return Response(
-                {"message": "Stat deleted successfully"},
+                {"message": "Stat deleted successfully."},
                 status=status.HTTP_204_NO_CONTENT,
             )
         except Exception as e:
@@ -521,7 +544,7 @@ class TargetTypeView(BaseAPIView, RenderAPIView):
             target_type = get_object_or_404(TargetType, pk=pk, user=request.user)
             target_type.delete()
             return Response(
-                {"message": "TargetType deleted successfully"},
+                {"message": "TargetType deleted successfully."},
                 status=status.HTTP_204_NO_CONTENT,
             )
         except Exception as e:
@@ -567,7 +590,7 @@ class TargetView(BaseAPIView, RenderAPIView):
             target = get_object_or_404(Target, pk=pk, user=request.user)
             target.delete()
             return Response(
-                {"message": "Target deleted successfully"},
+                {"message": "Target deleted successfully."},
                 status=status.HTTP_204_NO_CONTENT,
             )
         except Exception as e:
@@ -613,7 +636,7 @@ class ActionView(BaseAPIView, RenderAPIView):
             action = get_object_or_404(Action, pk=pk, user=request.user)
             action.delete()
             return Response(
-                {"message": "Action deleted successfully"},
+                {"message": "Action deleted successfully."},
                 status=status.HTTP_204_NO_CONTENT,
             )
         except Exception as e:
