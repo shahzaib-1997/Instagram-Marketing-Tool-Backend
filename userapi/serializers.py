@@ -36,6 +36,9 @@ from .models import (
     Stat,
     TargetUser,
     InstaCredential,
+    TargetType,
+    Target,
+    Action,
 )
 
 
@@ -284,4 +287,22 @@ class StatSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Stat
+        fields = "__all__"
+
+
+class TargetTypeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = TargetType
+        fields = "__all__"
+
+
+class TargetSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Target
+        fields = "__all__"
+
+
+class ActionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Action
         fields = "__all__"

@@ -7,7 +7,10 @@ from .models import (
     Hashtag,
     Stat,
     TargetUser,
-    InstaCredential
+    InstaCredential,
+    Target,
+    TargetType,
+    Action
 )
 
 admin.site.register(ActivityLog)
@@ -18,3 +21,6 @@ admin.site.register(Hashtag)
 admin.site.register(Stat)
 admin.site.register(TargetUser)
 admin.site.register(InstaCredential)
+admin.site.register(TargetType)
+admin.site.register(Target)
+admin.site.register(Action)

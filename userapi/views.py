@@ -14,6 +14,9 @@ from .models import (
     Reel,
     ActivityLog,
     Stat,
+    Target,
+    TargetType,
+    Action,
 )
 from .serializers import (
     RegistrationSerializer,
@@ -26,6 +29,9 @@ from .serializers import (
     ReelSerializer,
     ActivityLogSerializer,
     StatSerializer,
+    TargetTypeSerializer,
+    TargetSerializer,
+    ActionSerializer,
 )
 
 
@@ -470,6 +476,144 @@ class StatView(BaseAPIView, RenderAPIView):
             activity_log.delete()
             return Response(
                 {"message": "Stat deleted successfully"},
+                status=status.HTTP_204_NO_CONTENT,
+            )
+        except Exception as e:
+            return Response(
+                {"message": f"Error: {e}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
+
+
+class TargetTypeView(BaseAPIView, RenderAPIView):
+    def get(self, request):
+        try:
+            target_types = TargetType.objects.filter(user=request.user)
+            serializer = TargetTypeSerializer(target_types, many=True)
+            return Response(serializer.data)
+        except Exception as e:
+            return Response(
+                {"message": f"Error: {e}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
+
+    def post(self, request):
+        try:
+            mutable_data = add_user(request.data.copy(), request.user.id)
+            serializer = TargetTypeSerializer(data=mutable_data)
+            return szr_val_save(serializer, status.HTTP_201_CREATED)
+        except Exception as e:
+            return Response(
+                {"message": f"Error: {e}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
+
+    def put(self, request, pk):
+        try:
+            target_type = get_object_or_404(TargetType, pk=pk, user=request.user)
+            mutable_data = add_user(request.data.copy(), request.user.id)
+            serializer = TargetTypeSerializer(target_type, data=mutable_data)
+            return szr_val_save(serializer)
+        except Exception as e:
+            return Response(
+                {"message": f"Error: {e}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
+
+    def delete(self, request, pk):
+        try:
+            target_type = get_object_or_404(TargetType, pk=pk, user=request.user)
+            target_type.delete()
+            return Response(
+                {"message": "TargetType deleted successfully"},
+                status=status.HTTP_204_NO_CONTENT,
+            )
+        except Exception as e:
+            return Response(
+                {"message": f"Error: {e}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
+
+
+class TargetView(BaseAPIView, RenderAPIView):
+    def get(self, request):
+        try:
+            targets = Target.objects.filter(user=request.user)
+            serializer = TargetSerializer(targets, many=True)
+            return Response(serializer.data)
+        except Exception as e:
+            return Response(
+                {"message": f"Error: {e}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
+
+    def post(self, request):
+        try:
+            mutable_data = add_user(request.data.copy(), request.user.id)
+            serializer = TargetSerializer(data=mutable_data)
+            return szr_val_save(serializer, status.HTTP_201_CREATED)
+        except Exception as e:
+            return Response(
+                {"message": f"Error: {e}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
+
+    def put(self, request, pk):
+        try:
+            target = get_object_or_404(Target, pk=pk, user=request.user)
+            mutable_data = add_user(request.data.copy(), request.user.id)
+            serializer = TargetSerializer(target, data=mutable_data)
+            return szr_val_save(serializer)
+        except Exception as e:
+            return Response(
+                {"message": f"Error: {e}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
+
+    def delete(self, request, pk):
+        try:
+            target = get_object_or_404(Target, pk=pk, user=request.user)
+            target.delete()
+            return Response(
+                {"message": "Target deleted successfully"},
+                status=status.HTTP_204_NO_CONTENT,
+            )
+        except Exception as e:
+            return Response(
+                {"message": f"Error: {e}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
+
+
+class ActionView(BaseAPIView, RenderAPIView):
+    def get(self, request):
+        try:
+            actions = Action.objects.filter(user=request.user)
+            serializer = ActionSerializer(actions, many=True)
+            return Response(serializer.data)
+        except Exception as e:
+            return Response(
+                {"message": f"Error: {e}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
+
+    def post(self, request):
+        try:
+            mutable_data = add_user(request.data.copy(), request.user.id)
+            serializer = ActionSerializer(data=mutable_data)
+            return szr_val_save(serializer, status.HTTP_201_CREATED)
+        except Exception as e:
+            return Response(
+                {"message": f"Error: {e}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
+
+    def put(self, request, pk):
+        try:
+            action = get_object_or_404(Action, pk=pk, user=request.user)
+            mutable_data = add_user(request.data.copy(), request.user.id)
+            serializer = ActionSerializer(action, data=mutable_data)
+            return szr_val_save(serializer)
+        except Exception as e:
+            return Response(
+                {"message": f"Error: {e}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
+
+    def delete(self, request, pk):
+        try:
+            action = get_object_or_404(Action, pk=pk, user=request.user)
+            action.delete()
+            return Response(
+                {"message": "Action deleted successfully"},
                 status=status.HTTP_204_NO_CONTENT,
             )
         except Exception as e:

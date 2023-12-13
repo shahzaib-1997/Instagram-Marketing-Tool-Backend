@@ -49,6 +49,7 @@ class ActivityTime(models.Model):
         >>> print(activity_time)
         "username - timestamp"
     """
+
     time = models.DateTimeField(auto_now_add=True, null=True, blank=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
 
@@ -76,6 +77,7 @@ class InstaCredential(models.Model):
         >>> print(insta_credential)
         "username - instagram_username"
     """
+
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     username = models.CharField(max_length=255)
     password = models.CharField(max_length=255)
@@ -85,6 +87,88 @@ class InstaCredential(models.Model):
         method __str__(): Returns a string representation of the object.
         """
         return f"{self.user.username} - {self.username}"
+
+
+class TargetType(models.Model):
+    """
+    Model representing the target type.
+
+    Attributes:
+        user (ForeignKey): The user associated with the target type.
+        type (CharField): The type of the target, chosen from predefined options.
+
+    Methods:
+        __str__: Returns a string representation of the object.
+    """
+
+    options = (("option_1", "option_1"), ("option_2", "option_2"))
+
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    type = models.CharField(max_length=255, choices=options)
+
+    def __str__(self):
+        """
+        method __str__(): Returns a string representation of the object.
+        """
+        return f"{self.user.username} - {self.type}"
+
+
+class Action(models.Model):
+    """
+    Model representing an action.
+
+    Attributes:
+        user (ForeignKey): The user associated with the action.
+        type (CharField): The type of the action, chosen from predefined options.
+        action_target_type (ForeignKey): The target type associated with the action.
+
+    Methods:
+        __str__: Returns a string representation of the object.
+    """
+
+    options = (("option_1", "option_1"), ("option_2", "option_2"))
+
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    type = models.CharField(max_length=255, choices=options)
+    action_target_type = models.ForeignKey(
+        TargetType, on_delete=models.CASCADE, null=True, blank=True
+    )
+
+    def __str__(self):
+        """
+        method __str__(): Returns a string representation of the object.
+        """
+        return f"{self.user.username} - {self.type}"
+
+
+class Target(models.Model):
+    """
+    Model representing a target.
+
+    Attributes:
+        user (ForeignKey): The user associated with the target.
+        target_type (ForeignKey): The target type associated with the target.
+        activity_time (ForeignKey): The activity time associated with the target.
+        actions (ForeignKey): The actions associated with the target.
+
+    Methods:
+        __str__: Returns a string representation of the object.
+    """
+
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    target_type = models.ForeignKey(
+        TargetType, on_delete=models.CASCADE, null=True, blank=True
+    )
+    activity_time = models.ForeignKey(
+        ActivityTime, on_delete=models.CASCADE, null=True, blank=True
+    )
+    actions = models.ForeignKey(Action, on_delete=models.CASCADE, null=True, blank=True)
+
+    def __str__(self):
+        """
+        method __str__(): Returns a string representation of the object.
+        """
+        return f"{self.user.username} - {self.target_type.type}"
 
 
 class Hashtag(models.Model):
@@ -103,8 +187,10 @@ class Hashtag(models.Model):
         >>> print(hashtag)
         "username - user_defined_hashtag"
     """
+
     hashtag = models.CharField(max_length=255)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
+    target = models.ForeignKey(Target, on_delete=models.CASCADE, null=True, blank=True)
 
     def __str__(self):
         """
@@ -129,8 +215,10 @@ class TargetUser(models.Model):
         >>> print(target_user)
         "username - target_username"
     """
+
     username = models.CharField(max_length=255)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
+    target = models.ForeignKey(Target, on_delete=models.CASCADE, null=True, blank=True)
 
     def __str__(self):
         """
@@ -155,8 +243,10 @@ class Post(models.Model):
         >>> print(post)
         "username - post_url"
     """
+
     url = models.URLField()
     user = models.ForeignKey(User, on_delete=models.CASCADE)
+    target = models.ForeignKey(Target, on_delete=models.CASCADE, null=True, blank=True)
 
     def __str__(self):
         """
@@ -181,8 +271,10 @@ class Reel(models.Model):
         >>> print(reel)
         "username - reel_url"
     """
+
     url = models.URLField()
     user = models.ForeignKey(User, on_delete=models.CASCADE)
+    target = models.ForeignKey(Target, on_delete=models.CASCADE, null=True, blank=True)
 
     def __str__(self):
         """
@@ -208,6 +300,7 @@ class ActivityLog(models.Model):
         >>> print(activity_log)
         "username - activity_description"
     """
+
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     activity = models.CharField(max_length=255)
     time_stamp = models.DateTimeField(auto_now_add=True, blank=True, null=True)
@@ -234,6 +327,7 @@ class Stat(models.Model):
         >>> print(stat)
         "username - followers_count"
     """
+
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     followers = models.PositiveIntegerField()
     engagement_rate = models.FloatField()

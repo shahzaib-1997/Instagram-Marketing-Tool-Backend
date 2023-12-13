@@ -49,4 +49,10 @@ urlpatterns = [
     path("activity-log/<int:pk>/", views.ActivityLogView.as_view()),
     path("stat/", views.StatView.as_view()),
     path("stat/<int:pk>/", views.StatView.as_view()),
+    path("target-type/", views.TargetTypeView.as_view()),
+    path("target-type/<int:pk>/", views.TargetTypeView.as_view()),
+    path("target/", views.TargetView.as_view()),
+    path("target/<int:pk>/", views.TargetView.as_view()),
+    path("action/", views.ActionView.as_view()),
+    path("action/<int:pk>/", views.ActionView.as_view()),
 ]

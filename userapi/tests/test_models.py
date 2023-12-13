@@ -9,6 +9,9 @@ from userapi.models import (
     Reel,
     ActivityLog,
     Stat,
+    Target,
+    TargetType,
+    Action,
 )
 
 
@@ -68,6 +71,37 @@ class ModelsTestCase(TestCase):
         self.assertEqual(stat.engagement_rate, 5.0)
         self.assertIsNotNone(stat.time_stamp)
 
+    def test_target_type_model(self):
+        target_type = TargetType.objects.create(user=self.user, type="option_1")
+        self.assertEqual(target_type.user, self.user)
+        self.assertEqual(target_type.type, "option_1")
+
+    def test_action_model(self):
+        target_type = TargetType.objects.create(user=self.user, type="option_1")
+        action = Action.objects.create(
+            user=self.user, type="option_2", action_target_type=target_type
+        )
+        self.assertEqual(action.user, self.user)
+        self.assertEqual(action.type, "option_2")
+        self.assertEqual(action.action_target_type, target_type)
+
+    def test_target_model(self):
+        target_type = TargetType.objects.create(user=self.user, type="option_1")
+        activity_time = ActivityTime.objects.create(user=self.user)
+        action = Action.objects.create(
+            user=self.user, type="option_2", action_target_type=target_type
+        )
+        target = Target.objects.create(
+            user=self.user,
+            target_type=target_type,
+            activity_time=activity_time,
+            actions=action,
+        )
+        self.assertEqual(target.user, self.user)
+        self.assertEqual(target.target_type, target_type)
+        self.assertEqual(target.activity_time, activity_time)
+        self.assertEqual(target.actions, action)
+
 
 """
 Command:
@@ -77,12 +111,12 @@ python manage.py test userapi.tests.test_models
 
 Result:
 
-Found 8 test(s).
+Found 11 test(s).
 Creating test database for alias 'default'...
 System check identified no issues (0 silenced).
-........
+...........
 ----------------------------------------------------------------------
-Ran 8 tests in 6.374s
+Ran 11 tests in 10.241s
 
 OK
 Destroying test database for alias 'default'...
