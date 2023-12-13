@@ -1,10 +1,10 @@
+import re
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.authentication import TokenAuthentication
 from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from .renderers import UserRenderers
-import re
 
 
 def check_password(password):
@@ -25,7 +25,7 @@ def check_password(password):
         return False, "Password must contain at least 1 digit"
 
     # Check if password contains at least 1 special character
-    special_chars = "!@#$%^&*()_-+={}[]|\:;'<>,.?/~`"
+    special_chars = r"!@#$%^&*()_-+={}[]|\:;'<>,.?/~`"
     if not any(char in special_chars for char in password):
         return False, "Password must contain at least 1 special character"
 
@@ -34,22 +34,22 @@ def check_password(password):
 
 
 def check_email(email):
-    emailregix = r"\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b"
+    email_regix = r"\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b"
 
-    if re.match(emailregix, email):
-        return True
-    else:
-        return False
+    return bool(re.match(email_regix, email))
 
 
 class BaseAPIView(APIView):
     permission_classes = [IsAuthenticated]
     authentication_classes = [TokenAuthentication]
+
+
+class RenderAPIView(APIView):
     renderer_classes = [UserRenderers]
 
 
-def add_user(mutable_data, id):
-    mutable_data["user"] = id
+def add_user(mutable_data, user_id):
+    mutable_data["user"] = user_id
     return mutable_data
 
 

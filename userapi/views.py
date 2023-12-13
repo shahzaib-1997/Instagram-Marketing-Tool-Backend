@@ -1,12 +1,10 @@
 from rest_framework import status
-from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.authtoken.models import Token
 from django.shortcuts import get_object_or_404
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate
-from .renderers import UserRenderers
-from .DRY import BaseAPIView, szr_val_save, add_user
+from .dry import BaseAPIView, RenderAPIView, szr_val_save, add_user
 from .models import (
     ActivityTime,
     InstaCredential,
@@ -31,9 +29,7 @@ from .serializers import (
 )
 
 
-class SignupView(APIView):
-    renderer_classes = [UserRenderers]
-
+class SignupView(RenderAPIView):
     def post(self, request):
         try:
             serializer = RegistrationSerializer(data=request.data)
@@ -51,9 +47,7 @@ class SignupView(APIView):
             )
 
 
-class LoginView(APIView):
-    renderer_classes = [UserRenderers]
-
+class LoginView(RenderAPIView):
     def post(self, request):
         try:
             username = request.data.get("username")
@@ -79,7 +73,7 @@ class LoginView(APIView):
             )
 
 
-class ProfileView(BaseAPIView):
+class ProfileView(BaseAPIView, RenderAPIView):
     def get(self, request):
         try:
             serializer = ProfileSerializer(request.user)
@@ -112,7 +106,7 @@ class ProfileView(BaseAPIView):
             )
 
 
-class ActivityTimeView(BaseAPIView):
+class ActivityTimeView(BaseAPIView, RenderAPIView):
     def get(self, request):
         try:
             activity_times = ActivityTime.objects.filter(user=request.user)
@@ -158,7 +152,7 @@ class ActivityTimeView(BaseAPIView):
             )
 
 
-class InstaCredentialView(BaseAPIView):
+class InstaCredentialView(BaseAPIView, RenderAPIView):
     def get(self, request):
         try:
             insta_credentials = InstaCredential.objects.filter(user=request.user)
@@ -208,7 +202,7 @@ class InstaCredentialView(BaseAPIView):
             )
 
 
-class HashtagView(BaseAPIView):
+class HashtagView(BaseAPIView, RenderAPIView):
     def get(self, request):
         try:
             hashtags = Hashtag.objects.filter(user=request.user)
@@ -254,7 +248,7 @@ class HashtagView(BaseAPIView):
             )
 
 
-class TargetUserView(BaseAPIView):
+class TargetUserView(BaseAPIView, RenderAPIView):
     def get(self, request):
         try:
             target_users = TargetUser.objects.filter(user=request.user)
@@ -300,7 +294,7 @@ class TargetUserView(BaseAPIView):
             )
 
 
-class PostView(BaseAPIView):
+class PostView(BaseAPIView, RenderAPIView):
     def get(self, request):
         try:
             posts = Post.objects.filter(user=request.user)
@@ -346,7 +340,7 @@ class PostView(BaseAPIView):
             )
 
 
-class ReelView(BaseAPIView):
+class ReelView(BaseAPIView, RenderAPIView):
     def get(self, request):
         try:
             reels = Reel.objects.filter(user=request.user)
@@ -392,7 +386,7 @@ class ReelView(BaseAPIView):
             )
 
 
-class ActivityLogView(BaseAPIView):
+class ActivityLogView(BaseAPIView, RenderAPIView):
     def get(self, request):
         try:
             activity_logs = ActivityLog.objects.filter(user=request.user)
@@ -438,7 +432,7 @@ class ActivityLogView(BaseAPIView):
             )
 
 
-class StatView(BaseAPIView):
+class StatView(BaseAPIView, RenderAPIView):
     def get(self, request):
         try:
             activity_logs = Stat.objects.filter(user=request.user)

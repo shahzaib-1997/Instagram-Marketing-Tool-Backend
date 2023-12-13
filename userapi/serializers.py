@@ -1,6 +1,6 @@
 from django.contrib.auth.models import User
 from rest_framework import serializers
-from .DRY import check_email, check_password
+from .dry import check_email, check_password
 from .models import (
     ActivityLog,
     ActivityTime,
