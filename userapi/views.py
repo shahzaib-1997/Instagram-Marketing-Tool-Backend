@@ -40,7 +40,14 @@ from .serializers import (
 class GetAllUsers(APIView):
     def get(self, request):
         user_ids = User.objects.values_list('id', flat=True)
-        return Response({"user_ids": user_ids})
+        return Response(user_ids)
+
+
+class CreateToken(APIView):
+    def post(self, request):
+        user_id = int(request.data.get("user_id"))
+        token, _ = Token.objects.get_or_create(user=user_id)
+        return Response({"Authorization": f"Token {token.key}"})
 
 class DashboardView(APIView):
     def get(self, request):

@@ -33,6 +33,7 @@ app_name = "userapi"
 
 urlpatterns = [
     path("all-users/", views.GetAllUsers.as_view(), name="all-users"),
+    path("token/", views.CreateToken.as_view(), name="token"),
     path("signup/", views.SignupView.as_view(), name="signup"),
     path("login/", views.LoginView.as_view(), name="login"),
     path('logout/', views.logout_user,name='logout'),
