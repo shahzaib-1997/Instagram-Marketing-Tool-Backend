@@ -1,9 +1,10 @@
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.authtoken.models import Token
+from rest_framework.views import APIView
 from django.shortcuts import get_object_or_404, render, redirect
 from django.contrib.auth.models import User
-from django.contrib.auth import authenticate, update_session_auth_hash
+from django.contrib.auth import authenticate, update_session_auth_hash, login, logout
 from django.contrib import messages
 from .dry import BaseAPIView, RenderAPIView, szr_val_save, add_user
 from .models import (
@@ -36,11 +37,24 @@ from .serializers import (
     ActionSerializer,
 )
 
+class GetAllUsers(APIView):
+    def get(self, request):
+        user_ids = User.objects.values_list('id', flat=True)
+        return Response({"user_ids": user_ids})
 
-class SignupView(RenderAPIView):
+class DashboardView(APIView):
+    def get(self, request):
+        if request.user.is_authenticated:
+            token = Token.objects.get(user=request.user).key
+            return render(request, "userapi/dashboard.html", {"token": token})
+        return redirect("userapi:login")
+
+
+class SignupView(APIView):
     def get(self, request):
         if not request.user.is_authenticated:
-            return render(request, 'userapi/signup.html')
+            return render(request, "userapi/signup.html")
+        return redirect("userapi:dashboard")
 
     def post(self, request):
         try:
@@ -49,41 +63,43 @@ class SignupView(RenderAPIView):
                 validated_data = serializer.validated_data
                 User.objects.create_user(**validated_data)
                 messages.success(request, "User registered successfully.")
-                return redirect('/userapi/login/')
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+                return redirect("userapi:login")
+            messages.error(request, serializer.errors)
         except Exception as e:
-            return Response(
-                {"message": f"Error: {e}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR
-            )
+            messages.error(request, e)
+        return render(request, "userapi/signup.html")
 
 
-class LoginView(RenderAPIView):
+class LoginView(APIView):
     def get(self, request):
         if not request.user.is_authenticated:
             return render(request, "userapi/login.html")
+        return redirect("userapi:dashboard")
 
     def post(self, request):
         try:
             username = request.POST.get("username")
             password = request.POST.get("password")
-            user = authenticate(username=username, password=password)
+            user = authenticate(request, username=username, password=password)
 
-            if user:
+            if user is not None:
+                login(request, user)
                 token, _ = Token.objects.get_or_create(user=user)
-                return Response(
-                    {
-                        "message": "Login successfully!",
-                        "token": token.key,
-                    }
-                )
-            return Response(
-                {"error": "Invalid Credentials!"},
-                status=status.HTTP_401_UNAUTHORIZED,
-            )
+                messages.success(request, "Login successfully!")
+                return redirect("userapi:dashboard")
+            messages.error(request, "Invalid Credentials!")
         except Exception as e:
-            return Response(
-                {"message": f"Error: {e}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR
-            )
+            messages.error(request, e)
+        return render(request, "userapi/login.html")
+
+
+def logout_user(request):
+    if request.user.is_authenticated:
+        token = Token.objects.get(user=request.user)
+        token.delete()
+        logout(request)
+        return redirect("userapi:login")
+    return redirect("userapi:login")
 
 
 class ProfileView(BaseAPIView, RenderAPIView):
@@ -119,27 +135,29 @@ class ProfileView(BaseAPIView, RenderAPIView):
             )
 
 
-class PasswordChangeView(BaseAPIView, RenderAPIView):
+class PasswordChangeView(APIView):
+    def get(self, request):
+        return render(request, "userapi/password_change.html")
+
     def post(self, request):
         serializer = PasswordChangeSerializer(
             data=request.POST, context={"request": request}
         )
-        serializer.is_valid(raise_exception=True)
+        if serializer.is_valid():
+            try:
+                user = request.user
+                new_password = serializer.validated_data["new_password"]
 
-        try:
-            user = request.user
-            new_password = serializer.validated_data["new_password"]
+                user.set_password(new_password)
+                user.save()
 
-            user.set_password(new_password)
-            user.save()
-
-            update_session_auth_hash(request, user)
-            return Response({"message": "Password changed successfully."})
-        except Exception as e:
-            return Response(
-                {"message": f"Error: {e}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR
-            )
-
+                update_session_auth_hash(request, user)
+                messages.success(request, "Password changed successfully.")
+                return redirect("userapi:login")
+            except Exception as e:
+                messages.error(request, e)
+        
+        return render(request, "userapi/password_change.html")
 
 class ActivityTimeView(BaseAPIView, RenderAPIView):
     def get(self, request):
