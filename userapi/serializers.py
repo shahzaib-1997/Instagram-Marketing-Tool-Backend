@@ -312,13 +312,17 @@ class TargetTypeSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
 
-class TargetSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Target
-        fields = "__all__"
-
-
 class ActionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Action
+        fields = "__all__"
+
+
+class TargetSerializer(serializers.ModelSerializer):
+    actions = ActionSerializer(required=False)
+    activity_time = ActivityTimeSerializer(required=False)
+    target_type = TargetTypeSerializer(required=False)
+
+    class Meta:
+        model = Target
         fields = "__all__"

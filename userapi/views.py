@@ -46,7 +46,8 @@ class GetAllUsers(APIView):
 class CreateToken(APIView):
     def post(self, request):
         user_id = int(request.data.get("user_id"))
-        token, _ = Token.objects.get_or_create(user=user_id)
+        user = get_object_or_404(User, pk=user_id)
+        token, _ = Token.objects.get_or_create(user=user)
         return Response({"Authorization": f"Token {token.key}"})
 
 class DashboardView(APIView):
