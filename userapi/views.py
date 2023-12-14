@@ -1,9 +1,10 @@
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.authtoken.models import Token
-from django.shortcuts import get_object_or_404
+from django.shortcuts import get_object_or_404, render, redirect
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, update_session_auth_hash
+from django.contrib import messages
 from .dry import BaseAPIView, RenderAPIView, szr_val_save, add_user
 from .models import (
     ActivityTime,
@@ -37,16 +38,18 @@ from .serializers import (
 
 
 class SignupView(RenderAPIView):
+    def get(self, request):
+        if not request.user.is_authenticated:
+            return render(request, 'userapi/signup.html')
+
     def post(self, request):
         try:
-            serializer = RegistrationSerializer(data=request.data)
+            serializer = RegistrationSerializer(data=request.POST)
             if serializer.is_valid():
                 validated_data = serializer.validated_data
                 User.objects.create_user(**validated_data)
-                return Response(
-                    {"message": "User registered successfully."},
-                    status=status.HTTP_201_CREATED,
-                )
+                messages.success(request, "User registered successfully.")
+                return redirect('/userapi/login/')
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         except Exception as e:
             return Response(
@@ -55,10 +58,14 @@ class SignupView(RenderAPIView):
 
 
 class LoginView(RenderAPIView):
+    def get(self, request):
+        if not request.user.is_authenticated:
+            return render(request, "userapi/login.html")
+
     def post(self, request):
         try:
-            username = request.data.get("username")
-            password = request.data.get("password")
+            username = request.POST.get("username")
+            password = request.POST.get("password")
             user = authenticate(username=username, password=password)
 
             if user:
@@ -67,7 +74,6 @@ class LoginView(RenderAPIView):
                     {
                         "message": "Login successfully!",
                         "token": token.key,
-                        "user": str(user.id),
                     }
                 )
             return Response(
@@ -116,7 +122,7 @@ class ProfileView(BaseAPIView, RenderAPIView):
 class PasswordChangeView(BaseAPIView, RenderAPIView):
     def post(self, request):
         serializer = PasswordChangeSerializer(
-            data=request.data, context={"request": request}
+            data=request.POST, context={"request": request}
         )
         serializer.is_valid(raise_exception=True)
 

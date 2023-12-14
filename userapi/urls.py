@@ -29,6 +29,8 @@ Example:
 from django.urls import path
 from userapi import views
 
+app_name = "userapi"
+
 urlpatterns = [
     path("signup/", views.SignupView.as_view()),
     path("login/", views.LoginView.as_view()),

@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>
+      {% block title %}
+      {% endblock %}Instagram Marketing Tool
+    </title>
+    <style>
+      {% block style %}{% endblock %}
+    </style>
+  </head>
+  <body>
+    <header class="header">
+      <div>
+        {% comment %} <nav class="nav">
+          {% if request.user.is_authenticated %}
+            <a href="/userapi/profile" title="Update my profile">Hi! {{ request.user.username }}</a>
+            <a href="/userapi/logout" class="btn btn-outline">Logout</a>
+          {% else %}
+            <a href="/userapi/login" class="btn btn-outline">Login</a>
+            <a href="/userapi/signup" class="btn btn-primary">Sign Up</a>
+          {% endif %}
+        </nav> {% endcomment %}
+      </div>
+    </header>
+    <main>
+      <div class="container">
+        {% if messages %}
+          {% for message in messages %}
+            <div class="alert" data-display-time="5000">
+              <strong>{{ message }}</strong>
+            </div>
+          {% endfor %}
+        {% endif %}
+        {% block content %}
+
+        {% endblock %}
+      </div>
+    </main>
+    <footer class="footer">
+      <div class="container">
+        <p>
+          &copy; Copyright{% now 'Y' %} by Instagram Marketing Tool
+        </p>
+      </div>
+    </footer>
+  </body>
+</html>

@@ -269,6 +269,56 @@ class ViewsTestCase(TestCase):
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
         self.assertEqual(response.data["message"], "Stat deleted successfully")
 
+    def test_target_type_view(self):
+        post_data = {"type": "option_1"}
+        response = self.client.post(f"{self.api_url}/target-type/", data=post_data)
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        target_type_id = response.json()["id"]
+
+        response = self.client.get(f"{self.api_url}/target-type/")
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(response.json()), 1)
+        self.assertEqual(response.json()[0]["id"], target_type_id)
+
+        put_data = {"type": "option_2"}
+        response = self.client.put(
+            f"{self.api_url}/target-type/{target_type_id}/",
+            data=put_data,
+            headers=self.headers,
+        )
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.json()["id"], target_type_id)
+
+        response = self.client.delete(f"{self.api_url}/target-type/{target_type_id}/")
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+
+    def test_target_view(self):
+        post_data = {"target_type": "1", "activity_time": "1", "actions": "1"}
+        response = self.client.post(
+            f"{self.api_url}/target/",
+            #  data=post_data,
+            headers=self.headers,
+        )
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        target_id = response.json()["id"]
+
+        response = self.client.get(f"{self.api_url}/target/")
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(response.json()), 1)
+        self.assertEqual(response.json()[0]["id"], target_id)
+
+        put_data = {"target_type": "4", "activity_time": "7", "actions": "2"}
+        response = self.client.put(
+            f"{self.api_url}/target/{target_id}/",
+            # data=put_data,
+            headers=self.headers,
+        )
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.json()["id"], target_id)
+
+        response = self.client.delete(f"{self.api_url}/target/{target_id}/")
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+
 
 """
 Command:
