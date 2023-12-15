@@ -13,7 +13,7 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.RenameModel(
-            old_name='Credential',
+            old_name='InstaCredential',
             new_name='Credential',
         ),
     ]

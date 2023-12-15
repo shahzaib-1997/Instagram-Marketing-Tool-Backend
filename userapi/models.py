@@ -129,7 +129,7 @@ class Action(models.Model):
         __str__: Returns a string representation of the object.
     """
 
-    options = (("option_1", "option_1"), ("option_2", "option_2"))
+    options = (("like", "like"), ("view", "view"))
 
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     type = models.CharField(max_length=255, choices=options)
@@ -142,7 +142,7 @@ class Action(models.Model):
         """
         method __str__(): Returns a string representation of the object.
         """
-        return f"{self.user.username} - {self.type}"
+        return f"{self.user.username} - {self.type} - {self.action_target_type}"
 
 
 class Target(models.Model):
