@@ -5,9 +5,9 @@ from rest_framework.views import APIView
 from django.db.models import Q
 from django.shortcuts import get_object_or_404, render, redirect
 from django.contrib.auth.models import User
-from django.contrib.auth import authenticate, update_session_auth_hash, login, logout
+from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
-from .dry import BaseAPIView, RenderAPIView, check_password, szr_val_save, add_user
+from .dry import BaseAPIView, RenderAPIView, szr_val_save, add_user
 from .models import (
     ActivityTime,
     InstaCredential,
@@ -56,8 +56,8 @@ class CreateToken(APIView):
 class DashboardView(APIView):
     def get(self, request):
         if request.user.is_authenticated:
-            token = Token.objects.get(user=request.user).key
-            return render(request, "userapi/dashboard.html", {"token": token})
+            token, _ = Token.objects.get_or_create(user=request.user)
+            return render(request, "userapi/dashboard.html", {"token": token.key})
         return redirect("userapi:login")
 
 
@@ -69,13 +69,16 @@ class SignupView(APIView):
 
     def post(self, request):
         try:
-            serializer = RegistrationSerializer(data=request.POST)
+            serializer = RegistrationSerializer(
+                data=request.POST, context={"request": request}
+            )
+            if User.objects.filter(username=request.POST["username"]).exists():
+                messages.error(request, "A user with that username already exists.")
             if serializer.is_valid():
                 validated_data = serializer.validated_data
                 User.objects.create_user(**validated_data)
                 messages.success(request, "User registered successfully.")
                 return redirect("userapi:login")
-            messages.error(request, serializer.errors)
         except Exception as e:
             messages.error(request, e)
         return render(request, "userapi/signup.html")
@@ -160,7 +163,7 @@ class PasswordChangeUsernameView(APIView):
         if user is not None:
             request.session["user"] = user.id
             return redirect("userapi:password-change")
-        messages.error("Username or Email Incorrect.")
+        messages.error(request, "Username or Email is incorrect.")
         return render(request, "userapi/password_change_username.html")
 
 
@@ -168,7 +171,7 @@ class PasswordChangeView(APIView):
     def get(self, request):
         if request.session.get("user"):
             return render(request, "userapi/password_change.html")
-        return redirect('userapi:password-change-user')
+        return redirect("userapi:password-change-user")
 
     def post(self, request):
         serializer = PasswordChangeSerializer(
@@ -177,8 +180,6 @@ class PasswordChangeView(APIView):
         if serializer.is_valid():
             messages.success(request, "Password changed successfully.")
             return redirect("userapi:login")
-        else:
-            messages.error(request, serializer.errors)
         return render(request, "userapi/password_change.html")
 
 
@@ -281,7 +282,12 @@ class InstaCredentialView(BaseAPIView, RenderAPIView):
 class HashtagView(BaseAPIView, RenderAPIView):
     def get(self, request):
         try:
-            hashtags = Hashtag.objects.filter(user=request.user)
+            target_id = request.GET.get("target_id")
+
+            if target_id:
+                hashtags = Hashtag.objects.filter(target_id=target_id)
+            else:
+                hashtags = Hashtag.objects.filter(user=request.user)
             serializer = HashtagSerializer(hashtags, many=True)
             return Response(serializer.data)
         except Exception as e:
@@ -373,7 +379,12 @@ class TargetUserView(BaseAPIView, RenderAPIView):
 class PostView(BaseAPIView, RenderAPIView):
     def get(self, request):
         try:
-            posts = Post.objects.filter(user=request.user)
+            target_id = request.GET.get("target_id")
+
+            if target_id:
+                posts = Post.objects.filter(target=target_id)
+            else:
+                posts = Post.objects.filter(user=request.user)
             serializer = PostSerializer(posts, many=True)
             return Response(serializer.data)
         except Exception as e:
@@ -419,7 +430,12 @@ class PostView(BaseAPIView, RenderAPIView):
 class ReelView(BaseAPIView, RenderAPIView):
     def get(self, request):
         try:
-            reels = Reel.objects.filter(user=request.user)
+            target_id = request.GET.get("target_id")
+
+            if target_id:
+                reels = Reel.objects.filter(target=target_id)
+            else:
+                reels = Reel.objects.filter(user=request.user)
             serializer = ReelSerializer(reels, many=True)
             return Response(serializer.data)
         except Exception as e:
