@@ -2,11 +2,12 @@ from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.authtoken.models import Token
 from rest_framework.views import APIView
+from django.db.models import Q
 from django.shortcuts import get_object_or_404, render, redirect
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, update_session_auth_hash, login, logout
 from django.contrib import messages
-from .dry import BaseAPIView, RenderAPIView, szr_val_save, add_user
+from .dry import BaseAPIView, RenderAPIView, check_password, szr_val_save, add_user
 from .models import (
     ActivityTime,
     InstaCredential,
@@ -37,9 +38,10 @@ from .serializers import (
     ActionSerializer,
 )
 
+
 class GetAllUsers(APIView):
     def get(self, request):
-        user_ids = User.objects.values_list('id', flat=True)
+        user_ids = User.objects.values_list("id", flat=True)
         return Response(user_ids)
 
 
@@ -49,6 +51,7 @@ class CreateToken(APIView):
         user = get_object_or_404(User, pk=user_id)
         token, _ = Token.objects.get_or_create(user=user)
         return Response({"Authorization": f"Token {token.key}"})
+
 
 class DashboardView(APIView):
     def get(self, request):
@@ -86,16 +89,20 @@ class LoginView(APIView):
 
     def post(self, request):
         try:
-            username = request.POST.get("username")
+            value = request.POST.get("username")
             password = request.POST.get("password")
-            user = authenticate(request, username=username, password=password)
+            user = User.objects.filter(Q(username=value) | Q(email=value)).first()
+            if user is None:
+                messages.error(request, "Username or Email Incorrect.")
+            else:
+                username = user.username
+                user = authenticate(request, username=username, password=password)
 
-            if user is not None:
-                login(request, user)
-                token, _ = Token.objects.get_or_create(user=user)
-                messages.success(request, "Login successfully!")
-                return redirect("userapi:dashboard")
-            messages.error(request, "Invalid Credentials!")
+                if user is not None:
+                    login(request, user)
+                    Token.objects.get_or_create(user=user)
+                    return redirect("userapi:dashboard")
+                messages.error(request, "Invalid Credentials!")
         except Exception as e:
             messages.error(request, e)
         return render(request, "userapi/login.html")
@@ -143,29 +150,37 @@ class ProfileView(BaseAPIView, RenderAPIView):
             )
 
 
+class PasswordChangeUsernameView(APIView):
+    def get(self, request):
+        return render(request, "userapi/password_change_username.html")
+
+    def post(self, request):
+        value = request.POST.get("username")
+        user = User.objects.filter(Q(username=value) | Q(email=value)).first()
+        if user is not None:
+            request.session["user"] = user.id
+            return redirect("userapi:password-change")
+        messages.error("Username or Email Incorrect.")
+        return render(request, "userapi/password_change_username.html")
+
+
 class PasswordChangeView(APIView):
     def get(self, request):
-        return render(request, "userapi/password_change.html")
+        if request.session.get("user"):
+            return render(request, "userapi/password_change.html")
+        return redirect('userapi:password-change-user')
 
     def post(self, request):
         serializer = PasswordChangeSerializer(
             data=request.POST, context={"request": request}
         )
         if serializer.is_valid():
-            try:
-                user = request.user
-                new_password = serializer.validated_data["new_password"]
-
-                user.set_password(new_password)
-                user.save()
-
-                update_session_auth_hash(request, user)
-                messages.success(request, "Password changed successfully.")
-                return redirect("userapi:login")
-            except Exception as e:
-                messages.error(request, e)
-        
+            messages.success(request, "Password changed successfully.")
+            return redirect("userapi:login")
+        else:
+            messages.error(request, serializer.errors)
         return render(request, "userapi/password_change.html")
+
 
 class ActivityTimeView(BaseAPIView, RenderAPIView):
     def get(self, request):
