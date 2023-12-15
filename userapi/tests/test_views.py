@@ -77,19 +77,19 @@ class ViewsTestCase(TestCase):
 
     def test_insta_credential_view(self):
         data = {"username": "test_username", "password": "test_password"}
-        response = self.client.post("/userapi/insta-credential/", data)
+        response = self.client.post("/userapi/credential/", data)
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(response.data["username"], "test_username")
         self.assertEqual(response.data["password"], "test_password")
         insta_credential_id = response.data["id"]
 
-        response = self.client.get("/userapi/insta-credential/")
+        response = self.client.get("/userapi/credential/")
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(len(response.data), 1)
         self.assertEqual(response.data[0]["id"], insta_credential_id)
 
         response = self.client.put(
-            f"/userapi/insta-credential/{insta_credential_id}/",
+            f"/userapi/credential/{insta_credential_id}/",
             {"username": "updated_username", "password": "updated_password"},
         )
         self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -99,7 +99,7 @@ class ViewsTestCase(TestCase):
         self.assertEqual(response.data["id"], insta_credential_id)
 
         response = self.client.delete(
-            f"/userapi/insta-credential/{insta_credential_id}/"
+            f"/userapi/credential/{insta_credential_id}/"
         )
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
         self.assertEqual(

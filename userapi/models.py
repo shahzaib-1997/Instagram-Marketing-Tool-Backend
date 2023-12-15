@@ -5,7 +5,7 @@ This module defines Django models for storing various data related to user activ
 
 Classes:
     - ActivityTime: Model to store user activity time.
-    - InstaCredential: Model to store Instagram credentials for a user.
+    - Credential: Model to store Instagram credentials for a user.
     - Hashtag: Model to store user-defined hashtags.
     - TargetUser: Model to store target usernames for user activity tracking.
     - Post: Model to store user posts.
@@ -60,7 +60,7 @@ class ActivityTime(models.Model):
         return f"{self.user.username} - {self.time}"
 
 
-class InstaCredential(models.Model):
+class Credential(models.Model):
     """
     Model to store Instagram credentials for a user.
 
@@ -73,7 +73,7 @@ class InstaCredential(models.Model):
         __str__(): Returns a string representation of the object.
 
     Example:
-        >>> insta_credential = InstaCredential.objects.get(id=1)
+        >>> insta_credential = Credential.objects.get(id=1)
         >>> print(insta_credential)
         "username - instagram_username"
     """
@@ -81,6 +81,8 @@ class InstaCredential(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     username = models.CharField(max_length=255)
     password = models.CharField(max_length=255)
+    profile_id = models.CharField(max_length=255, blank=True, null=True)
+    time_stamp = models.DateTimeField(auto_now_add=True, blank=True, null=True)
 
     def __str__(self):
         """
@@ -105,6 +107,7 @@ class TargetType(models.Model):
 
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     type = models.CharField(max_length=255, choices=options)
+    time_stamp = models.DateTimeField(auto_now_add=True, blank=True, null=True)
 
     def __str__(self):
         """
@@ -133,6 +136,7 @@ class Action(models.Model):
     action_target_type = models.ForeignKey(
         TargetType, on_delete=models.CASCADE, null=True, blank=True
     )
+    time_stamp = models.DateTimeField(auto_now_add=True, blank=True, null=True)
 
     def __str__(self):
         """
@@ -163,6 +167,7 @@ class Target(models.Model):
         ActivityTime, on_delete=models.CASCADE, null=True, blank=True
     )
     actions = models.ForeignKey(Action, on_delete=models.CASCADE, null=True, blank=True)
+    time_stamp = models.DateTimeField(auto_now_add=True, blank=True, null=True)
 
     def __str__(self):
         """
@@ -191,6 +196,7 @@ class Hashtag(models.Model):
     hashtag = models.CharField(max_length=255)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     target = models.ForeignKey(Target, on_delete=models.CASCADE, null=True, blank=True)
+    time_stamp = models.DateTimeField(auto_now_add=True, blank=True, null=True)
 
     def __str__(self):
         """
@@ -219,6 +225,7 @@ class TargetUser(models.Model):
     username = models.CharField(max_length=255)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     target = models.ForeignKey(Target, on_delete=models.CASCADE, null=True, blank=True)
+    time_stamp = models.DateTimeField(auto_now_add=True, blank=True, null=True)
 
     def __str__(self):
         """
@@ -247,6 +254,7 @@ class Post(models.Model):
     url = models.URLField()
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     target = models.ForeignKey(Target, on_delete=models.CASCADE, null=True, blank=True)
+    time_stamp = models.DateTimeField(auto_now_add=True, blank=True, null=True)
 
     def __str__(self):
         """
@@ -275,6 +283,7 @@ class Reel(models.Model):
     url = models.URLField()
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     target = models.ForeignKey(Target, on_delete=models.CASCADE, null=True, blank=True)
+    time_stamp = models.DateTimeField(auto_now_add=True, blank=True, null=True)
 
     def __str__(self):
         """

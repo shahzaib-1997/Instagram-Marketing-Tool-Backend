@@ -2,7 +2,7 @@ from django.test import TestCase
 from django.contrib.auth.models import User
 from userapi.models import (
     ActivityTime,
-    InstaCredential,
+    Credential,
     Hashtag,
     TargetUser,
     Post,
@@ -27,7 +27,7 @@ class ModelsTestCase(TestCase):
         self.assertEqual(activity_time.user, self.user)
 
     def test_insta_credential_model(self):
-        insta_credential = InstaCredential.objects.create(
+        insta_credential = Credential.objects.create(
             user=self.user, username="test_username", password="test_password"
         )
         self.assertEqual(insta_credential.user, self.user)

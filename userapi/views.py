@@ -10,7 +10,7 @@ from django.contrib import messages
 from .dry import BaseAPIView, RenderAPIView, szr_val_save, add_user
 from .models import (
     ActivityTime,
-    InstaCredential,
+    Credential,
     Hashtag,
     TargetUser,
     Post,
@@ -26,7 +26,7 @@ from .serializers import (
     RegistrationSerializer,
     ProfileSerializer,
     ActivityTimeSerializer,
-    InstaCredentialSerializer,
+    CredentialSerializer,
     HashtagSerializer,
     TargetUserSerializer,
     PostSerializer,
@@ -229,11 +229,11 @@ class ActivityTimeView(BaseAPIView, RenderAPIView):
             )
 
 
-class InstaCredentialView(BaseAPIView, RenderAPIView):
+class CredentialView(BaseAPIView, RenderAPIView):
     def get(self, request):
         try:
-            insta_credentials = InstaCredential.objects.filter(user=request.user)
-            serializer = InstaCredentialSerializer(insta_credentials, many=True)
+            credentials = Credential.objects.filter(user=request.user)
+            serializer = CredentialSerializer(credentials, many=True)
             return Response(serializer.data)
         except Exception as e:
             return Response(
@@ -243,7 +243,7 @@ class InstaCredentialView(BaseAPIView, RenderAPIView):
     def post(self, request):
         try:
             mutable_data = add_user(request.data.copy(), request.user.id)
-            serializer = InstaCredentialSerializer(data=mutable_data)
+            serializer = CredentialSerializer(data=mutable_data)
             return szr_val_save(serializer, status.HTTP_201_CREATED)
         except Exception as e:
             return Response(
@@ -252,11 +252,11 @@ class InstaCredentialView(BaseAPIView, RenderAPIView):
 
     def put(self, request, pk):
         try:
-            insta_credential = get_object_or_404(
-                InstaCredential, pk=pk, user=request.user
+            credential = get_object_or_404(
+                Credential, pk=pk, user=request.user
             )
             mutable_data = add_user(request.data.copy(), request.user.id)
-            serializer = InstaCredentialSerializer(insta_credential, data=mutable_data)
+            serializer = CredentialSerializer(credential, data=mutable_data)
             return szr_val_save(serializer)
         except Exception as e:
             return Response(
@@ -265,10 +265,10 @@ class InstaCredentialView(BaseAPIView, RenderAPIView):
 
     def delete(self, request, pk):
         try:
-            insta_credential = get_object_or_404(
-                InstaCredential, pk=pk, user=request.user
+            credential = get_object_or_404(
+                Credential, pk=pk, user=request.user
             )
-            insta_credential.delete()
+            credential.delete()
             return Response(
                 {"message": "Insta Credential deleted successfully."},
                 status=status.HTTP_204_NO_CONTENT,

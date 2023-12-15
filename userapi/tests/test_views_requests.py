@@ -81,7 +81,7 @@ class ViewsTestCase(TestCase):
     def test_insta_credential_view(self):
         data = {"username": "test_username", "password": "test_password"}
         response = requests.post(
-            f"{self.api_url}/insta-credential/", data=data, headers=self.headers
+            f"{self.api_url}/credential/", data=data, headers=self.headers
         )
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(response.json()["username"], "test_username")
@@ -89,14 +89,14 @@ class ViewsTestCase(TestCase):
         insta_credential_id = response.json()["id"]
 
         response = requests.get(
-            f"{self.api_url}/insta-credential/", headers=self.headers
+            f"{self.api_url}/credential/", headers=self.headers
         )
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(len(response.json()), 1)
         self.assertEqual(response.json()[0]["id"], insta_credential_id)
 
         response = requests.put(
-            f"{self.api_url}/insta-credential/{insta_credential_id}/",
+            f"{self.api_url}/credential/{insta_credential_id}/",
             {"username": "updated_username", "password": "updated_password"},
             headers=self.headers,
         )
@@ -106,7 +106,7 @@ class ViewsTestCase(TestCase):
         self.assertEqual(response.json()["id"], insta_credential_id)
 
         response = requests.delete(
-            f"{self.api_url}/insta-credential/{insta_credential_id}/",
+            f"{self.api_url}/credential/{insta_credential_id}/",
             headers=self.headers,
         )
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)

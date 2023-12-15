@@ -9,7 +9,7 @@ Serializers:
     - RegistrationSerializer(serializers.ModelSerializer): Serializer for user registration.
     - ProfileSerializer(serializers.ModelSerializer): Serializer for user profiles.
     - ActivityTimeSerializer(serializers.ModelSerializer): Serializer for ActivityTime model.
-    - InstaCredentialSerializer(serializers.ModelSerializer): Serializer for InstaCredential model.
+    - CredentialSerializer(serializers.ModelSerializer): Serializer for Credential model.
     - HashtagSerializer(serializers.ModelSerializer): Serializer for Hashtag model.
     - TargetUserSerializer(serializers.ModelSerializer): Serializer for TargetUser model.
     - PostSerializer(serializers.ModelSerializer): Serializer for Post model.
@@ -37,7 +37,7 @@ from .models import (
     Hashtag,
     Stat,
     TargetUser,
-    InstaCredential,
+    Credential,
     TargetType,
     Target,
     Action,
@@ -185,22 +185,22 @@ class ActivityTimeSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
 
-class InstaCredentialSerializer(serializers.ModelSerializer):
+class CredentialSerializer(serializers.ModelSerializer):
     """
-    Serializer for InstaCredential model.
+    Serializer for Credential model.
 
     Fields:
-        - All fields from the InstaCredential model.
+        - All fields from the Credential model.
 
     Example:
-        >>> insta_credential = InstaCredential.objects.get(pk=1)
-        >>> serializer = InstaCredentialSerializer(insta_credential)
+        >>> insta_credential = Credential.objects.get(pk=1)
+        >>> serializer = CredentialSerializer(insta_credential)
         >>> serializer.data
         {'id': 1, 'field1': 'value1', 'field2': 'value2', ...}
     """
 
     class Meta:
-        model = InstaCredential
+        model = Credential
         fields = "__all__"
 
 
