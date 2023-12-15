@@ -25,7 +25,7 @@ Usage:
 """
 
 from django.contrib.auth.models import User
-from django.contrib.auth import authenticate
+from django.contrib.auth import authenticate, update_session_auth_hash
 from rest_framework import serializers
 from .dry import check_email, check_password
 from .models import (
@@ -123,14 +123,21 @@ class PasswordChangeSerializer(serializers.Serializer):
     new_password = serializers.CharField(write_only=True)
 
     def validate_new_password(self, password):
-        username = self.context["request"].user.username
-        if authenticate(username=username, password=password):
-            raise serializers.ValidationError(
-                "New Password is same as current password!"
-            )
         check, message = check_password(password)
         if not check:
             raise serializers.ValidationError(message)
+        id = self.context["request"].session["user"]
+        user = User.objects.get(id=id)
+        if authenticate(username=user.username, password=password):
+            raise serializers.ValidationError(
+                "New Password is same as current password!"
+            )
+        user.set_password(password)
+        user.save()
+
+        self.context["request"].session.pop("user")
+        update_session_auth_hash(self.context["request"], user)
+        
         return password
 
 

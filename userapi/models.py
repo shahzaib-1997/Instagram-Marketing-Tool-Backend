@@ -101,7 +101,7 @@ class TargetType(models.Model):
         __str__: Returns a string representation of the object.
     """
 
-    options = (("option_1", "option_1"), ("option_2", "option_2"))
+    options = (("hashtags", "hashtags"), ("posts", "posts"), ("reels", "reels"))
 
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     type = models.CharField(max_length=255, choices=options)
