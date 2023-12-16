@@ -149,5 +149,5 @@ def szr_val_save(serializer, status_code=status.HTTP_200_OK):
     """
     if serializer.is_valid():
         serializer.save()
-        return Response(serializer.data, status=status_code)
-    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        return True
+    return False

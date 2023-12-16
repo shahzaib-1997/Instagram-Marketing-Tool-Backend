@@ -1,7 +1,7 @@
 <head>
     <style>
         header {
-            padding: 20px 0;
+            padding: 10px 0;
             text-align: center;
             display: flex;
             flex-direction: column;
@@ -9,7 +9,7 @@
         }
 
         header nav {
-            margin: 10px;
+            {% comment %} margin: 10px; {% endcomment %}
             font-size: 20px;
         }
 
@@ -31,7 +31,7 @@
         <div>
             <nav class="nav">
                 {% if request.user.is_authenticated %}
-                <a href={%url "userapi:profile" %} title="Update profile">Hi {{ request.user.username }}</a>
+                <a href={%url "userapi:profile" %} title="Your Profile">Hi {{ request.user.username }}</a>
                 <a href={%url "userapi:logout" %} class="btn btn-outline">Logout</a>
                 {% else %}
                 <a href={%url "userapi:login" %} class="btn btn-outline">Login</a>
@@ -39,7 +39,6 @@
                 {% endif %}
             </nav>
         </div>
-
     </header>
 </body>
 

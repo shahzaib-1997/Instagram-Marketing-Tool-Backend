@@ -1,0 +1,36 @@
+{% extends "userapi/base.html" %}
+
+{% block title %}
+  User Profile
+{% endblock %}
+
+{% block header %}
+{% include "userapi/header.html" %}
+
+{% endblock %}
+
+
+{% block content %}
+<div class="form">
+    <div id="view-mode">
+        <p><strong>Username:</strong> <span>{{ data.username }}</span></p>
+        <p><strong>Email:</strong> <span>{{ data.email }}</span></p>
+        <button id="edit-button" onclick="toggleEditMode()">Edit Profile</button>
+    </div>
+    <div id="edit-mode" style="display: none;">
+        <form action="{% url "userapi:profile" %}" method="POST">
+            {% csrf_token %}
+            <input type="text" name="username" placeholder="Enter New Username" required><br>
+            <input type="email" name="email" placeholder="Enter New Email" required><br>
+            <button>Submit Changes</button>
+        </form>
+    </div>
+</div>
+
+<script>
+    function toggleEditMode() {
+        document.getElementById("view-mode").style.display = "none";
+        document.getElementById("edit-mode").style.display = "block";
+    }
+</script>
+{% endblock %}

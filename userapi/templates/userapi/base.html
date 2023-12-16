@@ -4,8 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>
-      {% block title %}
-      {% endblock %} Instagram Marketing Tool
+      {% block title %} {% endblock %}
     </title>
     <style>
       @import url(https://fonts.googleapis.com/css?family=Roboto:300);
@@ -32,13 +31,12 @@
           </div>
         {% endfor %}
       {% endif %}
-    {% block content %}
-
-    {% endblock %}
+      {% block content %}
+      {% endblock %}
     </div>
     <footer class="footer" style="padding: 0;">
       <p style="text-align: center; margin: 0;">
-        &copy; Copyright{% now 'Y' %} by Instagram Marketing Tool
+        &copy; Copyright {% now 'Y' %} by Instagram Marketing Tool
       </p>
     </footer>
     <script>

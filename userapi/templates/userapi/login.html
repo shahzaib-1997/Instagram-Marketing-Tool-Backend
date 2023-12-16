@@ -1,20 +1,20 @@
 {% extends "userapi/base.html" %}
 
-{% block title %}Log In |{% endblock %}
+{% block title %}Log In{% endblock %}
 
 {% block content %}
-    <div class="form">
-      <form method="POST" action="{%url 'userapi:login'%}">
-        {% csrf_token %}
-        <input type="text" placeholder="Enter Username or Email" name="username" required>
-        <input type="password" placeholder="Enter Password" name="password" required>
-        <button>login</button>
-        <div class="message">
-          <a href={%url "userapi:password-change-user"%} class="btn btn-outline">Forget Password?</a>
-          <p>
-            Not registered? <a href="{%url 'userapi:signup'%}">Create an account</a>
-          </p>
-        </div>
-      </form>
-    </div>
+  <div class="form">
+    <form method="POST" action="{%url 'userapi:login'%}">
+      {% csrf_token %}
+      <input type="text" placeholder="Enter Username or Email" name="username" required>
+      <input type="password" placeholder="Enter Password" name="password" required>
+      <button>login</button>
+      <div class="message">
+        <a href={%url "userapi:password-change-user"%} class="btn btn-outline">Forget Password?</a>
+        <p>
+          Not registered? <a href="{%url 'userapi:signup'%}">Create an account</a>
+        </p>
+      </div>
+    </form>
+  </div>
 {% endblock %}

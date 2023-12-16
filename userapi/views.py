@@ -1,3 +1,4 @@
+import json
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.authtoken.models import Token
@@ -57,6 +58,7 @@ class DashboardView(APIView):
     def get(self, request):
         if request.user.is_authenticated:
             token, _ = Token.objects.get_or_create(user=request.user)
+            request.session["token"] = token.key
             return render(request, "userapi/dashboard.html", {"token": token.key})
         return redirect("userapi:login")
 
@@ -69,11 +71,11 @@ class SignupView(APIView):
 
     def post(self, request):
         try:
+            if User.objects.filter(username=request.POST["username"]).exists():
+                messages.error(request, "A user with that username already exists.")
             serializer = RegistrationSerializer(
                 data=request.POST, context={"request": request}
             )
-            if User.objects.filter(username=request.POST["username"]).exists():
-                messages.error(request, "A user with that username already exists.")
             if serializer.is_valid():
                 validated_data = serializer.validated_data
                 User.objects.create_user(**validated_data)
@@ -120,24 +122,33 @@ def logout_user(request):
     return redirect("userapi:login")
 
 
-class ProfileView(BaseAPIView, RenderAPIView):
+class ProfileView(APIView):
     def get(self, request):
         try:
-            serializer = ProfileSerializer(request.user)
-            return Response(serializer.data)
+            key = request.session.get("token")
+            token = Token.objects.filter(key=key)
+            if token:
+                serializer = ProfileSerializer(request.user)
+                return render(request, "userapi/profile.html", {"data": serializer.data})
+            else:
+                messages.error(request, 'You need to login first.')
+                return redirect("userapi:login")
         except Exception as e:
-            return Response(
-                {"message": f"Error: {e}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR
-            )
+            messages.error(request, e)
+            return redirect("userapi:dashboard")
 
-    def put(self, request):
+    def post(self, request):
         try:
-            serializer = ProfileSerializer(request.user, data=request.data)
-            return szr_val_save(serializer)
+            serializer = ProfileSerializer(request.user, data=request.POST)
+            check = szr_val_save(serializer)
+            if check:
+                messages.success(request, "Profile Updated Successfully.") 
+            else:
+                for error in serializer.errors.values():
+                    messages.error(request, json.dumps(error)[2:-2])
         except Exception as e:
-            return Response(
-                {"message": f"Error: {e}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR
-            )
+            messages.error(request, e)
+        return redirect("userapi:profile")
 
     def delete(self, request):
         try:
