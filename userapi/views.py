@@ -140,8 +140,6 @@ def logout_user(request):
 class ProfileView(APIView):
     def get(self, request):
         try:
-            # key = request.session.get("token")
-            # token = Token.objects.filter(key=key)
             if request.user.is_authenticated:
                 serializer = ProfileSerializer(request.user)
                 return render(request, "userapi/profile.html", {"data": serializer.data})
