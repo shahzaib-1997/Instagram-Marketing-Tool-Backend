@@ -1,20 +1,185 @@
 {% extends "userapi/base.html" %}
+{% load static %}
 
-{% block title %}Log In{% endblock %}
+{% block title %}Sign In | {% endblock %}
 
-{% block content %}
-  <div class="form">
-    <form method="POST" action="{%url 'userapi:login'%}">
-      {% csrf_token %}
-      <input type="text" placeholder="Enter Username or Email" name="username" required>
-      <input type="password" placeholder="Enter Password" name="password" required>
-      <button>login</button>
-      <div class="message">
-        <a href={%url "userapi:password-change-user"%} class="btn btn-outline">Forget Password?</a>
-        <p>
-          Not registered? <a href="{%url 'userapi:signup'%}">Create an account</a>
-        </p>
-      </div>
-    </form>
+{% block side_nav %}
+<div class="container">
+  <div class="dot-menu">
+    <div class="circle-inner">
+      <div class="circle circle-one"></div>
+      <div class="circle circle-two"></div>
+      <div class="circle circle-three"></div>
+    </div>
   </div>
+
+  <div class="container">
+    <div class="side-nav-inner">
+      <div class="side-nav justify-content-center  align-items-center">
+        <div class="side-item">
+          <div class="search-box">
+            <i class="flaticon-loupe"></i>
+          </div>
+        </div>
+
+        <div class="side-item">
+          <div class="user-btn">
+            <a href="#">
+              <i class="flaticon-contact"></i>
+            </a>
+          </div>
+        </div>
+
+        <div class="side-item">
+          <div class="nav-add-btn">
+            <a href="#" class="nav-menu-btn border-radius">
+              Contact us
+              <i class='bx bx-plus'></i>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock side_nav %}
+
+{% block content1 %}
+<!-- Search Overlay -->
+<div class="search-overlay">
+  <div class="d-table">
+    <div class="d-table-cell">
+      <div class="search-layer"></div>
+      <div class="search-layer"></div>
+      <div class="search-layer"></div>
+
+      <div class="search-close">
+        <span class="search-close-line"></span>
+        <span class="search-close-line"></span>
+      </div>
+
+      <div class="search-form">
+        <form>
+          <input type="text" class="input-search" placeholder="Search here...">
+          <button type="submit"><i class="flaticon-loupe"></i></button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- End Search Overlay -->
+
+<!-- Inner Banner Area -->
+<div class="inner-banner">
+  <div class="container">
+    <div class="inner-title text-center">
+      <h3>Sign In</h3>
+      <ul>
+        <li>
+          <a href="index.html">Home</a>
+        </li>
+        <li>
+          <i class='bx bx-chevron-right'></i>
+        </li>
+        <li>Sign In</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="inner-banner-shape">
+    <div class="shape-one">
+      <img src="{% static 'assets/img/inner-banner/banner-shape1.png' %}" alt="Images">
+    </div>
+
+    <div class="shape-two">
+      <img src="{% static 'assets/img/inner-banner/banner-shape2.png' %}" alt="Images">
+    </div>
+
+    <div class="shape-three">
+      <img src="{% static 'assets/img/inner-banner/banner-shape3.png' %}" alt="Images">
+    </div>
+
+    <div class="inner-banner-dots-2">
+      <img src="{% static 'assets/img/shape/dots-shape.png' %}" alt="Images">
+    </div>
+  </div>
+</div>
+<!-- Inner Banner Area End -->
+
+<!-- Sign In Area -->
+<div class="sign-in-area pt-50 pb-70">
+  <div class="container">
+    <div class="section-title text-center">
+      <span class="sp-before sp-after">Sign In</span>
+      <h2 class="h2-color">Sign in to Your Account!</h2>
+    </div>
+    <div class="row align-items-center pt-45">
+      <div class="col-lg-5">
+        <div class="user-all-img">
+          <img src="{% static 'assets/img/faq-img.png' %}" alt="Images">
+        </div>
+      </div>
+      <div class="col-lg-7">
+        <div class="user-all-form">
+          <div class="contact-form">
+            <form method="POST" action="{%url 'userapi:login'%}">
+              {% csrf_token %}
+              <div class="row">
+                <div class="col-lg-12 ">
+                  <div class="form-group">
+                    <i class='bx bx-user'></i>
+                    <input type="text" name="username" id="name" class="form-control" required
+                      data-error="Please enter your Username or Email" placeholder="Username or Email">
+                  </div>
+                </div>
+                <div class="col-12">
+                  <div class="form-group">
+                    <i class='bx bx-lock-alt'></i>
+                    <input class="form-control" id="password-input" type="password" name="password"
+                      placeholder="Password">
+                    <input type="checkbox" id="chb2" onclick="togglePassword()">
+                    <label for="chb2">
+                      Show Password
+                    </label>
+                  </div>
+                </div>
+                <div class="col-lg-6 col-sm-6 form-condition">
+                  <div class="agree-label">
+                    <input type="checkbox" id="chb1">
+                    <label for="chb1">
+                      Remember Me
+                    </label>
+                  </div>
+                </div>
+                <div class="col-lg-6 col-sm-6">
+                  <a class="forget" href={%url "userapi:password-change-user" %}>Forgot my password?</a>
+                </div>
+                <div class="col-lg-12 col-md-12 text-center">
+                  <button type="submit" class="default-btn">
+                    Sign In Now
+                    <i class='bx bx-plus'></i>
+                  </button>
+                </div>
+                <div class="col-12">
+                  <p class="account-desc">
+                    Not a member?
+                    <a href="{%url 'userapi:signup'%}">Sign Up</a>
+                  </p>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Sign In Area End -->
+
+<script>
+  function togglePassword() {
+    const passwordInput = document.getElementById("password-input");
+    passwordInput.type = passwordInput.type === 'password' ? 'text' : 'password';
+  }
+</script>
 {% endblock %}

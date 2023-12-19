@@ -32,10 +32,11 @@ from userapi import views
 app_name = "userapi"
 
 urlpatterns = [
+    path("", views.home, name="home"),
     path("all-users/", views.GetAllUsers.as_view(), name="all-users"),
     path("token/", views.CreateToken.as_view(), name="token"),
     path("signup/", views.SignupView.as_view(), name="signup"),
-    path("login/", views.LoginView.as_view(), name="login"),
+    path("signin/", views.LoginView.as_view(), name="login"),
     path('logout/', views.logout_user,name='logout'),
     path("profile/", views.ProfileView.as_view(), name="profile"),
     path("password-change-user/", views.PasswordChangeUsernameView.as_view(), name="password-change-user"),

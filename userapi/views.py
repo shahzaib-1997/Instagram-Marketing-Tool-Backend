@@ -40,6 +40,10 @@ from .serializers import (
 )
 
 
+def home(request):
+    return render(request, "userapi/index.html")
+
+
 class GetAllUsers(APIView):
     def get(self, request):
         user_ids = User.objects.values_list("id", flat=True)
@@ -59,7 +63,8 @@ class DashboardView(APIView):
         if request.user.is_authenticated:
             token, _ = Token.objects.get_or_create(user=request.user)
             request.session["token"] = token.key
-            return render(request, "userapi/dashboard.html", {"token": token.key})
+            return render(request, "userapi/dashboard.html")
+        messages.error(request, 'You need to login first.')
         return redirect("userapi:login")
 
 
@@ -88,9 +93,9 @@ class SignupView(APIView):
 
 class LoginView(APIView):
     def get(self, request):
-        if not request.user.is_authenticated:
-            return render(request, "userapi/login.html")
-        return redirect("userapi:dashboard")
+        if request.user.is_authenticated:
+            return redirect("userapi:dashboard")
+        return render(request, "userapi/login.html")
 
     def post(self, request):
         try:
@@ -98,16 +103,15 @@ class LoginView(APIView):
             password = request.POST.get("password")
             user = User.objects.filter(Q(username=value) | Q(email=value)).first()
             if user is None:
-                messages.error(request, "Username or Email Incorrect.")
+                messages.error(request, "Username or Email is incorrect!")
             else:
                 username = user.username
                 user = authenticate(request, username=username, password=password)
 
                 if user is not None:
                     login(request, user)
-                    Token.objects.get_or_create(user=user)
                     return redirect("userapi:dashboard")
-                messages.error(request, "Invalid Credentials!")
+                messages.error(request, "Password is incorrect!")
         except Exception as e:
             messages.error(request, e)
         return render(request, "userapi/login.html")
@@ -125,9 +129,9 @@ def logout_user(request):
 class ProfileView(APIView):
     def get(self, request):
         try:
-            key = request.session.get("token")
-            token = Token.objects.filter(key=key)
-            if token:
+            # key = request.session.get("token")
+            # token = Token.objects.filter(key=key)
+            if request.user.is_authenticated:
                 serializer = ProfileSerializer(request.user)
                 return render(request, "userapi/profile.html", {"data": serializer.data})
             else:

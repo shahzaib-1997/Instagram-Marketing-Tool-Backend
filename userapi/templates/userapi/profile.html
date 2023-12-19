@@ -16,6 +16,9 @@
         <p><strong>Username:</strong> <span>{{ data.username }}</span></p>
         <p><strong>Email:</strong> <span>{{ data.email }}</span></p>
         <button id="edit-button" onclick="toggleEditMode()">Edit Profile</button>
+        <div class="message">
+            <a href={%url "userapi:password-change-user" %} style="font-size: 14px;">Change Password</a>
+        </div>
     </div>
     <div id="edit-mode" style="display: none;">
         <form action="{% url "userapi:profile" %}" method="POST">

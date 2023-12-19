@@ -1,22 +1,16 @@
-<head>
+<!-- <head>
     <style>
         header {
-            padding: 10px 0;
-            text-align: center;
+            padding-top: 20px;
             display: flex;
             flex-direction: column;
             align-items: center;
-        }
-
-        header nav {
-            {% comment %} margin: 10px; {% endcomment %}
-            font-size: 20px;
+            font-size: 25px;
         }
 
         header nav a {
-            color: thistle;
+            color: rgb(191, 216, 208);
             margin: 0 10px;
-            text-decoration: none;
         }
 
         header nav a:hover {
@@ -29,17 +23,77 @@
 <body>
     <header>
         <div>
-            <nav class="nav">
-                {% if request.user.is_authenticated %}
-                <a href={%url "userapi:profile" %} title="Your Profile">Hi {{ request.user.username }}</a>
-                <a href={%url "userapi:logout" %} class="btn btn-outline">Logout</a>
-                {% else %}
-                <a href={%url "userapi:login" %} class="btn btn-outline">Login</a>
-                <a href={%url "userapi:signup" %} class="btn btn-primary">Sign Up</a>
-                {% endif %}
+            <nav class="nav"> -->
+<!-- Start Navbar Area -->
+{% block header %}
+<div class="navbar-area">
+    <!-- Menu For Mobile Device -->
+    <div class="mobile-nav">
+        <a href="{% url 'userapi:home' %}" class="logo">
+            <h1>InstaBot</h1>
+        </a>
+    </div>
+
+    <!-- Menu For Desktop Device -->
+    <div class="main-nav nav-bar-three">
+        <div class="container-fluid">
+            <nav class="container-max-2 navbar navbar-expand-md navbar-light ">
+                <a class="navbar-brand" href="{% url 'userapi:home' %}">
+                    <h1>InstaBot</h1>
+                </a>
+                <div class="collapse navbar-collapse mean-menu" id="navbarSupportedContent">
+                    <ul class="navbar-nav m-auto">
+                        <li class="nav-item">
+                            <a href="{% url 'userapi:home' %}" class="nav-link">
+                                Home
+                            </a>
+                        </li>
+                        {% if request.user.is_authenticated %}
+                        <li class="nav-item">
+                            <a href="{% url 'userapi:profile' %}" class="nav-link">
+                                Your Profile
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{%url 'userapi:logout' %}" class="nav-link">Logout</a>
+                        </li>
+                        {% else %}
+                        <li class="nav-item">
+                            <a href="{%url 'userapi:login' %}" class="nav-link">Sign In</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{%url 'userapi:signup' %}" class="nav-link">Sign Up</a>
+                        </li>
+                        {% endif %}
+                        <li class="nav-item">
+                            <a href="{% url 'userapi:about' %}" class="nav-link">
+                                About Us
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{% url 'userapi:pricing' %}" class="nav-link">
+                                Pricing
+                            </a>
+                        </li>
+
+                        <div class="side-nav d-in-line align-items-center">
+                            <div class="side-item">
+                                <div class="nav-add-btn">
+                                    <a href="{% url 'userapi:login' %}" class="nav-menu-btn border-radius">
+                                        Get started
+                                        <i class='bx bx-plus'></i>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                </div>
             </nav>
         </div>
-    </header>
-</body>
+    </div>
 
-</html>
+    <div class="side-nav-responsive">
+        {% block side_nav %}{% endblock side_nav %}
+    </div>
+</div>
+<!-- End Navbar Area -->
+{% endblock header %}
