@@ -103,7 +103,7 @@ class TargetType(models.Model):
         __str__: Returns a string representation of the object.
     """
 
-    options = (("hashtags", "hashtags"), ("posts", "posts"), ("reels", "reels"))
+    options = (("hashtags", "hashtags"), ("posts", "posts"), ("reels", "reels"), ("comments", "comments"))
 
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     type = models.CharField(max_length=255, choices=options)
@@ -261,6 +261,19 @@ class Post(models.Model):
         method __str__(): Returns a string representation of the object.
         """
         return f"{self.user.username} - {self.url}"
+
+
+class Comment(models.Model):
+    comment = models.TextField()
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    target = models.ForeignKey(Target, on_delete=models.CASCADE, null=True, blank=True)
+    time_stamp = models.DateTimeField(auto_now_add=True, blank=True, null=True)
+
+    def __str__(self):
+        """
+        method __str__(): Returns a string representation of the object.
+        """
+        return f"{self.user.username} - {self.comment[:25]}"
 
 
 class Reel(models.Model):

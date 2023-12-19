@@ -10,7 +10,8 @@ from .models import (
     Credential,
     Target,
     TargetType,
-    Action
+    Action,
+    Comment
 )
 
 admin.site.register(ActivityLog)
@@ -24,3 +25,4 @@ admin.site.register(Credential)
 admin.site.register(TargetType)
 admin.site.register(Target)
 admin.site.register(Action)
+admin.site.register(Comment)
