@@ -1,6 +1,10 @@
 {% extends "userapi/base.html" %}
 {% load static %}
 
+{% block header %}
+{% include "userapi/header.html" %}
+{% endblock header %}
+
 {% block side_nav %}
 <div class="container">
     <div class="dot-menu">
@@ -15,8 +19,8 @@
             <div class="side-nav side-nav-two justify-content-center  align-items-center">
                 <div class="side-item">
                     <div class="nav-add-btn">
-                        <a href="#" class="nav-menu-btn border-radius">
-                            Get started
+                        <a href={% url "userapi:login" %} class="nav-menu-btn border-radius">
+                            Get Started
                             <i class='bx bx-plus'></i>
                         </a>
                     </div>
@@ -38,7 +42,7 @@
                         <h1>Real, Organic Instagram Followers</h1>
                         <p>No bots. No fake users. Build your community with AI targeted IG follower growth.</p>
                         <div class="banner-three-btn">
-                            <a href="#" class="explore-btn">
+                            <a href={% url "userapi:login" %} class="explore-btn">
                                 Get Started
                                 <i class='bx bx-plus'></i>
                             </a>
@@ -197,7 +201,7 @@
                     </div>
                     <p>Each step contributes to maximizing your Instagram growth efficiently and authentically through
                         our AI-powered tool.</p>
-                    <a href="#" class="default-btn-two">
+                    <a href={% url "userapi:login" %} class="default-btn-two">
                         Get Started
                         <i class='bx bx-plus'></i>
                     </a>

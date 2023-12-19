@@ -1,31 +1,3 @@
-<!-- <head>
-    <style>
-        header {
-            padding-top: 20px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            font-size: 25px;
-        }
-
-        header nav a {
-            color: rgb(191, 216, 208);
-            margin: 0 10px;
-        }
-
-        header nav a:hover {
-            text-decoration: underline;
-            color: antiquewhite;
-        }
-    </style>
-</head>
-
-<body>
-    <header>
-        <div>
-            <nav class="nav"> -->
-<!-- Start Navbar Area -->
-{% block header %}
 <div class="navbar-area">
     <!-- Menu For Mobile Device -->
     <div class="mobile-nav">
@@ -75,25 +47,62 @@
                                 Pricing
                             </a>
                         </li>
-
-                        <div class="side-nav d-in-line align-items-center">
-                            <div class="side-item">
-                                <div class="nav-add-btn">
-                                    <a href="{% url 'userapi:login' %}" class="nav-menu-btn border-radius">
-                                        Get started
-                                        <i class='bx bx-plus'></i>
-                                    </a>
-                                </div>
+                    </ul>
+                    {% if request.user.is_anonymous %}
+                    <div class="side-nav d-in-line align-items-center">
+                        <div class="side-item">
+                            <div class="nav-add-btn">
+                                <a href="{% url 'userapi:login' %}" class="nav-menu-btn border-radius">
+                                    Get started
+                                    <i class='bx bx-plus'></i>
+                                </a>
                             </div>
                         </div>
+                    </div>
+                    {% endif %}
                 </div>
             </nav>
         </div>
     </div>
 
     <div class="side-nav-responsive">
-        {% block side_nav %}{% endblock side_nav %}
+        <div class="container">
+            <div class="dot-menu">
+                <div class="circle-inner">
+                    <div class="circle circle-one"></div>
+                    <div class="circle circle-two"></div>
+                    <div class="circle circle-three"></div>
+                </div>
+            </div>
+        
+            <div class="container">
+                <div class="side-nav-inner">
+                    <div class="side-nav justify-content-center  align-items-center">
+                        <div class="side-item">
+                            <div class="search-box">
+                                <i class="flaticon-loupe"></i>
+                            </div>
+                        </div>
+        
+                        <div class="side-item">
+                            <div class="user-btn">
+                                <a href="#">
+                                    <i class="flaticon-contact"></i>
+                                </a>
+                            </div>
+                        </div>
+        
+                        <div class="side-item">
+                            <div class="nav-add-btn">
+                                <a href={% url "userapi:contact" %} class="nav-menu-btn border-radius">
+                                    Contact us
+                                    <i class='bx bx-plus'></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
-<!-- End Navbar Area -->
-{% endblock header %}

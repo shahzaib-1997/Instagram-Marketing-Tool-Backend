@@ -7,9 +7,9 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+  <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
     integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA=="
-    crossorigin="anonymous" referrerpolicy="no-referrer" />
+    crossorigin="anonymous" referrerpolicy="no-referrer" /> -->
   <!-- Bootstrap CSS -->
   <link rel="stylesheet" href="{% static 'assets/css/bootstrap.min.css' %}">
   <!-- Flaticon CSS -->
@@ -34,7 +34,7 @@
   <!-- Favicon -->
   <link rel="icon" type="image/png" href="{% static 'assets/img/favicon.png' %}">
 
-  <title>{% block title %}{% endblock title %} Zinka - IT & SEO Startup HTML Template</title>
+  <title>{% block title %}{% endblock title %} Zinka - IT & SEO Startup</title>
 
   {% block style %}{% endblock style %}
 </head>
@@ -50,8 +50,36 @@
   </div>
   <!-- End Pre Loader -->
 
+  <!-- Start Navbar Area -->
   {% block header %}{% endblock header %}
+  <!-- End Navbar Area -->
+
+  <!-- Search Overlay -->
+  <div class="search-overlay">
+    <div class="d-table">
+      <div class="d-table-cell">
+        <div class="search-layer"></div>
+        <div class="search-layer"></div>
+        <div class="search-layer"></div>
+
+        <div class="search-close">
+          <span class="search-close-line"></span>
+          <span class="search-close-line"></span>
+        </div>
+
+        <div class="search-form">
+          <form>
+            <input type="text" class="input-search" placeholder="Search here...">
+            <button type="submit"><i class="flaticon-loupe"></i></button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- End Search Overlay -->
+
   {% block content1 %}{% endblock content1%}
+
   <!-- Brand Logo Area -->
   <div class="brand-logo-area">
     <div class="container-fluid">
@@ -241,80 +269,3 @@
 </body>
 
 </html>
-
-
-{% comment %}
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>{% block title %} {% endblock %} Zinka - IT & SEO Startup HTML Template</title>
-  <!-- Bootstrap CSS -->
-  <link rel="stylesheet" href="assets/css/bootstrap.min.css">
-  <!-- Flaticon CSS -->
-  <link rel="stylesheet" href="assets/fonts/flaticon.css">
-  <!-- Boxicons CSS -->
-  <link rel="stylesheet" href="assets/css/boxicons.min.css">
-  <!-- Owl Carousel CSS -->
-  <link rel="stylesheet" href="assets/css/owl.theme.default.min.css">
-  <link rel="stylesheet" href="assets/css/owl.carousel.min.css">
-  <!-- Magnific Popup CSS -->
-  <link rel="stylesheet" href="assets/css/magnific-popup.min.css">
-  <!-- Animate Min CSS -->
-  <link rel="stylesheet" href="assets/css/animate.min.css">
-  <!-- Meanmenu CSS -->
-  <link rel="stylesheet" href="assets/css/meanmenu.css">
-  <!-- Style CSS -->
-  <link rel="stylesheet" href="assets/css/style.css">
-  <!-- Responsive CSS -->
-  <link rel="stylesheet" href="assets/css/responsive.css">
-  <!-- Theme Dark CSS -->
-  <link rel="stylesheet" href="assets/css/theme-dark.css">
-  <!-- Favicon -->
-  <link rel="icon" type="image/png" href="assets/img/favicon.png">
-  {% block style %}{% endblock %}
-  </style>
-</head>
-
-<body>
-  {% block header %}
-  {% endblock %}
-  <main style="flex: 1;">
-    <div class="container">
-      {% if messages %}
-      {% for message in messages %}
-      <div class="alert" data-display-time="5000" style="text-align: center;">
-        <strong>{{ message }}</strong>
-      </div>
-      {% endfor %}
-      {% endif %}
-      {% block content %}
-      {% endblock %}
-    </div>
-  </main>
-  <footer>
-    &copy; Copyright {% now 'Y' %} by Instagram Marketing Tool
-  </footer>
-  <script>
-    // Function to handle the message divs
-    function handleMessages() {
-      const messageDivs = document.querySelectorAll('.alert');
-
-      messageDivs.forEach((messageDiv) => {
-        const displayTime = parseInt(messageDiv.dataset.displayTime);
-
-        // Set a timeout to hide the message after the specified display time
-        setTimeout(() => {
-          messageDiv.style.display = 'none';
-        }, displayTime);
-      });
-    }
-
-    // Call the function when the DOM is loaded
-    document.addEventListener('DOMContentLoaded', handleMessages);
-  </script>
-</body>
-
-</html> {% endcomment %}

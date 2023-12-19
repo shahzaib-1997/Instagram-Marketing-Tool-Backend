@@ -3,72 +3,11 @@
 
 {% block title %}Sign In | {% endblock %}
 
-{% block side_nav %}
-<div class="container">
-  <div class="dot-menu">
-    <div class="circle-inner">
-      <div class="circle circle-one"></div>
-      <div class="circle circle-two"></div>
-      <div class="circle circle-three"></div>
-    </div>
-  </div>
-
-  <div class="container">
-    <div class="side-nav-inner">
-      <div class="side-nav justify-content-center  align-items-center">
-        <div class="side-item">
-          <div class="search-box">
-            <i class="flaticon-loupe"></i>
-          </div>
-        </div>
-
-        <div class="side-item">
-          <div class="user-btn">
-            <a href="#">
-              <i class="flaticon-contact"></i>
-            </a>
-          </div>
-        </div>
-
-        <div class="side-item">
-          <div class="nav-add-btn">
-            <a href="#" class="nav-menu-btn border-radius">
-              Contact us
-              <i class='bx bx-plus'></i>
-            </a>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-{% endblock side_nav %}
+{% block header %}
+{% include "userapi/header.html" %}
+{% endblock header %}
 
 {% block content1 %}
-<!-- Search Overlay -->
-<div class="search-overlay">
-  <div class="d-table">
-    <div class="d-table-cell">
-      <div class="search-layer"></div>
-      <div class="search-layer"></div>
-      <div class="search-layer"></div>
-
-      <div class="search-close">
-        <span class="search-close-line"></span>
-        <span class="search-close-line"></span>
-      </div>
-
-      <div class="search-form">
-        <form>
-          <input type="text" class="input-search" placeholder="Search here...">
-          <button type="submit"><i class="flaticon-loupe"></i></button>
-        </form>
-      </div>
-    </div>
-  </div>
-</div>
-<!-- End Search Overlay -->
-
 <!-- Inner Banner Area -->
 <div class="inner-banner">
   <div class="container">

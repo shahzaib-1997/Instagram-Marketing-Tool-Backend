@@ -117,12 +117,23 @@ class LoginView(APIView):
         return render(request, "userapi/login.html")
 
 
+def pricing(request):
+    return render(request, "userapi/pricing.html")
+
+
+def about(request):
+    return render(request, "userapi/about.html")
+
+
+def contact(request):
+    return render(request, "userapi/contact.html")
+
+
 def logout_user(request):
     if request.user.is_authenticated:
         token = Token.objects.get(user=request.user)
         token.delete()
         logout(request)
-        return redirect("userapi:login")
     return redirect("userapi:login")
 
 
