@@ -48,10 +48,10 @@ MIDDLEWARE = [
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
-    "userapi.middleware.SessionTimeoutMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    "userapi.middleware.SessionTimeoutMiddleware",
 ]
 
 ROOT_URLCONF = "instagram_marketing.urls"
