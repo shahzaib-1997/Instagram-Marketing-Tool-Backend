@@ -50,7 +50,7 @@ class ActivityTime(models.Model):
         "username - timestamp"
     """
 
-    time = models.DateTimeField(auto_now_add=True, null=True, blank=True)
+    time = models.DateTimeField(null=True, blank=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
 
     def __str__(self):
