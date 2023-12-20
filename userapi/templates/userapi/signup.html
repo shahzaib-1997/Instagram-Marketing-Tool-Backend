@@ -3,10 +3,6 @@
 
 {% block title %}Sign Up | {% endblock %}
 
-{% block header %}
-{% include "userapi/header.html" %}
-{% endblock header %}
-
 {% block content1 %}
 <!-- Inner Banner Area -->
 <div class="inner-banner">
@@ -62,6 +58,13 @@
       <div class="col-lg-7">
         <div class="user-all-form">
           <div class="contact-form">
+            <div class="container">
+              {% if messages %}
+              {% for message in messages %}
+              <div class="alert" data-display-time="6000"><strong>{{ message }}</strong></div>
+              {% endfor %}
+              {% endif %}
+            </div>
             <form method="POST" action="{%url 'userapi:signup'%}">
               <div class="row">
                 <div class="col-lg-12 ">
@@ -115,6 +118,23 @@
 </div>
 <!-- Sign Up Area End -->
 <script>
+  // Function to handle the message divs
+  function handleMessages() {
+    const messageDivs = document.querySelectorAll('.alert');
+
+    messageDivs.forEach((messageDiv) => {
+      const displayTime = parseInt(messageDiv.dataset.displayTime);
+
+      // Set a timeout to hide the message after the specified display time
+      setTimeout(() => {
+        messageDiv.style.display = 'none';
+      }, displayTime);
+    });
+  }
+
+  // Call the function when the DOM is loaded
+  document.addEventListener('DOMContentLoaded', handleMessages);
+
   function togglePassword() {
     const passwordInput = document.getElementById("password-input");
     passwordInput.type = passwordInput.type === "password" ? "text" : "password";
@@ -122,23 +142,3 @@
 </script>
 {% endblock content1 %}
 
-{% block content %}
-<div class="signup-page">
-  <div class="form">
-    <form method="POST" action="{%url 'userapi:signup'%}">
-      {% csrf_token %}
-      <input type="email" placeholder="Enter Email Address" name="email" required>
-      <input type="text" placeholder="Enter Username" name="username" required>
-      <div class="password-input-wrapper">
-        <input type="password" placeholder="Enter Password" name="password" id="password-input" required>
-        <i class="fas fa-eye" id="eye-icon" onclick="togglePassword()"></i>
-      </div>
-      <button>Sign Up</button>
-      <p class="message">
-        Already registered? <a href="{%url 'userapi:login'%}">Login</a>
-      </p>
-    </form>
-  </div>
-</div>
-
-{% endblock %}

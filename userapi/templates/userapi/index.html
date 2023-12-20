@@ -1,36 +1,6 @@
 {% extends "userapi/base.html" %}
 {% load static %}
 
-{% block header %}
-{% include "userapi/header.html" %}
-{% endblock header %}
-
-{% block side_nav %}
-<div class="container">
-    <div class="dot-menu">
-        <div class="circle-inner">
-            <div class="circle circle-one"></div>
-            <div class="circle circle-two"></div>
-            <div class="circle circle-three"></div>
-        </div>
-    </div>
-    <div class="container">
-        <div class="side-nav-inner">
-            <div class="side-nav side-nav-two justify-content-center  align-items-center">
-                <div class="side-item">
-                    <div class="nav-add-btn">
-                        <a href={% url "userapi:login" %} class="nav-menu-btn border-radius">
-                            Get Started
-                            <i class='bx bx-plus'></i>
-                        </a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-{% endblock side_nav %}
-
 {% block content1 %}
 <!-- Banner Area Three -->
 <div class="banner-area-three">
