@@ -24,11 +24,9 @@ Usage:
     requests meets specific criteria.
 """
 
-from django.contrib import messages
 from django.contrib.auth.models import User
-from django.contrib.auth import authenticate, update_session_auth_hash
 from rest_framework import serializers
-from .dry import check_email, check_password
+from .dry import check_password
 from .models import (
     ActivityLog,
     ActivityTime,
@@ -74,7 +72,7 @@ class RegistrationSerializer(serializers.ModelSerializer):
         """
         Validate the email address during user registration.
 
-        This method checks whether the provided email address is valid and not already in use.
+        This method checks whether the provided email address is not already in use.
 
         Args:
             value (str): The email address to be validated.
@@ -89,10 +87,7 @@ class RegistrationSerializer(serializers.ModelSerializer):
             >>> validate_email("test@example.com")
             "test@example.com"
         """
-        # if not check_email(value):
-        #     raise serializers.ValidationError("Email not valid!")
         if User.objects.filter(email=value).exists():
-            messages.error(self.context["request"], "A user with that email already exists.")
             raise serializers.ValidationError("A user with that email already exists.")
         return value
 
@@ -117,7 +112,6 @@ class RegistrationSerializer(serializers.ModelSerializer):
         """
         check, message = check_password(value)
         if not check:
-            messages.error(self.context["request"], message)
             raise serializers.ValidationError(message)
         return value
 
@@ -128,21 +122,7 @@ class PasswordChangeSerializer(serializers.Serializer):
     def validate_new_password(self, password):
         check, message = check_password(password)
         if not check:
-            messages.error(self.context["request"], message)
             raise serializers.ValidationError(message)
-        id = self.context["request"].session["user"]
-        user = User.objects.get(id=id)
-        if authenticate(username=user.username, password=password):
-            messages.error(self.context["request"], "New Password is same as Current password!")
-            raise serializers.ValidationError(
-                "New Password is same as current password!"
-            )
-        user.set_password(password)
-        user.save()
-
-        self.context["request"].session.pop("user")
-        update_session_auth_hash(self.context["request"], user)
-        
         return password
 
 

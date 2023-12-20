@@ -6,7 +6,7 @@ from rest_framework.views import APIView
 from django.db.models import Q
 from django.shortcuts import get_object_or_404, render, redirect
 from django.contrib.auth.models import User
-from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth import authenticate, login, logout, update_session_auth_hash
 from django.contrib import messages
 from .dry import BaseAPIView, RenderAPIView, szr_val_save, add_user
 from .models import (
@@ -64,7 +64,7 @@ class DashboardView(APIView):
             token, _ = Token.objects.get_or_create(user=request.user)
             request.session["token"] = token.key
             return render(request, "userapi/dashboard.html")
-        messages.error(request, 'You need to login first.')
+        messages.error(request, "You need to login first.")
         return redirect("userapi:login")
 
 
@@ -76,8 +76,6 @@ class SignupView(APIView):
 
     def post(self, request):
         try:
-            if User.objects.filter(username=request.POST["username"]).exists():
-                messages.error(request, "A user with that username already exists.")
             serializer = RegistrationSerializer(
                 data=request.POST, context={"request": request}
             )
@@ -86,8 +84,12 @@ class SignupView(APIView):
                 User.objects.create_user(**validated_data)
                 messages.success(request, "User registered successfully.")
                 return redirect("userapi:login")
+            else:
+                for value in serializer.errors.values():
+                    error = value[0].replace('/', '')
+                    messages.error(request, f"{error}")
         except Exception as e:
-            messages.error(request, e)
+            messages.error(request, str(e))
         return render(request, "userapi/signup.html")
 
 
@@ -113,7 +115,7 @@ class LoginView(APIView):
                     return redirect("userapi:dashboard")
                 messages.error(request, "Password is incorrect!")
         except Exception as e:
-            messages.error(request, e)
+            messages.error(request, str(e))
         return render(request, "userapi/login.html")
 
 
@@ -142,12 +144,14 @@ class ProfileView(APIView):
         try:
             if request.user.is_authenticated:
                 serializer = ProfileSerializer(request.user)
-                return render(request, "userapi/profile.html", {"data": serializer.data})
+                return render(
+                    request, "userapi/profile.html", {"data": serializer.data}
+                )
             else:
-                messages.error(request, 'You need to login first.')
+                messages.error(request, "You need to login first.")
                 return redirect("userapi:login")
         except Exception as e:
-            messages.error(request, e)
+            messages.error(request, str(e))
             return redirect("userapi:dashboard")
 
     def post(self, request):
@@ -155,26 +159,23 @@ class ProfileView(APIView):
             serializer = ProfileSerializer(request.user, data=request.POST)
             check = szr_val_save(serializer)
             if check:
-                messages.success(request, "Profile Updated Successfully.") 
+                messages.success(request, "Profile Updated Successfully.")
             else:
                 for error in serializer.errors.values():
                     messages.error(request, json.dumps(error)[2:-2])
         except Exception as e:
-            messages.error(request, e)
+            messages.error(request, str(e))
         return redirect("userapi:profile")
 
     def delete(self, request):
         try:
             user = request.user
             user.delete()
-            return Response(
-                {"message": "User deleted successfully."},
-                status=status.HTTP_204_NO_CONTENT,
-            )
+            messages.success(request, "User deleted successfully.")
+            return redirect("userapi:signup")
         except Exception as e:
-            return Response(
-                {"message": f"Error: {e}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR
-            )
+            messages.error(request, str(e))
+        return redirect("userapi:profile")
 
 
 class PasswordChangeUsernameView(APIView):
@@ -198,12 +199,27 @@ class PasswordChangeView(APIView):
         return redirect("userapi:password-change-user")
 
     def post(self, request):
-        serializer = PasswordChangeSerializer(
-            data=request.POST, context={"request": request}
-        )
-        if serializer.is_valid():
-            messages.success(request, "Password changed successfully.")
-            return redirect("userapi:login")
+        try:
+            serializer = PasswordChangeSerializer(data=request.POST)
+            if serializer.is_valid():
+                password = request.POST["new_password"]
+                id = request.session["user"]
+                user = get_object_or_404(User, pk=id)
+                if authenticate(username=user.username, password=password):
+                    messages.error(request, "New Password is same as current password!")
+                request.session.pop("user", None)
+                user.set_password(password)
+                user.save()
+                update_session_auth_hash(request, user)
+
+                messages.success(request, "Password changed successfully.")
+                return redirect("userapi:login")
+            else:
+                for value in serializer.errors.values():
+                    error = value[0].replace('/', '')
+                    messages.error(request, f"{error}")
+        except Exception as e:
+            messages.error(request, str(e))
         return render(request, "userapi/password_change.html")
 
 
@@ -276,9 +292,7 @@ class CredentialView(BaseAPIView, RenderAPIView):
 
     def put(self, request, pk):
         try:
-            credential = get_object_or_404(
-                Credential, pk=pk, user=request.user
-            )
+            credential = get_object_or_404(Credential, pk=pk, user=request.user)
             mutable_data = add_user(request.data.copy(), request.user.id)
             serializer = CredentialSerializer(credential, data=mutable_data)
             return szr_val_save(serializer)
@@ -289,9 +303,7 @@ class CredentialView(BaseAPIView, RenderAPIView):
 
     def delete(self, request, pk):
         try:
-            credential = get_object_or_404(
-                Credential, pk=pk, user=request.user
-            )
+            credential = get_object_or_404(Credential, pk=pk, user=request.user)
             credential.delete()
             return Response(
                 {"message": "Insta Credential deleted successfully."},
