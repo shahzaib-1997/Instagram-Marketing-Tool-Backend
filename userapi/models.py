@@ -159,6 +159,11 @@ class Target(models.Model):
         __str__: Returns a string representation of the object.
     """
 
+    options = [
+        (0, 'Not Started'),
+        (1, 'Running'),
+        (2, 'Completed'),
+    ]    
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     target_type = models.ForeignKey(
         TargetType, on_delete=models.CASCADE, null=True, blank=True
@@ -168,6 +173,7 @@ class Target(models.Model):
     )
     actions = models.ForeignKey(Action, on_delete=models.CASCADE, null=True, blank=True)
     time_stamp = models.DateTimeField(auto_now_add=True, blank=True, null=True)
+    status = models.IntegerField(choices=options, default=0)
 
     def __str__(self):
         """
