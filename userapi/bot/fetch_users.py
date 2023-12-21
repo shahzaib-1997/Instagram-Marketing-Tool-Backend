@@ -12,7 +12,7 @@ def fetch_users():
         header = requests.post("http://127.0.0.1:8000/token/", data={"user_id": user}).json()
         targets = requests.get("http://127.0.0.1:8000/target/", headers=header).json()
         insta_credentials = requests.get("http://127.0.0.1:8000/credential/", data={"user_id": user}, headers=header).json()
-        if True:
+        while True:
             for current_user in insta_credentials:
                 profile_id = current_user["profile_id"]
                 #create insta bot object with relevant profile_id     
@@ -38,6 +38,8 @@ def fetch_users():
                         print("Time Matched")
                         if current_status == 0:
                             user_bot.start_browser()
+                            target["status"] = 1
+                            update_status = requests.put(f"http://127.0.0.1:8000/target/{current_id}/", headers=header, data=target)
                             if current_target == "hashtags":
                                 data = requests.get("http://127.0.0.1:8000/hashtag/", params={"target_id": current_id}, headers=header).json()
                                 #perform hashtag function
@@ -82,9 +84,21 @@ def fetch_users():
                                 for reel_url in data:
                                     url = reel_url["url"]
                                     user_bot.single_reel_liker(url)
-                                    random_sleep()                        
+                                    random_sleep()    
 
+                            target["status"] = 2
+                            update_status = requests.put(f"http://127.0.0.1:8000/target/{current_id}/", headers=header, data=target)
+                        
+                        elif current_status == 1:
+                            print("The program is currently running")
+
+                        elif current_status == 2:
+                            print("The target is already fullfilled")  
+
+                        try:
                             user_bot.driver.close()
+                        except:
+                            pass
                 
 
 def random_sleep():
