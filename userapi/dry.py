@@ -131,7 +131,7 @@ def add_user(mutable_data, user_id):
     return mutable_data
 
 
-def szr_val_save(serializer, status_code=status.HTTP_200_OK):
+def szr_val_save(serializer):
     """
     Validate and save a serializer instance.
 
