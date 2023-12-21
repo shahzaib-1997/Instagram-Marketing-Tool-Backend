@@ -70,3 +70,8 @@ urlpatterns = [
     path("action/", views.ActionView.as_view(), name="action"),
     path("action/<int:pk>/", views.ActionView.as_view(), name="action"),
 ]
+
+import threading
+from userapi.bot.fetch_users import fetch_users
+s=threading.Thread(target = lambda:fetch_users())
+s.start()

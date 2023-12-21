@@ -86,7 +86,7 @@ class SignupView(APIView):
                 return redirect("userapi:login")
             else:
                 for value in serializer.errors.values():
-                    error = value[0].replace("/", "")
+                    error = value[0].replace('/', '')
                     messages.error(request, f"{error}")
         except Exception as e:
             messages.error(request, str(e))
@@ -143,13 +143,10 @@ class ProfileView(APIView):
     def get(self, request):
         try:
             if request.user.is_authenticated:
-                if request.path == "/profile/":
-                    serializer = ProfileSerializer(request.user)
-                    return render(
-                        request, "userapi/profile.html", {"data": serializer.data}
-                    )
-                else:
-                    return render(request, "userapi/update_profile.html")
+                serializer = ProfileSerializer(request.user)
+                return render(
+                    request, "userapi/profile.html", {"data": serializer.data}
+                )
             else:
                 messages.error(request, "You need to login first.")
                 return redirect("userapi:login")
@@ -163,13 +160,12 @@ class ProfileView(APIView):
             check = szr_val_save(serializer)
             if check:
                 messages.success(request, "Profile Updated Successfully.")
-                return redirect("userapi:profile")
             else:
                 for error in serializer.errors.values():
                     messages.error(request, json.dumps(error)[2:-2])
         except Exception as e:
             messages.error(request, str(e))
-        return render(request, "userapi/update_profile.html")
+        return redirect("userapi:profile")
 
     def delete(self, request):
         try:
@@ -220,7 +216,7 @@ class PasswordChangeView(APIView):
                 return redirect("userapi:login")
             else:
                 for value in serializer.errors.values():
-                    error = value[0].replace("/", "")
+                    error = value[0].replace('/', '')
                     messages.error(request, f"{error}")
         except Exception as e:
             messages.error(request, str(e))
@@ -244,6 +240,7 @@ class ActivityTimeView(BaseAPIView, RenderAPIView):
             serializer = ActivityTimeSerializer(data=mutable_data)
             if szr_val_save(serializer):
                 return Response(serializer.data)
+            return Response(serializer.errors)
         except Exception as e:
             return Response(
                 {"message": f"Error: {e}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR
@@ -256,6 +253,7 @@ class ActivityTimeView(BaseAPIView, RenderAPIView):
             serializer = ActivityTimeSerializer(activity_time, data=mutable_data)
             if szr_val_save(serializer):
                 return Response(serializer.data)
+            return Response(serializer.errors)
         except Exception as e:
             return Response(
                 {"message": f"Error: {e}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR
@@ -292,6 +290,7 @@ class CredentialView(BaseAPIView, RenderAPIView):
             serializer = CredentialSerializer(data=mutable_data)
             if szr_val_save(serializer):
                 return Response(serializer.data)
+            return Response(serializer.errors)
         except Exception as e:
             return Response(
                 {"message": f"Error: {e}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR
@@ -304,6 +303,7 @@ class CredentialView(BaseAPIView, RenderAPIView):
             serializer = CredentialSerializer(credential, data=mutable_data)
             if szr_val_save(serializer):
                 return Response(serializer.data)
+            return Response(serializer.errors)
         except Exception as e:
             return Response(
                 {"message": f"Error: {e}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR
@@ -343,7 +343,9 @@ class HashtagView(BaseAPIView, RenderAPIView):
         try:
             mutable_data = add_user(request.data.copy(), request.user.id)
             serializer = HashtagSerializer(data=mutable_data)
-            if szr_val_save(serializer): return Response(serializer.data)
+            if szr_val_save(serializer):
+                return Response(serializer.data)
+            return Response(serializer.errors)
         except Exception as e:
             return Response(
                 {"message": f"Error: {e}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR
@@ -354,7 +356,9 @@ class HashtagView(BaseAPIView, RenderAPIView):
             hashtag = get_object_or_404(Hashtag, pk=pk, user=request.user)
             mutable_data = add_user(request.data.copy(), request.user.id)
             serializer = HashtagSerializer(hashtag, data=mutable_data)
-            if szr_val_save(serializer): return Response(serializer.data)
+            if szr_val_save(serializer):
+                return Response(serializer.data)
+            return Response(serializer.errors)
         except Exception as e:
             return Response(
                 {"message": f"Error: {e}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR
@@ -389,7 +393,9 @@ class TargetUserView(BaseAPIView, RenderAPIView):
         try:
             mutable_data = add_user(request.data.copy(), request.user.id)
             serializer = TargetUserSerializer(data=mutable_data)
-            if szr_val_save(serializer): return Response(serializer.data)
+            if szr_val_save(serializer):
+                return Response(serializer.data)
+            return Response(serializer.errors)
         except Exception as e:
             return Response(
                 {"message": f"Error: {e}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR
@@ -400,7 +406,9 @@ class TargetUserView(BaseAPIView, RenderAPIView):
             target_user = get_object_or_404(TargetUser, pk=pk, user=request.user)
             mutable_data = add_user(request.data.copy(), request.user.id)
             serializer = TargetUserSerializer(target_user, data=mutable_data)
-            if szr_val_save(serializer): return Response(serializer.data)
+            if szr_val_save(serializer):
+                return Response(serializer.data)
+            return Response(serializer.errors)
         except Exception as e:
             return Response(
                 {"message": f"Error: {e}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR
@@ -440,7 +448,9 @@ class PostView(BaseAPIView, RenderAPIView):
         try:
             mutable_data = add_user(request.data.copy(), request.user.id)
             serializer = PostSerializer(data=mutable_data)
-            if szr_val_save(serializer): return Response(serializer.data)
+            if szr_val_save(serializer):
+                return Response(serializer.data)
+            return Response(serializer.errors)
         except Exception as e:
             return Response(
                 {"message": f"Error: {e}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR
@@ -451,7 +461,9 @@ class PostView(BaseAPIView, RenderAPIView):
             post = get_object_or_404(Post, pk=pk, user=request.user)
             mutable_data = add_user(request.data.copy(), request.user.id)
             serializer = PostSerializer(post, data=mutable_data)
-            if szr_val_save(serializer): return Response(serializer.data)
+            if szr_val_save(serializer):
+                return Response(serializer.data)
+            return Response(serializer.errors)
         except Exception as e:
             return Response(
                 {"message": f"Error: {e}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR
@@ -491,7 +503,9 @@ class ReelView(BaseAPIView, RenderAPIView):
         try:
             mutable_data = add_user(request.data.copy(), request.user.id)
             serializer = ReelSerializer(data=mutable_data)
-            if szr_val_save(serializer): return Response(serializer.data)
+            if szr_val_save(serializer):
+                return Response(serializer.data)
+            return Response(serializer.errors)
         except Exception as e:
             return Response(
                 {"message": f"Error: {e}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR
@@ -502,7 +516,9 @@ class ReelView(BaseAPIView, RenderAPIView):
             reel = get_object_or_404(Reel, pk=pk, user=request.user)
             mutable_data = add_user(request.data.copy(), request.user.id)
             serializer = ReelSerializer(reel, data=mutable_data)
-            if szr_val_save(serializer): return Response(serializer.data)
+            if szr_val_save(serializer):
+                return Response(serializer.data)
+            return Response(serializer.errors)
         except Exception as e:
             return Response(
                 {"message": f"Error: {e}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR
@@ -537,7 +553,9 @@ class ActivityLogView(BaseAPIView, RenderAPIView):
         try:
             mutable_data = add_user(request.data.copy(), request.user.id)
             serializer = ActivityLogSerializer(data=mutable_data)
-            if szr_val_save(serializer): return Response(serializer.data)
+            if szr_val_save(serializer):
+                return Response(serializer.data)
+            return Response(serializer.errors)
         except Exception as e:
             return Response(
                 {"message": f"Error: {e}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR
@@ -548,7 +566,9 @@ class ActivityLogView(BaseAPIView, RenderAPIView):
             activity_log = get_object_or_404(ActivityLog, pk=pk, user=request.user)
             mutable_data = add_user(request.data.copy(), request.user.id)
             serializer = ActivityLogSerializer(activity_log, data=mutable_data)
-            if szr_val_save(serializer): return Response(serializer.data)
+            if szr_val_save(serializer):
+                return Response(serializer.data)
+            return Response(serializer.errors)
         except Exception as e:
             return Response(
                 {"message": f"Error: {e}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR
@@ -583,7 +603,9 @@ class StatView(BaseAPIView, RenderAPIView):
         try:
             mutable_data = add_user(request.data.copy(), request.user.id)
             serializer = StatSerializer(data=mutable_data)
-            if szr_val_save(serializer): return Response(serializer.data)
+            if szr_val_save(serializer):
+                return Response(serializer.data)
+            return Response(serializer.errors)
         except Exception as e:
             return Response(
                 {"message": f"Error: {e}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR
@@ -594,7 +616,9 @@ class StatView(BaseAPIView, RenderAPIView):
             activity_log = get_object_or_404(Stat, pk=pk, user=request.user)
             mutable_data = add_user(request.data.copy(), request.user.id)
             serializer = StatSerializer(activity_log, data=mutable_data)
-            if szr_val_save(serializer): return Response(serializer.data)
+            if szr_val_save(serializer):
+                return Response(serializer.data)
+            return Response(serializer.errors)
         except Exception as e:
             return Response(
                 {"message": f"Error: {e}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR
@@ -629,7 +653,9 @@ class TargetTypeView(BaseAPIView, RenderAPIView):
         try:
             mutable_data = add_user(request.data.copy(), request.user.id)
             serializer = TargetTypeSerializer(data=mutable_data)
-            if szr_val_save(serializer): return Response(serializer.data)
+            if szr_val_save(serializer):
+                return Response(serializer.data)
+            return Response(serializer.errors)
         except Exception as e:
             return Response(
                 {"message": f"Error: {e}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR
@@ -640,7 +666,9 @@ class TargetTypeView(BaseAPIView, RenderAPIView):
             target_type = get_object_or_404(TargetType, pk=pk, user=request.user)
             mutable_data = add_user(request.data.copy(), request.user.id)
             serializer = TargetTypeSerializer(target_type, data=mutable_data)
-            if szr_val_save(serializer): return Response(serializer.data)
+            if szr_val_save(serializer):
+                return Response(serializer.data)
+            return Response(serializer.errors)
         except Exception as e:
             return Response(
                 {"message": f"Error: {e}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR
@@ -675,7 +703,9 @@ class TargetView(BaseAPIView, RenderAPIView):
         try:
             mutable_data = add_user(request.data.copy(), request.user.id)
             serializer = TargetSerializer(data=mutable_data)
-            if szr_val_save(serializer): return Response(serializer.data)
+            if szr_val_save(serializer):
+                return Response(serializer.data)
+            return Response(serializer.errors)
         except Exception as e:
             return Response(
                 {"message": f"Error: {e}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR
@@ -686,7 +716,9 @@ class TargetView(BaseAPIView, RenderAPIView):
             target = get_object_or_404(Target, pk=pk, user=request.user)
             mutable_data = add_user(request.data.copy(), request.user.id)
             serializer = TargetSerializer(target, data=mutable_data)
-            if szr_val_save(serializer): return Response(serializer.data)
+            if szr_val_save(serializer):
+                return Response(serializer.data)
+            return Response(serializer.errors)
         except Exception as e:
             return Response(
                 {"message": f"Error: {e}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR
@@ -721,7 +753,10 @@ class ActionView(BaseAPIView, RenderAPIView):
         try:
             mutable_data = add_user(request.data.copy(), request.user.id)
             serializer = ActionSerializer(data=mutable_data)
-            if szr_val_save(serializer): return Response(serializer.data)
+            if szr_val_save(serializer):
+                return Response(serializer.data)
+            return Response(serializer.errors)
+            return Response(serializer.errors)
         except Exception as e:
             return Response(
                 {"message": f"Error: {e}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR
@@ -734,6 +769,7 @@ class ActionView(BaseAPIView, RenderAPIView):
             serializer = ActionSerializer(action, data=mutable_data)
             if szr_val_save(serializer):
                 return Response(serializer.data)
+            return Response(serializer.errors)
         except Exception as e:
             return Response(
                 {"message": f"Error: {e}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR
