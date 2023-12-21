@@ -86,7 +86,7 @@ class SignupView(APIView):
                 return redirect("userapi:login")
             else:
                 for value in serializer.errors.values():
-                    error = value[0].replace('/', '')
+                    error = value[0].replace("/", "")
                     messages.error(request, f"{error}")
         except Exception as e:
             messages.error(request, str(e))
@@ -143,10 +143,13 @@ class ProfileView(APIView):
     def get(self, request):
         try:
             if request.user.is_authenticated:
-                serializer = ProfileSerializer(request.user)
-                return render(
-                    request, "userapi/profile.html", {"data": serializer.data}
-                )
+                if request.path == "/profile/":
+                    serializer = ProfileSerializer(request.user)
+                    return render(
+                        request, "userapi/profile.html", {"data": serializer.data}
+                    )
+                else:
+                    return render(request, "userapi/update_profile.html")
             else:
                 messages.error(request, "You need to login first.")
                 return redirect("userapi:login")
@@ -160,12 +163,13 @@ class ProfileView(APIView):
             check = szr_val_save(serializer)
             if check:
                 messages.success(request, "Profile Updated Successfully.")
+                return redirect("userapi:profile")
             else:
                 for error in serializer.errors.values():
                     messages.error(request, json.dumps(error)[2:-2])
         except Exception as e:
             messages.error(request, str(e))
-        return redirect("userapi:profile")
+        return render(request, "userapi/update_profile.html")
 
     def delete(self, request):
         try:
@@ -216,7 +220,7 @@ class PasswordChangeView(APIView):
                 return redirect("userapi:login")
             else:
                 for value in serializer.errors.values():
-                    error = value[0].replace('/', '')
+                    error = value[0].replace("/", "")
                     messages.error(request, f"{error}")
         except Exception as e:
             messages.error(request, str(e))

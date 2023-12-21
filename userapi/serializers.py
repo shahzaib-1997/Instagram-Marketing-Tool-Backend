@@ -145,6 +145,29 @@ class ProfileSerializer(serializers.ModelSerializer):
         model = User
         fields = ["username", "email"]
 
+    def validate_email(self, value):
+        """
+        Validate the email address during user registration.
+
+        This method checks whether the provided email address is not already in use.
+
+        Args:
+            value (str): The email address to be validated.
+
+        Raises:
+            serializers.ValidationError: If the email is not valid or already exists.
+
+        Returns:
+            str: The validated email address.
+
+        Example:
+            >>> validate_email("test@example.com")
+            "test@example.com"
+        """
+        if User.objects.filter(email=value).exists():
+            raise serializers.ValidationError("A user with that email already exists.")
+        return value
+
 
 class ActivityTimeSerializer(serializers.ModelSerializer):
     """

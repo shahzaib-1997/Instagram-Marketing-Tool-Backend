@@ -1,14 +1,14 @@
 {% extends "userapi/base.html" %}
 {% load static %}
 
-{% block title %}Profile | {% endblock %}
+{% block title %}Update Profile | {% endblock %}
 
 {% block content1 %}
 <!-- Inner Banner Area -->
 <div class="inner-banner">
     <div class="container">
         <div class="inner-title text-center">
-            <h3>Your Profile</h3>
+            <h3>Update Profile</h3>
             <ul>
                 <li>
                     <a href="index.html">Home</a>
@@ -16,7 +16,7 @@
                 <li>
                     <i class='bx bx-chevron-right'></i>
                 </li>
-                <li>Your Profile</li>
+                <li>Update Profile</li>
             </ul>
         </div>
     </div>
@@ -45,7 +45,7 @@
     <div class="container">
         <div class="section-title text-center">
             <span class="sp-before sp-after">Your Profile</span>
-            <h2 class="h2-color">View or Update Your Profile!</h2>
+            <h2 class="h2-color">View or Update your Profile!</h2>
         </div>
         <div class="row align-items-center pt-45">
             <div class="col-lg-5">
@@ -66,13 +66,14 @@
                         </div>
                         <div class="row">
                             <div class="col-lg-12 ">
-                                <div class="form-group" id="view-mode">
-                                    <p><strong>Username:</strong> <span>{{ data.username }}</span></p>
-                                    <p><strong>Email:</strong> <span>{{ data.email }}</span></p>
-                                    <a href={%url "userapi:update-profile" %}>Edit Profile</a>
-                                    <div class="message">
-                                        <a href={%url "userapi:password-change-user" %}>Change Password</a>
-                                    </div>
+                                <div>
+                                    <form action={% url "userapi:update-profile" %} method="POST">
+                                        {% csrf_token %}
+                                        <input type="text" name="username" placeholder="Enter New Username"
+                                            required><br>
+                                        <input type="email" name="email" placeholder="Enter New Email" required><br>
+                                        <button>Submit Changes</button>
+                                    </form>
                                 </div>
                             </div>
                         </div>
@@ -82,5 +83,4 @@
         </div>
     </div>
 </div>
-
 {% endblock %}

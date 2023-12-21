@@ -44,6 +44,7 @@ urlpatterns = [
     path('terms-condition/', views.pricing, name='terms-condition'),
     path('contact/', views.contact, name='contact'),
     path("profile/", views.ProfileView.as_view(), name="profile"),
+    path("update-profile/", views.ProfileView.as_view(), name="update-profile"),
     path("password-change-user/", views.PasswordChangeUsernameView.as_view(), name="password-change-user"),
     path("password-change/", views.PasswordChangeView.as_view(), name="password-change"),
     path('dashboard/', views.DashboardView.as_view(), name='dashboard'),
