@@ -72,6 +72,11 @@
               </li>
               {% if request.user.is_authenticated %}
               <li class="nav-item">
+                <a href="{% url 'userapi:dashboard' %}" class="nav-link">
+                  Dashboard
+                </a>
+              </li>
+              <li class="nav-item">
                 <a href="{% url 'userapi:profile' %}" class="nav-link">
                   Your Profile
                 </a>
