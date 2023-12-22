@@ -19,19 +19,12 @@
     }
 
     .toggle-button {
-        position: relative;
         margin: 10px;
     }
 
-    /* .toggle-button .bx {
-        margin-left: 0.5rem;
-    } */
-
-    .toggle-content {
-        margin: 5px;
-
+    #labels {
+        margin-bottom: 10px;
     }
-
     /* More specific styling for labels, inputs, etc. can be added here */
 </style>
 {% endblock style %}
@@ -75,110 +68,154 @@
 <!-- Inner Banner Area End -->
 
 <div class="dashboard-container">
-    <div class="d-flex justify-content-between align-items-center">
+    <div class="btn-group">
+        <button type="button" class="btn btn-primary" onclick="showDiv('settingsDiv')">Settings</button>
+        <button type="button" class="btn btn-primary" onclick="showDiv('activityLogDiv')">Activity Log</button>
+        <button type="button" class="btn btn-primary" onclick="showDiv('statsDiv')">Stats</button>
+        <a class="align-self-center">5 Min Setup</a>
+    </div>
+    <div id="settingsDiv" class="hidden">
+        <div class="toggle-button">
+            <button class="btn btn-primary" onclick="toggleDisplay('inner-data-targeting')">
+                <i class='bx bx-chevron-down'></i>
+                Targeting
+            </button>
+        </div>
+        <div id="inner-data-targeting" style="display: none;" class="toggle-content">
+            <label>
+                <input class="radio" name="type" type="radio" value="post-like" checked="">
+                <span>
+                    Post (like)
+                </span>
+            </label>
+
+            <label>
+                <input class="radio" name="type" type="radio" value="post-comment">
+                <span>
+                    Post (comment)
+                </span>
+            </label>
+
+            <label>
+                <input class="radio" name="type" type="radio" value="comment-like">
+                <span>
+                    Comment (like)
+                </span>
+            </label>
+
+            <label>
+                <input class="radio" name="type" type="radio" value="reels-view">
+                <span>
+                    Reels (view)
+                </span>
+            </label>
+
+            <label>
+                <input class="radio" name="type" type="radio" value="reels-like">
+                <span>
+                    Reels (like)
+                </span>
+            </label>
+
+            <label>
+                <input class="radio" name="type" type="radio" value="reels-comment">
+                <span>
+                    Reels (comment)
+                </span>
+            </label>
+
+            <label>
+                <input class="radio" name="type" type="radio" value="hashtag-like">
+                <span>
+                    #Hashtags (like)
+                </span>
+            </label>
+
+            <label>
+                <input class="radio" name="type" type="radio" value="hashtag-comment">
+                <span>
+                    #Hashtags (comment)
+                </span>
+            </label>
+            <div class="btn-group">
+                <button class="btn btn-primary">
+                    Targets list
+                </button>
+                <button class="btn btn-primary">
+                    Clear targets
+                </button>
+                <button class="btn btn-primary">
+                    View targets
+                </button>
+                <button class="btn btn-primary">
+                    Copy targets
+                </button>
+                <button class="btn btn-primary">
+                    Insert targets
+                </button>
+            </div>
+            <p>
+                <label class="form-label">
+                    <input name="search" type="text">
+                    Search
+                </label>
+            </p>
+        </div>
+        <div class="toggle-button">
+            <button class="btn btn-primary" onclick="toggleDisplay('inner-data-activity')">
+                <i class='bx bx-chevron-down'></i>
+                Activity Time Settings
+            </button>
+        </div>
+        <div id="inner-data-activity" style="display: none;" class="toggle-content">
+            <p>
+                Activity Time Div
+            </p>
+        </div>
+        <div class="toggle-button">
+            <button class="btn btn-primary" onclick="toggleDisplay('inner-data-followers')">
+                <i class='bx bx-chevron-down'></i>
+                Followers Source Tracking
+            </button>
+        </div>
+        <div id="inner-data-followers" style="display: none;" class="toggle-content">
+            <p>
+                Followers Source Div
+            </p>
+        </div>
+        <div class="form-group">
+            <label for="labels" class="form-label">
+                Labels
+            </label>
+            <br>
+            <input id="labels" name="labels" type="text" placeholder="Select the label..." value="">
+        </div>
         <div class="btn-group">
-            <button type="submit" class="btn btn-primary">Settings</button>
-            <button type="submit" class="btn btn-primary">Activity Log</button>
-            <button type="submit" class="btn btn-primary">Stats</button>
-            <a class="align-self-center">5 Min Setup</a>
+            <button class="btn btn-primary" type="submit">
+                Start Tasks
+            </button>
         </div>
     </div>
-    <div class="toggle-button">
-        <button class="btn btn-primary" onclick="toggleDisplay('inner-data-targeting')">
-            <i class='bx bx-chevron-down'></i>
-            Targeting
-        </button>
+    <div id="activityLogDiv" class="hidden" style="display: none;">
+        <!-- Content for Activity Log Div -->
+        <h2>Activity Log Div Content</h2>
     </div>
-    <div id="inner-data-targeting" style="display: none;" class="toggle-content">
-        <label>
-            <input class="radio" name="type" type="radio" value="people_followers" checked="">
-            <span>
-                <span class="icon"></span>
-                Post (like) </span>
-        </label>
-
-        <label>
-            <input class="radio" name="type" type="radio" value="people_likers">
-            <span>
-                <span class="icon"></span>
-                Post (comment) </span>
-        </label>
-
-        <label>
-            <input class="radio" name="type" type="radio" value="people_likers">
-            <span>
-                <span class="icon"></span>
-                Comment (like) </span>
-        </label>
-
-        <label>
-            <input class="radio" name="type" type="radio" value="reels">
-            <span>
-                <span class="icon"></span>
-                Reels (view) </span>
-        </label>
-
-        <label>
-            <input class="radio" name="type" type="radio" value="reels">
-            <span>
-                <span class="icon"></span>
-                Reels (like) </span>
-        </label>
-
-        <label>
-            <input class="radio" name="type" type="radio" value="reels">
-            <span>
-                <span class="icon"></span>
-                Reels (comment) </span>
-        </label>
-
-        <label>
-            <input class="radio" name="type" type="radio" value="hashtag_likers">
-            <span>
-                <span class="icon"></span>
-                #Hashtags (like) </span>
-        </label>
-
-        <label>
-            <input class="radio" name="type" type="radio" value="hashtag">
-            <span>
-                <span class="icon"></span>
-                #Hashtags (comment) </span>
-        </label>
-        <p>
-            <label class="form-label" for="search">Search</label>
-            <input name="search" type="text">
-        </p>
-    </div>
-    <div class="toggle-button">
-        <button class="btn btn-primary" onclick="toggleDisplay('inner-data-activity')">
-            <i class='bx bx-chevron-down'></i>
-            Activity Time Settings
-        </button>
-    </div>
-    <div id="inner-data-activity" style="display: none;" class="toggle-content">
-        <p>
-            Activity Time Div
-        </p>
-    </div>
-    <div class="toggle-content">
-        <button class="btn btn-primary" onclick="toggleDisplay('inner-data-followers')">
-            <i class='bx bx-chevron-down'></i>
-            Followers Source Tracking
-        </button>
-    </div>
-    <div id="inner-data-followers" style="display: none;" class="toggle-content">
-        <p>
-            Followers Source Div
-        </p>
-    </div>
-    <div class="form-group mt-3">
-        <label class="form-label">Labels</label>
-        <input id="labels" name="labels" type="text" placeholder="Select the label..." value="">
+    <div id="statsDiv" class="hidden" style="display: none;">
+        <!-- Content for Stats Div -->
+        <h2>Stats Div Content</h2>
     </div>
 </div>
 
 <script>
+    function showDiv(divId) {
+        // Hide all divs
+        document.querySelectorAll('.hidden').forEach(div => {
+            div.style.display = 'none';
+        });
+
+        // Show the selected div
+        document.getElementById(divId).style.display = 'block';
+    }
     function toggleDisplay(inputID) {
         const dataDisplay = document.getElementById(inputID);
         dataDisplay.style.display = dataDisplay.style.display === 'none' ? 'block' : 'none';
