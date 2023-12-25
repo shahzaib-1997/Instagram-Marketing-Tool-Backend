@@ -63,7 +63,9 @@ class DashboardView(APIView):
         if request.user.is_authenticated:
             token, _ = Token.objects.get_or_create(user=request.user)
             request.session["token"] = token.key
-            return render(request, "userapi/dashboard.html")
+            targets = Target.objects.select_related('target_type').filter(user=request.user)
+            insta_creds = Credential.objects.filter(user=request.user).values('id', 'username')
+            return render(request, "userapi/dashboard.html", {"targets": targets, "insta_creds": insta_creds})
         messages.error(request, "You need to login first.")
         return redirect("userapi:login")
 
