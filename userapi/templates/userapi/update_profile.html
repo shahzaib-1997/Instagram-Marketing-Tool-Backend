@@ -67,22 +67,26 @@
                         <form action={% url "userapi:update-profile" %} method="POST">
                             {% csrf_token %}
                             <div class="row">
-                                <div class="col-lg-12 ">
+                                <div class="col-lg-12">
+                                    <label for="username">Username</label><br>
                                     <div class="form-group">
                                         <i class='bx bx-user'></i>
                                         <input type="text" name="username" id="username" class="form-control" required
-                                          data-error="Please enter your Username" placeholder="Enter New Username">
-                                      </div>
+                                            value="{{ data.username }}" placeholder="Enter New Username">
                                     </div>
                                 </div>
                                 <div class="col-lg-12">
+                                    <label for="email">Email</label><br>
                                     <div class="form-group">
-                                    <i class='bx bx-mail-send'></i>
-                                    <input type="email" name="email" id="email" class="form-control" required
-                                        data-error="Please enter email" placeholder="Enter New Email">
+                                        <i class='bx bx-mail-send'></i>
+                                        <input type="email" name="email" id="email" class="form-control" required
+                                            value="{{ data.email }}" placeholder="Enter New Email">
                                     </div>
                                 </div>
                                 <div class="col-lg-12 col-md-12 text-center">
+                                    <a href={% url "userapi:profile" %} style="margin-right: 20px;">
+                                        Cancel
+                                    </a>
                                     <button type="submit" class="default-btn">
                                         Submit Changes
                                         <i class='bx bx-plus'></i>
