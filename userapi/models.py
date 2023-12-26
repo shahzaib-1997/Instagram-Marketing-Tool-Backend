@@ -257,7 +257,7 @@ class Post(models.Model):
         "username - post_url"
     """
 
-    url = models.URLField()
+    url = models.TextField()
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     target = models.ForeignKey(Target, on_delete=models.CASCADE, null=True, blank=True)
     time_stamp = models.DateTimeField(auto_now_add=True, blank=True, null=True)
@@ -299,7 +299,7 @@ class Reel(models.Model):
         "username - reel_url"
     """
 
-    url = models.URLField()
+    url = models.TextField()
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     target = models.ForeignKey(Target, on_delete=models.CASCADE, null=True, blank=True)
     time_stamp = models.DateTimeField(auto_now_add=True, blank=True, null=True)

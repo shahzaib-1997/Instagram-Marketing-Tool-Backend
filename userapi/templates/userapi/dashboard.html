@@ -5,27 +5,42 @@
 
 {% block style %}
 <style>
-    /* Custom styles for spacing and visual enhancements */
-    .dashboard-container {
-        padding: 2rem;
-    }
-
-    .btn-group {
-        margin-bottom: 1rem;
-    }
-
-    .btn-group button {
+    .buttons button {
         margin-right: 0.5rem;
     }
 
-    .toggle-button {
-        margin: 10px;
+    /* Styles for the popup */
+    .popup {
+        display: none;
+        position: fixed;
+        bottom: 0;
+        right: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5);
+        z-index: 9999;
     }
 
-    #labels {
-        margin-bottom: 10px;
+    .popup-content {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background: #ffffff;
+        color: #1d1d1d;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
     }
-    /* More specific styling for labels, inputs, etc. can be added here */
+
+    .theme-dark .popup-content {
+        background: #1d1d1d;
+        color: #ffffff;
+    }
+
+    body.popup-open {
+        overflow: hidden;
+    }
 </style>
 {% endblock style %}
 
@@ -67,158 +82,141 @@
 </div>
 <!-- Inner Banner Area End -->
 
-<div class="dashboard-container">
-    <div class="btn-group">
-        <button type="button" class="btn btn-primary" onclick="showDiv('settingsDiv')">Settings</button>
-        <button type="button" class="btn btn-primary" onclick="showDiv('activityLogDiv')">Activity Log</button>
-        <button type="button" class="btn btn-primary" onclick="showDiv('statsDiv')">Stats</button>
-        <a class="align-self-center">5 Min Setup</a>
-    </div>
-    <div id="settingsDiv" class="hidden">
-        <div class="toggle-button">
-            <button class="btn btn-primary" onclick="toggleDisplay('inner-data-targeting')">
-                <i class='bx bx-chevron-down'></i>
-                Targeting
-            </button>
+<div class="container mb-3">
+    <div class="row pt-45">
+        <div class="col-lg-5">
+            <div class="d-flex justify-content-between mb-3">
+                <h2>Targets</h2>
+                <div class="buttons">
+                    <button type="button" class="btn btn-primary" onclick="openSettingsPopup()">
+                        Settings
+                        <i class="bx bx-cog"></i>
+                    </button>
+                    <button type="button" class="btn btn-primary">
+                        <a href={% url "userapi:target-edit" %} style="color: white;">Add new Target</a>
+                        <i class='bx bx-plus'></i>
+                    </button>
+                </div>
+            </div>
+            {% if targets %}
+            {% for target in targets %}
+            <div class="d-flex justify-content-between mb-3">
+                <div class="col-lg-7">
+                    {{ target.target_type.type }}
+                </div>
+                <div class="col-lg-4">
+                    <button type="button" class="btn btn-primary btn-sm">
+                        <a href={% url "userapi:target-edit" target.id %} style="color: white;">Edit</a>
+                    </button>
+                </div>
+            </div>
+            {% endfor %}
+            {% else %}
+            <strong>No Targets Added yet!</strong>
+            {% endif %}
         </div>
-        <div id="inner-data-targeting" style="display: none;" class="toggle-content">
-            <label>
-                <input class="radio" name="type" type="radio" value="post-like" checked="">
-                <span>
-                    Post (like)
-                </span>
-            </label>
+    </div>
+</div>
 
-            <label>
-                <input class="radio" name="type" type="radio" value="post-comment">
-                <span>
-                    Post (comment)
-                </span>
-            </label>
-
-            <label>
-                <input class="radio" name="type" type="radio" value="comment-like">
-                <span>
-                    Comment (like)
-                </span>
-            </label>
-
-            <label>
-                <input class="radio" name="type" type="radio" value="reels-view">
-                <span>
-                    Reels (view)
-                </span>
-            </label>
-
-            <label>
-                <input class="radio" name="type" type="radio" value="reels-like">
-                <span>
-                    Reels (like)
-                </span>
-            </label>
-
-            <label>
-                <input class="radio" name="type" type="radio" value="reels-comment">
-                <span>
-                    Reels (comment)
-                </span>
-            </label>
-
-            <label>
-                <input class="radio" name="type" type="radio" value="hashtag-like">
-                <span>
-                    #Hashtags (like)
-                </span>
-            </label>
-
-            <label>
-                <input class="radio" name="type" type="radio" value="hashtag-comment">
-                <span>
-                    #Hashtags (comment)
-                </span>
-            </label>
-            <div class="btn-group">
-                <button class="btn btn-primary">
-                    Targets list
-                </button>
-                <button class="btn btn-primary">
-                    Clear targets
-                </button>
-                <button class="btn btn-primary">
-                    View targets
-                </button>
-                <button class="btn btn-primary">
-                    Copy targets
-                </button>
-                <button class="btn btn-primary">
-                    Insert targets
+<!-- Settings Popup -->
+<div class="popup" id="settingsPopup">
+    <div class="popup-content">
+        <form action={% url "userapi:dashboard" %} method="POST">
+            {% csrf_token %}
+            <div class="clearfix mb-3">
+                <button type="button" class="btn btn-primary btn-sm float-end" onclick="openInstaPopup()">
+                    Add New
+                    <i class='bx bx-plus'></i>
                 </button>
             </div>
-            <p>
-                <label class="form-label">
-                    <input name="search" type="text">
-                    Search
-                </label>
-            </p>
-        </div>
-        <div class="toggle-button">
-            <button class="btn btn-primary" onclick="toggleDisplay('inner-data-activity')">
-                <i class='bx bx-chevron-down'></i>
-                Activity Time Settings
-            </button>
-        </div>
-        <div id="inner-data-activity" style="display: none;" class="toggle-content">
-            <p>
-                Activity Time Div
-            </p>
-        </div>
-        <div class="toggle-button">
-            <button class="btn btn-primary" onclick="toggleDisplay('inner-data-followers')">
-                <i class='bx bx-chevron-down'></i>
-                Followers Source Tracking
-            </button>
-        </div>
-        <div id="inner-data-followers" style="display: none;" class="toggle-content">
-            <p>
-                Followers Source Div
-            </p>
-        </div>
-        <div class="form-group">
-            <label for="labels" class="form-label">
-                Labels
-            </label>
-            <br>
-            <input id="labels" name="labels" type="text" placeholder="Select the label..." value="">
-        </div>
-        <div class="btn-group">
-            <button class="btn btn-primary" type="submit">
-                Start Tasks
-            </button>
-        </div>
+            <div>
+                {% if insta_creds %}
+                <label for="settingsDropdown">Select or Edit Your Insta Account:</label>
+                <select id="settingsDropdown" name="selected_insta_cred">
+                    <option value="">-------</option>
+                    {% for insta_cred in insta_creds %}
+                    <option value="{{ insta_cred.username }}">{{ insta_cred.username }} </option>
+                    {% endfor %}
+                </select>
+                {% else %}
+                <strong>No Insta Account Found against Your Account!</strong>
+                {% endif %}
+            </div>
+            <div class="col-lg-12 col-md-12 text-center">
+                <div class="form-group" style="margin-top: 15px;">
+                    {% if insta_creds %}
+                    <button type="submit" class="btn btn-primary">Select</button>
+                    <button type="button" class="btn btn-primary">Edit</button>
+                    {% endif %}
+                    <button type="button" class="btn btn-primary" onclick="closeSettingsPopup()">Close</button>
+                </div>
+            </div>
+        </form>
     </div>
-    <div id="activityLogDiv" class="hidden" style="display: none;">
-        <!-- Content for Activity Log Div -->
-        <h2>Activity Log Div Content</h2>
-    </div>
-    <div id="statsDiv" class="hidden" style="display: none;">
-        <!-- Content for Stats Div -->
-        <h2>Stats Div Content</h2>
+</div>
+
+<!-- Insta Popup -->
+<div class="popup" id="instaPopup">
+    <div class="popup-content">
+        <form action={% url "userapi:credential" %} method="POST">
+            {% csrf_token %}
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="form-group">
+                        <label for="username">Your Insta Username</label><br>
+                        <input type="text" class="form-control" name="username" id="name" placeholder="Please Enter Your Insta Username" required>
+                    </div>
+                </div>
+                <div class="col-12">
+                    <div class="form-group">
+                        <label for="username">Your Insta Password</label><br>
+                        <input type="password" class="form-control" name="password" id="password-input" placeholder="Password" required>
+                        <input type="checkbox" id="chb2" onclick="togglePassword()">
+                        <label for="chb2">
+                            Show Password
+                        </label>
+                    </div>
+                </div>
+                <div class="col-lg-12 col-md-12 text-center">
+                    <button type="submit" class="btn btn-primary">
+                        Add
+                        <i class='bx bx-plus'></i>
+                    </button>
+                    <button type="button" class="btn btn-primary" onclick="closeInstaPopup()">
+                        Cancel
+                        <i class='bx bx-x'></i>
+                    </button>
+                </div>
+            </div>
+        </form>
     </div>
 </div>
 
 <script>
-    function showDiv(divId) {
-        // Hide all divs
-        document.querySelectorAll('.hidden').forEach(div => {
-            div.style.display = 'none';
-        });
-
-        // Show the selected div
-        document.getElementById(divId).style.display = 'block';
+    function togglePassword() {
+        const passwordInput = document.getElementById("password-input");
+        passwordInput.type = passwordInput.type === 'password' ? 'text' : 'password';
     }
-    function toggleDisplay(inputID) {
-        const dataDisplay = document.getElementById(inputID);
-        dataDisplay.style.display = dataDisplay.style.display === 'none' ? 'block' : 'none';
+
+    function openSettingsPopup() {
+        document.getElementById('settingsPopup').style.display = 'block';
+        document.body.classList.add('popup-open'); // Add this line to disable body scrolling
+    }
+
+    function openInstaPopup() {
+        document.getElementById('instaPopup').style.display = 'block';
+        document.getElementById('settingsPopup').style.display = 'none';
+        document.body.classList.add('popup-open'); // Add this line to disable body scrolling
+    }
+
+    function closeInstaPopup() {
+        document.getElementById('instaPopup').style.display = 'none';
+        document.body.classList.remove('popup-open'); // Remove this line to enable body scrolling
+    }
+
+    function closeSettingsPopup() {
+        document.getElementById('settingsPopup').style.display = 'none';
+        document.body.classList.remove('popup-open'); // Remove this line to enable body scrolling
     }
 </script>
 {% endblock %}
