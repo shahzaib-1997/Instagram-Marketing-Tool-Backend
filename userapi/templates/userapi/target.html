@@ -1,0 +1,197 @@
+{% extends 'userapi/base.html' %}
+{% load static %}
+
+{% block title %}Add or Edit Target | {% endblock %}
+
+{% block style %}
+<style>
+    /* Custom styles for spacing and visual enhancements */
+    .target-container {
+        padding: 2rem;
+    }
+
+    .buttons {
+        margin-bottom: 1rem;
+    }
+
+    .buttons button {
+        margin-right: 0.5rem;
+    }
+</style>
+{% endblock style %}
+
+{% block content1 %}
+<!-- Inner Banner Area -->
+<div class="inner-banner">
+    <div>
+        <div class="inner-title text-center">
+            <h3>Target</h3>
+            <ul>
+                <li>
+                    <a href={% url "userapi:dashboard" %}>Dashboard</a>
+                </li>
+                <li>
+                    <i class='bx bx-chevron-right'></i>
+                </li>
+                <li>Add or Edit Target</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="inner-banner-shape">
+        <div class="shape-one">
+            <img src="{% static 'assets/img/inner-banner/banner-shape1.png' %}" alt="Images">
+        </div>
+
+        <div class="shape-two">
+            <img src="{% static 'assets/img/inner-banner/banner-shape2.png' %}" alt="Images">
+        </div>
+
+        <div class="shape-three">
+            <img src="{% static 'assets/img/inner-banner/banner-shape3.png' %}" alt="Images">
+        </div>
+
+        <div class="inner-banner-dots-2">
+            <img src="{% static 'assets/img/shape/dots-shape.png' %}" alt="Images">
+        </div>
+    </div>
+</div>
+<!-- Inner Banner Area End -->
+
+<div class="target-container">
+    <div class="buttons">
+        <button type="button" class="btn btn-primary" onclick="showDiv('settingsDiv')">Settings</button>
+        <button type="button" class="btn btn-primary" onclick="showDiv('activityLogDiv')">Activity Log</button>
+        <button type="button" class="btn btn-primary" onclick="showDiv('statsDiv')">Stats</button>
+        <a class="align-self-center">5 Min Setup</a>
+    </div>
+    <div id="settingsDiv" class="hidden">
+        <div class="buttons">
+            <button class="btn btn-primary" onclick="toggleDisplay('inner-data-targeting')">
+                <i class='bx bx-chevron-down'></i>
+                Targeting
+            </button>
+        </div>
+        <div id="inner-data-targeting" style="display: none;" class="toggle-content">
+            <label>
+                <input class="radio" name="type" type="radio" value="post-like" checked="">
+                <span>
+                    Post (like)
+                </span>
+            </label>
+
+            <label>
+                <input class="radio" name="type" type="radio" value="post-comment">
+                <span>
+                    Post (comment)
+                </span>
+            </label>
+
+            <label>
+                <input class="radio" name="type" type="radio" value="comment-like">
+                <span>
+                    Comment (like)
+                </span>
+            </label>
+
+            <label>
+                <input class="radio" name="type" type="radio" value="reels-view">
+                <span>
+                    Reels (view)
+                </span>
+            </label>
+
+            <label>
+                <input class="radio" name="type" type="radio" value="reels-like">
+                <span>
+                    Reels (like)
+                </span>
+            </label>
+
+            <label>
+                <input class="radio" name="type" type="radio" value="reels-comment">
+                <span>
+                    Reels (comment)
+                </span>
+            </label>
+
+            <label>
+                <input class="radio" name="type" type="radio" value="hashtag-like">
+                <span>
+                    #Hashtags (like)
+                </span>
+            </label>
+
+            <label>
+                <input class="radio" name="type" type="radio" value="hashtag-comment">
+                <span>
+                    #Hashtags (comment)
+                </span>
+            </label>
+            <div class="buttons">
+                <button class="btn btn-primary">
+                    Targets list
+                </button>
+                <button class="btn btn-primary">
+                    Clear targets
+                </button>
+                <button class="btn btn-primary">
+                    View targets
+                </button>
+                <button class="btn btn-primary">
+                    Copy targets
+                </button>
+            </div>
+            <div class="search">
+                <input name="search" type="text" placeholder="Enter Insta Username or complete URL" size="50">
+                <label for="search" class="form-label">
+                    <!-- Search -->
+                    <button class="btn btn-primary">
+                        Insert targets
+                    </button>
+                </label>
+            </div>
+        </div>
+        <div class="buttons">
+            <button class="btn btn-primary" onclick="toggleDisplay('inner-data-activity')">
+                <i class='bx bx-chevron-down'></i>
+                Activity Time Settings
+            </button>
+        </div>
+        <div id="inner-data-activity" style="display: none;" class="toggle-content">
+            <p>
+                Activity Time Div
+            </p>
+        </div>
+        <div class="buttons">
+            <button class="btn btn-primary" type="submit">
+                Save Task
+            </button>
+        </div>
+    </div>
+    <div id="activityLogDiv" class="hidden" style="display: none;">
+        <!-- Content for Activity Log Div -->
+        <h2>Activity Log Div Content</h2>
+    </div>
+    <div id="statsDiv" class="hidden" style="display: none;">
+        <!-- Content for Stats Div -->
+        <h2>Stats Div Content</h2>
+    </div>
+</div>
+
+<script>
+    function showDiv(divId) {
+        // Hide all divs
+        document.querySelectorAll('.hidden').forEach(div => {
+            div.style.display = 'none';
+        });
+
+        // Show the selected div
+        document.getElementById(divId).style.display = 'block';
+    }
+    function toggleDisplay(inputID) {
+        const dataDisplay = document.getElementById(inputID);
+        dataDisplay.style.display = dataDisplay.style.display === 'none' ? 'block' : 'none';
+    }
+</script>
+{% endblock %}

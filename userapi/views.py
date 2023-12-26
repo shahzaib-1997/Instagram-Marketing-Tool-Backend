@@ -44,6 +44,26 @@ def home(request):
     return render(request, "userapi/index.html")
 
 
+def pricing(request):
+    return render(request, "userapi/pricing.html")
+
+
+def about(request):
+    return render(request, "userapi/about.html")
+
+
+def contact(request):
+    return render(request, "userapi/contact.html")
+
+
+def logout_user(request):
+    if request.user.is_authenticated:
+        token = Token.objects.get(user=request.user)
+        token.delete()
+        logout(request)
+    return redirect("userapi:login")
+
+
 class GetAllUsers(APIView):
     def get(self, request):
         user_ids = User.objects.values_list("id", flat=True)
@@ -56,18 +76,6 @@ class CreateToken(APIView):
         user = get_object_or_404(User, pk=user_id)
         token, _ = Token.objects.get_or_create(user=user)
         return Response({"Authorization": f"Token {token.key}"})
-
-
-class DashboardView(APIView):
-    def get(self, request):
-        if request.user.is_authenticated:
-            token, _ = Token.objects.get_or_create(user=request.user)
-            request.session["token"] = token.key
-            targets = Target.objects.select_related('target_type').filter(user=request.user)
-            insta_creds = Credential.objects.filter(user=request.user).values('id', 'username')
-            return render(request, "userapi/dashboard.html", {"targets": targets, "insta_creds": insta_creds})
-        messages.error(request, "You need to login first.")
-        return redirect("userapi:login")
 
 
 class SignupView(APIView):
@@ -120,38 +128,42 @@ class LoginView(APIView):
             messages.error(request, str(e))
         return render(request, "userapi/login.html")
 
+class DashboardView(APIView):
+    def get(self, request):
+        if request.user.is_authenticated:
+            token, _ = Token.objects.get_or_create(user=request.user)
+            request.session["token"] = token.key
+            targets = Target.objects.select_related('target_type').filter(user=request.user)
+            insta_creds = Credential.objects.filter(user=request.user).values('id', 'username')
+            return render(request, "userapi/dashboard.html", {"targets": targets, "insta_creds": insta_creds})
+        messages.error(request, "You need to login first.")
+        return redirect("userapi:login")
 
-def pricing(request):
-    return render(request, "userapi/pricing.html")
 
-
-def about(request):
-    return render(request, "userapi/about.html")
-
-
-def contact(request):
-    return render(request, "userapi/contact.html")
-
-
-def logout_user(request):
-    if request.user.is_authenticated:
-        token = Token.objects.get(user=request.user)
-        token.delete()
-        logout(request)
-    return redirect("userapi:login")
+class TargetTemplateView(APIView):
+    def get(self, request, pk=None):
+        if request.user.is_authenticated:
+            target = {}
+            if pk:
+                target = get_object_or_404(Target, id=pk, user=request.user)
+            return render(request, "userapi/target.html", {"target": target})
+        messages.error(request, "You need to login first.")
+        return redirect("userapi:login")
 
 
 class ProfileView(APIView):
     def get(self, request):
         try:
             if request.user.is_authenticated:
+                serializer = ProfileSerializer(request.user)
                 if request.path == "/profile/":
-                    serializer = ProfileSerializer(request.user)
                     return render(
                         request, "userapi/profile.html", {"data": serializer.data}
                     )
                 else:
-                    return render(request, "userapi/update_profile.html")
+                    return render(
+                        request, "userapi/update_profile.html", {"data": serializer.data}
+                    )
             else:
                 messages.error(request, "You need to login first.")
                 return redirect("userapi:login")
