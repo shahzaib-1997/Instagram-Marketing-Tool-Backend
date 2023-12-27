@@ -25,10 +25,11 @@
         position: absolute;
         top: 50%;
         left: 50%;
+        width: 340px;
         transform: translate(-50%, -50%);
         background: #ffffff;
         color: #1d1d1d;
-        padding: 20px;
+        padding: 15px;
         border-radius: 8px;
         box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
     }
@@ -84,11 +85,18 @@
 
 <div class="container mb-3">
     <div class="row pt-45">
+        <div class="container mb-2">
+            {% if messages %}
+            {% for message in messages %}
+            <div class="text-danger" data-display-time="6000"><strong>{{ message }}</strong></div>
+            {% endfor %}
+            {% endif %}
+        </div>
         <div class="col-lg-5">
             <div class="d-flex justify-content-between mb-3">
                 <h2>Targets</h2>
                 <div class="buttons">
-                    <button type="button" class="btn btn-primary" onclick="openSettingsPopup()">
+                    <button type="button" class="btn btn-primary" onclick="togglePopup('settingsPopup', true)">
                         Settings
                         <i class="bx bx-cog"></i>
                     </button>
@@ -98,9 +106,11 @@
                     </button>
                 </div>
             </div>
+            <div id="noTargetsMessage" class="d-flex"></div>
             {% if targets %}
             {% for target in targets %}
-            <div class="d-flex justify-content-between mb-3">
+            <div class="d-flex justify-content-between mb-3 target-item"
+                data-insta-username="{{ target.insta_user.username }}">
                 <div class="col-lg-7">
                     {{ target.target_type.type }}
                 </div>
@@ -121,68 +131,64 @@
 <!-- Settings Popup -->
 <div class="popup" id="settingsPopup">
     <div class="popup-content">
-        <form action={% url "userapi:dashboard" %} method="POST">
-            {% csrf_token %}
-            <div class="clearfix mb-3">
-                <button type="button" class="btn btn-primary btn-sm float-end" onclick="openInstaPopup()">
-                    Add New
-                    <i class='bx bx-plus'></i>
-                </button>
-            </div>
-            <div>
-                {% if insta_creds %}
-                <label for="settingsDropdown">Select or Edit Your Insta Account:</label>
-                <select id="settingsDropdown" name="selected_insta_cred">
-                    <option value="">-------</option>
-                    {% for insta_cred in insta_creds %}
-                    <option value="{{ insta_cred.username }}">{{ insta_cred.username }} </option>
-                    {% endfor %}
-                </select>
-                {% else %}
-                <strong>No Insta Account Found against Your Account!</strong>
-                {% endif %}
-            </div>
-            <div class="col-lg-12 col-md-12 text-center">
-                <div class="form-group" style="margin-top: 15px;">
-                    {% if insta_creds %}
-                    <button type="submit" class="btn btn-primary">Select</button>
-                    <button type="button" class="btn btn-primary">Edit</button>
-                    {% endif %}
-                    <button type="button" class="btn btn-primary" onclick="closeSettingsPopup()">Close</button>
-                </div>
-            </div>
-        </form>
+        <div class="d-flex justify-content-between mb-2">
+            <strong>Select or Edit Insta Account</strong>
+            <button type="button" class="btn btn-primary btn-sm" onclick="togglePopup('instaPopup', true)">
+                Add New
+                <i class='bx bx-plus'></i>
+            </button>
+        </div>
+        <div class="d-flex justify-content-center mb-2">
+            {% if insta_creds %}
+            <select id="settingsDropdown" name="selected_insta_cred">
+                <option value="all">Targets of All Accounts</option>
+                {% for insta_cred in insta_creds %}
+                <option value="{{ insta_cred.username }}">{{ insta_cred.username }} </option>
+                {% endfor %}
+            </select>
+            {% else %}
+            <strong>No Insta Account Found against Your Account!</strong>
+            {% endif %}
+        </div>
+        <div class="d-flex justify-content-center" id="no-account"></div>
+        <div class="buttons text-center" style="margin-top: 15px;">
+            {% if insta_creds %}
+            <button type="button" class="btn btn-primary btn-sm" onclick="displayInstaTargets()">Select</button>
+            <button type="button" class="btn btn-primary btn-sm"
+                onclick="togglePopup('instaPopup', true, true)">Edit</button>
+            {% endif %}
+            <button type="button" class="btn btn-primary btn-sm"
+                onclick="togglePopup('settingsPopup', false)">Close</button>
+        </div>
     </div>
 </div>
 
 <!-- Insta Popup -->
 <div class="popup" id="instaPopup">
     <div class="popup-content">
-        <form action={% url "userapi:credential" %} method="POST">
+        <form action={% url "userapi:dashboard" %} method="POST">
             {% csrf_token %}
             <div class="row">
-                <div class="col-lg-12">
-                    <div class="form-group">
-                        <label for="username">Your Insta Username</label><br>
-                        <input type="text" class="form-control" name="username" id="name" placeholder="Please Enter Your Insta Username" required>
-                    </div>
+                <div class="form-group">
+                    <label for="username">Your Insta Username</label><br>
+                    <input type="text" class="form-control" name="username" id="username"
+                        placeholder="Please Enter Your Insta Username" required>
                 </div>
-                <div class="col-12">
-                    <div class="form-group">
-                        <label for="username">Your Insta Password</label><br>
-                        <input type="password" class="form-control" name="password" id="password-input" placeholder="Password" required>
-                        <input type="checkbox" id="chb2" onclick="togglePassword()">
-                        <label for="chb2">
-                            Show Password
-                        </label>
-                    </div>
+                <div class="form-group">
+                    <label for="username">Your Insta Password</label><br>
+                    <input type="password" class="form-control" name="password" id="password-input"
+                        placeholder="Password" required>
+                    <input type="checkbox" id="chb2" onclick="togglePassword()">
+                    <label for="chb2">
+                        Show Password
+                    </label>
                 </div>
-                <div class="col-lg-12 col-md-12 text-center">
+                <div class="buttons text-center">
                     <button type="submit" class="btn btn-primary">
                         Add
                         <i class='bx bx-plus'></i>
                     </button>
-                    <button type="button" class="btn btn-primary" onclick="closeInstaPopup()">
+                    <button type="button" class="btn btn-primary" onclick="togglePopup('instaPopup', false)">
                         Cancel
                         <i class='bx bx-x'></i>
                     </button>
@@ -193,30 +199,50 @@
 </div>
 
 <script>
-    function togglePassword() {
-        const passwordInput = document.getElementById("password-input");
-        passwordInput.type = passwordInput.type === 'password' ? 'text' : 'password';
+    function togglePopup(popupId, isOpen, instaID = false) {
+        var instaUsername = document.getElementById('settingsDropdown').value;
+        if (instaUsername === "all" && popupId === "instaPopup" && instaID == true) {
+            document.getElementById("no-account").innerText = "Please select account to Edit!";
+        }
+        else {
+            document.getElementById("no-account").innerText = "";
+            document.getElementById(popupId).style.display = isOpen ? 'block' : 'none';
+            document.body.classList.toggle('popup-open', isOpen);
+            if (!instaID || instaUsername === "all") {
+                instaUsername = "";
+            }
+            document.getElementById('username').value = instaUsername;
+            document.getElementById('password-input').value = "";
+        }
     }
 
-    function openSettingsPopup() {
-        document.getElementById('settingsPopup').style.display = 'block';
-        document.body.classList.add('popup-open'); // Add this line to disable body scrolling
-    }
+    function displayInstaTargets() {
+        var instaUsername = document.getElementById('settingsDropdown').value;
+        var allTargets = document.querySelectorAll('.target-item');
+        var targetsFound = false;
 
-    function openInstaPopup() {
-        document.getElementById('instaPopup').style.display = 'block';
-        document.getElementById('settingsPopup').style.display = 'none';
-        document.body.classList.add('popup-open'); // Add this line to disable body scrolling
-    }
+        allTargets.forEach(function (target) {
+            var targetInstaUsername = target.getAttribute('data-insta-username');
+            if (instaUsername === 'all' || targetInstaUsername === instaUsername) {
+                target.classList.add('d-flex');
+                target.classList.remove('d-none');
+                targetsFound = true;
+            } else {
+                target.classList.remove('d-flex');
+                target.classList.add('d-none');
+            }
+        });
 
-    function closeInstaPopup() {
-        document.getElementById('instaPopup').style.display = 'none';
-        document.body.classList.remove('popup-open'); // Remove this line to enable body scrolling
-    }
+        // Show or hide the message based on whether targets are found
+        if (!targetsFound) {
+            document.getElementById('noTargetsMessage').innerText = "No targets found for the selected Account.";
+        }
+        else {
+            document.getElementById('noTargetsMessage').innerText = "";
+        }
 
-    function closeSettingsPopup() {
-        document.getElementById('settingsPopup').style.display = 'none';
-        document.body.classList.remove('popup-open'); // Remove this line to enable body scrolling
+        // Close the popup
+        togglePopup('settingsPopup', false);
     }
 </script>
 {% endblock %}
