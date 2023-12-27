@@ -84,6 +84,9 @@ class Credential(models.Model):
     profile_id = models.CharField(max_length=255, blank=True, null=True)
     time_stamp = models.DateTimeField(auto_now_add=True, blank=True, null=True)
 
+    class Meta:
+        unique_together = ('user', 'username')
+
     def __str__(self):
         """
         method __str__(): Returns a string representation of the object.
@@ -103,7 +106,12 @@ class TargetType(models.Model):
         __str__: Returns a string representation of the object.
     """
 
-    options = (("hashtags", "hashtags"), ("posts", "posts"), ("reels", "reels"), ("comments", "comments"))
+    options = (
+        ("hashtags", "hashtags"),
+        ("posts", "posts"),
+        ("reels", "reels"),
+        ("comments", "comments"),
+    )
 
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     type = models.CharField(max_length=255, choices=options)
@@ -160,11 +168,14 @@ class Target(models.Model):
     """
 
     options = [
-        (0, 'Not Started'),
-        (1, 'Running'),
-        (2, 'Completed'),
-    ]    
+        (0, "Not Started"),
+        (1, "Running"),
+        (2, "Completed"),
+    ]
     user = models.ForeignKey(User, on_delete=models.CASCADE)
+    insta_user = models.ForeignKey(
+        Credential, on_delete=models.CASCADE, null=True, blank=True
+    )
     target_type = models.ForeignKey(
         TargetType, on_delete=models.CASCADE, null=True, blank=True
     )
