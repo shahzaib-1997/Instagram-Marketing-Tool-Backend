@@ -57,10 +57,10 @@
       <div class="col-lg-7">
         <div class="user-all-form">
           <div class="contact-form">
-            <div class="container">
+            <div class="container mb-2">
               {% if messages %}
               {% for message in messages %}
-              <div class="alert" data-display-time="6000"><strong>{{ message }}</strong></div>
+              <div class="text-danger" data-display-time="6000"><strong>{{ message }}</strong></div>
               {% endfor %}
               {% endif %}
             </div>
@@ -117,28 +117,4 @@
   </div>
 </div>
 <!-- Sign In Area End -->
-
-<script>
-  // Function to handle the message divs
-  function handleMessages() {
-    const messageDivs = document.querySelectorAll('.alert');
-
-    messageDivs.forEach((messageDiv) => {
-      const displayTime = parseInt(messageDiv.dataset.displayTime);
-
-      // Set a timeout to hide the message after the specified display time
-      setTimeout(() => {
-        messageDiv.style.display = 'none';
-      }, displayTime);
-    });
-  }
-
-  // Call the function when the DOM is loaded
-  document.addEventListener('DOMContentLoaded', handleMessages);
-
-  function togglePassword() {
-    const passwordInput = document.getElementById("password-input");
-    passwordInput.type = passwordInput.type === 'password' ? 'text' : 'password';
-  }
-</script>
 {% endblock %}
