@@ -60,7 +60,9 @@
             <div class="container mb-2">
               {% if messages %}
               {% for message in messages %}
-              <div class="text-danger" data-display-time="6000"><strong>{{ message }}</strong></div>
+              <div class="alert {% if message.tags == 'error' %}text-danger{% elif message.tags == 'success' %}text-success{% endif %}" data-display-time="6000">
+                <strong>{{ message }}</strong>
+              </div>
               {% endfor %}
               {% endif %}
             </div>
