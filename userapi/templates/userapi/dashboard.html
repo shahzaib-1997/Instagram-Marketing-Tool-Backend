@@ -25,7 +25,7 @@
         position: absolute;
         top: 50%;
         left: 50%;
-        width: 340px;
+        width: 400px;
         transform: translate(-50%, -50%);
         background: #ffffff;
         color: #1d1d1d;
@@ -200,7 +200,8 @@
 
 <script>
     function togglePopup(popupId, isOpen, instaID = false) {
-        var instaUsername = document.getElementById('settingsDropdown').value;
+        var dropdown = document.getElementById('settingsDropdown');
+        var instaUsername = dropdown ? dropdown.value : null;
         if (instaUsername === "all" && popupId === "instaPopup" && instaID == true) {
             document.getElementById("no-account").innerText = "Please select account to Edit!";
         }
@@ -234,7 +235,7 @@
         });
 
         // Show or hide the message based on whether targets are found
-        if (!targetsFound) {
+        if (!targetsFound && allTargets.length > 0) {
             document.getElementById('noTargetsMessage').innerText = "No targets found for the selected Account.";
         }
         else {
