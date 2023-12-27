@@ -128,16 +128,57 @@ class LoginView(APIView):
             messages.error(request, str(e))
         return render(request, "userapi/login.html")
 
+
 class DashboardView(APIView):
     def get(self, request):
         if request.user.is_authenticated:
             token, _ = Token.objects.get_or_create(user=request.user)
             request.session["token"] = token.key
-            targets = Target.objects.select_related('target_type').filter(user=request.user)
-            insta_creds = Credential.objects.filter(user=request.user).values('id', 'username')
-            return render(request, "userapi/dashboard.html", {"targets": targets, "insta_creds": insta_creds})
+            insta_creds = (
+                Credential.objects.filter(user=request.user)
+                .values("id", "username")
+                .order_by("id")
+            )
+            targets = Target.objects.select_related("target_type", "insta_user").filter(
+                user=request.user
+            )
+            return render(
+                request,
+                "userapi/dashboard.html",
+                {"targets": targets, "insta_creds": insta_creds},
+            )
         messages.error(request, "You need to login first.")
         return redirect("userapi:login")
+
+    def post(self, request, pk=None):
+        try:
+            if request.user.is_authenticated:
+                credential = Credential.objects.filter(user=request.user, username=pk) if pk else Credential(user = request.user)
+                credential.username = request.POST.get("username")
+                credential.password = request.POST.get("password")
+                credential.save()
+                messages.success(request, "Details added successfully!")
+                insta_creds = (
+                    Credential.objects.filter(user=request.user)
+                    .values("id", "username")
+                    .order_by("id")
+                )
+                targets = Target.objects.select_related("target_type", "insta_user").filter(
+                    user=request.user
+                )
+                return render(
+                    request,
+                    "userapi/dashboard.html",
+                    {"targets": targets, "insta_creds": insta_creds},
+                )
+            messages.error(request, "You need to login first.")
+            return redirect("userapi:login")
+        except Exception as e:
+            if "UNIQUE" in str(e):
+                messages.error(request, "Username already exists against your account!")
+            else:
+                messages.error(request, str(e))
+        return redirect("userapi:dashboard")
 
 
 class TargetTemplateView(APIView):
@@ -162,7 +203,9 @@ class ProfileView(APIView):
                     )
                 else:
                     return render(
-                        request, "userapi/update_profile.html", {"data": serializer.data}
+                        request,
+                        "userapi/update_profile.html",
+                        {"data": serializer.data},
                     )
             else:
                 messages.error(request, "You need to login first.")
