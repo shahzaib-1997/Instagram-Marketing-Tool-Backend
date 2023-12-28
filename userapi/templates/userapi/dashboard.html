@@ -3,48 +3,6 @@
 
 {% block title %}Dashboard | {% endblock %}
 
-{% block style %}
-<style>
-    .buttons button {
-        margin-right: 0.5rem;
-    }
-
-    /* Styles for the popup */
-    .popup {
-        display: none;
-        position: fixed;
-        bottom: 0;
-        right: 0;
-        width: 100%;
-        height: 100%;
-        background: rgba(0, 0, 0, 0.5);
-        z-index: 9999;
-    }
-
-    .popup-content {
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        width: 400px;
-        transform: translate(-50%, -50%);
-        background: #ffffff;
-        color: #1d1d1d;
-        padding: 15px;
-        border-radius: 8px;
-        box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
-    }
-
-    .theme-dark .popup-content {
-        background: #1d1d1d;
-        color: #ffffff;
-    }
-
-    body.popup-open {
-        overflow: hidden;
-    }
-</style>
-{% endblock style %}
-
 {% block content1 %}
 <!-- Inner Banner Area -->
 <div class="inner-banner">
@@ -83,6 +41,7 @@
 </div>
 <!-- Inner Banner Area End -->
 
+<!-- Targets Area -->
 <div class="container mb-3">
     <div class="row pt-45">
         <div class="container mb-2">
@@ -98,7 +57,8 @@
             <div class="d-flex justify-content-between mb-3">
                 <h2>Targets</h2>
                 <div class="buttons">
-                    <button type="button" class="btn btn-primary" onclick="togglePopup('settingsPopup', true)">
+                    <button type="button" class="btn btn-primary">
+                        <a href={% url "userapi:insta-credentials" %} style="color: white;">
                         Settings
                         <i class="bx bx-cog"></i>
                     </button>
@@ -119,6 +79,7 @@
                 <div class="col-lg-4">
                     <button type="button" class="btn btn-primary btn-sm">
                         <a href={% url "userapi:target-edit" target.id %} style="color: white;">Edit</a>
+                        <i class="bx bx-edit"></i>
                     </button>
                 </div>
             </div>
@@ -129,82 +90,13 @@
         </div>
     </div>
 </div>
-
-<!-- Settings Popup -->
-<div class="popup" id="settingsPopup">
-    <div class="popup-content">
-        <div class="d-flex justify-content-between mb-2">
-            <strong>Select or Edit Insta Account</strong>
-            <button type="button" class="btn btn-primary btn-sm" onclick="togglePopup('instaPopup', true)">
-                Add New
-                <i class='bx bx-plus'></i>
-            </button>
-        </div>
-        <div class="d-flex justify-content-center mb-2">
-            {% if insta_creds %}
-            <select id="settingsDropdown" name="selected_insta_cred">
-                <option value="all">Targets of All Accounts</option>
-                {% for insta_cred in insta_creds %}
-                <option value="{{ insta_cred.username }}">{{ insta_cred.username }} </option>
-                {% endfor %}
-            </select>
-            {% else %}
-            <strong>No Insta Account Found against Your Account!</strong>
-            {% endif %}
-        </div>
-        <div class="d-flex justify-content-center" id="no-account"></div>
-        <div class="buttons text-center" style="margin-top: 15px;">
-            {% if insta_creds %}
-            <button type="button" class="btn btn-primary btn-sm" onclick="displayInstaTargets()">Select</button>
-            <button type="button" class="btn btn-primary btn-sm"
-                onclick="togglePopup('instaPopup', true, true)">Edit</button>
-            {% endif %}
-            <button type="button" class="btn btn-primary btn-sm"
-                onclick="togglePopup('settingsPopup', false)">Close</button>
-        </div>
-    </div>
-</div>
-
-<!-- Insta Popup -->
-<div class="popup" id="instaPopup">
-    <div class="popup-content">
-        <form action={% url "userapi:dashboard" %} method="POST">
-            {% csrf_token %}
-            <div class="row">
-                <div class="form-group">
-                    <label for="username">Your Insta Username</label><br>
-                    <input type="text" class="form-control" name="username" id="username"
-                        placeholder="Please Enter Your Insta Username" required>
-                </div>
-                <div class="form-group">
-                    <label for="username">Your Insta Password</label><br>
-                    <input type="password" class="form-control" name="password" id="password-input"
-                        placeholder="Password" required>
-                    <input type="checkbox" id="chb2" onclick="togglePassword()">
-                    <label for="chb2">
-                        Show Password
-                    </label>
-                </div>
-                <div class="buttons text-center">
-                    <button type="submit" class="btn btn-primary">
-                        Add
-                        <i class='bx bx-plus'></i>
-                    </button>
-                    <button type="button" class="btn btn-primary" onclick="togglePopup('instaPopup', false)">
-                        Cancel
-                        <i class='bx bx-x'></i>
-                    </button>
-                </div>
-            </div>
-        </form>
-    </div>
-</div>
+<!-- Targets Area End -->
 
 <script>
     function togglePopup(popupId, isOpen, instaID = false) {
         var dropdown = document.getElementById('settingsDropdown');
         var instaUsername = dropdown ? dropdown.value : null;
-        if (instaUsername === "all" && popupId === "instaPopup" && instaID == true) {
+        if (instaUsername === "all" && instaID == true) {
             document.getElementById("no-account").innerText = "Please select account to Edit!";
         }
         else {
@@ -213,6 +105,28 @@
             document.body.classList.toggle('popup-open', isOpen);
             if (!instaID || instaUsername === "all") {
                 instaUsername = "";
+            }
+            else {
+                if (popupId === "instaPopup") {
+                    var form = document.getElementById('instaForm');
+
+                    // Check if the hidden input already exists
+                    var existingInput = form.querySelector('input[name="previous_usernme"]');
+                    
+                    if (existingInput) {
+                        // If it exists, update its value
+                        existingInput.value = instaUsername;
+                    } else {
+                    // If it doesn't exist, create a new input element
+                    var hiddenInput = document.createElement('input');
+                    hiddenInput.type = 'hidden';
+                    hiddenInput.name = 'previous_usernme';
+                    hiddenInput.value = instaUsername;
+
+                    // Append the hidden input to the form
+                    form.appendChild(hiddenInput);
+                    }
+                }
             }
             document.getElementById('username').value = instaUsername;
             document.getElementById('password-input').value = "";

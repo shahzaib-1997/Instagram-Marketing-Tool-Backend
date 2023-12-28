@@ -5,17 +5,42 @@
 
 {% block style %}
 <style>
-    /* Custom styles for spacing and visual enhancements */
-    .target-container {
-        padding: 2rem;
+    .buttons{
+        margin: 0.5rem;
     }
 
-    .buttons {
-        margin-bottom: 1rem;
+    /* Styles for the popup */
+    .popup {
+        display: none;
+        position: fixed;
+        bottom: 0;
+        right: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5);
+        z-index: 9999;
     }
 
-    .buttons button {
-        margin-right: 0.5rem;
+    .popup-content {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 450px;
+        transform: translate(-50%, -50%);
+        background: #ffffff;
+        color: #1d1d1d;
+        padding: 15px;
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+    }
+
+    .theme-dark .popup-content {
+        background: #1d1d1d;
+        color: #ffffff;
+    }
+
+    body.popup-open {
+        overflow: hidden;
     }
 </style>
 {% endblock style %}
@@ -58,126 +83,162 @@
 </div>
 <!-- Inner Banner Area End -->
 
-<div class="target-container">
-    <div class="buttons">
-        <button type="button" class="btn btn-primary" onclick="showDiv('settingsDiv')">Settings</button>
-        <button type="button" class="btn btn-primary" onclick="showDiv('activityLogDiv')">Activity Log</button>
-        <button type="button" class="btn btn-primary" onclick="showDiv('statsDiv')">Stats</button>
-        <a class="align-self-center">5 Min Setup</a>
-    </div>
-    <div id="settingsDiv" class="hidden">
+<!-- Target Area -->
+<div class="container mb-3">
+    <div class="row pt-45">
         <div class="buttons">
-            <button class="btn btn-primary" onclick="toggleDisplay('inner-data-targeting')">
-                <i class='bx bx-chevron-down'></i>
-                Targeting
-            </button>
+            <button type="button" class="btn btn-primary" onclick="togglePopup('settingsPopup', true)">Settings</button>
+            <button type="button" class="btn btn-primary" onclick="showDiv('activityLogDiv')">Activity Log</button>
+            <button type="button" class="btn btn-primary" onclick="showDiv('statsDiv')">Stats</button>
+            <a class="align-self-center">5 Min Setup</a>
         </div>
-        <div id="inner-data-targeting" style="display: none;" class="toggle-content">
-            <label>
-                <input class="radio" name="type" type="radio" value="post-like" checked="">
-                <span>
-                    Post (like)
-                </span>
-            </label>
-
-            <label>
-                <input class="radio" name="type" type="radio" value="post-comment">
-                <span>
-                    Post (comment)
-                </span>
-            </label>
-
-            <label>
-                <input class="radio" name="type" type="radio" value="comment-like">
-                <span>
-                    Comment (like)
-                </span>
-            </label>
-
-            <label>
-                <input class="radio" name="type" type="radio" value="reels-view">
-                <span>
-                    Reels (view)
-                </span>
-            </label>
-
-            <label>
-                <input class="radio" name="type" type="radio" value="reels-like">
-                <span>
-                    Reels (like)
-                </span>
-            </label>
-
-            <label>
-                <input class="radio" name="type" type="radio" value="reels-comment">
-                <span>
-                    Reels (comment)
-                </span>
-            </label>
-
-            <label>
-                <input class="radio" name="type" type="radio" value="hashtag-like">
-                <span>
-                    #Hashtags (like)
-                </span>
-            </label>
-
-            <label>
-                <input class="radio" name="type" type="radio" value="hashtag-comment">
-                <span>
-                    #Hashtags (comment)
-                </span>
-            </label>
+        <div id="settingsDiv" class="mb-3">
             <div class="buttons">
-                <button class="btn btn-primary">
-                    Targets list
-                </button>
-                <button class="btn btn-primary">
-                    Clear targets
-                </button>
-                <button class="btn btn-primary">
-                    View targets
-                </button>
-                <button class="btn btn-primary">
-                    Copy targets
+                <button class="btn btn-primary" onclick="toggleDisplay('inner-data-targeting')">
+                    <i class='bx bx-chevron-down'></i>
+                    Targeting
                 </button>
             </div>
-            <div class="search">
-                <input name="search" type="text" placeholder="Enter Insta Username or complete URL" size="50">
-                <label for="search" class="form-label">
-                    <!-- Search -->
-                    <button class="btn btn-primary">
-                        Insert targets
-                    </button>
+            <div id="inner-data-targeting" style="display: none;" class="toggle-content">
+                <label>
+                    <input class="radio" name="type" type="radio" value="post-like" checked="">
+                    <span>
+                        Post (like)
+                    </span>
                 </label>
+
+                <label>
+                    <input class="radio" name="type" type="radio" value="post-comment">
+                    <span>
+                        Post (comment)
+                    </span>
+                </label>
+
+                <label>
+                    <input class="radio" name="type" type="radio" value="comment-like">
+                    <span>
+                        Comment (like)
+                    </span>
+                </label>
+
+                <label>
+                    <input class="radio" name="type" type="radio" value="reels-view">
+                    <span>
+                        Reels (view)
+                    </span>
+                </label>
+
+                <label>
+                    <input class="radio" name="type" type="radio" value="reels-like">
+                    <span>
+                        Reels (like)
+                    </span>
+                </label>
+
+                <label>
+                    <input class="radio" name="type" type="radio" value="reels-comment">
+                    <span>
+                        Reels (comment)
+                    </span>
+                </label>
+
+                <label>
+                    <input class="radio" name="type" type="radio" value="hashtag-like">
+                    <span>
+                        #Hashtags (like)
+                    </span>
+                </label>
+
+                <label>
+                    <input class="radio" name="type" type="radio" value="hashtag-comment">
+                    <span>
+                        #Hashtags (comment)
+                    </span>
+                </label>
+                <div class="buttons">
+                    <button class="btn btn-primary">
+                        Targets list
+                    </button>
+                    <button class="btn btn-primary">
+                        Clear targets
+                    </button>
+                    <button class="btn btn-primary">
+                        View targets
+                    </button>
+                    <button class="btn btn-primary">
+                        Copy targets
+                    </button>
+                </div>
+                <div class="search">
+                    <input name="search" type="text" placeholder="Enter Insta Username or complete URL" size="50">
+                    <label for="search" class="form-label">
+                        <!-- Search -->
+                        <button class="btn btn-primary">
+                            Insert targets
+                        </button>
+                    </label>
+                </div>
+            </div>
+            <div class="buttons">
+                <button class="btn btn-primary" onclick="toggleDisplay('inner-data-activity')">
+                    <i class='bx bx-chevron-down'></i>
+                    Activity Time Settings
+                </button>
+            </div>
+            <div id="inner-data-activity" style="display: none;" class="toggle-content">
+                <p>
+                    Activity Time Div
+                </p>
+            </div>
+            <div class="buttons">
+                <button class="btn btn-primary" type="submit">
+                    Save Task
+                </button>
             </div>
         </div>
-        <div class="buttons">
-            <button class="btn btn-primary" onclick="toggleDisplay('inner-data-activity')">
-                <i class='bx bx-chevron-down'></i>
-                Activity Time Settings
-            </button>
+        <div id="activityLogDiv" class="hidden" style="display: none;">
+            <!-- Content for Activity Log Div -->
+            <h2>Activity Log Div Content</h2>
         </div>
-        <div id="inner-data-activity" style="display: none;" class="toggle-content">
-            <p>
-                Activity Time Div
-            </p>
+        <div id="statsDiv" class="hidden" style="display: none;">
+            <!-- Content for Stats Div -->
+            <h2>Stats Div Content</h2>
         </div>
-        <div class="buttons">
-            <button class="btn btn-primary" type="submit">
-                Save Task
-            </button>
-        </div>
-    </div>
-    <div id="activityLogDiv" class="hidden" style="display: none;">
-        <!-- Content for Activity Log Div -->
-        <h2>Activity Log Div Content</h2>
-    </div>
-    <div id="statsDiv" class="hidden" style="display: none;">
-        <!-- Content for Stats Div -->
-        <h2>Stats Div Content</h2>
     </div>
 </div>
+<!-- Target Area End -->
+
+<!-- Settings Popup -->
+<div class="popup" id="settingsPopup">
+    <div class="popup-content">
+        <div class="d-flex justify-content-center mb-2">
+            <strong>Select Insta Account for the Target</strong>
+        </div>
+        <form action={% url "userapi:update-insta-target" %} method="post">
+            {% csrf_token %}
+            <input type="hidden" name="pk" value="{{ pk }}">
+            <div class="d-flex justify-content-center mb-2">
+                {% if insta_creds %}
+                <select id="settingsDropdown" name="selected_insta_cred">
+                    {% for insta_cred in insta_creds %}
+                    <option value="{{ insta_cred.id }}">{{ insta_cred.username }} </option>
+                    {% endfor %}
+                </select>
+                {% else %}
+                <strong>No Insta Account Found against Your Account!</strong>
+                {% endif %}
+            </div>
+            <div class="buttons text-center" style="margin-top: 15px;">
+                {% if insta_creds %}
+                <button type="submit" class="btn btn-primary btn-sm">Select & Save</button>
+                {% endif %}
+                <button type="button" class="btn btn-primary btn-sm"
+                    onclick="togglePopup('settingsPopup', false)">Close</button>
+            </div>
+        </form>
+    </div>
+</div>
+<!-- Settings Popup End-->
 
 <script>
     function showDiv(divId) {
@@ -189,9 +250,15 @@
         // Show the selected div
         document.getElementById(divId).style.display = 'block';
     }
+
     function toggleDisplay(inputID) {
         const dataDisplay = document.getElementById(inputID);
         dataDisplay.style.display = dataDisplay.style.display === 'none' ? 'block' : 'none';
+    }
+
+    function togglePopup(popupId, isOpen) {
+        document.getElementById(popupId).style.display = isOpen ? 'block' : 'none';
+        document.body.classList.toggle('popup-open', isOpen);
     }
 </script>
 {% endblock %}
