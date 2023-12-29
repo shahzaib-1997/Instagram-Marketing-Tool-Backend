@@ -148,11 +148,7 @@
                                                         guarantee you'll be a happy MASSNOVA user.</p>
 
                                                     <div class="d-inline-block z-index-2 mt-3 mb-5">
-                                                        <form class="form-inline">
-                                                            <div class="input-group">
-                                                                <input type="text" class="form-control signUpForm"
-                                                                    placeholder="Your Email Address">
-                                                            </div>
+                                                        <form action="{%url 'userapi:signup' %}" method="get">
                                                             <button type="submit"
                                                                 class="btn btn-primary w-sm-100 w-lg-auto">Sign Up
                                                                 Now</button>
@@ -288,11 +284,7 @@
                                 class="font-weight-bold text-primary">organically</span>.</p>
                         <p class="d-none d-lg-block lead text-black-50">Enter your email to get started!</p>
                         <div class="d-inline-block my-3">
-                            <form class="form-inline formoid">
-                                <div class="input-group">
-                                    <input type="email" class="form-control signUpForm" placeholder="Your Email Address"
-                                        required>
-                                </div>
+                            <form action="{%url 'userapi:signup' %}" method="get">
                                 <button type="submit" class="btn btn-primary w-sm-100 w-lg-auto">Sign Up Now 👈</button>
                                 <span class="text-black-50 small my-3">2 Minutes Setup • 7 Day Growth Guarantee• Get
                                     More Instagram Followers</span>
@@ -661,11 +653,7 @@
                                     engagement for your Instagram. You'll see a steady uptick in profile visitors, post
                                     likes, and Instagram followers. </p>
                                 <div class="d-block z-index-2 my-5">
-                                    <form class="form-inline formoid">
-                                        <div class="input-group">
-                                            <input type="email" class="form-control signUpForm"
-                                                placeholder="Your Email Address" required>
-                                        </div>
+                                    <form action="{%url 'userapi:signup' %}" method="get">
                                         <button type="submit" class="btn btn-success w-sm-100 w-lg-auto">Sign Up Now
                                             👈</button>
                                     </form>
@@ -1396,11 +1384,8 @@
                             signing up to MASSNOVA just yet, <a href="{% static '' %}contact.html">reach out to support
                                 now</a>. One of
                             our customer gurus can help you find out whether we're a match!
-                        <form class="form-inline formoid">
-                            <div class="input-group">
-                                <input type="email" class="form-control signUpForm" placeholder="Your Email Address"
-                                    required>
-                            </div>
+                        </p>
+                        <form action="{%url 'userapi:signup' %}" method="get">
                             <button type="submit" class="btn btn-primary w-sm-100 w-lg-auto">Sign Up Now 👈</button>
                         </form>
                         <span class="d-block text-white-50 small my-3">2 Minutes Setup • 7 Day Growth Guarantee• Get
@@ -1433,11 +1418,7 @@
                             more Instagram followers with MASSNOVA. Grow your account, expand your reach, and build your
                             brand - <span class="font-weight-bold">the right way</span>.</p>
                         <div class="d-inline-block my-3">
-                            <form class="form-inline formoid">
-                                <div class="input-group">
-                                    <input type="email" class="form-control signUpForm" placeholder="Your Email Address"
-                                        required>
-                                </div>
+                            <form action="{%url 'userapi:signup' %}" method="get">
                                 <button type="submit" class="btn btn-primary w-sm-100 w-lg-auto">Sign Up Now 👈</button>
                             </form>
                             <span class="d-block text-white-50 small my-3">2 Minutes Setup • 7 Day Growth Guarantee• Get
@@ -1594,11 +1575,7 @@
 
                         <div class="d-inline-block z-index-2">
                             <p>Enter your email to start growing your Instagram:</p>
-                            <form class="form-inline formoid">
-                                <div class="input-group">
-                                    <input type="email" class="form-control signUpForm" placeholder="Your Email Address"
-                                        required>
-                                </div>
+                            <form action="{%url 'userapi:signup' %}" method="get">
                                 <button type="submit" class="btn btn-primary w-sm-100 w-lg-auto">Sign Up Now 👈</button>
                             </form>
                             <span class="d-block text-light-50 small my-3">2 Minutes Setup • 7 Day Growth Guarantee•
@@ -1688,10 +1665,6 @@
                                 <p class="lead text-black-50 mb-lg-3">Finish creating your MASSNOVA account and start
                                     growing your Instagram faster today.</p>
                                 <form action="{%url 'userapi:signup' %}" method="get">
-                                    <div class="input-group">
-                                        <input type="email" class="form-control signUpForm"
-                                            placeholder="Your Email Address" required>
-                                    </div>
                                     <button type="submit" class="btn btn-success w-sm-100 w-lg-auto">Join
                                         MASSNOVA</button>
                                 </form>
