@@ -1,1 +1,0 @@
-window.onload=function(){$(".formoid").submit(function(i){i.preventDefault(),mail=$(this).find(".signUpForm").val(),window.location.href=`https://instacaptain.com/signup?email=${mail}`})};

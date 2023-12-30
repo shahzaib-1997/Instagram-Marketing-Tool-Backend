@@ -72,24 +72,21 @@
                 <div class="col-lg-12 ">
                   <div class="form-group">
                     <i class='bx bx-user'></i>
-                    <input type="text" name="username" id="username" class="form-control" required
-                      data-error="Please enter your Username" placeholder="Username">
+                    <input type="text" name="username" id="username" class="form-control" required data-error="Please enter your Username" placeholder="Username">
                   </div>
                 </div>
 
                 <div class="col-lg-12">
                   <div class="form-group">
                     <i class='bx bx-mail-send'></i>
-                    <input type="email" name="email" id="email" class="form-control" required
-                      data-error="Please enter email" placeholder="Email">
+                    <input type="email" name="email" id="email" class="form-control" required data-error="Please enter email" placeholder="Email">
                   </div>
                 </div>
 
                 <div class="col-12">
                   <div class="form-group">
                     <i class='bx bx-lock-alt'></i>
-                    <input class="form-control" type="password" name="password" id="password-input"
-                      placeholder="Password">
+                    <input class="form-control" type="password" name="password" id="password-input" placeholder="Password">
                     <input type="checkbox" id="chb2" onclick="togglePassword()">
                     <label for="chb2">
                       Show Password
@@ -120,4 +117,19 @@
   </div>
 </div>
 <!-- Sign Up Area End -->
+
+<script>
+  window.onload = function () {
+    // Create a URLSearchParams object
+    var urlParams = location.search;
+    if (urlParams) {
+      var email = urlParams.split('?')[1];
+      
+      if (email) {
+        var val = email.split('=')[1]; 
+        document.getElementById('email').value = val;
+      }
+    }
+  };
+</script>
 {% endblock content1 %}

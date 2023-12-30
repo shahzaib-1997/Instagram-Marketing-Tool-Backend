@@ -27,6 +27,7 @@ Example:
     ... ]
 """
 from django.urls import path
+from django.views.generic import TemplateView
 from userapi import views
 
 app_name = "userapi"
@@ -37,24 +38,55 @@ urlpatterns = [
     path("token/", views.CreateToken.as_view(), name="token"),
     path("signup/", views.SignupView.as_view(), name="signup"),
     path("signin/", views.LoginView.as_view(), name="login"),
-    path('logout/', views.logout_user, name='logout'),
-    path('dashboard/', views.DashboardView.as_view(), name='dashboard'),
-    path("insta-credentials/", views.InstaCredentialView.as_view(), name="insta-credentials"),
-    path("insta-credential/<str:pk>/", views.InstaCredentialView.as_view(), name="insta-credential"),
-    path("update-insta-target/", views.update_insta_target, name="update-insta-target"),
+    path("logout/", views.logout_user, name="logout"),
+    path("dashboard/", views.DashboardView.as_view(), name="dashboard"),
+    path(
+        "insta-credentials/",
+        views.InstaCredentialView.as_view(),
+        name="insta-credentials",
+    ),
+    path(
+        "insta-credential/<str:pk>/",
+        views.InstaCredentialView.as_view(),
+        name="insta-credential",
+    ),
     path("target-edit/", views.TargetTemplateView.as_view(), name="target-edit"),
-    path("target-edit/<int:pk>/", views.TargetTemplateView.as_view(), name="target-edit"),
-    path('about/', views.about, name='about'),
-    path('pricing/', views.pricing, name='pricing'),
-    path('privacy-policy/', views.pricing, name='privacy-policy'),
-    path('terms-condition/', views.pricing, name='terms-condition'),
-    path('contact/', views.contact, name='contact'),
+    path(
+        "target-edit/<int:pk>/", views.TargetTemplateView.as_view(), name="target-edit"
+    ),
+    path("about/", views.about, name="about"),
+    path(
+        "pricing/",
+        TemplateView.as_view(template_name="userapi/pricing.html"),
+        name="pricing",
+    ),
+    path(
+        "privacy-policy/",
+        TemplateView.as_view(template_name="userapi/privacy.html"),
+        name="privacy-policy",
+    ),
+    path(
+        "terms-condition/",
+        TemplateView.as_view(template_name="userapi/terms.html"),
+        name="terms-condition",
+    ),
+    path("contact/", views.contact, name="contact"),
     path("profile/", views.ProfileView.as_view(), name="profile"),
     path("update-profile/", views.ProfileView.as_view(), name="update-profile"),
-    path("password-change-user/", views.PasswordChangeUsernameView.as_view(), name="password-change-user"),
-    path("password-change/", views.PasswordChangeView.as_view(), name="password-change"),
+    path(
+        "password-change-user/",
+        views.PasswordChangeUsernameView.as_view(),
+        name="password-change-user",
+    ),
+    path(
+        "password-change/", views.PasswordChangeView.as_view(), name="password-change"
+    ),
     path("activity-time/", views.ActivityTimeView.as_view(), name="activity-time"),
-    path("activity-time/<int:pk>/", views.ActivityTimeView.as_view(), name="activity-time"),
+    path(
+        "activity-time/<int:pk>/",
+        views.ActivityTimeView.as_view(),
+        name="activity-time",
+    ),
     path("credential/", views.CredentialView.as_view(), name="credential"),
     path("credential/<int:pk>/", views.CredentialView.as_view(), name="credential"),
     path("hashtag/", views.HashtagView.as_view(), name="hashtag"),
@@ -66,7 +98,9 @@ urlpatterns = [
     path("reel/", views.ReelView.as_view(), name="reel"),
     path("reel/<int:pk>/", views.ReelView.as_view(), name="reel"),
     path("activity-log/", views.ActivityLogView.as_view(), name="activity-log"),
-    path("activity-log/<int:pk>/", views.ActivityLogView.as_view(), name="activity-log"),
+    path(
+        "activity-log/<int:pk>/", views.ActivityLogView.as_view(), name="activity-log"
+    ),
     path("stat/", views.StatView.as_view(), name="stat"),
     path("stat/<int:pk>/", views.StatView.as_view(), name="stat"),
     path("target-type/", views.TargetTypeView.as_view(), name="target-type"),
@@ -75,4 +109,135 @@ urlpatterns = [
     path("target/<int:pk>/", views.TargetView.as_view(), name="target"),
     path("action/", views.ActionView.as_view(), name="action"),
     path("action/<int:pk>/", views.ActionView.as_view(), name="action"),
+    path("how/", TemplateView.as_view(template_name="userapi/how.html"), name="how"),
+    path(
+        "features/",
+        TemplateView.as_view(template_name="userapi/features.html"),
+        name="features",
+    ),
+    path(
+        "instagram-growth-service/",
+        TemplateView.as_view(template_name="userapi/instagram-growth-service.html"),
+        name="instagram-growth-service",
+    ),
+    path(
+        "testimonials/",
+        TemplateView.as_view(template_name="userapi/testimonials.html"),
+        name="testimonials",
+    ),
+    path(
+        "compare/",
+        TemplateView.as_view(template_name="userapi/compare.html"),
+        name="compare",
+    ),
+    path(
+        "instagram-agency/",
+        TemplateView.as_view(template_name="userapi/instagram-agency.html"),
+        name="instagram-agency",
+    ),
+    path(
+        "instagram-for-business/",
+        TemplateView.as_view(template_name="userapi/instagram-for-business.html"),
+        name="instagram-for-business",
+    ),
+    path(
+        "instagram-creator-account/",
+        TemplateView.as_view(template_name="userapi/instagram-creator-account.html"),
+        name="instagram-creator-account",
+    ),
+    path(
+        "instagram-manager/",
+        TemplateView.as_view(template_name="userapi/instagram-manager.html"),
+        name="instagram-manager",
+    ),
+    path(
+        "growth-club/",
+        TemplateView.as_view(template_name="userapi/growth-club.html"),
+        name="growth-club",
+    ),
+    path(
+        "instagram-influencers/",
+        TemplateView.as_view(template_name="userapi/instagram-influencers.html"),
+        name="instagram-influencers",
+    ),
+    path(
+        "instagram-models/",
+        TemplateView.as_view(template_name="userapi/instagram-models.html"),
+        name="instagram-models",
+    ),
+    path(
+        "instagram-meme-accounts/",
+        TemplateView.as_view(template_name="userapi/instagram-meme-accounts.html"),
+        name="instagram-meme-accounts",
+    ),
+    path(
+        "jarvee/",
+        TemplateView.as_view(template_name="userapi/jarvee.html"),
+        name="jarvee",
+    ),
+    path(
+        "instazood/",
+        TemplateView.as_view(template_name="userapi/instazood.html"),
+        name="instazood",
+    ),
+    path(
+        "followliker/",
+        TemplateView.as_view(template_name="userapi/followliker.html"),
+        name="followliker",
+    ),
+    path(
+        "kicksta/",
+        TemplateView.as_view(template_name="userapi/kicksta.html"),
+        name="kicksta",
+    ),
+    path(
+        "socialcaptain/",
+        TemplateView.as_view(template_name="userapi/socialcaptain.html"),
+        name="socialcaptain",
+    ),
+    path(
+        "affiliate/",
+        TemplateView.as_view(template_name="userapi/affiliate.html"),
+        name="affiliate",
+    ),
+    path(
+        "careers/",
+        TemplateView.as_view(template_name="userapi/careers.html"),
+        name="careers",
+    ),
+    path(
+        "press/", TemplateView.as_view(template_name="userapi/press.html"), name="press"
+    ),
+    path(
+        "instagram-engagement-calculator/",
+        TemplateView.as_view(
+            template_name="userapi/instagram-engagement-calculator.html"
+        ),
+        name="instagram-engagement-calculator",
+    ),
+    path(
+        "instagram-audit/",
+        TemplateView.as_view(template_name="userapi/instagram-audit.html"),
+        name="instagram-audit",
+    ),
+    path(
+        "instagram-story-templates/",
+        TemplateView.as_view(template_name="userapi/instagram-story-templates.html"),
+        name="instagram-story-templates",
+    ),
+    path(
+        "instagram-hashtag-generator/",
+        TemplateView.as_view(template_name="userapi/instagram-hashtag-generator.html"),
+        name="instagram-hashtag-generator",
+    ),
+    path(
+        "username-generator/",
+        TemplateView.as_view(template_name="userapi/username-generator.html"),
+        name="username-generator",
+    ),
+    path(
+        "instagram-tools/",
+        TemplateView.as_view(template_name="userapi/instagram-tools.html"),
+        name="instagram-tools",
+    ),
 ]

@@ -190,7 +190,7 @@ class Target(models.Model):
         """
         method __str__(): Returns a string representation of the object.
         """
-        return f"{self.user.username} - {self.target_type.type}"
+        return f"{self.user.username} - {dict(self.options).get(self.status)}"
 
 
 class Hashtag(models.Model):
