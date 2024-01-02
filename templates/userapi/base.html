@@ -1,358 +1,29 @@
 {% load static %}
 <!DOCTYPE html>
-<html lang="zxx">
+<html lang="en">
 
   <head>
-    <!-- Required Meta Tags -->
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
-    <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="{% static 'assets/css/bootstrap.min.css' %}">
-    <!-- Flaticon CSS -->
-    <link rel="stylesheet" href="{% static 'assets/fonts/flaticon.css' %}">
-    <!-- Boxicons CSS -->
-    <link rel="stylesheet" href="{% static 'assets/css/boxicons.min.css' %}">
-    <!-- Owl Carousel CSS -->
-    <link rel="stylesheet" href="{% static 'assets/css/owl.theme.default.min.css' %}">
-    <link rel="stylesheet" href="{% static 'assets/css/owl.carousel.min.css' %}">
-    <!-- Magnific Popup CSS -->
-    <link rel="stylesheet" href="{% static 'assets/css/magnific-popup.min.css' %}">
-    <!-- Animate Min CSS -->
-    <link rel="stylesheet" href="{% static 'assets/css/animate.min.css' %}">
-    <!-- Meanmenu CSS -->
-    <link rel="stylesheet" href="{% static 'assets/css/meanmenu.css' %}">
-    <!-- Style CSS -->
-    <link rel="stylesheet" href="{% static 'assets/css/style.css' %}">
-    <!-- Responsive CSS -->
-    <link rel="stylesheet" href="{% static 'assets/css/responsive.css' %}">
-    <!-- Theme Dark CSS -->
-    <link rel="stylesheet" href="{% static 'assets/css/theme-dark.css' %}">
-    <!-- Favicon -->
-    <link rel="icon" href="{% static '' %}media/icon.png" type="image/x-icon" />
-
-    <title>{% block title %}{% endblock title %} MASSNOVA</title>
-
-    <style>
-      .buttons button {
-        margin-right: 0.5rem;
-      }
-    </style>
-    {% block style %}{% endblock style %}
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" href="{% static '' %}media/icon.png" type="image/x-icon" />  
+    <!--plugins-->
+    <link href="{% static '' %}bs/plugins/perfect-scrollbar/css/perfect-scrollbar.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="{% static '' %}bs/plugins/metismenu/metisMenu.min.css">
+    <link rel="stylesheet" type="text/css" href="{% static '' %}bs/plugins/metismenu/mm-vertical.css">
+    <!--main css-->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Material+Icons+Outlined" rel="stylesheet">
+    <link href="{% static '' %}bs/css/bootstrap.min.css" rel="stylesheet">
+    <link href="{% static '' %}bs/css/bootstrap-extended.css" rel="stylesheet">
+    <link href="{% static '' %}bs/sass/main.css" rel="stylesheet">
+    <link href="{% static '' %}bs/sass/responsive.css" rel="stylesheet">
+    {% block head %}{% endblock  %}
   </head>
 
   <body>
-    <!-- Pre Loader -->
-    <div class="preloader">
-      <div class="d-table">
-        <div class="d-table-cell">
-          <div class="spinner"></div>
-        </div>
-      </div>
-    </div>
-    <!-- End Pre Loader -->
+    {% block content %}{% endblock content %}
 
-    <!-- Start Navbar Area -->
-    <div class="navbar-area">
-      <!-- Menu For Mobile Device -->
-      <div class="mobile-nav">
-        <a href="{% url 'userapi:home' %}" class="logo">
-          <h1>MASSNOVA</h1>
-        </a>
-      </div>
-
-      <!-- Menu For Desktop Device -->
-      <div class="main-nav nav-bar-three">
-        <div class="container-fluid">
-          <nav class="container-max-2 navbar navbar-expand-md navbar-light ">
-            <a class="navbar-brand" href="{% url 'userapi:home' %}">
-              <h1>MASSNOVA</h1>
-            </a>
-            <div class="collapse navbar-collapse mean-menu" id="navbarSupportedContent">
-              <ul class="navbar-nav m-auto">
-                <li class="nav-item">
-                  <a href="{% url 'userapi:home' %}" class="nav-link">
-                    Home
-                  </a>
-                </li>
-                {% if request.user.is_authenticated %}
-                <li class="nav-item">
-                  <a href="{% url 'userapi:dashboard' %}" class="nav-link">
-                    Dashboard
-                  </a>
-                </li>
-                <li class="nav-item">
-                  <a href="{% url 'userapi:profile' %}" class="nav-link">
-                    Your Profile
-                  </a>
-                </li>
-                <li class="nav-item">
-                  <a href="{%url 'userapi:logout' %}" class="nav-link">Logout</a>
-                </li>
-                {% else %}
-                <li class="nav-item">
-                  <a href="{%url 'userapi:login' %}" class="nav-link">Sign In</a>
-                </li>
-                <li class="nav-item">
-                  <a href="{%url 'userapi:signup' %}" class="nav-link">Sign Up</a>
-                </li>
-                {% endif %}
-                <li class="nav-item">
-                  <a href="{% url 'userapi:about' %}" class="nav-link">
-                    About Us
-                  </a>
-                </li>
-                <li class="nav-item">
-                  <a href="{% url 'userapi:pricing' %}" class="nav-link">
-                    Pricing
-                  </a>
-                </li>
-              </ul>
-              {% if request.user.is_anonymous %}
-              <div class="side-nav d-in-line align-items-center">
-                <div class="side-item">
-                  <div class="nav-add-btn">
-                    <a href="{% url 'userapi:login' %}" class="nav-menu-btn border-radius">
-                      Get started
-                      <i class='bx bx-plus'></i>
-                    </a>
-                  </div>
-                </div>
-              </div>
-              {% endif %}
-            </div>
-          </nav>
-        </div>
-      </div>
-
-      <div class="side-nav-responsive">
-        <div class="container">
-          <div class="dot-menu">
-            <div class="circle-inner">
-              <div class="circle circle-one"></div>
-              <div class="circle circle-two"></div>
-              <div class="circle circle-three"></div>
-            </div>
-          </div>
-
-          <div class="container">
-            <div class="side-nav-inner">
-              <div class="side-nav justify-content-center  align-items-center">
-                <div class="side-item">
-                  <div class="search-box">
-                    <i class="flaticon-loupe"></i>
-                  </div>
-                </div>
-
-                <div class="side-item">
-                  <div class="user-btn">
-                    <a href={% url "userapi:contact" %}>
-                      <i class="flaticon-contact"></i>
-                    </a>
-                  </div>
-                </div>
-
-                <div class="side-item">
-                  <div class="nav-add-btn">
-                    <a href={% url "userapi:contact" %} class="nav-menu-btn border-radius">
-                      Contact us
-                      <i class='bx bx-plus'></i>
-                    </a>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <!-- End Navbar Area -->
-
-    <!-- Search Overlay -->
-    <div class="search-overlay">
-      <div class="d-table">
-        <div class="d-table-cell">
-          <div class="search-layer"></div>
-          <div class="search-layer"></div>
-          <div class="search-layer"></div>
-
-          <div class="search-close">
-            <span class="search-close-line"></span>
-            <span class="search-close-line"></span>
-          </div>
-
-          <div class="search-form">
-            <form>
-              <input type="text" class="input-search" placeholder="Search here...">
-              <button type="submit"><i class="flaticon-loupe"></i></button>
-            </form>
-          </div>
-        </div>
-      </div>
-    </div>
-    <!-- End Search Overlay -->
-
-    {% block content1 %}{% endblock content1%}
-
-    <!-- Brand Logo Area -->
-    <div class="brand-logo-area">
-      <div class="container-fluid">
-        <div class="container-max">
-          <div class="brand-logo-slider owl-carousel owl-theme">
-            <div class="brand-logo-item">
-              <img src="{% static 'assets/img/brand/brand-logo1.png' %}" class="brand-logo1" alt="Images">
-              <img src="{% static 'assets/img/brand/brand-style1.png' %}" class="brand-logo2" alt="Images">
-            </div>
-            <div class="brand-logo-item">
-              <img src="{% static 'assets/img/brand/brand-logo2.png' %}" class="brand-logo1" alt="Images">
-              <img src="{% static 'assets/img/brand/brand-style2.png' %}" class="brand-logo2" alt="Images">
-            </div>
-            <div class="brand-logo-item">
-              <img src="{% static 'assets/img/brand/brand-logo3.png' %}" class="brand-logo1" alt="Images">
-              <img src="{% static 'assets/img/brand/brand-style3.png' %}" class="brand-logo2" alt="Images">
-            </div>
-            <div class="brand-logo-item">
-              <img src="{% static 'assets/img/brand/brand-logo4.png' %}" class="brand-logo1" alt="Images">
-              <img src="{% static 'assets/img/brand/brand-style4.png' %}" class="brand-logo2" alt="Images">
-            </div>
-            <div class="brand-logo-item">
-              <img src="{% static 'assets/img/brand/brand-logo5.png' %}" class="brand-logo1" alt="Images">
-              <img src="{% static 'assets/img/brand/brand-style5.png' %}" class="brand-logo2" alt="Images">
-            </div>
-            <div class="brand-logo-item">
-              <img src="{% static 'assets/img/brand/brand-logo6.png' %}" class="brand-logo1" alt="Images">
-              <img src="{% static 'assets/img/brand/brand-style6.png' %}" class="brand-logo2" alt="Images">
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <!-- Brand Logo Area End -->
-
-    {% block content2 %}{% endblock content2 %}
-
-    <!-- Footer Area -->
-    <footer class="footer-area footer-bg2 pt-100">
-      <div class="container">
-        <div class="footer-midal pb-70">
-          <div class="row">
-            <div class="col-lg-4 col-sm-7">
-              <div class="footer-widget">
-                <div class="footer-img">
-                  <h1>MASSNOVA</h1>
-                </div>
-                <div class="footer-social-icon">
-                  <ul class="social-link">
-                    <li>
-                      <a href="#" target="_blank"><i class='bx bxl-facebook'></i></a>
-                    </li>
-                    <li>
-                      <a href="#" target="_blank"><i class='bx bxl-twitter'></i></a>
-                    </li>
-                    <li>
-                      <a href="#" target="_blank"><i class='bx bxl-instagram'></i></a>
-                    </li>
-                    <li>
-                      <a href="#" target="_blank"><i class='bx bxl-pinterest-alt'></i></a>
-                    </li>
-                    <li>
-                      <a href="#" target="_blank"><i class='bx bxl-youtube'></i></a>
-                    </li>
-                  </ul>
-                </div>
-              </div>
-            </div>
-
-            <div class="col-lg-3 col-sm-7">
-              <div class="footer-widget ps-5">
-                <h3>Company</h3>
-                <ul class="footer-list">
-                  <li>
-                    <a href="{% url 'userapi:home' %}">Home</a>
-                  </li>
-                  <li>
-                    <a href={% url "userapi:about" %}>About Us</a>
-                  </li>
-                  <li>
-                    <a href={% url "userapi:pricing" %}>Pricing</a>
-                  </li>
-                  <li>
-                    <a href={% url "userapi:contact" %}>Contact</a>
-                  </li>
-                </ul>
-              </div>
-            </div>
-
-            <div class="col-lg-3 col-sm-5">
-              <div class="footer-widget">
-                <h3>Address</h3>
-                <ul class="footer-list-two">
-                  <li>
-                    <i class='flaticon-telephone'></i>
-                    <a href="tel:">Sample Number</a>
-                  </li>
-
-                  <li>
-                    <i class='flaticon-email-1'></i>
-                    <a href="mailto:">Sample Email</a>
-                  </li>
-
-                  <li>
-                    <i class='flaticon-place'></i>
-                    Sample Address
-                  </li>
-                </ul>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="copy-right-area">
-          <div class="row">
-            <div class="col-lg-8">
-              <div class="copy-right-text text-left">
-                <p>
-                  Copyright @ {% now 'Y' %} MASSNOVA. All Rights Reserved by
-                  <a href="https://hibootstrap.com/" target="_blank">Hi Bootstrap</a>
-                </p>
-              </div>
-            </div>
-
-            <div class="col-lg-4">
-              <div class="copy-right-list">
-                <ul>
-                  <li><a href={% url "userapi:privacy-policy" %}> Privacy Policy </a></li>
-                  <li><a href={% url "userapi:terms-condition" %}> Terms & Conditions </a></li>
-                </ul>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </footer>
-    <!-- Footer Area End -->
-
-
-    <!-- Jquery Min JS -->
-    <script src="{% static 'assets/js/jquery.min.js' %}"></script>
-    <!-- Bootstrap Bundle Min JS -->
-    <script src="{% static 'assets/js/bootstrap.bundle.min.js' %}"></script>
-    <!-- Wow Min JS -->
-    <script src="{% static 'assets/js/wow.min.js' %}"></script>
-    <!-- Owl Carousel Min JS -->
-    <script src="{% static 'assets/js/owl.carousel.min.js' %}"></script>
-    <!-- Magnific Popup Min JS -->
-    <script src="{% static 'assets/js/jquery.magnific-popup.min.js' %}"></script>
-    <!-- Meanmenu JS -->
-    <script src="{% static 'assets/js/meanmenu.js' %}"></script>
-    <!-- Ajaxchimp Min JS -->
-    <script src="{% static 'assets/js/jquery.ajaxchimp.min.js' %}"></script>
-    <!-- Form Validator Min JS -->
-    <script src="{% static 'assets/js/form-validator.min.js' %}"></script>
-    <!-- Contact Form JS -->
-    <script src="{% static 'assets/js/contact-form-script.js' %}"></script>
-    <!-- Custom JS -->
-    <script src="{% static 'assets/js/custom.js' %}"></script>
+    <script src="{% static '' %}bs/js/jquery.min.js"></script>
 
     <script>
       function handleMessages() {
@@ -367,16 +38,24 @@
           }, displayTime);
         });
       }
-
       // Call the function when the DOM is loaded
       document.addEventListener('DOMContentLoaded', handleMessages);
 
-      function togglePassword() {
-        const passwordInput = document.getElementById("password-input");
-        passwordInput.type = passwordInput.type === 'password' ? 'text' : 'password';
-      }
+      $(document).ready(function () {
+        $("#show_hide_password a").on('click', function (event) {
+          event.preventDefault();
+          if ($('#show_hide_password input').attr("type") == "text") {
+            $('#show_hide_password input').attr('type', 'password');
+            $('#show_hide_password i').addClass("bi-eye-slash-fill");
+            $('#show_hide_password i').removeClass("bi-eye-fill");
+          } else if ($('#show_hide_password input').attr("type") == "password") {
+            $('#show_hide_password input').attr('type', 'text');
+            $('#show_hide_password i').removeClass("bi-eye-slash-fill");
+            $('#show_hide_password i').addClass("bi-eye-fill");
+          }
+        });
+      });
     </script>
-
   </body>
 
 </html>

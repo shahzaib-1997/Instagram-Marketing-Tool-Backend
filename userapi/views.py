@@ -81,8 +81,8 @@ class CreateToken(APIView):
 class SignupView(APIView):
     def get(self, request):
         if not request.user.is_authenticated:
-            email = request.GET.get('email')
-            return render(request, "userapi/signup.html", {'email': email})
+            email = request.GET.get("email", "")
+            return render(request, "userapi/signup.html", {"email": email})
         return redirect("userapi:dashboard")
 
     def post(self, request):
@@ -158,29 +158,52 @@ class TargetTemplateView(APIView):
             if request.user.is_authenticated:
                 if pk:
                     target = get_object_or_404(Target, id=pk, user=request.user)
-                insta_creds = Credential.objects.filter(user=request.user).values("id", "username").order_by("id")
-                return render(request, "userapi/target.html", {
-                    "target": target if pk else "",
-                    "insta_creds": insta_creds,
-                    "pk": pk
-                    })
+                insta_creds = (
+                    Credential.objects.filter(user=request.user)
+                    .values("id", "username")
+                    .order_by("id")
+                )
+                return render(
+                    request,
+                    "userapi/target.html",
+                    {
+                        "target": target if pk else "",
+                        "insta_creds": insta_creds,
+                        "pk": pk,
+                    },
+                )
             messages.error(request, "You need to login first.")
             return redirect("userapi:login")
         except Exception as e:
             messages.error(request, str(e))
-        return redirect("userapi:dashboard")        
+        return redirect("userapi:dashboard")
 
     def post(self, request, pk=None):
         try:
             if request.user.is_authenticated:
-                target = get_object_or_404(Target, id=pk) if pk else Target(user=request.user)
+                target = (
+                    get_object_or_404(Target, id=pk)
+                    if pk
+                    else Target(user=request.user)
+                )
                 insta_cred = request.POST.get("selected_insta_cred")
                 credential = get_object_or_404(Credential, id=insta_cred)
                 target.insta_user = credential
                 target.save()
-                insta_creds = Credential.objects.filter(user=request.user).values("id", "username").order_by("id")
-                messages.success(request, "Target " + ("updated" if pk else "added") + " successfully!")
-                return render(request, "userapi/target.html", {"target": target, "insta_creds": insta_creds, "pk": pk})
+                insta_creds = (
+                    Credential.objects.filter(user=request.user)
+                    .values("id", "username")
+                    .order_by("id")
+                )
+                messages.success(
+                    request,
+                    "Target " + ("updated" if pk else "added") + " successfully!",
+                )
+                return render(
+                    request,
+                    "userapi/target.html",
+                    {"target": target, "insta_creds": insta_creds, "pk": pk},
+                )
             messages.error(request, "You need to login first.")
             return redirect("userapi:login")
         except Exception as e:
@@ -191,8 +214,14 @@ class TargetTemplateView(APIView):
 class InstaCredentialView(APIView):
     def get(self, request):
         if request.user.is_authenticated:
-            insta_creds = Credential.objects.filter(user=request.user).values("id", "username").order_by("id")
-            return render(request, "userapi/insta_credentials.html", {"insta_creds": insta_creds})
+            insta_creds = (
+                Credential.objects.filter(user=request.user)
+                .values("id", "username")
+                .order_by("id")
+            )
+            return render(
+                request, "userapi/insta_credentials.html", {"insta_creds": insta_creds}
+            )
         messages.error(request, "You need to login first.")
         return redirect("userapi:login")
 
@@ -200,13 +229,28 @@ class InstaCredentialView(APIView):
         try:
             if request.user.is_authenticated:
                 pk = request.POST.get("previous_username")
-                credential = get_object_or_404(Credential, user=request.user, username=pk) if pk else Credential(user = request.user)
+                credential = (
+                    get_object_or_404(Credential, user=request.user, username=pk)
+                    if pk
+                    else Credential(user=request.user)
+                )
                 credential.username = request.POST.get("username")
                 credential.password = request.POST.get("password")
                 credential.save()
-                messages.success(request, "Details " + ("updated" if pk else "added") + " successfully!")
-                insta_creds = Credential.objects.filter(user=request.user).values("id", "username").order_by("id")
-                return render(request, "userapi/insta_credentials.html", {"insta_creds": insta_creds})
+                messages.success(
+                    request,
+                    "Details " + ("updated" if pk else "added") + " successfully!",
+                )
+                insta_creds = (
+                    Credential.objects.filter(user=request.user)
+                    .values("id", "username")
+                    .order_by("id")
+                )
+                return render(
+                    request,
+                    "userapi/insta_credentials.html",
+                    {"insta_creds": insta_creds},
+                )
             messages.error(request, "You need to login first.")
             return redirect("userapi:login")
         except Exception as e:
@@ -219,15 +263,20 @@ class InstaCredentialView(APIView):
     def delete(self, request, pk):
         try:
             if request.user.is_authenticated:
-                credential = get_object_or_404(Credential, username=pk, user=request.user)
+                credential = get_object_or_404(
+                    Credential, username=pk, user=request.user
+                )
                 credential.delete()
-                messages.success(request, f"Insta Credential {pk} deleted successfully.")
+                messages.success(
+                    request, f"Insta Credential {pk} deleted successfully."
+                )
                 return Response(status=status.HTTP_204_NO_CONTENT)
             messages.error(request, "You need to login first.")
             return redirect("userapi:login")
         except Exception as e:
             messages.error(request, str(e))
             return Response(status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
 
 class ProfileView(APIView):
     def get(self, request):
