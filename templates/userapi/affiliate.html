@@ -1,0 +1,173 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+        {% include "userapi/head.html" %}
+        <title>Affiliate Program - MASSNOVA</title>
+        <meta property="og:url" content={% url "userapi:affiliate" %} />
+        <link rel="canonical" href={% url "userapi:affiliate" %} />
+        <link rel="alternate" href={% url "userapi:affiliate" %} hreflang="x-default" />
+    </head>
+
+    <body class="h-100">
+        {% include "userapi/header.html" %}
+        <section id="hero" class="pt-0 py-lg-5">
+            <div class="container">
+                <div class="row justify-content-center align-items-center">
+                    <div class="col-md-12 col-lg-5">
+                        <div class="label py-2 px-2 mb-3 preheader">Become an Affiliate</div>
+                        <h1 class="mb-3 h2">Life can be easy 🏄‍♂️</h1>
+                        <h2 class="h3">This is the affiliate program you were looking for</h2>
+                        <p class="lead text-black-50">Join MASSNOVA's affiliate program and help other's grow their Instagram - all while growing your own recurring revenue.</p>
+                        <p class="text-black-50">We offer 25% flat rate recurring commission. For life.</p>
+                        <a href="https://affiliates.nitreo.com/" class="btn btn-lg btn-primary mt-3 aff-top-cta">Join our affiliate program</a>
+                    </div>
+                    <div class="col-lg-5 mt-5 mt-lg-0">
+                        <div class="asset-container mx-auto">
+                            <div class="asset-support">
+                                <img class="faster-1 br-24 shadow-2 zi-1 lazy" data-src="{% static '' %}img/hashtag-photograph-instagram-impressions.png" data-aos="fade-up">
+                            </div>
+                            <img class="br-24 shadow-2" src="{% static '' %}img/nitreo-surfing.jpg" alt="an image of a man enjoying MASSNOVA's affiliate program">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <section class="py-3 bg-primary-lightest">
+            <div class="container">
+                <div class="row py-5 align-items-center justify-content-center">
+                    <div class="col-3 col-lg-2">
+                        <p class="lead text-center my-0">As seen on</p>
+                    </div>
+                    <div class="col-3 col-lg-2 ">
+                        <img class="lazy" data-src="{% static '' %}img/aw-logo.png">
+                    </div>
+                    <div class="col-3 col-lg-2 ">
+                        <img class="lazy" data-src="{% static '' %}img/stm-logo.png">
+                    </div>
+                    <div class="col-3 col-lg-2">
+                        <img class="lazy" data-src="{% static '' %}img/igb-logo.png">
+                    </div>
+                    <div class="d-none d-lg-flex col-lg-2">
+                        <img class="lazy" data-src="{% static '' %}img/aff-summit-logo.png">
+                    </div>
+
+                </div>
+            </div>
+        </section>
+        <section id="about">
+            <div class="container">
+                <div class="row align-items-center justify-content-center">
+                    <div class="col-md-12 col-lg-4">
+                        <div class="label py-2 px-2 mb-3 preheader gray">General Info</div>
+                        <h2 class="mb-3 h3">The Basics</h2>
+                        <p class="lead text-black-50">Sign up to our affiliate program to start offering the best Instagram growth service to potential customers all over the world. You help us promote, we pay out for conversions. It's that simple.</p>
+                    </div>
+                    <div class="col-lg-5 offset-lg-1">
+                        <ul class="list-unstyled check text-black-50  my-3">
+                            <li class="list-inline-item mt-3">
+                                25% recurring commission
+                            </li>
+                            <li class="list-inline-item mt-3">
+                                As long as the customer is with us, you get paid
+                            </li>
+                            <li class="list-inline-item mt-3">
+                                ~30 day holding fee pending refunds
+                            </li>
+                            <li class="list-inline-item mt-3">
+                                Regular, monthly payouts
+                            </li>
+                            <li class="list-inline-item mt-3">
+                                60 day cookie storage
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="row justify-content-center mt-5 pt-lg-5">
+                    <div class="col-lg-8">
+                        <div class="alert bg-green text-green px-5 py-3">
+                            <p class="font-weight-bold my-3">💡 Heads up</p>
+                            <p class="text-black-50">We highly encourage you to carefully read our <b>MASSNOVA Partnership Guidelines</b> to gain more insight of how you can start maximizing your earning potential with our program. <a href={% url "userapi:partners" %}>Learn more</a></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <section id="features" class="bg-light">
+            <div class="container">
+                <div class="row align-items-center my-5 justify-content-center">
+                    <div class="col-lg-8 text-center">
+                        <div class="label py-2 px-2 mb-3 preheader">Features</div>
+                        <h2 class="h3 mb-3">Straightforward and trackable</h2>
+                        <p class="lead">We've designed our affiliate program to be straightfoward and trackable so that there's full transparency. When people click on your URL and subscribe to one of MASSNOVA's plans, you get 25% affiliate commission. No questions asked. <strong>Become an affiliate now!</strong></p>
+                        <a href="https://affiliates.nitreo.com/" class="btn btn-lg btn-primary mt-3 mb-5 aff-middle-cta">Get your affiliate URL now</a>
+                    </div>
+                    <div class="row my-5 text-center">
+                        <div class="col-lg-3">
+                            <h3 class="h4">Easy Setup</h3>
+                            <img class="my-3" src="{% static '' %}img/comment-liking.svg" width="100px" alt="an affiliate feature">
+                            <p class="lead text-black-50">Signing up as an affiliate and all the way to setting up your customized affiliate URL takes a few minutes of your time. It's so straightforward you won't have to blink!</p>
+
+                        </div>
+                        <div class="col-lg-3">
+                            <h3 class="h4">Live Tracking</h3>
+                            <img class="my-3" src="{% static '' %}img/live-reactions.svg" width="100px" alt="an icon depicting Instagram live">
+                            <p class="text-black-50 lead">Any subscription that signs up through your affiliate link becomes automatically added - <strong> in real time</strong> - to your dashboard. Track your performance as soon as it happens.</p>
+                        </div>
+                        <div class="col-lg-3">
+                            <h3 class="h4">Dashboard</h3>
+                            <img class="my-3" src="{% static '' %}img/features.svg" width="100px" alt="features icon">
+                            <p class="text-black-50 lead">You get your own dashboard as soon as you sign up, where you can track your own progress. See everything from commission rate to recurring revenue payouts, all in one place.</p>
+                        </div>
+                        <div class="col-lg-3">
+
+                            <h3 class="h4">Auto Verification</h3>
+                            <img class="my-3" src="{% static '' %}img/white-listing.svg" width="100px" alt="whitelisting and export feature icon">
+                            <p class="text-black-50 lead">Qualified affiliate signups and subscriptions are automatically tracked by MASSNOVA's affiliate dashboard. And you'll see these pop up on your own dashboard.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <section id="about" class="pb-0">
+            <div class="container">
+                <div class="row align-items-center justify-content-center">
+                    <div class="col-md-12 col-lg-4">
+                        <div class="label py-2 px-2 mb-3 preheader">Media Ready</div>
+                        <h2 class="mb-3 h3">The easiest brand to push for conversions</h2>
+                        <p class="lead text-black-50">We know we look good, especially compared to other services out there. All the information you need is right on our website (did you <em>see</em> our <a href="{% url "userapi:compare" %}">comparison pages</a>?) - meaning we're an easy sell. Not to mention our product is pretty kickass.</p>
+                        <p class="lead text-black-50 font-weight-bold">We even have a press kit available for you to use... in case you're a content junkie.</p>
+                        <div class="btn-group">
+                            <a href="https://affiliates.nitreo.com/" class="btn btn-primary aff-bottom-cta">Become an affiliate</a>
+                            <a href="{% url "userapi:press" %}" class="btn btn-primary-light ml-0 ml-lg-3 mt-3 mt-lg-0">Download the press kit</a>
+                        </div>
+                    </div>
+                    <div class="col-lg-5 offset-lg-1">
+                        <img class="lazy" data-src="{% static '' %}img/instagram-follower-dashboard-nitreo.jpg">
+                    </div>
+                </div>
+            </div>
+        </section>
+        <section id="start" class="pb-0">
+            <div class="container">
+                <div class="row align-items-center justify-content-center">
+                    <div class="col-lg-4">
+                        <div class="label py-2 px-2 mb-3 preheader">How To start</div>
+                        <h2 class="h3 mb-3">Getting started is easy</h2>
+                        <p class="lead text-black-50">Becoming an affiliate and promoting our services is super easy. Simply sign up through our dedicated affiliate site, then generate your own customized URL to share with others.</p>
+                        <p class="lead text-black-50">If you're unsure about something we're one email away with a dedicated affiliate manager!</p>
+                        <a href="https://affiliates.nitreo.com/" class="btn btn-lg btn-primary mt-3 aff-footer-cta">Get your affiliate dashboard free</a>
+                    </div>
+                    <div class="offset-lg-1 col-lg-5 mt-5 mt-lg-0 align-self-end">
+                        <img src="{% static '' %}img/etienne-header.jpg" alt="arrow icon pointing to Etienne the affiliate manager">
+                        <img src="{% static '' %}img/etienne-affiliate.jpg" width="300" alt="A portrait photo of Etienne the affiliate manager for MASSNOVA">
+                    </div>
+                </div>
+            </div>
+        </section>
+        {% include "userapi/footer.html" %}
+    </body>
+    <!-- Mirrored from www.nitreo.com/affiliate by HTTrack Website Copier/3.x [XR&CO'2014], Fri, 29 Dec 2023 18:27:03 GMT -->
+
+</html>

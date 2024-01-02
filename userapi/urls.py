@@ -151,9 +151,9 @@ urlpatterns = [
         name="instagram-manager",
     ),
     path(
-        "growth-club/",
-        TemplateView.as_view(template_name="userapi/growth-club.html"),
-        name="growth-club",
+        "partners/",
+        TemplateView.as_view(template_name="userapi/partners.html"),
+        name="partners",
     ),
     path(
         "instagram-influencers/",

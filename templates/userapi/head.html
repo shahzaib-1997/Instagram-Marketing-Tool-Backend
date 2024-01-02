@@ -1,0 +1,27 @@
+{% load static %}
+
+<head>
+    <!-- Google Tag Manager -->
+    <script>(function (w, d, s, l, i) {
+            w[l] = w[l] || []; w[l].push({
+                'gtm.start':
+                    new Date().getTime(), event: 'gtm.js'
+            }); var f = d.getElementsByTagName(s)[0],
+                j = d.createElement(s), dl = l != 'dataLayer' ? '&l=' + l : ''; j.async = true; j.src =
+                    '{% static "" %}data.nitreo.com/gtm5445.html?id=' + i + dl; f.parentNode.insertBefore(j, f);
+        })(window, document, 'script', 'dataLayer', 'GTM-PZB5HND');
+    </script>
+    <!-- End Google Tag Manager -->
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1" name="viewport" />
+    <meta property="og:type" content="website" />
+    {% comment %} <meta property="og:image" content="{% static '' %}img/og-image-1200-630.jpg" />
+    <meta name="twitter:site" content="@getnitreo" />
+    <meta name="twitter:image" content="{% static '' %}img/twitter-card.jpg" /> {% endcomment %}
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <link rel="icon" href="{% static '' %}media/icon.png" type="image/x-icon" />
+    <link href="{% static '' %}css/bootstrap.min.css" rel="stylesheet">
+    <link href="{% static '' %}css/nitreo.css" rel="stylesheet">
+</head>

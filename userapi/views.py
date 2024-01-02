@@ -81,7 +81,8 @@ class CreateToken(APIView):
 class SignupView(APIView):
     def get(self, request):
         if not request.user.is_authenticated:
-            return render(request, "userapi/signup.html")
+            email = request.GET.get('email')
+            return render(request, "userapi/signup.html", {'email': email})
         return redirect("userapi:dashboard")
 
     def post(self, request):

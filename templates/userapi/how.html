@@ -3,216 +3,15 @@
 <html lang="en">
 
     <head>
-        <!-- Google Tag Manager -->
-        <script>(function (w, d, s, l, i) {
-                w[l] = w[l] || []; w[l].push({
-                    'gtm.start':
-                        new Date().getTime(), event: 'gtm.js'
-                }); var f = d.getElementsByTagName(s)[0],
-                    j = d.createElement(s), dl = l != 'dataLayer' ? '&l=' + l : ''; j.async = true; j.src =
-                        '../data.nitreo.com/gtm5445.html?id=' + i + dl; f.parentNode.insertBefore(j, f);
-            })(window, document, 'script', 'dataLayer', 'GTM-PZB5HND');</script>
-        <!-- End Google Tag Manager -->
-        <meta charset="utf-8">
-        <meta content="width=device-width, initial-scale=1" name="viewport" />
+        {% include "userapi/head.html" %}
         <title>How MASSNOVA Works - MASSNOVA</title>
-        <meta name="description" content="Discover how MASSNOVA helps you get more Instagram followers, and our great list of features that help power your Instagram growth.">
-        <meta name="twitter:title" content="How MASSNOVA Works - MASSNOVA" />
-        <meta property="og:title" content="How MASSNOVA Works - MASSNOVA" />
-        <meta property="og:description" content="Discover how MASSNOVA helps you get more Instagram followers, and our great list of features that help power your Instagram growth." />
-        <meta name="twitter:description" content="Discover how MASSNOVA helps you get more Instagram followers, and our great list of features that help power your Instagram growth." />
-        <meta property="og:url" content="https://nitreo.com/how" />
-        <link rel="canonical" href="how.html" />
-        <link rel="alternate" href="how.html" hreflang="x-default" />
-
-        <meta property="og:type" content="website" />
-        <meta property="og:image:width" content="1200" />
-        <meta property="og:image:height" content="630" />
-        <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:site" content="@getnitreo" />
-        <link rel="icon" href="../media/icon.png" type="image/x-icon" />
-        <meta property="og:image" content="https://nitreo.com/img/nitreo-og-image-1200-630.jpg" />
-        <meta name="twitter:image" content="https://nitreo.com/img/nitreo-twitter-card.jpg" />
-        <link href="{% static '' %}css/bootstrap.min.css" rel="stylesheet">
-        <link href="{% static '' %}css/nitreo.css" rel="stylesheet">
+        <meta property="og:url" content={% url "userapi:how" %} />
+        <link rel="canonical" href={% url "userapi:how" %} />
+        <link rel="alternate" href={% url "userapi:how" %} hreflang="x-default" />
     </head>
 
     <body class="h-100">
-        <!-- Nemanja Syncer -->
-        <script>
-            window.trackerURL = "https://app.nitreo.com/assets/tracking/storage.html";
-        </script>
-        <script src="{% static '' %}js/storage.js"></script>
-        <!-- Google Tag Manager (noscript) -->
-        <noscript><iframe src="https://data.nitreo.com/ns.html?id=GTM-PZB5HND" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
-        <!-- End Google Tag Manager (noscript) -->
-        <nav id="static-desktop" class="container navbar navbar-expand-sm navbar-light static-top my-3 d-none d-lg-flex">
-            <div class="container">
-                <a class="navbar-brand" href="index.html"><img style="width: 200px; height: auto;" src="../media/Logo Black Font re.png"></a>
-                <ul class="navbar-nav ml-auto">
-                    <li class="nav-item ml-auto d-none d-md-block">
-                        <a href="https://app.nitreo.com/login" class="nav-link nav-login arrow mr-3"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" id="Layer_1" x="0px" y="0px" viewBox="0 0 24 24" style="enable-background:new 0 0 24 24;" xml:space="preserve" class="injected-svg svg-inject black small mr-2">
-                                <g>
-                                    <path d="M12,0c1.5,0,3,0.3,4.5,0.9c3,1.2,5.3,3.5,6.6,6.4c2.6,6.1-0.3,13.1-6.3,15.7c-1.5,0.6-3.1,1-4.7,1C7.2,24,2.8,21.1,1,16.7   c-0.1-0.1-0.1-0.3,0-0.4c0-0.1,0.1-0.2,0.3-0.3c0.1,0,0.1,0,0.2,0c0.2,0,0.4,0.1,0.5,0.3C3.6,20.4,7.6,23,12,23   c1.5,0,2.9-0.3,4.3-0.9c2.7-1.1,4.8-3.3,5.9-6c1.1-2.7,1.1-5.7-0.1-8.4c-1.1-2.7-3.3-4.8-6-5.9C14.8,1.3,13.4,1,12,1   c-1.5,0-2.9,0.3-4.3,0.9C5.1,3,3,5.1,1.9,7.7C1.8,7.9,1.6,8,1.4,8C1.4,8,1.3,8,1.2,8C1.1,7.9,1,7.8,1,7.7c0-0.1,0-0.3,0-0.4   C2.2,4.4,4.4,2.2,7.3,1C8.8,0.3,10.4,0,12,0z"></path>
-                                    <path d="M12.5,7.5c0.1,0,0.3,0.1,0.4,0.1l4,4c0,0,0.1,0.1,0.1,0.2c0,0.1,0,0.3,0,0.4c0,0.1-0.1,0.1-0.1,0.2l-4,4   c-0.1,0.1-0.2,0.1-0.4,0.1s-0.3-0.1-0.4-0.1S12,16.1,12,16s0.1-0.3,0.1-0.4l3.1-3.1H0.5C0.2,12.5,0,12.3,0,12s0.2-0.5,0.5-0.5h14.8   l-3.1-3.1C12.1,8.3,12,8.1,12,8c0-0.1,0.1-0.3,0.1-0.4S12.4,7.5,12.5,7.5z"></path>
-                                </g>
-                            </svg>
-                            Log In</a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="https://app.nitreo.com/register" class="nav-link btn-c btn btn-primary-light nav-btn" data-toggle="modal" data-target="#signup">Get Started Now</a>
-                    </li>
-                </ul>
-            </div>
-        </nav>
-        <nav id="sticky" class="container navbar navbar-dark bg-nav navbar-expand-xl fixed-top mb-3 oov">
-            <div class="container container-fix">
-                <a class="navbar-brand" href="index.html"><img style="width: 150px; height: auto;" src="../media/Logo White Font re.png" alt="MASSNOVA Logo"></a>
-                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                    <div id="MASSNOVA-burger">
-                        <span></span>
-                        <span></span>
-                        <span></span>
-                    </div>
-                </button>
-                <div id="navbarNav" class="collapse navbar-collapse">
-                    <ul class="navbar-nav pages">
-                        <li class="nav-item">
-                            <a class="nav-link" href="index.html">Home</a>
-                        </li>
-                        <li class="nav-item dropdown position-static">
-                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                What's MASSNOVA
-                            </a>
-                            <div class="dropdown-menu w-100 bg-nav" aria-labelledby="navbarDropdown">
-                                <div class="dropdown-menu-container">
-                                    <div class="row align-items-center justify-content-center no-gutters">
-                                        <div class="col-md-12 col-xl-5">
-                                            <div class="row no-gutters justify-content-center">
-                                                <div class="col-md-12 col-xl-8">
-                                                    <a class="d-flex align-items-center my-5" href="how.html"><img class="mr-3" src="img/how.svg" alt="How it works icon">
-                                                        <div class="d-inline-block">
-                                                            <div class="lead">How MASSNOVA Works ❯</div>
-                                                            <div class="desc">Discover how MASSNOVA works and why it's better than anything you've tried</div>
-                                                        </div>
-                                                    </a>
-                                                    <a class="d-flex align-items-center my-5" href="features.html"><img class="mr-3" src="img/features.svg" alt="Features icon">
-                                                        <div class="d-inline-block">
-                                                            <div class="lead">Features ❯</div>
-                                                            <div class="desc">Find out all the magic MASSNOVA does to get you Instagram followers </div>
-                                                        </div>
-                                                    </a>
-
-
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="d-none d-xl-flex col-xl-7">
-                                            <div class="row mx-0 px-5 py-5 text-left align-items-center position-relative justify-content-center bg-nav text-light o-hidden">
-                                                <div class="col-md-12 col-lg-10">
-                                                    <p class="h2 mt-5 mb-3">In a nutshell...</p>
-                                                    <ul class="mt-lg-3 list-inline check font-weight-light small">
-                                                        <li class="list-inline-item">
-                                                            Real Instagram Followers
-                                                        </li>
-                                                        <li class="list-inline-item">
-                                                            More Instagram Engagement
-                                                        </li>
-
-                                                    </ul>
-                                                    <p class="text-white-75 my-2 font-weight-light">MASSNOVA puts your Instagram on autopilot, helping you get more Instagram followers. <span class="font-weight-bold">With a 97% customer satisfaction rate and multiple awards</span> won - we guarantee you'll be a happy MASSNOVA user.</p>
-
-                                                    <div class="d-inline-block z-index-2 mt-3 mb-5">
-                                                        <form class="form-inline">
-                                                            <div class="input-group">
-                                                                <input type="text" class="form-control signUpForm" placeholder="Your Email Address">
-                                                            </div>
-                                                            <button type="submit" class="btn btn-primary w-sm-100 w-lg-auto">Sign Up Now</button>
-                                                        </form>
-
-                                                        <span class="d-block text-light-50 small my-3">2 Minutes Setup • Real Results • Get More Followers</span>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                    </div>
-
-                                </div>
-
-                            </div>
-                        </li>
-                        <li class="nav-item dropdown position-static">
-                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                Why MASSNOVA
-                            </a>
-                            <div class="dropdown-menu w-100 bg-nav" aria-labelledby="navbarDropdown">
-                                <div class="dropdown-menu-container">
-                                    <div class="row align-items-center justify-content-center no-gutters">
-                                        <div class="col-md-12 col-xl-5 order-xl-2">
-                                            <div class="row no-gutters justify-content-center">
-                                                <div class="col-md-12 col-lg-8 col-xl-6">
-                                                    <a class="d-flex align-items-center my-5" href="instagram-growth-service.html"><img class="mr-3" src="img/organic-instagram-growth.svg" alt="Instagram growth service icon">
-                                                        <div class="d-inline-block">
-                                                            <div class="lead">Instagram Growth ❯</div>
-                                                            <div class="desc">Learn how our done-for-you engagement saves you time and gets you results</div>
-                                                        </div>
-                                                    </a>
-                                                    <a class="d-flex align-items-center my-5" href="testimonials.html"><img class="mr-3" src="img/testimonials.svg" alt="An icon depicting testimonials">
-                                                        <div class="d-inline-block">
-                                                            <div class="lead">Testimonials ❯</div>
-                                                            <div class="desc">Thousands of happy MASSNOVA users can't be wrong! See what they say </div>
-                                                        </div>
-                                                    </a>
-                                                    <a class="d-flex align-items-center my-5" href="compare.html"><img class="mr-3" src="img/compare.svg" alt="an icon depicting a comparison page">
-                                                        <div class="d-inline-block">
-                                                            <div class="lead">Compare ❯</div>
-                                                            <div class="desc">Learn how our done-for-you engagement saves you time and gets you results</div>
-                                                        </div>
-                                                    </a>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="d-none d-xl-flex col-xl-7 order-xl-1">
-                                            <div class="row mx-0 px-5 py-5 text-left align-items-center position-relative justify-content-center bg-nav text-light o-hidden">
-                                                <div class="col-md-12 col-lg-10 text-left">
-                                                    <p class="h2 mt-5 mb-3">Agencies, businesses, and creators love us</p>
-                                                    <p class="text-white-75 my-2 font-weight-light">MASSNOVA grows your account while saving you time and money. And that's exactly why managers, businesses, and creators all around the globe trust us to grow their Instagram audience. <span class="mb-2 border-bottom border-primary">Which one are you?</span></p>
-                                                    <a href="instagram-agency.html" class="btn btn-sm btn-primary my-5 mr-2">I'm an agency</a>
-                                                    <a href="instagram-for-business.html" class="btn btn-sm btn-primary-light my-5 mr-2">I'm a Business</a>
-                                                    <a href="instagram-creator-account.html" class="btn btn-sm btn-success my-5 mr-2">I'm a Creator</a>
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                    </div>
-
-                                </div>
-
-                            </div>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="pricing.html">Pricing</a>
-                        </li>
-                        <li class="nav-item login ml-auto">
-                            <a href="https://app.nitreo.com/login" class="nav-link nav-login arrow"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" id="Layer_1" x="0px" y="0px" viewBox="0 0 24 24" style="enable-background:new 0 0 24 24;" xml:space="preserve" class="injected-svg svg-inject white small mr-2">
-                                    <g>
-                                        <path d="M12,0c1.5,0,3,0.3,4.5,0.9c3,1.2,5.3,3.5,6.6,6.4c2.6,6.1-0.3,13.1-6.3,15.7c-1.5,0.6-3.1,1-4.7,1C7.2,24,2.8,21.1,1,16.7   c-0.1-0.1-0.1-0.3,0-0.4c0-0.1,0.1-0.2,0.3-0.3c0.1,0,0.1,0,0.2,0c0.2,0,0.4,0.1,0.5,0.3C3.6,20.4,7.6,23,12,23   c1.5,0,2.9-0.3,4.3-0.9c2.7-1.1,4.8-3.3,5.9-6c1.1-2.7,1.1-5.7-0.1-8.4c-1.1-2.7-3.3-4.8-6-5.9C14.8,1.3,13.4,1,12,1   c-1.5,0-2.9,0.3-4.3,0.9C5.1,3,3,5.1,1.9,7.7C1.8,7.9,1.6,8,1.4,8C1.4,8,1.3,8,1.2,8C1.1,7.9,1,7.8,1,7.7c0-0.1,0-0.3,0-0.4   C2.2,4.4,4.4,2.2,7.3,1C8.8,0.3,10.4,0,12,0z"></path>
-                                        <path d="M12.5,7.5c0.1,0,0.3,0.1,0.4,0.1l4,4c0,0,0.1,0.1,0.1,0.2c0,0.1,0,0.3,0,0.4c0,0.1-0.1,0.1-0.1,0.2l-4,4   c-0.1,0.1-0.2,0.1-0.4,0.1s-0.3-0.1-0.4-0.1S12,16.1,12,16s0.1-0.3,0.1-0.4l3.1-3.1H0.5C0.2,12.5,0,12.3,0,12s0.2-0.5,0.5-0.5h14.8   l-3.1-3.1C12.1,8.3,12,8.1,12,8c0-0.1,0.1-0.3,0.1-0.4S12.4,7.5,12.5,7.5z"></path>
-                                    </g>
-                                </svg>
-                                Log in</a>
-                        </li>
-                        <li class="nav-item get-started">
-                            <a href="https://app.nitreo.com/register" class="nav-link btn-c btn btn-nav-dark nav-btn btn-will-change" data-toggle="modal" data-target="#signup">Get Started Now</a>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </nav>
-        <div id="mobile-brand" class="d-flex d-lg-none justify-content-between align-items-center mt-1 mb-3">
-            <a class="ml-3" href="index.html"><img style="width: 200px; height: auto;" src="../media/Logo Black Font re.png" width="75px" alt="MASSNOVA Logo"></a> <a href="https://app.nitreo.com/register" class="btn btn-primary-light" data-toggle="modal" data-target="#signup">Get Started Now</a>
-        </div>
+        {% include "userapi/header.html" %}
         <section id="hero" class="py-5">
             <div class="container">
                 <div class="row align-items-center">
@@ -232,8 +31,8 @@
                         </div>
                     </div>
                     <div class="col-md-12 col-lg-6 offset-lg-1">
-                        <div class="video-wrapper shadow-2"><video src="https://nitreo.com/video/nitreo-how-it-works.mp4" class="w-100 br-24" poster="img/how-nitreo-works-poster.png" preload="false"></video></div>
-                        <div class="d-block text-center mt-3"><img class="lazy" data-src="img/play-me-arrow.jpg" alt="arrow pointing upwards"></div>
+                        <div class="video-wrapper shadow-2"><video src="https://nitreo.com/video/nitreo-how-it-works.mp4" class="w-100 br-24" poster="{% static '' %}img/how-nitreo-works-poster.png" preload="false"></video></div>
+                        <div class="d-block text-center mt-3"><img class="lazy" data-src="{% static '' %}img/play-me-arrow.jpg" alt="arrow pointing upwards"></div>
                     </div>
                 </div>
             </div>
@@ -245,28 +44,28 @@
                         <div class="row mt-lg-5">
                             <div class="col-lg-3">
                                 <div class="square content">
-                                    <img class="w64" src="img/easy-to-set-up.svg" alt="an icon showing how easy it is to set up MASSNOVA">
+                                    <img class="w64" src="{% static '' %}img/easy-to-set-up.svg" alt="an icon showing how easy it is to set up MASSNOVA">
                                     <h3 class="my-3 h4">Add Your Account</h3>
                                     <p class="text-black-50 lead">Add your Instagram account and tell us what type of account you run.</p>
                                 </div>
                             </div>
                             <div class="col-lg-3">
                                 <div class="square content">
-                                    <img class="w64" src="img/more-followers.svg" alt="an icon showing how you can get more followers on Instagram">
+                                    <img class="w64" src="{% static '' %}img/more-followers.svg" alt="an icon showing how you can get more followers on Instagram">
                                     <h3 class="my-3 h4">Hashtags, Similar Users</h3>
                                     <p class="text-black-50 lead">Add niche-specific hashtags and accounts similar to yours. Choose between genders too! </p>
                                 </div>
                             </div>
                             <div class="col-lg-3">
                                 <div class="square content">
-                                    <img class="w64" src="img/engagement-grows.svg" alt="an icon showing growth in Instagram engagement">
+                                    <img class="w64" src="{% static '' %}img/engagement-grows.svg" alt="an icon showing growth in Instagram engagement">
                                     <h3 class="my-3 h4">MASSNOVA Starts</h3>
                                     <p class="text-black-50 lead">MASSNOVA gets going to give your Instagram account the boost it deserves.</p>
                                 </div>
                             </div>
                             <div class="col-lg-3">
                                 <div class="square content">
-                                    <img class="w64" src="img/organic-instagram-growth.svg">
+                                    <img class="w64" src="{% static '' %}img/organic-instagram-growth.svg">
                                     <h3 class="my-3 h4">Get Results That Are <em>Real</em></h3>
                                     <p class="text-black-50 lead">Watch your Instagram grow with likes, story views, profile visits, and real <strong>followers</strong>.</p>
                                 </div>
@@ -301,10 +100,10 @@
                     <div class="offset-lg-1 col-lg-5 my-5 my-lg-0">
                         <div class="asset-container mx-auto">
                             <div class="asset-support">
-                                <img class="discovery-1 br-24 shadow-2 zi-1 lazy" data-src="img/categorize-account.jpg" data-aos="fade-up" alt="a screenshot of a MASSNOVA user categorizing their account">
+                                <img class="discovery-1 br-24 shadow-2 zi-1 lazy" data-src="{% static '' %}img/categorize-account.jpg" data-aos="fade-up" alt="a screenshot of a MASSNOVA user categorizing their account">
 
                             </div>
-                            <img class="br-24 shadow-2" src="img/sign-up.jpg" alt="a screenshot of the MASSNOVA sign up page">
+                            <img class="br-24 shadow-2" src="{% static '' %}img/sign-up.jpg" alt="a screenshot of the MASSNOVA sign up page">
                         </div>
                     </div>
                 </div>
@@ -321,7 +120,7 @@
         <section id="signup-banner">
             <div class="container">
                 <div class="row mx-0 px-3 px-lg-5 py-5 my-lg-5 text-left align-items-center position-relative justify-content-center bg-pattern-light border border-light o-hidden">
-                    <img class="background-image d-none d-lg-flex right bottom position-absolute opacity-10 rotate-min-30 lazy" data-src="img/instagram-carousel-background-small.png" alt="a carousel of Instagram posts">
+                    <img class="background-image d-none d-lg-flex right bottom position-absolute opacity-10 rotate-min-30 lazy" data-src="{% static '' %}img/instagram-carousel-background-small.png" alt="a carousel of Instagram posts">
                     <div class="col-md-12 col-lg-6">
                         <div class="alert alert-primary bg-primary-light br-24 d-inline-block small">Updated on <span class="date"></span></div>
                         <p class="h2">Signups close in <span id="deadline" class="d-inline"><span class="values text-dark"></span></span></p>
@@ -374,11 +173,11 @@
                     <div class="offset-lg-1 col-lg-4 my-5 my-lg-0">
                         <div class="asset-container mx-auto">
                             <div class="asset-support">
-                                <img class="hashtag-1 zi-1 lazy" data-src="img/user-2.png" data-aos="fade-up">
-                                <img class="hashtag-2 zi-1 lazy" data-src="img/user-3.png" data-aos="fade-up">
+                                <img class="hashtag-1 zi-1 lazy" data-src="{% static '' %}img/user-2.png" data-aos="fade-up">
+                                <img class="hashtag-2 zi-1 lazy" data-src="{% static '' %}img/user-3.png" data-aos="fade-up">
 
                             </div>
-                            <img class="br-24 shadow-2" src="img/similar-users.jpg" alt="a screenshot of a MASSNOVA member adding similar Instagram users">
+                            <img class="br-24 shadow-2" src="{% static '' %}img/similar-users.jpg" alt="a screenshot of a MASSNOVA member adding similar Instagram users">
                         </div>
                     </div>
                 </div>
@@ -386,7 +185,7 @@
                     <div class="col-lg-10">
                         <div class="alert alert-primary text-green px-5 py-3">
                             <p class="font-weight-bold my-3">💡 Targeting Tip</p>
-                            <p>When choosing accounts to target, it's never a bad idea to look at the current champions of your niche, and who's hitting the explore page. You could even use our <a href="instagram-hashtag-generator.html">hashtag generator</a> or ask our success team if you're running dry on ideas.</p>
+                            <p>When choosing accounts to target, it's never a bad idea to look at the current champions of your niche, and who's hitting the explore page. You could even use our <a href={% url "userapi:instagram-hashtag-generator" %}>hashtag generator</a> or ask our success team if you're running dry on ideas.</p>
                         </div>
                     </div>
                 </div>
@@ -422,11 +221,11 @@
                     <div class="offset-lg-1 col-lg-4 my-5 my-lg-0">
                         <div class="asset-container mx-auto">
                             <div class="position-absolute o-hidden h-100 br-24 vertical-gradient vertical-gradient-md zi-0">
-                                <img class="rellax rellax-fix" data-rellax-speed="2" src="img/list-of-new-instagram-followers.jpg" alt="list of new Instagram followers">
+                                <img class="rellax rellax-fix" data-rellax-speed="2" src="{% static '' %}img/list-of-new-instagram-followers.jpg" alt="list of new Instagram followers">
                             </div>
                             <div class="asset-support">
-                                <img class="faster-1 zi-1 br-24 shadow-2 d-none d-lg-flex lazy" data-src="img/graph-1.png" data-aos="fade-up">
-                                <img class="hashtag-2 zi-2 br-24 shadow-2 lazy" data-src="img/graph-organic-instagram-followers.jpg" data-aos="fade-up">
+                                <img class="faster-1 zi-1 br-24 shadow-2 d-none d-lg-flex lazy" data-src="{% static '' %}img/graph-1.png" data-aos="fade-up">
+                                <img class="hashtag-2 zi-2 br-24 shadow-2 lazy" data-src="{% static '' %}img/graph-organic-instagram-followers.jpg" data-aos="fade-up">
                             </div>
                         </div>
                     </div>
@@ -458,10 +257,10 @@
                     <div class="offset-lg-1 col-lg-4 my-5 my-lg-0">
                         <div class="asset-container mx-auto mb-5 mb-lg-0">
                             <div class="position-absolute o-hidden h-100 br-24 vertical-gradient vertical-gradient-md zi-0">
-                                <img class="rellax" data-rellax-speed="2" src="img/optimize.jpg" alt="a screenshot of a MASSNOVA user optimizing their account">
+                                <img class="rellax" data-rellax-speed="2" src="{% static '' %}img/optimize.jpg" alt="a screenshot of a MASSNOVA user optimizing their account">
                             </div>
                             <div class="asset-support">
-                                <img class="discovery-1 zi-1 br-24 shadow-2 lazy" data-src="img/activity-feed.jpg" data-aos="fade-up" alt="activity feed screenshot from MASSNOVA's dashboard">
+                                <img class="discovery-1 zi-1 br-24 shadow-2 lazy" data-src="{% static '' %}img/activity-feed.jpg" data-aos="fade-up" alt="activity feed screenshot from MASSNOVA's dashboard">
                             </div>
                         </div>
                     </div>
@@ -481,7 +280,7 @@
                     <div class="col-md-12 col-lg-5 col-xl-4">
                         <div class="label py-2 px-2 mb-3 preheader gray">Learn More</div>
                         <h2 class="h3 mb-3">MASSNOVA is feature rich</h2>
-                        <p class="lead text-black-50">Did you know, MASSNOVA's more than just a way to get more Instagram followers. We're feature rich with analytics, suggestions, improvements, and even a way to export your performance. <a href="features.html">Learn more about our features</a> or discover them yourself by signing up!</p>
+                        <p class="lead text-black-50">Did you know, MASSNOVA's more than just a way to get more Instagram followers. We're feature rich with analytics, suggestions, improvements, and even a way to export your performance. <a href={% url "userapi:features" %}>Learn more about our features</a> or discover them yourself by signing up!</p>
                         <form class="form-inline formoid">
                             <div class="input-group">
                                 <input type="email" class="form-control signUpForm" placeholder="Your Email Address" required>
@@ -492,255 +291,18 @@
                     <div class="col-lg-6 col-xl-4 offset-xl-1 mt-5 mt-lg-0">
                         <div class="asset-container mx-auto br-0 shadow-none">
                             <div class="asset-support">
-                                <img class="hashtag-1 zi-1 lazy" data-src="img/get-nitreo-user.png">
-                                <img class="hashtag-2 zi-1 lazy" data-src="img/get-nitreo-hashtag.png">
+                                <img class="hashtag-1 zi-1 lazy" data-src="{% static '' %}img/get-nitreo-user.png">
+                                <img class="hashtag-2 zi-1 lazy" data-src="{% static '' %}img/get-nitreo-hashtag.png">
 
                             </div>
-                            <video class="br-24 shadow-2" src="video/get-nitreo-instagram-growth.mp4" poster="img/get-nitreo-instagram-growth-poster.png" autoplay loop muted preload="auto"></video>
+                            <video class="br-24 shadow-2" src="{% static '' %}video/get-nitreo-instagram-growth.mp4" poster="{% static '' %}img/get-nitreo-instagram-growth-poster.png" autoplay loop muted preload="auto"></video>
                         </div>
                     </div>
                 </div>
             </div>
         </section>
-        <footer class="bg-darker text-light pt-3 pt-lg-5 pb-0">
-            <div class="container">
-                <div class="row align-items-center justify-content-between mt-5">
-                    <div class="col-md-12 col-lg-4">
-                        <h4 class="h2 my-3">Get Started Today</h4>
-                        <p class="text-light-50 lead my-3">Join thousands of brands, creators, and businesses in getting more Instagram followers with MASSNOVA. Grow your account, expand your reach, and build your brand - <span class="font-weight-bold">the right way</span>.</p>
-                        <div class="d-inline-block my-3">
-                            <form class="form-inline formoid">
-                                <div class="input-group">
-                                    <input type="email" class="form-control signUpForm" placeholder="Your Email Address" required>
-                                </div>
-                                <button type="submit" class="btn btn-primary w-sm-100 w-lg-auto">Sign Up Now 👈</button>
-                            </form>
-                            <span class="d-block text-white-50 small my-3">2 Minutes Setup • Real Results • Get Instagram Followers Fast</span>
-                        </div>
-                    </div>
-                    <div class="col-md-12 col-lg-6 text-center">
-                        <p class="text-uppercase small font-weight-light text-white-50 ">Companies like these love MASSNOVA</p>
-                        <img data-src="img/featured-brands-growing-instagram.jpg" class="lazy">
-                    </div>
-                </div>
-                <div class="row align-items-center my-2 my-lg-5">
-                    <div class="col-md-12 col-lg-5 col-xl-8 text-center text-lg-left my-5 my-lg-0 align-items-center">
-                        <div class="d-inline-flex align-items-center">
-                            <a href="index.html" class="mr-0 mr-lg-5"><img style="width: 200px; height: auto;" src="../media/Logo White Font re.png" width="100" alt="MASSNOVA logo in white"></a>
+        {% include "userapi/footer.html" %}
 
-                        </div>
-
-                    </div>
-                    <div class="col-md-12 col-lg-7 col-xl-4 text-lg-right">
-                        <ul class="list-inline text-center text-lg-right">
-                            <li class="list-inline-item"><a target="_blank" href="https://instagram.com/trynitreo"><img class="mr-2" src="img/instagram-logo.png" alt="instagram logo"></a></li>
-                            <li class="list-inline-item"><a target="_blank" href="https://twitter.com/getnitreo"><img class="mr-2" src="img/twitter-logo.png" alt="twitter logo"></a></li>
-                        </ul>
-                    </div>
-                </div>
-                <div class="row my-2 my-lg-5 py-2 py-lg-5 justify-content-center text-center text-lg-left">
-                    <div class="col-md-12 col-lg-2 my-5 my-lg-0">
-                        <h4 class="h3">What We Do</h4>
-                        <nav class="nav flex-column nav-footer-items text-white-50">
-                            <a class="nav-link" href="features.html">Features</a>
-                            <a class="nav-link" href="how.html">How MASSNOVA Works</a>
-                            <a class="nav-link" href="instagram-growth-service.html">Instagram Growth</a>
-                            <a class="nav-link" href="instagram-manager.html">Instagram Manager</a>
-                            <a class="nav-link" href="pricing.html">Pricing</a>
-                            <a class="nav-link" href="testimonials.html">Testimonials</a>
-                            <a class="nav-link" href="growth-club.html">Growth Club</a>
-                            <div class="link mt-3 d-block d-lg-none"><a href="https://app.nitreo.com/register" class="text-primary font-weight-bold text-uppercase small" data-toggle="modal" data-target="#signup">START GROWING YOUR INSTAGRAM TODAY ❯</a></div>
-                        </nav>
-                    </div>
-                    <div class="col-md-12 col-lg-2 my-2 my-lg-0">
-                        <h4 class="h3">Our Customers</h4>
-                        <nav class="nav flex-column nav-footer-items text-white-50">
-                            <a class="nav-link" href="instagram-agency.html">Agency</a>
-                            <a class="nav-link" href="instagram-creator-account.html">Instagram Creators</a>
-                            <a class="nav-link" href="instagram-for-business.html">Instagram For Business</a>
-                            <a class="nav-link" href="instagram-influencers.html">Instagram Influencers</a>
-                            <a class="nav-link" href="instagram-models.html">Instagram Models</a>
-                            <a class="nav-link" href="instagram-meme-accounts.html">Meme Accounts</a>
-                            <div class="link mt-3"><a href="testimonials.html" class="text-primary font-weight-bold text-uppercase small">About Our Customers ❯</a></div>
-                        </nav>
-                    </div>
-                    <div class="col-md-12 col-lg-2 my-2 my-lg-0">
-                        <h4 class="h3">Compare</h4>
-                        <nav class="nav flex-column nav-footer-items text-white-50">
-                            <a class="nav-link" href="jarvee.html">Jarvee</a>
-                            <a class="nav-link" href="instazood.html">Instazood</a>
-                            <a class="nav-link" href="followliker.html">FollowLiker</a>
-                            <a class="nav-link" href="kicksta.html">Kicksta</a>
-                            <a class="nav-link" href="socialcaptain.html">SocialCaptain</a>
-                            <div class="link mt-3"><a href="compare.html" class="text-primary font-weight-bold text-uppercase small">See All Comparisons ❯</a></div>
-                        </nav>
-                    </div>
-                    <div class="col-md-12 col-lg-2 my-2 my-lg-0">
-                        <h4 class="h3">Company</h4>
-                        <nav class="nav flex-column nav-footer-items text-white-50">
-                            <a class="nav-link" href="instagram-agency.html">Agency Program <span class="label py-1 px-2 bg-success small font-weight-bold">NEW</span></a>
-                            <a class="nav-link" href="affiliate.html">Become an Affiliate <span class="label py-1 px-2 bg-success small font-weight-bold">NEW</span></a>
-                            <a class="nav-link" href="contact.html">Contact Us</a>
-                            <a class="nav-link" href="about.html">About Us</a>
-                            <a class="nav-link" href="careers.html">Careers <span class="label py-1 px-2 bg-primary-2 small font-weight-bold">HIRING</span></a>
-                            <a class="nav-link" href="press.html">Press</a>
-                            <a class="nav-link" href="privacy.html">Privacy Policy</a>
-                            <a class="nav-link" href="terms.html">Terms & Conditions</a>
-                        </nav>
-                    </div>
-                    <div class="col-md-12 col-lg-2 my-2 my-lg-0">
-                        <h4 class="h3">Freebies</h4>
-                        <nav class="nav flex-column nav-footer-items text-white-50">
-                            <a class="nav-link" href="instagram-engagement-calculator.html">Instagram Engagement Calculator</a>
-                            <a class="nav-link" href="instagram-audit.html">Instagram Audit</a>
-                            <a class="nav-link" href="instagram-hashtag-generator.html">Instagram Hashtag Generator</a>
-
-                            <a class="nav-link" href="instagram-story-templates.html">Instagram Story Templates</a>
-                            <a class="nav-link" href="username-generator.html">Username Generator</a>
-                            <div class="link mt-3"><a href="instagram-tools.html" class="text-primary font-weight-bold text-uppercase small">View All Instagram Tools ❯</a></div>
-                        </nav>
-                    </div>
-                    <div class="col-md-12 col-lg-2 mt-5 mt-lg-0">
-                        <div class="boxed">
-                            <h4 class="h3">Sign Up</h4>
-                            <p class="text-white">Start getting Instagram followers today - Get MASSNOVA for your Instagram. Setting up is easy and takes two minutes.</p>
-                            <a href="https://app.nitreo.com/register" class="btn btn-primary" data-toggle="modal" data-target="#signup">Get Started Now</a>
-                        </div>
-                    </div>
-                </div>
-                <div class="row my-5">
-                    <div class="col-lg-12 text-center text-lg-right">
-                        <p class="text-uppercase font-weight-bold small d-inline"><span class="mr-2">Share MASSNOVA with a friend</span> </p>
-                        <div class="d-inline"><a target="_blank" href="https://twitter.com/share?url=https://nitreo.com/&amp;text=Hey,%20why%20don't%20you%20check%20out%20Nitreo%20-%20it's%20a%20great%20way%20to%20grow%20your%20Insta!"><img src="img/twitter-logo.png" class="mr-2" width="24px" alt="Twitter Logo"></a>
-                            <a target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://nitreo.com/"><img src="img/facebook-logo.png" class="mr-2" width="24px" alt="Facebook Logo"></a>
-                            <a class="d-inline d-xl-none" target="_blank" href="fb-messenger_/share27c9.html?link=https://nitreo.com"><img src="img/messenger-logo.png" class="mr-2" width="24px" alt="Messenger Logo"></a>
-                            <a target="_blank" href="whatsapp://send?text=Check out MASSNOVA, it's a great way to grow your Insta... thought you might like it https://nitreo.com/"><img alt="Whatsapp Logo" src="img/whatsapp-logo.png" class="mr-2" width="24px"></a>
-                        </div>
-                    </div>
-                </div>
-                <div class="row mx-0 px-3 px-lg-5 py-5 my-lg-5 text-left align-items-center position-relative justify-content-center bg-pattern-2 text-light o-hidden">
-                    <img class="background-image w-100 left position-absolute opacity-10" src="img/instagram-growth-chart.svg" alt="a chart from MASSNOVA's dashboard displaying Instagram growth">
-                    <img class="background-image d-none d-lg-flex right bottom position-absolute opacity-10 rotate-min-30 lazy" data-src="img/instagram-carousel-background-small.png" alt="a carousel of Instagram posts">
-                    <div class="col-md-12 col-lg-6">
-                        <div class="alert alert-primary bg-primary-light br-24 d-inline-block small opacity-50">💡 Updated on <span class="date"></span></div>
-                        <p class="h2">Signups close in <span id="deadline" class="d-inline"><span class="values text-white"></span></span></p>
-                        <hr class="border border-primary">
-                        <p class="my-2">We're limiting signup slots to the public to ensure our customers get the best experience possible. Get started today and start getting more Instagram followers!</p>
-                    </div>
-                    <div class="col-md-12 col-lg-5 offset-lg-1">
-
-                        <div class="d-inline-block z-index-2">
-                            <p>Enter your email to start growing your Instagram:</p>
-                            <form class="form-inline formoid">
-                                <div class="input-group">
-                                    <input type="email" class="form-control signUpForm" placeholder="Your Email Address" required>
-                                </div>
-                                <button type="submit" class="btn btn-primary w-sm-100 w-lg-auto">Sign Up Now </button>
-                            </form>
-                            <span class="d-block text-light-50 small my-3">2 Minutes Setup • Real Results • Grow Your Instagram</span>
-                        </div>
-                    </div>
-
-                </div>
-                <div class="row align-items-center my-5 my-lg-2">
-                    <div class="col-md-12 col-lg-6 text-center text-lg-left">
-                        <img class="mr-lg-2 my-2 my-lg-0 lazy" data-src="img/best-of-social-winner.png" width="200px" alt="best of social award">
-                        <img data-src="img/best-instagram-followers-growth-winner.png" width="200px" class="lazy" alt="best instagram growth service award logo">
-                    </div>
-                    <div class="col-md-12 col-lg-6 text-center text-lg-right my-5 my-lg-0">
-                        <div class="alert alert-operation d-inline-block">
-                            <img class="mr-2" src="img/zap.png" width="16px" alt="icon with lightning symbol"> <a href="https://app.nitreo.com/register" class="text-uppercase small text-arial text-operation font-weight-bold" data-toggle="modal" data-target="#signup">All Systems Operational</a>
-                        </div>
-                    </div>
-                </div>
-
-            </div>
-        </footer>
-        <section class="bg-dark py-2">
-            <div class="container">
-                <div id="disclaimer" class="row align-items-center text-center py-3 px-3 py-lg-0 px-lg-0">
-                    <div class="col-md-12 col-lg-2"><a href="index.html"><img class="d-inline-block d-lg-inline mr-0 mr-lg-5 my-2 my-lg-2" style="width: 150px; height: auto;" src="../media/Logo White Font re.png" width="50"></a></div>
-                    <div class="col-md-12 col-lg-10">
-                        <p class="d-inline small mb-0 text-white-50">© SocialGrowth LLC FZ. Business Center 1, M Floor, Nad Al Sheba, Dubai, U.A.E. All rights reserved. Various trademarks held by their respective owners. See our <a href="privacy.html" class="text-white">Privacy Policy</a> and <a href="terms.html" class="text-white">Terms & Conditions</a> prior to using any service we offer.</p>
-                    </div>
-                </div>
-            </div>
-        </section>
-        <div class="modal fade" id="signup" tabindex="-1" role="dialog" aria-labelledby="signup" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered modal-xl" role="document">
-                <div class="modal-content bg-image o-hidden br-24">
-                    <div class="position-absolute top right zi-2">
-                        <div class="d-block mt-3 mr-3"><a href="#" class="h3 close-btn text-black-50" data-dismiss="modal" aria-label="Close">
-                                ✕
-                            </a></div>
-                    </div>
-                    <div class="row no-gutters align-items-center">
-                        <div class="col-lg-6 zi-1 d-none d-lg-flex text-light">
-                            <div class="holder px-5 py-5 text-center">
-                                <h4 class="mb-3">The benefits of signing up to MASSNOVA</h4>
-                                <ul class="list-unstyled check text-left my-5 font-weight-light pl-5">
-                                    <li class="list-item">
-                                        Grow your Instagram with a suite of growth tools
-                                    </li>
-                                    <li class="list-item">
-                                        Attract real, organic Instagram followers
-                                    </li>
-                                    <li class="list-item">
-                                        Build up your community & audience on Insta
-                                    </li>
-                                    <li class="list-item">
-                                        For less than a cup of coffee per day ☕
-                                    </li>
-                                </ul>
-                                <div class="px-3 py-3 bg-white br-24 text-black-50 shadow-2 d-flex justify-content-center align-items-center">
-                                    <p class="small mb-0">🏆 MASSNOVA has an average rating of <span class="text-success font-weight-bold">4.81</span></p><img class="ml-2" src="img/stars.jpg" width="96px" alt="5 stars rating for MASSNOVA">
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-lg-6 shadow-3 zi-1 bg-white br-24">
-                            <div class="holder px-5 py-5 text-center">
-                                <img class="mb-5 pt-lg-5" style="width: 200px; height: auto;" src="../media/Logo Black Font re.png" width="128px" alt="MASSNOVA Logo">
-                                <h3 class="mb-lg-3">You're almost there 🎉</h3>
-                                <p class="lead text-black-50 mb-lg-3">Finish creating your MASSNOVA account and start growing your Instagram faster today.</p>
-                                <form class="form-inline mb-3 mb-lg-5 justify-content-center formoid">
-                                    <div class="input-group">
-                                        <input type="email" class="form-control signUpForm" placeholder="Your Email Address" required>
-                                    </div>
-                                    <button type="submit" class="btn btn-success w-sm-100 w-lg-auto">Join MASSNOVA</button>
-                                </form>
-                                <span class="d-block text-black-50 small my-lg-3">2 Minutes Setup • Real Results • Get more followers</span>
-                                <p class="small text-black-50 my-3">Already have an account? <a class="text-underline" href="https://app.nitreo.com/login">Log In</a></p>
-
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <!-- Scripts -->
-        <!-- Chatwoot Integration -->
-        <script>
-            (function (d, t) {
-                var BASE_URL = "https://chat.socialgrowth.co/";
-                var g = d.createElement(t), s = d.getElementsByTagName(t)[0];
-                g.src = BASE_URL + "/packs/js/sdk.js";
-                g.defer = true;
-                g.async = true;
-                s.parentNode.insertBefore(g, s);
-                g.onload = function () {
-                    window.chatwootSDK.run({
-                        websiteToken: 'iaAnerkMhfyaVJdDCufocgkj',
-                        baseUrl: BASE_URL
-                    })
-                }
-            })(document, "script");
-        </script>
-        <script src="{% static '' %}js/jquery.min.js" type="text/javascript"></script>
-        <script src="{% static '' %}js/bootstrap.min.js" type="text/javascript"></script>
-        <script src="{% static '' %}js/popper.min.js" type="text/javascript"></script>
-        <script src="{% static '' %}js/nitreo.js" type="text/javascript"></script>
-        <script src="{% static '' %}js/nitreo-parallax.min.js" type="text/javascript"></script>
-        <script src="{% static '' %}js/signup.min.js" type="text/javascript"></script>
         <script src="{% static '' %}js/play.min.js" type="text/javascript"></script>
 
     </body>
