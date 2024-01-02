@@ -74,12 +74,12 @@ urlpatterns = [
     path("profile/", views.ProfileView.as_view(), name="profile"),
     path("update-profile/", views.ProfileView.as_view(), name="update-profile"),
     path(
-        "password-change-user/",
+        "forgot-password/",
         views.PasswordChangeUsernameView.as_view(),
-        name="password-change-user",
+        name="forgot-password",
     ),
     path(
-        "password-change/", views.PasswordChangeView.as_view(), name="password-change"
+        "change-password/", views.PasswordChangeView.as_view(), name="change-password"
     ),
     path("activity-time/", views.ActivityTimeView.as_view(), name="activity-time"),
     path(
@@ -171,31 +171,6 @@ urlpatterns = [
         name="instagram-meme-accounts",
     ),
     path(
-        "jarvee/",
-        TemplateView.as_view(template_name="userapi/jarvee.html"),
-        name="jarvee",
-    ),
-    path(
-        "instazood/",
-        TemplateView.as_view(template_name="userapi/instazood.html"),
-        name="instazood",
-    ),
-    path(
-        "followliker/",
-        TemplateView.as_view(template_name="userapi/followliker.html"),
-        name="followliker",
-    ),
-    path(
-        "kicksta/",
-        TemplateView.as_view(template_name="userapi/kicksta.html"),
-        name="kicksta",
-    ),
-    path(
-        "socialcaptain/",
-        TemplateView.as_view(template_name="userapi/socialcaptain.html"),
-        name="socialcaptain",
-    ),
-    path(
         "affiliate/",
         TemplateView.as_view(template_name="userapi/affiliate.html"),
         name="affiliate",
@@ -207,33 +182,6 @@ urlpatterns = [
     ),
     path(
         "press/", TemplateView.as_view(template_name="userapi/press.html"), name="press"
-    ),
-    path(
-        "instagram-engagement-calculator/",
-        TemplateView.as_view(
-            template_name="userapi/instagram-engagement-calculator.html"
-        ),
-        name="instagram-engagement-calculator",
-    ),
-    path(
-        "instagram-audit/",
-        TemplateView.as_view(template_name="userapi/instagram-audit.html"),
-        name="instagram-audit",
-    ),
-    path(
-        "instagram-story-templates/",
-        TemplateView.as_view(template_name="userapi/instagram-story-templates.html"),
-        name="instagram-story-templates",
-    ),
-    path(
-        "instagram-hashtag-generator/",
-        TemplateView.as_view(template_name="userapi/instagram-hashtag-generator.html"),
-        name="instagram-hashtag-generator",
-    ),
-    path(
-        "username-generator/",
-        TemplateView.as_view(template_name="userapi/username-generator.html"),
-        name="username-generator",
     ),
     path(
         "instagram-tools/",
