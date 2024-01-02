@@ -327,23 +327,24 @@ class ProfileView(APIView):
 
 class PasswordChangeUsernameView(APIView):
     def get(self, request):
-        return render(request, "userapi/password_change_username.html")
+        return render(request, "userapi/forgot-password.html")
 
     def post(self, request):
         value = request.POST.get("username")
         user = User.objects.filter(Q(username=value) | Q(email=value)).first()
         if user is not None:
             request.session["user"] = user.id
-            return redirect("userapi:password-change")
+            return redirect("userapi:change-password")
         messages.error(request, "Username or Email is incorrect.")
-        return render(request, "userapi/password_change_username.html")
+        return render(request, "userapi/forgot-password.html")
 
 
 class PasswordChangeView(APIView):
     def get(self, request):
         if request.session.get("user"):
             return render(request, "userapi/password_change.html")
-        return redirect("userapi:password-change-user")
+        messages.error(request, "Please Enter Username or Email first!")
+        return redirect("userapi:forgot-password")
 
     def post(self, request):
         try:
@@ -352,15 +353,15 @@ class PasswordChangeView(APIView):
                 password = request.POST["new_password"]
                 id = request.session["user"]
                 user = get_object_or_404(User, pk=id)
-                if authenticate(username=user.username, password=password):
-                    messages.error(request, "New Password is same as current password!")
-                request.session.pop("user", None)
-                user.set_password(password)
-                user.save()
-                update_session_auth_hash(request, user)
+                if not authenticate(username=user.username, password=password):
+                    request.session.pop("user", None)
+                    user.set_password(password)
+                    user.save()
+                    update_session_auth_hash(request, user)
 
-                messages.success(request, "Password changed successfully.")
-                return redirect("userapi:login")
+                    messages.success(request, "Password changed successfully.")
+                    return redirect("userapi:login")
+                messages.error(request, "New Password is same as current password!")
             else:
                 for value in serializer.errors.values():
                     error = value[0].replace("/", "")
