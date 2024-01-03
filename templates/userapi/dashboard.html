@@ -3,46 +3,9 @@
 
 {% block title %}Dashboard | {% endblock %}
 
-{% block content1 %}
-<!-- Inner Banner Area -->
-<div class="inner-banner">
-    <div>
-        <div class="inner-title text-center">
-            <h3>Dashboard</h3>
-            <ul>
-                <li>
-                    <a href={% url "userapi:home" %}>Home</a>
-                </li>
-                <li>
-                    <i class='bx bx-chevron-right'></i>
-                </li>
-                <li>Dashboard</li>
-            </ul>
-        </div>
-    </div>
-
-    <div class="inner-banner-shape">
-        <div class="shape-one">
-            <img src="{% static 'assets/img/inner-banner/banner-shape1.png' %}" alt="Images">
-        </div>
-
-        <div class="shape-two">
-            <img src="{% static 'assets/img/inner-banner/banner-shape2.png' %}" alt="Images">
-        </div>
-
-        <div class="shape-three">
-            <img src="{% static 'assets/img/inner-banner/banner-shape3.png' %}" alt="Images">
-        </div>
-
-        <div class="inner-banner-dots-2">
-            <img src="{% static 'assets/img/shape/dots-shape.png' %}" alt="Images">
-        </div>
-    </div>
-</div>
-<!-- Inner Banner Area End -->
-
+{% block content %}
 <!-- Targets Area -->
-<div class="container mb-3">
+<div class="container m-3">
     <div class="row pt-45">
         <div class="container mb-2">
             {% if messages %}
