@@ -4,21 +4,18 @@
 
     <head>
         {% include "userapi/head.html" %}
-
         <title>Learn More About Us - MassNova</title>
+        <meta name="description" content="Learn more about MassNova! Here's everything about us regarding our team, size, and what we do to help thousands grow their social media.">
+        <meta name="twitter:title" content="About Us - MassNova" />
+        <meta property="og:title" content="About Us - MassNova" />
+        <meta property="og:description" content="Learn more about MassNova! Here's everything about us regarding our team, size, and what we do to help thousands grow their social media." />
+        <meta name="twitter:description" content="Learn more about MassNova! Here's everything about us regarding our team, size, and what we do to help thousands grow their social media." />
+        <meta property="og:url" content={% url "userapi:about" %} />
         <link rel="canonical" href={% url "userapi:about" %} />
         <link rel="alternate" href={% url "userapi:about" %} hreflang="x-default" />
     </head>
 
     <body class="h-100">
-        <!-- Nemanja Syncer -->
-        <script>
-            window.trackerURL = "https://app.nitreo.com/assets/tracking/storage.html";
-        </script>
-        <script src="{% static '' %}js/storage.js"></script>
-        <!-- Google Tag Manager (noscript) -->
-        <noscript><iframe src="https://data.nitreo.com/ns.html?id=GTM-PZB5HND" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
-        <!-- End Google Tag Manager (noscript) -->
         {% include "userapi/header.html" %}
         <section id="hero" class="pt-0 py-lg-5">
             <div class="container">
@@ -27,7 +24,7 @@
                         <div class="label py-2 px-2 mb-3 preheader">About Us</div>
                         <h1 class="mb-3 h2">Hey, we're MassNova 👋</h1>
                         <p class="lead text-black-50">We're glad you made it to our site! The picture to your right (or below this lump of text if you're on mobile) is us... minus the <span class="text-danger">red</span> and <span class="text-warning">yellow</span> shirts. If you've made it this far, you're either a sneaky competitor looking into us... or you're on the fence about trying our product! </p>
-                        <p class="lead text-black-50">For any questions related to MassNova, who we are, or anything else for that matter - <a href="contact.html" class="text-underline">please get in touch</a> with us and we'll try our best to answer all your questions.</p>
+                        <p class="lead text-black-50">For any questions related to MassNova, who we are, or anything else for that matter - <a href={% url "userapi:contact" %} class="text-underline">please get in touch</a> with us and we'll try our best to answer all your questions.</p>
 
                     </div>
                     <div class="my-3 my-lg-5 col-md-12 offset-lg-1 col-lg-5">

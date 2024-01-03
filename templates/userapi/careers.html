@@ -1,0 +1,90 @@
+{% load static %}
+<!doctype html>
+<html lang="en">
+
+    <head>
+        {% include "userapi/head.html" %}
+        <title>Careers - MassNova</title>
+        <meta name="description" content="Your next job could be with MassNova! Job openings are always made readily available here. Learn more about why you want to join us!">
+        <meta name="twitter:title" content="Ampfluence - What you need to know - MassNova" />
+        <meta property="og:title" content="Ampfluence - What you need to know - MassNova" />
+        <meta property="og:description" content="Your next job could be with MassNova! Job openings are always made readily available here. Learn more about why you want to join us!" />
+        <meta name="twitter:description" content="Your next job could be with MassNova! Job openings are always made readily available here. Learn more about why you want to join us!" />
+        <meta property="og:url" content={% url "userapi:careers" %} />
+        <link rel="canonical" href={% url "userapi:careers" %} />
+        <link rel="alternate" href={% url "userapi:careers" %} hreflang="x-default" />
+    </head>
+
+    <body class="h-100">
+        {% include "userapi/header.html" %}
+        <section id="hero" class="pt-0 py-lg-5">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-12 col-lg-5">
+                        <div class="label py-2 px-2 mb-3 preheader">Apply Now</div>
+                        <h1 class="mb-3 h2">Careers</h1>
+                        <p class="lead text-black-50">Looking for a career in Instagram? Check out some of our job openings below. We look forward to your application!</p>
+
+                    </div>
+                </div>
+            </div>
+        </section>
+        <section id="jobs" class="pt-0">
+            <div class="container">
+                <div class="row mt-0 mt-lg-5">
+                    <div class="col-lg-4">
+                        <div class="card mb-4 shadow-2 px-5 py-5">
+                            <div class="card-body">
+                                <div class="label py-2 px-2 mb-3 preheader green">Full Time</div>
+                                <h3>Account Manager EMEA</h3>
+                                <p class="card-text text-black-50">Our valued clients need help! We've got great customers and inbound prospects that need product education, results, and relationship maintenance. You'll act as their contact point and keep everyone happy. </p>
+                                <p>Hit the apply now button for more info.</p>
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div class="btn-group">
+                                        <a href="mailto:#" class="btn btn-sm btn-primary">Apply Now</a>
+                                    </div>
+                                    <small class="text-muted">37 applicants</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-4">
+                        <div class="card mb-4 shadow-2 px-5 py-5">
+                            <div class="card-body">
+                                <div class="label py-2 px-2 mb-3 preheader green">Full Time</div>
+                                <div class="label py-2 px-2 mb-3 preheader gray ml-2">Remote</div>
+                                <h3>Sales Outreach (US/CA)</h3>
+                                <p class="card-text text-black-50">We're looking for an English speaking, American loving sales beast! Closing deals with the right customers should be on your agenda. Set your own targets, and work whenever and wherever you want.</p>
+                                <p>Hit the apply now button for more info.</p>
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div class="btn-group">
+                                        <a href="mailto:#" class="btn btn-sm btn-primary">Apply Now</a>
+                                    </div>
+                                    <small class="text-muted">7 applicants</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-4">
+                        <div class="card mb-4 shadow-2 px-5 py-5">
+                            <div class="card-body">
+                                <div class="label py-2 px-2 mb-3 preheader green">Part Time</div>
+                                <h3>Happiness Champ</h3>
+                                <p class="card-text text-black-50">Love making people happy? We're currently at max capacity with our success team and we're in need of helping hands. We'll slot you into the team seamlessly so you can help our Instagrammers shine. </p>
+                                <p>Hit the apply now button for more info.</p>
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div class="btn-group">
+                                        <a href="#" class="btn btn-sm btn-secondary" disabled>Closed</a>
+                                    </div>
+                                    <small class="text-muted">194 applicants</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        {% include "userapi/footer.html" %}
+    </body>
+
+</html>
