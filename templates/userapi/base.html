@@ -15,6 +15,7 @@
     <link href="https://fonts.googleapis.com/css?family=Material+Icons+Outlined" rel="stylesheet">
     <link href="{% static '' %}bs/css/bootstrap.min.css" rel="stylesheet">
     <link href="{% static '' %}bs/css/bootstrap-extended.css" rel="stylesheet">
+    <link href="{% static '' %}assets/css/boxicons.min.css" rel="stylesheet">
     <link href="{% static '' %}bs/sass/main.css" rel="stylesheet">
     <link href="{% static '' %}bs/sass/responsive.css" rel="stylesheet">
     {% block head %}{% endblock  %}
@@ -23,7 +24,13 @@
   <body>
     {% block content %}{% endblock content %}
 
+    <!--bootstrap js-->
+    <script src="{% static '' %}bs/js/bootstrap.bundle.min.js"></script>
+    <!--plugins-->
     <script src="{% static '' %}bs/js/jquery.min.js"></script>
+    <script src="{% static '' %}bs/plugins/perfect-scrollbar/js/perfect-scrollbar.js"></script>
+    <script src="{% static '' %}bs/js/index.js"></script>
+    <script src="{% static '' %}bs/js/main.js"></script>
 
     <script>
       function handleMessages() {

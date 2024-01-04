@@ -23,7 +23,7 @@
       <div class="col-12 col-xl-5 col-xxl-4 auth-cover-right justify-content-center">
         <div class="card rounded-0 m-3 mb-0 border-0 shadow-none">
           <div class="card-body p-sm-5">
-            <a href={% url "userapi:home" %}><img src="{% static '' %}media/Logo Black Font re.png" width="180" alt=""></a>
+            <a href={% url "userapi:index" %}><img src="{% static '' %}media/Logo Black Font re.png" width="180" alt=""></a>
             <h4 class="fw-bold">Get Started Now</h4>
             <strong class="mb-0">Enter your credentials to login your account</strong>
             <div class="container mb-2">
@@ -37,6 +37,7 @@
             </div>
             <div class="form-body mt-4">
               <form class="row g-3" action={% url 'userapi:login' %} method="post">
+                {% csrf_token %}
                 <div class="col-12">
                   <label for="inputEmailAddress" class="form-label">Username or Email</label>
                   <input type="name" class="form-control" name="username" id="inputEmailAddress" placeholder="Enter username or email" required>

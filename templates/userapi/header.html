@@ -10,7 +10,7 @@
 
 <nav id="static-desktop" class="container navbar navbar-expand-sm navbar-light static-top my-3 d-none d-lg-flex">
     <div class="container">
-        <a class="navbar-brand" href={% url "userapi:home" %}><img style="width: 200px; height: auto;" src="{% static '' %}media/Logo Black Font re.png"></a>
+        <a class="navbar-brand" href={% url "userapi:index" %}><img style="width: 200px; height: auto;" src="{% static '' %}media/Logo Black Font re.png"></a>
         <ul class="navbar-nav ml-auto">
             <li class="nav-item ml-auto d-none d-md-block">
                 <a href={% url "userapi:login" %} class="nav-link nav-login arrow mr-3">
@@ -33,7 +33,7 @@
 </nav>
 <nav id="sticky" class="container navbar navbar-dark bg-nav navbar-expand-xl fixed-top mb-3 oov">
     <div class="container container-fix">
-        <a class="navbar-brand" href={% url "userapi:home" %}>
+        <a class="navbar-brand" href={% url "userapi:index" %}>
             <img style="width: 150px; height: auto;" src="{% static '' %}media/Logo White Font re.png" alt="MassNova Logo"></a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
             <div id="nitreo-burger">
@@ -45,7 +45,7 @@
         <div id="navbarNav" class="collapse navbar-collapse">
             <ul class="navbar-nav pages">
                 <li class="nav-item">
-                    <a class="nav-link" href={% url "userapi:home" %}>Home</a>
+                    <a class="nav-link" href={% url "userapi:index" %}>Home</a>
                 </li>
                 <li class="nav-item dropdown position-static">
                     <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -189,5 +189,5 @@
     </div>
 </nav>
 <div id="mobile-brand" class="d-flex d-lg-none justify-content-between align-items-center mt-1 mb-3">
-    <a class="ml-3" href={% url "userapi:home" %}><img style="width: 200px; height: auto;" src="{% static '' %}media/Logo Black Font re.png" width="75px" alt="MassNova Logo"></a> <a class="btn btn-primary-light" data-toggle="modal" data-target="#signup">Get Started Now</a>
+    <a class="ml-3" href={% url "userapi:index" %}><img style="width: 200px; height: auto;" src="{% static '' %}media/Logo Black Font re.png" width="75px" alt="MassNova Logo"></a> <a class="btn btn-primary-light" data-toggle="modal" data-target="#signup">Get Started Now</a>
 </div>

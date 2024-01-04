@@ -40,20 +40,23 @@ from .serializers import (
 )
 
 
-def home(request):
-    return render(request, "userapi/index.html")
-
-
-def pricing(request):
-    return render(request, "userapi/pricing.html")
-
-
-def about(request):
-    return render(request, "userapi/about.html")
-
-
-def contact(request):
-    return render(request, "userapi/contact.html")
+def user_targets(request):
+    if request.user.is_authenticated:
+        insta_creds = (
+            Credential.objects.filter(user=request.user)
+            .values("id", "username")
+            .order_by("id")
+        )
+        targets = Target.objects.select_related("target_type", "insta_user").filter(
+            user=request.user
+        )
+        return render(
+            request,
+            "userapi/targets.html",
+            {"targets": targets, "insta_creds": insta_creds},
+        )
+    messages.error(request, "You need to login first.")
+    return redirect("userapi:login")
 
 
 def logout_user(request):
@@ -876,8 +879,8 @@ class TargetView(BaseAPIView, RenderAPIView):
         try:
             target = get_object_or_404(Target, pk=pk, user=request.user)
             target.delete()
+            messages.success(request, "Target deleted successfully.")
             return Response(
-                {"message": "Target deleted successfully."},
                 status=status.HTTP_204_NO_CONTENT,
             )
         except Exception as e:

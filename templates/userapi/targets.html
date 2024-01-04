@@ -1,0 +1,192 @@
+{% extends "userapi/base.html" %}
+{% load static %}
+
+{% block head %}
+<title>Targets - MassNova</title>
+<style>
+    /* Styles for the popup */
+    .popup {
+        display: none;
+        position: fixed;
+        bottom: 0;
+        right: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5);
+        z-index: 9999;
+    }
+
+    .popup-content {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 450px;
+        transform: translate(-50%, -50%);
+        background: #ffffff;
+        color: #1d1d1d;
+        padding: 15px;
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+    }
+
+    body.popup-open {
+        overflow: hidden;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+{% include "userapi/dashboard_header.html" %}
+<!--start main wrapper-->
+<main class="main-wrapper">
+    <div class="main-content">
+        <!--breadcrumb-->
+        <div class="page-breadcrumb d-none d-sm-flex align-items-center mb-3">
+            <div class="breadcrumb-title pe-3">MassNova</div>
+            <div class="ps-3">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb mb-0 p-0">
+                        <li class="breadcrumb-item"><a href="javascript:;"><i class="bx bx-home-alt"></i></a>
+                        </li>
+                        <li class="breadcrumb-item active" aria-current="page">Targets</li>
+                    </ol>
+                </nav>
+            </div>
+            <div class="ms-auto">
+                <button type="button" class="btn btn-primary">
+                    <a href={% url "userapi:insta-credentials" %} style="color: white;">
+                        Settings
+                        <i class="bx bx-cog"></i>
+                    </a>
+                </button>
+                <button type="button" class="btn btn-primary">
+                    <a href={% url "userapi:target-edit" %} style="color: white;">Add new Target</a>
+                    <i class='bx bx-plus'></i>
+                </button>
+            </div>
+        </div>
+        <!--end breadcrumb-->
+        <!-- Targets -->
+        <div class="col-12">
+            <div class="container mb-2">
+                {% if messages %}
+                {% for message in messages %}
+                <div class="alert {% if message.tags == 'error' %}text-danger{% elif message.tags == 'success' %}text-success{% endif %}" data-display-time="6000">
+                    <strong>{{ message }}</strong>
+                </div>
+                {% endfor %}
+                {% endif %}
+            </div>
+            <div class="card">
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th style="width: 80%;">
+                                        <h2>Targets</h2>
+                                    </th>
+                                    <th class="text-center" style="width: 20%;">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% if targets %}
+                                {% for target in targets %}
+                                <tr>
+                                    <td>{{ target.time_stamp }}</td>
+                                    <td>
+                                        <div class="d-flex justify-content-center">
+                                            <button type="button" class="btn btn-primary btn-sm me-2">
+                                                <a href="{% url 'userapi:target-edit' target.id %}" class="text-white">Edit</a>
+                                                <i class="bx bx-edit"></i>
+                                            </button>
+                                            <button type="button" class="btn btn-danger btn-sm" onclick="togglePopup(true, '{{ target.id }}')">
+                                                Delete
+                                                <i class='bx bx-trash'></i>
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                                {% else %}
+                                <tr>
+                                    <td colspan="2" class="text-center">
+                                        <strong>No Targets Added Yet!</strong>
+                                    </td>
+                                </tr>
+                                {% endif %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Targets Area End -->
+    </div>
+</main>
+<!--end main wrapper-->
+
+<!-- Delete Popup -->
+<div class="popup" id="deletePopup">
+    <div class="popup-content">
+        <form id="deleteTarget">
+            {% csrf_token %}
+            <input type="hidden" id="targetID">
+            <div class="d-flex justify-content-center mb-3">
+                <strong>
+                    <span>Are you sure to delete this taget from your account?</span>
+                </strong>
+            </div>
+            <div class="buttons text-center">
+                <button type="button" class="btn btn-danger" onclick="deleteInstaCred()">
+                    Delete
+                    <i class='bx bx-trash'></i>
+                </button>
+                <button type="button" class="btn btn-primary" onclick="togglePopup(false)">
+                    Cancel
+                    <i class='bx bx-x'></i>
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+<!-- Delete Popup End -->
+
+{% include "userapi/dashboard_footer.html" %}
+
+<script>
+    function togglePopup(toOpen, targetID = null) {
+        document.getElementById('deletePopup').style.display = toOpen ? 'block' : 'none';
+        document.body.classList.toggle('popup-open', toOpen);
+        if (targetID) {
+            document.getElementById("targetID").value = targetID;
+        }
+    }
+
+    function deleteInstaCred() {
+        var form = document.getElementById('deleteTarget');
+        let csrfToken = form.querySelector('input[name="csrfmiddlewaretoken"]').value;
+        let targetID = form.querySelector("#targetID").value;
+        var url = `/target/${targetID}/`;
+
+        fetch(url, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': csrfToken,
+                'Authorization': "Token {{ request.session.token }}"
+            },
+        })
+            .then(response => {
+                if (response.ok) {
+                    // Handle success (e.g., show a success message, refresh the page)
+                    window.location.pathname = '/targets/';
+                }
+            })
+            .catch(error => {
+                // Handle network or other errors
+                alert('Error during delete request:', error);
+            });
+    }
+</script>
+{% endblock %}

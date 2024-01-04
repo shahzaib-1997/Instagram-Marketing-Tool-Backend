@@ -1,0 +1,73 @@
+{% load static %}
+
+<!--start primary menu offcanvas-->
+<div class="offcanvas offcanvas-start w-260" data-bs-scroll="true" tabindex="-1" id="offcanvasPrimaryMenu">
+    <div class="offcanvas-header border-bottom h-70">
+        <img src="{% static '' %}media/Logo Black Font re.png" width="160" alt="MassNova Logo">
+        <a href="javascript:;" class="primaery-menu-close" data-bs-dismiss="offcanvas">
+            <i class="material-icons-outlined">close</i>
+        </a>
+    </div>
+    <div class="d-flex align-items-center offcanvas-body">
+        <nav class="sidebar-nav">
+            <ul class="metismenu" id="sidenav">
+                <li>
+                    <a href={% url "userapi:dashboard" %} title="Dashboard">
+                        <div class="parent-icon"><i class="material-icons-outlined">home</i>
+                        </div>
+                        <div class="menu-title">Dashboard</div>
+                    </a>
+                </li>
+                <li>
+                    <a href="#">
+                        <div class="parent-icon"><i class="material-icons-outlined">widgets</i>
+                        </div>
+                        <div class="menu-title">Stats</div>
+                    </a>
+                </li>
+                <li>
+                    <a href={% url "userapi:targets" %}>
+                        <div class="parent-icon"><i class="material-icons-outlined">inventory_2</i>
+                        </div>
+                        <div class="menu-title">Targets</div>
+                    </a>
+                </li>
+                <li>
+                    <a href="#">
+                        <div class="parent-icon"><i class="material-icons-outlined">shopping_bag</i>
+                        </div>
+                        <div class="menu-title">Settings</div>
+                    </a>
+                </li>
+                <li>
+                    <a href={% url "userapi:insta-credentials" %}>
+                        <div class="parent-icon"><i class="material-icons-outlined">card_giftcard</i>
+                        </div>
+                        <div class="menu-title">Insta Credentials</div>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+</div>
+<!--end primary menu offcanvas-->
+
+<!--start user details offcanvas-->
+<div class="offcanvas offcanvas-start w-260" data-bs-scroll="true" tabindex="-1" id="offcanvasUserDetails">
+    <div class="offcanvas-body">
+        <div class="user-wrapper">
+            <div class="text-center p-3 bg-light rounded">
+                <img src="{% static '' %}bs/images/avatars/01.png" class="rounded-circle p-1 shadow mb-3" width="120" height="120" alt="">
+                <h5 class="user-name mb-0 fw-bold">{{ request.user }}</h5>
+                <!-- <p class="mb-0">Administrator</p> -->
+            </div>
+            <div class="list-group list-group-flush mt-3 profil-menu fw-bold">
+                <a href={% url "userapi:profile" %} class="list-group-item list-group-item-action d-flex align-items-center gap-2 border-top"><i class="material-icons-outlined">person_outline</i>Profile</a>
+                <a href="javascript:;" class="list-group-item list-group-item-action d-flex align-items-center gap-2"><i class="material-icons-outlined">local_bar</i>Setting</a>
+                <a href="javascript:;" class="list-group-item list-group-item-action d-flex align-items-center gap-2"><i class="material-icons-outlined">dashboard</i>Dashboard</a>
+                <a href={% url "userapi:logout" %} class="list-group-item list-group-item-action d-flex align-items-center gap-2 border-bottom"><i class="material-icons-outlined">power_settings_new</i>Logout</a>
+            </div>
+        </div>
+    </div>
+</div>
+<!--end user details offcanvas-->

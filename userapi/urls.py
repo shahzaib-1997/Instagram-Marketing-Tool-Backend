@@ -33,7 +33,7 @@ from userapi import views
 app_name = "userapi"
 
 urlpatterns = [
-    path("", views.home, name="home"),
+    path("", TemplateView.as_view(template_name="userapi/index.html"), name="index"),
     path("all-users/", views.GetAllUsers.as_view(), name="all-users"),
     path("token/", views.CreateToken.as_view(), name="token"),
     path("signup/", views.SignupView.as_view(), name="signup"),
@@ -54,7 +54,14 @@ urlpatterns = [
     path(
         "target-edit/<int:pk>/", views.TargetTemplateView.as_view(), name="target-edit"
     ),
-    path("about/", views.about, name="about"),
+    path(
+        "targets/", views.user_targets, name="targets",
+    ),
+    path(
+        "about/",
+        TemplateView.as_view(template_name="userapi/about.html"),
+        name="about",
+    ),
     path(
         "pricing/",
         TemplateView.as_view(template_name="userapi/pricing.html"),
@@ -70,7 +77,11 @@ urlpatterns = [
         TemplateView.as_view(template_name="userapi/terms.html"),
         name="terms-condition",
     ),
-    path("contact/", views.contact, name="contact"),
+    path(
+        "contact/",
+        TemplateView.as_view(template_name="userapi/contact.html"),
+        name="contact",
+    ),
     path("profile/", views.ProfileView.as_view(), name="profile"),
     path("update-profile/", views.ProfileView.as_view(), name="update-profile"),
     path(
