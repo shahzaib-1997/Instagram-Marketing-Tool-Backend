@@ -1,260 +1,213 @@
 {% extends 'userapi/base.html' %}
 {% load static %}
 
-{% block title %}Add or Edit Target | {% endblock %}
+{% block head %}
+<title>Target - MassNova</title>
+{% endblock %}
 
-{% block style %}
-<style>
-    .buttons {
-        margin: 0.5rem;
-    }
-
-    /* Styles for the popup */
-    .popup {
-        display: none;
-        position: fixed;
-        bottom: 0;
-        right: 0;
-        width: 100%;
-        height: 100%;
-        background: rgba(0, 0, 0, 0.5);
-        z-index: 9999;
-    }
-
-    .popup-content {
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        width: 450px;
-        transform: translate(-50%, -50%);
-        background: #ffffff;
-        color: #1d1d1d;
-        padding: 15px;
-        border-radius: 8px;
-        box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
-    }
-
-    .theme-dark .popup-content {
-        background: #1d1d1d;
-        color: #ffffff;
-    }
-
-    body.popup-open {
-        overflow: hidden;
-    }
-</style>
-{% endblock style %}
-
-{% block content1 %}
-<!-- Inner Banner Area -->
-<div class="inner-banner">
-    <div>
-        <div class="inner-title text-center">
-            <h3>Target</h3>
-            <ul>
-                <li>
-                    <a href={% url "userapi:dashboard" %}>Dashboard</a>
-                </li>
-                <li>
-                    <i class='bx bx-chevron-right'></i>
-                </li>
-                <li>Add or Edit Target</li>
-            </ul>
-        </div>
-    </div>
-
-    <div class="inner-banner-shape">
-        <div class="shape-one">
-            <img src="{% static 'assets/img/inner-banner/banner-shape1.png' %}" alt="Images">
-        </div>
-
-        <div class="shape-two">
-            <img src="{% static 'assets/img/inner-banner/banner-shape2.png' %}" alt="Images">
-        </div>
-
-        <div class="shape-three">
-            <img src="{% static 'assets/img/inner-banner/banner-shape3.png' %}" alt="Images">
-        </div>
-
-        <div class="inner-banner-dots-2">
-            <img src="{% static 'assets/img/shape/dots-shape.png' %}" alt="Images">
-        </div>
-    </div>
-</div>
-<!-- Inner Banner Area End -->
+{% block content %}
+{% include "userapi/dashboard_header.html" %}
 
 <!-- Target Area -->
-<div class="container mb-3">
-    <div class="row pt-45">
-        <div class="container mb-2">
-            {% if messages %}
-            {% for message in messages %}
-            <div class="alert {% if message.tags == 'error' %}text-danger{% elif message.tags == 'success' %}text-success{% endif %}"
-                data-display-time="6000">
-                <strong>{{ message }}</strong>
+<main class="main-wrapper">
+    <div class="main-content">
+        <!--breadcrumb-->
+        <div class="page-breadcrumb d-none d-sm-flex align-items-center mb-3">
+            <div class="breadcrumb-title pe-3">MassNova</div>
+            <div class="ps-3">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb mb-0 p-0">
+                        <li class="breadcrumb-item active" aria-current="page">Target Editor</li>
+                    </ol>
+                </nav>
             </div>
-            {% endfor %}
+            <div class="ms-auto">
+                <button type="button" class="btn btn-primary" onclick="openModal('instaUser')">
+                    Settings
+                    <i class='bx bx-cog'></i>
+                </button>
+            </div>
+        </div>
+        <div class="col-12">
+            <div class="container mb-2">
+                {% if messages %}
+                {% for message in messages %}
+                <div class="alert {% if message.tags == 'error' %}text-danger{% elif message.tags == 'success' %}text-success{% endif %}" data-display-time="6000">
+                    <strong>{{ message }}</strong>
+                </div>
+                {% endfor %}
+                {% endif %}
+            </div>
+            <div class="card">
+                <div class="card-body">
+                    <form class="row g-3" action="{% if pk %}{% url 'userapi:target-edit' pk %}{% else %}{% url 'userapi:target-edit' %}{% endif %}" method="post" onsubmit="return checkForm()">
+                        {% csrf_token %}
+                        <div class="accordion">
+                            <div class="accordion-item">
+                                <h2 class="accordion-header" id="headingOne">
+                                    <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
+                                        Target Edit
+                                    </button>
+                                </h2>
+                                <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+                                    <div class="accordion-body text-center">
+                                        <div class="d-flex flex-wrap gap-3">
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="type" id="post-like" value="post-like">
+                                                <label class="form-check-label" for="post-like">
+                                                    Post (like)
+                                                </label>
+                                            </div>
+
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="type" id="post-comment" value="post-comment">
+                                                <label class="form-check-label" for="post-comment">
+                                                    Post (comment)
+                                                </label>
+                                            </div>
+
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="type" id="comment-like" value="comment-like">
+                                                <label class="form-check-label" for="comment-like">
+                                                    Comment (like)
+                                                </label>
+                                            </div>
+
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="type" id="reels-view" value="reels-view">
+                                                <label class="form-check-label" for="reels-view">
+                                                    Reels (view)
+                                                </label>
+                                            </div>
+
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="type" id="reels-like" value="reels-like">
+                                                <label class="form-check-label" for="reels-like">
+                                                    Reels (like)
+                                                </label>
+                                            </div>
+
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="type" id="reels-comment" value="reels-comment">
+                                                <label class="form-check-label" for="reels-comment">
+                                                    Reels (comment)
+                                                </label>
+                                            </div>
+
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="type" id="hashtag-like" value="hashtag-like">
+                                                <label class="form-check-label" for="hashtag-like">
+                                                    #Hashtags (like)
+                                                </label>
+                                            </div>
+
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="type" id="hashtag-comment" value="hashtag-comment">
+                                                <label class="form-check-label" for="hashtag-comment">
+                                                    #Hashtags (comment)
+                                                </label>
+                                            </div>
+                                        </div>
+                                        <div class="row m-3">
+                                            <div class="col">
+                                                <button type="button" class="btn ripple btn-primary px-5" data-bs-toggle="modal" data-bs-target="#listModal">
+                                                    Targets list
+                                                </button>
+                                                <!-- Modal -->
+                                                <div class="modal fade" id="listModal" tabindex="-1" aria-hidden="true">
+                                                    <div class="modal-dialog modal-dialog-centered">
+                                                        <div class="modal-content">
+                                                            <div class="modal-header">
+                                                                <h5 class="modal-title"> Add Usernames </h5>
+                                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                            </div>
+                                                            <div class="modal-body"><textarea rows="6" cols="40"></textarea></div>
+                                                            <div class="modal-footer">
+                                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                                                <button type="button" class="btn btn-primary">Save changes</button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col">
+                                                <button class="btn btn-primary ripple px-5">
+                                                    Clear targets
+                                                </button>
+                                            </div>
+                                            <div class="col">
+                                                <button class="btn btn-primary ripple px-5">
+                                                    View targets
+                                                </button>
+                                            </div>
+                                            <div class="col">
+                                                <button class="btn btn-primary ripple px-5">
+                                                    Copy targets
+                                                </button>
+                                            </div>
+                                        </div>
+                                        <div class="">
+                                            <input name="search" type="text" placeholder="Enter Insta Username or complete URL" size="50">
+                                            <button class="btn btn-primary ripple px-5">
+                                                Insert targets
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="accordion">
+                            <div class="accordion-item">
+                                <h2 class="accordion-header" id="headingTwo">
+                                    <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                                        Activity Time Settings
+                                    </button>
+                                </h2>
+                                <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#accordionExample">
+                                    <p>
+                                        Activity Time Div
+                                    </p>
+                                </div>
+                                <button class="btn btn-primary ripple px-5" type="submit">
+                                    Save Task
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+<!-- Target Area End -->
+
+<!-- Settings Modal -->
+<div class="modal fade" id="settingsModal">
+    <div class="popup-content">
+        <div class="d-flex justify-content-center mb-2">
+            <strong>Select Insta Account for the Target</strong>
+        </div>
+        <div class="d-flex justify-content-center mb-2">
+            {% if insta_creds %}
+            <select id="settingsDropdown" name="selected_insta_cred">
+                <option value="#">------</option>
+                {% for insta_cred in insta_creds %}
+                <option value="{{ insta_cred.id }}" {% if insta_cred.id == target.insta_user.id %} selected {% endif %}>{{ insta_cred.username }} </option>
+                {% endfor %}
+            </select>
+            {% else %}
+            <strong>No Insta Account Found against Your Account!</strong>
             {% endif %}
         </div>
-        <div class="buttons">
-            <button type="button" class="btn btn-primary" onclick="togglePopup('settingsPopup', true)">Settings</button>
-            <button type="button" class="btn btn-primary" onclick="showDiv('activityLogDiv')">Activity Log</button>
-            <button type="button" class="btn btn-primary" onclick="showDiv('statsDiv')">Stats</button>
-            <a class="align-self-center">5 Min Setup</a>
-        </div>
-        <form action="{% if pk %}{% url 'userapi:target-edit' pk %}
-                    {% else %}{% url 'userapi:target-edit' %}
-                    {% endif %}"
-                    method="post" onsubmit="return checkForm()">
-            {% csrf_token %}
-            <!-- Settings Popup -->
-            <div class="popup" id="settingsPopup">
-                <div class="popup-content">
-                    <div class="d-flex justify-content-center mb-2">
-                        <strong>Select Insta Account for the Target</strong>
-                    </div>
-                    <input type="hidden" name="pk" value={{ pk }}>
-                    <div class="d-flex justify-content-center mb-2">
-                        {% if insta_creds %}
-                        <select id="settingsDropdown" name="selected_insta_cred">
-                            <option value="#">------</option>
-                            {% for insta_cred in insta_creds %}
-                            <option value="{{ insta_cred.id }}" {% if insta_cred.id == target.insta_user.id %}
-                            selected {% endif %}>{{ insta_cred.username }} </option>
-                            {% endfor %}
-                        </select>
-                        {% else %}
-                        <strong>No Insta Account Found against Your Account!</strong>
-                        {% endif %}
-                    </div>
-                    <div class="buttons text-center" style="margin-top: 15px;">
-                        {% if insta_creds %}
-                        <button type="button" class="btn btn-primary btn-sm"
-                            onclick="togglePopup('settingsPopup', false)">Select</button>
-                        {% endif %}
-                        <button type="button" class="btn btn-primary btn-sm"
-                            onclick="togglePopup('settingsPopup', false)">Close</button>
-                    </div>
-                </div>
-            </div>
-            <!-- Settings Popup End-->
-            <div id="settingsDiv" class="mb-3">
-                <div class="buttons">
-                    <button class="btn btn-primary" onclick="toggleDisplay('inner-data-targeting')">
-                        <i class='bx bx-chevron-down'></i>
-                        Targeting
-                    </button>
-                </div>
-                <div id="inner-data-targeting" style="display: none;" class="toggle-content">
-                    <label>
-                        <input class="radio" name="type" type="radio" value="post-like" checked="">
-                        <span>
-                            Post (like)
-                        </span>
-                    </label>
-
-                    <label>
-                        <input class="radio" name="type" type="radio" value="post-comment">
-                        <span>
-                            Post (comment)
-                        </span>
-                    </label>
-
-                    <label>
-                        <input class="radio" name="type" type="radio" value="comment-like">
-                        <span>
-                            Comment (like)
-                        </span>
-                    </label>
-
-                    <label>
-                        <input class="radio" name="type" type="radio" value="reels-view">
-                        <span>
-                            Reels (view)
-                        </span>
-                    </label>
-
-                    <label>
-                        <input class="radio" name="type" type="radio" value="reels-like">
-                        <span>
-                            Reels (like)
-                        </span>
-                    </label>
-
-                    <label>
-                        <input class="radio" name="type" type="radio" value="reels-comment">
-                        <span>
-                            Reels (comment)
-                        </span>
-                    </label>
-
-                    <label>
-                        <input class="radio" name="type" type="radio" value="hashtag-like">
-                        <span>
-                            #Hashtags (like)
-                        </span>
-                    </label>
-
-                    <label>
-                        <input class="radio" name="type" type="radio" value="hashtag-comment">
-                        <span>
-                            #Hashtags (comment)
-                        </span>
-                    </label>
-                    <div class="buttons">
-                        <button class="btn btn-primary">
-                            Targets list
-                        </button>
-                        <button class="btn btn-primary">
-                            Clear targets
-                        </button>
-                        <button class="btn btn-primary">
-                            View targets
-                        </button>
-                        <button class="btn btn-primary">
-                            Copy targets
-                        </button>
-                    </div>
-                    <div class="search">
-                        <input name="search" type="text" placeholder="Enter Insta Username or complete URL" size="50">
-                        <label for="search" class="form-label">
-                            <!-- Search -->
-                            <button class="btn btn-primary">
-                                Insert targets
-                            </button>
-                        </label>
-                    </div>
-                </div>
-                <div class="buttons">
-                    <button class="btn btn-primary" onclick="toggleDisplay('inner-data-activity')">
-                        <i class='bx bx-chevron-down'></i>
-                        Activity Time Settings
-                    </button>
-                </div>
-                <div id="inner-data-activity" style="display: none;" class="toggle-content">
-                    <p>
-                        Activity Time Div
-                    </p>
-                </div>
-                <div class="buttons">
-                    <button class="btn btn-primary" type="submit">
-                        Save Task
-                    </button>
-                </div>
-            </div>
-        </form>
-        <div id="activityLogDiv" class="hidden" style="display: none;">
-            <!-- Content for Activity Log Div -->
-            <h2>Activity Log Div Content</h2>
-        </div>
-        <div id="statsDiv" class="hidden" style="display: none;">
-            <!-- Content for Stats Div -->
-            <h2>Stats Div Content</h2>
+        <div class="buttons text-center" style="margin-top: 15px;">
+            {% if insta_creds %}
+            <button type="button" class="btn btn-primary btn-sm" onclick="toggleModal('settingsModal', false)">Select</button>
+            {% endif %}
+            <button type="button" class="btn btn-primary btn-sm" onclick="toggleModal('settingsModal', false)">Close</button>
         </div>
     </div>
 </div>
-<!-- Target Area End -->
-
+<!-- Settings Modal End-->
 <script>
     function showDiv(divId) {
         // Hide all divs
@@ -271,8 +224,8 @@
         dataDisplay.style.display = dataDisplay.style.display === 'none' ? 'block' : 'none';
     }
 
-    function togglePopup(popupId, isOpen) {
-        document.getElementById(popupId).style.display = isOpen ? 'block' : 'none';
+    function toggleModal(modalId, isOpen) {
+        document.getElementById(modalId).style.display = isOpen ? 'block' : 'none';
         document.body.classList.toggle('popup-open', isOpen);
     }
 
@@ -289,4 +242,7 @@
         return true;
     }
 </script>
+
+{% include "userapi/dashboard_footer.html" %}
+
 {% endblock %}

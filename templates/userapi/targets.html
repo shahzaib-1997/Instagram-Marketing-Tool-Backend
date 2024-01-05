@@ -3,36 +3,6 @@
 
 {% block head %}
 <title>Targets - MassNova</title>
-<style>
-    /* Styles for the popup */
-    .popup {
-        display: none;
-        position: fixed;
-        bottom: 0;
-        right: 0;
-        width: 100%;
-        height: 100%;
-        background: rgba(0, 0, 0, 0.5);
-        z-index: 9999;
-    }
-
-    .popup-content {
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        width: 450px;
-        transform: translate(-50%, -50%);
-        background: #ffffff;
-        color: #1d1d1d;
-        padding: 15px;
-        border-radius: 8px;
-        box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
-    }
-
-    body.popup-open {
-        overflow: hidden;
-    }
-</style>
 {% endblock %}
 
 {% block content %}
@@ -46,8 +16,7 @@
             <div class="ps-3">
                 <nav aria-label="breadcrumb">
                     <ol class="breadcrumb mb-0 p-0">
-                        <li class="breadcrumb-item"><a href="javascript:;"><i class="bx bx-home-alt"></i></a>
-                        </li>
+                        <li class="breadcrumb-item"></li>
                         <li class="breadcrumb-item active" aria-current="page">Targets</li>
                     </ol>
                 </nav>
@@ -67,6 +36,8 @@
         </div>
         <!--end breadcrumb-->
         <!-- Targets -->
+        <h2>Targets</h2>
+        <hr>
         <div class="col-12">
             <div class="container mb-2">
                 {% if messages %}
@@ -83,10 +54,8 @@
                         <table class="table table-hover">
                             <thead>
                                 <tr>
-                                    <th style="width: 80%;">
-                                        <h2>Targets</h2>
-                                    </th>
-                                    <th class="text-center" style="width: 20%;">Actions</th>
+                                    <th style="width: 64%;">Time stamp of target</th>
+                                    <th class="text-center" colspan="2">Actions</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -94,23 +63,25 @@
                                 {% for target in targets %}
                                 <tr>
                                     <td>{{ target.time_stamp }}</td>
-                                    <td>
-                                        <div class="d-flex justify-content-center">
-                                            <button type="button" class="btn btn-primary btn-sm me-2">
-                                                <a href="{% url 'userapi:target-edit' target.id %}" class="text-white">Edit</a>
+                                    <td class="text-end">
+                                        <button type="button" class="btn btn-primary btn-sm me-2">
+                                            <a href="{% url 'userapi:target-edit' target.id %}" class="text-white">
+                                                Edit
                                                 <i class="bx bx-edit"></i>
-                                            </button>
-                                            <button type="button" class="btn btn-danger btn-sm" onclick="togglePopup(true, '{{ target.id }}')">
-                                                Delete
-                                                <i class='bx bx-trash'></i>
-                                            </button>
-                                        </div>
+                                            </a>
+                                        </button>
+                                    </td>
+                                    <td class="text-start">
+                                        <button type="button" class="btn btn-danger btn-sm"  data-bs-toggle="modal" data-bs-target="#deleteModal" onclick="setTargetID('{{ target.id }}')">
+                                            Delete
+                                            <i class='bx bx-trash'></i>
+                                        </button>
                                     </td>
                                 </tr>
                                 {% endfor %}
                                 {% else %}
                                 <tr>
-                                    <td colspan="2" class="text-center">
+                                    <td colspan="3" class="text-center">
                                         <strong>No Targets Added Yet!</strong>
                                     </td>
                                 </tr>
@@ -126,44 +97,48 @@
 </main>
 <!--end main wrapper-->
 
-<!-- Delete Popup -->
-<div class="popup" id="deletePopup">
-    <div class="popup-content">
-        <form id="deleteTarget">
-            {% csrf_token %}
-            <input type="hidden" id="targetID">
-            <div class="d-flex justify-content-center mb-3">
-                <strong>
-                    <span>Are you sure to delete this taget from your account?</span>
-                </strong>
+<!-- Delete Modal -->
+<div class="modal fade" tabindex="-1" aria-hidden="true" id="deleteModal">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Delete Target</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <div class="buttons text-center">
-                <button type="button" class="btn btn-danger" onclick="deleteInstaCred()">
-                    Delete
-                    <i class='bx bx-trash'></i>
-                </button>
-                <button type="button" class="btn btn-primary" onclick="togglePopup(false)">
-                    Cancel
-                    <i class='bx bx-x'></i>
-                </button>
-            </div>
-        </form>
+            <form id="deleteTarget">
+                {% csrf_token %}
+                <input type="hidden" id="targetID">
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <strong>
+                            <span>Are you sure to delete this target from your account?</span>
+                        </strong>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" onclick="deleteTarget()">
+                        Delete
+                        <i class='bx bx-trash'></i>
+                    </button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                        Cancel
+                        <i class='bx bx-x'></i>
+                    </button>
+                </div>
+            </form>
+        </div>
     </div>
 </div>
-<!-- Delete Popup End -->
+<!-- Delete Modal End -->
 
 {% include "userapi/dashboard_footer.html" %}
 
 <script>
-    function togglePopup(toOpen, targetID = null) {
-        document.getElementById('deletePopup').style.display = toOpen ? 'block' : 'none';
-        document.body.classList.toggle('popup-open', toOpen);
-        if (targetID) {
-            document.getElementById("targetID").value = targetID;
-        }
+    function setTargetID(targetID) {
+        document.getElementById("targetID").value = targetID;
     }
 
-    function deleteInstaCred() {
+    function deleteTarget() {
         var form = document.getElementById('deleteTarget');
         let csrfToken = form.querySelector('input[name="csrfmiddlewaretoken"]').value;
         let targetID = form.querySelector("#targetID").value;

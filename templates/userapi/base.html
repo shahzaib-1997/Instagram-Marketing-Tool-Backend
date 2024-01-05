@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="icon" href="{% static '' %}media/icon.png" type="image/x-icon" />  
+    <link rel="icon" href="{% static '' %}media/icon.png" type="image/x-icon" />
     <!--plugins-->
     <link href="{% static '' %}bs/plugins/perfect-scrollbar/css/perfect-scrollbar.css" rel="stylesheet">
     <link rel="stylesheet" type="text/css" href="{% static '' %}bs/plugins/metismenu/metisMenu.min.css">
@@ -15,10 +15,10 @@
     <link href="https://fonts.googleapis.com/css?family=Material+Icons+Outlined" rel="stylesheet">
     <link href="{% static '' %}bs/css/bootstrap.min.css" rel="stylesheet">
     <link href="{% static '' %}bs/css/bootstrap-extended.css" rel="stylesheet">
-    <link href="{% static '' %}assets/css/boxicons.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/boxicons/2.1.0/css/boxicons.min.css" rel="stylesheet">
     <link href="{% static '' %}bs/sass/main.css" rel="stylesheet">
     <link href="{% static '' %}bs/sass/responsive.css" rel="stylesheet">
-    {% block head %}{% endblock  %}
+    {% block head %}{% endblock %}
   </head>
 
   <body>
@@ -33,6 +33,10 @@
     <script src="{% static '' %}bs/js/main.js"></script>
 
     <script>
+      $(document).ready(function () {
+        $('[data-toggle="tooltip"]').tooltip();
+      });
+
       function handleMessages() {
         const messageDivs = document.querySelectorAll('.alert');
 
