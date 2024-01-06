@@ -21,23 +21,9 @@
                     </ol>
                 </nav>
             </div>
-            <div class="ms-auto">
-                <button type="button" class="btn btn-primary">
-                    <a href={% url "userapi:insta-credentials" %} style="color: white;">
-                        Settings
-                        <i class="bx bx-cog"></i>
-                    </a>
-                </button>
-                <button type="button" class="btn btn-primary">
-                    <a href={% url "userapi:target-edit" %} style="color: white;">Add new Target</a>
-                    <i class='bx bx-plus'></i>
-                </button>
-            </div>
         </div>
         <!--end breadcrumb-->
         <!-- Targets -->
-        <h2>Targets</h2>
-        <hr>
         <div class="col-12">
             <div class="container mb-2">
                 {% if messages %}
@@ -50,8 +36,22 @@
             </div>
             <div class="card">
                 <div class="card-body">
-                    <div class="table-responsive">
-                        <table class="table table-hover">
+                    <div class="container p-0 m-2">
+                        <div class="row">
+                            <div class="d-flex  justify-content-between">
+                                <div class="col-lg-8">
+                                    <h3>Targets</h3>
+                                </div>
+                                <div class="col-lg-4 text-lg-end mt-lg-0">
+                                    <button type="button" class="btn btn-primary">
+                                        <a href="{% url 'userapi:target-edit' %}" class="text-white">Add New<i class='bx bx-plus'></i></a>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="table-responsive ">
+                        <table class="table table-hover align-middle">
                             <thead>
                                 <tr>
                                     <th style="width: 64%;">Time stamp of target</th>
@@ -72,7 +72,7 @@
                                         </button>
                                     </td>
                                     <td class="text-start">
-                                        <button type="button" class="btn btn-danger btn-sm"  data-bs-toggle="modal" data-bs-target="#deleteModal" onclick="setTargetID('{{ target.id }}')">
+                                        <button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#deleteModal" onclick="setTargetID('{{ target.id }}')">
                                             Delete
                                             <i class='bx bx-trash'></i>
                                         </button>

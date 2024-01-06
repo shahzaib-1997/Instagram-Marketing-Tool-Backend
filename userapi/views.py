@@ -184,11 +184,7 @@ class TargetTemplateView(APIView):
     def post(self, request, pk=None):
         try:
             if request.user.is_authenticated:
-                target = (
-                    get_object_or_404(Target, id=pk)
-                    if pk
-                    else Target(user=request.user)
-                )
+                target = get_object_or_404(Target, id=pk) if pk else Target.objects.create(user=request.user)
                 insta_cred = request.POST.get("selected_insta_cred")
                 credential = get_object_or_404(Credential, id=insta_cred)
                 target.insta_user = credential
@@ -202,16 +198,12 @@ class TargetTemplateView(APIView):
                     request,
                     "Target " + ("updated" if pk else "added") + " successfully!",
                 )
-                return render(
-                    request,
-                    "userapi/target.html",
-                    {"target": target, "insta_creds": insta_creds, "pk": pk},
-                )
+                return redirect("userapi:targets")
             messages.error(request, "You need to login first.")
             return redirect("userapi:login")
         except Exception as e:
             messages.error(request, str(e))
-        return redirect("userapi:target-edit", pk=pk if pk else target.id)
+            return redirect("userapi:target-edit", pk=pk if pk else target.id)
 
 
 class InstaCredentialView(APIView):

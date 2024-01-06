@@ -3,6 +3,13 @@
 
 {% block head %}
 <title>Target - MassNova</title>
+<style>
+    .scroll-at-bottom {
+        overflow-y: hidden;
+        resize: none;
+        white-space: nowrap;
+    }
+</style>
 {% endblock %}
 
 {% block content %}
@@ -21,12 +28,6 @@
                     </ol>
                 </nav>
             </div>
-            <div class="ms-auto">
-                <button type="button" class="btn btn-primary" onclick="openModal('instaUser')">
-                    Settings
-                    <i class='bx bx-cog'></i>
-                </button>
-            </div>
         </div>
         <div class="col-12">
             <div class="container mb-2">
@@ -42,65 +43,101 @@
                 <div class="card-body">
                     <form class="row g-3" action="{% if pk %}{% url 'userapi:target-edit' pk %}{% else %}{% url 'userapi:target-edit' %}{% endif %}" method="post" onsubmit="return checkForm()">
                         {% csrf_token %}
+                        <div class="d-flex justify-content-between m-3">
+                            <h2>Target Edit</h2>
+                            <div class="ms-auto">
+                                <button type="button" class="btn btn-primary mx-3" data-bs-toggle="modal" data-bs-target="#instaUser">
+                                    Settings
+                                    <i class='bx bx-cog'></i>
+                                </button>
+                                <!-- Settings Modal -->
+                                <div class="modal fade" id="instaUser" tabindex="-1" aria-hidden="true">
+                                    <div class="modal-dialog modal-dialog-centered">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title">
+                                                    Select Insta Account for the Target
+                                                </h5>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <div class="d-flex align-items-center">
+                                                    {% if insta_creds %}
+                                                    <select class="form-select text-center" id="settingsDropdown" name="selected_insta_cred">
+                                                        <option value="#">------</option>
+                                                        {% for insta_cred in insta_creds %}
+                                                        <option value="{{ insta_cred.id }}" {% if insta_cred.id == target.insta_user.id %} selected {% endif %}>{{ insta_cred.username }} </option>
+                                                        {% endfor %}
+                                                    </select>
+                                                    {% else %}
+                                                    <strong>No Insta Account Found against Your Account!</strong>
+                                                    {% endif %}
+                                                </div>
+                                            </div>
+                                            <div class="modal-footer">
+                                                {% if insta_creds %}
+                                                <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Select</button>
+                                                {% endif %}
+                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- Settings Modal End-->
+                            </div>
+                        </div>
                         <div class="accordion">
                             <div class="accordion-item">
                                 <h2 class="accordion-header" id="headingOne">
                                     <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
-                                        Target Edit
+                                        Targeting
                                     </button>
                                 </h2>
-                                <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+                                <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne">
                                     <div class="accordion-body text-center">
-                                        <div class="d-flex flex-wrap gap-3">
+                                        <div class="d-flex justify-content-center flex-wrap gap-3 mb-3">
                                             <div class="form-check">
                                                 <input class="form-check-input" type="radio" name="type" id="post-like" value="post-like">
                                                 <label class="form-check-label" for="post-like">
                                                     Post (like)
                                                 </label>
                                             </div>
-
                                             <div class="form-check">
                                                 <input class="form-check-input" type="radio" name="type" id="post-comment" value="post-comment">
                                                 <label class="form-check-label" for="post-comment">
                                                     Post (comment)
                                                 </label>
                                             </div>
-
                                             <div class="form-check">
                                                 <input class="form-check-input" type="radio" name="type" id="comment-like" value="comment-like">
                                                 <label class="form-check-label" for="comment-like">
                                                     Comment (like)
                                                 </label>
                                             </div>
-
                                             <div class="form-check">
                                                 <input class="form-check-input" type="radio" name="type" id="reels-view" value="reels-view">
                                                 <label class="form-check-label" for="reels-view">
                                                     Reels (view)
                                                 </label>
                                             </div>
-
                                             <div class="form-check">
                                                 <input class="form-check-input" type="radio" name="type" id="reels-like" value="reels-like">
                                                 <label class="form-check-label" for="reels-like">
                                                     Reels (like)
                                                 </label>
                                             </div>
-
                                             <div class="form-check">
                                                 <input class="form-check-input" type="radio" name="type" id="reels-comment" value="reels-comment">
                                                 <label class="form-check-label" for="reels-comment">
                                                     Reels (comment)
                                                 </label>
                                             </div>
-
                                             <div class="form-check">
                                                 <input class="form-check-input" type="radio" name="type" id="hashtag-like" value="hashtag-like">
                                                 <label class="form-check-label" for="hashtag-like">
                                                     #Hashtags (like)
                                                 </label>
                                             </div>
-
                                             <div class="form-check">
                                                 <input class="form-check-input" type="radio" name="type" id="hashtag-comment" value="hashtag-comment">
                                                 <label class="form-check-label" for="hashtag-comment">
@@ -108,49 +145,35 @@
                                                 </label>
                                             </div>
                                         </div>
-                                        <div class="row m-3">
-                                            <div class="col">
-                                                <button type="button" class="btn ripple btn-primary px-5" data-bs-toggle="modal" data-bs-target="#listModal">
-                                                    Targets list
+                                        <div class="d-flex justify-content-center flex-wrap gap-3">
+                                            <div class="col-12 col-md-6 col-lg-2">
+                                                <button type="button" class="btn ripple btn-primary w-75" data-bs-toggle="modal" data-bs-target="#listModal">
+                                                    List
                                                 </button>
-                                                <!-- Modal -->
-                                                <div class="modal fade" id="listModal" tabindex="-1" aria-hidden="true">
-                                                    <div class="modal-dialog modal-dialog-centered">
-                                                        <div class="modal-content">
-                                                            <div class="modal-header">
-                                                                <h5 class="modal-title"> Add Usernames </h5>
-                                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                                            </div>
-                                                            <div class="modal-body"><textarea rows="6" cols="40"></textarea></div>
-                                                            <div class="modal-footer">
-                                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                                                <button type="button" class="btn btn-primary">Save changes</button>
-                                                            </div>
-                                                        </div>
+                                            </div>
+                                            <div class="col-12 col-md-6 col-lg-2">
+                                                <button type="button" class="btn ripple btn-primary w-75" data-bs-toggle="modal" data-bs-target="#viewModal">View</button>
+                                            </div>
+                                            <div class="col-12 col-md-6 col-lg-2">
+                                                <button type="button" class="btn ripple btn-primary w-75">Copy</button>
+                                            </div>
+                                            <div class="col-12 col-md-6 col-lg-2">
+                                                <button type="button" class="btn ripple btn-primary w-75">Clear</button>
+                                            </div>
+                                        </div>
+                                        <div class="row justify-content-center m-3">
+                                            <div class="col-lg-6 col-md-8 col-sm-10 col-12">
+                                                <div class="d-flex justify-content-center">
+                                                    <div class="w-100">
+                                                        <textarea class="form-control mx-3 scroll-at-bottom" id="username" name="username" placeholder="Enter Username or complete URL" rows="1"></textarea>
+                                                    </div>
+                                                    <div class="d-flex align-items-center">
+                                                        <button class="btn btn-primary rounded-start mx-4" type="button">
+                                                            Insert
+                                                        </button>
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="col">
-                                                <button class="btn btn-primary ripple px-5">
-                                                    Clear targets
-                                                </button>
-                                            </div>
-                                            <div class="col">
-                                                <button class="btn btn-primary ripple px-5">
-                                                    View targets
-                                                </button>
-                                            </div>
-                                            <div class="col">
-                                                <button class="btn btn-primary ripple px-5">
-                                                    Copy targets
-                                                </button>
-                                            </div>
-                                        </div>
-                                        <div class="">
-                                            <input name="search" type="text" placeholder="Enter Insta Username or complete URL" size="50">
-                                            <button class="btn btn-primary ripple px-5">
-                                                Insert targets
-                                            </button>
                                         </div>
                                     </div>
                                 </div>
@@ -159,20 +182,61 @@
                         <div class="accordion">
                             <div class="accordion-item">
                                 <h2 class="accordion-header" id="headingTwo">
-                                    <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
                                         Activity Time Settings
                                     </button>
                                 </h2>
-                                <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#accordionExample">
-                                    <p>
-                                        Activity Time Div
-                                    </p>
+                                <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo">
+                                    <div class="accordion-body text-center">
+                                        <p>
+                                            Activity Time Div
+                                        </p>
+                                    </div>
                                 </div>
-                                <button class="btn btn-primary ripple px-5" type="submit">
-                                    Save Task
-                                </button>
                             </div>
                         </div>
+                        <div class="text-center m-3">
+                            <button class="btn btn-primary ripple px-5" type="submit">
+                                Save Target
+                            </button>
+                        </div>
+                        <!-- List Modal -->
+                        <div class="modal fade" id="listModal" tabindex="-1" aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-centered">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title"> Add Usernames </h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <textarea class="form-control w-100" rows="6"></textarea>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-primary">Save</button>
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- List Modal End-->
+                        <!-- View Modal -->
+                        <div class="modal fade" id="viewModal" tabindex="-1" aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-centered">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title"> All Usernames </h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <textarea class="form-control w-100" rows="6" readonly></textarea>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- View Modal End -->
                     </form>
                 </div>
             </div>
@@ -181,57 +245,14 @@
 </main>
 <!-- Target Area End -->
 
-<!-- Settings Modal -->
-<div class="modal fade" id="settingsModal">
-    <div class="popup-content">
-        <div class="d-flex justify-content-center mb-2">
-            <strong>Select Insta Account for the Target</strong>
-        </div>
-        <div class="d-flex justify-content-center mb-2">
-            {% if insta_creds %}
-            <select id="settingsDropdown" name="selected_insta_cred">
-                <option value="#">------</option>
-                {% for insta_cred in insta_creds %}
-                <option value="{{ insta_cred.id }}" {% if insta_cred.id == target.insta_user.id %} selected {% endif %}>{{ insta_cred.username }} </option>
-                {% endfor %}
-            </select>
-            {% else %}
-            <strong>No Insta Account Found against Your Account!</strong>
-            {% endif %}
-        </div>
-        <div class="buttons text-center" style="margin-top: 15px;">
-            {% if insta_creds %}
-            <button type="button" class="btn btn-primary btn-sm" onclick="toggleModal('settingsModal', false)">Select</button>
-            {% endif %}
-            <button type="button" class="btn btn-primary btn-sm" onclick="toggleModal('settingsModal', false)">Close</button>
-        </div>
-    </div>
-</div>
-<!-- Settings Modal End-->
 <script>
-    function showDiv(divId) {
-        // Hide all divs
-        document.querySelectorAll('.hidden').forEach(div => {
-            div.style.display = 'none';
-        });
-
-        // Show the selected div
-        document.getElementById(divId).style.display = 'block';
-    }
-
-    function toggleDisplay(inputID) {
-        const dataDisplay = document.getElementById(inputID);
-        dataDisplay.style.display = dataDisplay.style.display === 'none' ? 'block' : 'none';
-    }
-
     function toggleModal(modalId, isOpen) {
         document.getElementById(modalId).style.display = isOpen ? 'block' : 'none';
         document.body.classList.toggle('popup-open', isOpen);
     }
 
     function checkForm() {
-        var dropDown = document.getElementById('settingsDropdown');
-        var instaAccount = dropDown.value;
+        var instaAccount = document.getElementById('settingsDropdown').value;
 
         // Check if the selected value is the default value
         if (instaAccount === '#') {
