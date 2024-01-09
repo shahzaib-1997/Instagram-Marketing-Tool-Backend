@@ -39,6 +39,7 @@ from .models import (
     TargetType,
     Target,
     Action,
+    Comment,
 )
 
 
@@ -223,6 +224,12 @@ class HashtagSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Hashtag
+        fields = "__all__"
+
+
+class CommentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Comment
         fields = "__all__"
 
 

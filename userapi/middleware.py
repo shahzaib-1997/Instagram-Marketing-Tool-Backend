@@ -16,7 +16,7 @@ class SessionTimeoutMiddleware:
                 last_activity = timezone.datetime.fromisoformat(last_activity)
                 if (timezone.now() - last_activity).seconds > 14400:
                     request.session.pop("last_activity")
-                    messages.info(request, "Session Timed Out. Please log in again.")
+                    messages.error(request, "Session Timed Out. Please log in again.")
                     return logout_user(request)
             request.session["last_activity"] = timezone.now().isoformat()
                 

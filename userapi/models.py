@@ -210,6 +210,12 @@ class Hashtag(models.Model):
         "username - user_defined_hashtag"
     """
 
+    options = (
+        ("like", "like"),
+        ("comment", "comment"),
+    )
+
+    type = models.CharField(max_length=255, choices=options, null=True, blank=True)
     hashtag = models.CharField(max_length=255)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     target = models.ForeignKey(Target, on_delete=models.CASCADE, null=True, blank=True)
@@ -268,6 +274,12 @@ class Post(models.Model):
         "username - post_url"
     """
 
+    options = (
+        ("like", "like"),
+        ("comment", "comment"),
+    )
+
+    type = models.CharField(max_length=255, choices=options, null=True, blank=True)
     url = models.TextField()
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     target = models.ForeignKey(Target, on_delete=models.CASCADE, null=True, blank=True)
@@ -310,6 +322,13 @@ class Reel(models.Model):
         "username - reel_url"
     """
 
+    options = (
+        ("like", "like"),
+        ("comment", "comment"),
+        ("view", "view"),
+    )
+
+    type = models.CharField(max_length=255, choices=options, null=True, blank=True)
     url = models.TextField()
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     target = models.ForeignKey(Target, on_delete=models.CASCADE, null=True, blank=True)
