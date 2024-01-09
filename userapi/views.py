@@ -21,6 +21,7 @@ from .models import (
     Target,
     TargetType,
     Action,
+    Comment
 )
 from .serializers import (
     PasswordChangeSerializer,
@@ -186,14 +187,28 @@ class TargetTemplateView(APIView):
             if request.user.is_authenticated:
                 target = get_object_or_404(Target, id=pk) if pk else Target.objects.create(user=request.user)
                 insta_cred = request.POST.get("selected_insta_cred")
+                mod, opt = request.POST.get("type").split("-")
+                url = request.POST.get("username")
+                match mod:
+                    case "post":
+                        act, _ = Post.objects.get_or_create(url=url, user=request.user)
+                    case "reels":
+                        act, _ = Reel.objects.get_or_create(url=url, user=request.user)
+                    case "hashtag":
+                        act, _ = Hashtag.objects.get_or_create(hashtag=url, user=request.user)
+                    case "comment":
+                        act, _ = Comment.objects.get_or_create(comment=url, user=request.user)
+                    case _:
+                        raise Exception("Please select correct option!")
+                    
+                act.type = opt
                 credential = get_object_or_404(Credential, id=insta_cred)
                 target.insta_user = credential
                 target.save()
-                insta_creds = (
-                    Credential.objects.filter(user=request.user)
-                    .values("id", "username")
-                    .order_by("id")
-                )
+                act.target = target
+                act.save()
+                print(target.__dict__)
+                print(act.__dict__)
                 messages.success(
                     request,
                     "Target " + ("updated" if pk else "added") + " successfully!",

@@ -37,25 +37,23 @@
             <div class="card">
                 <div class="card-body">
                     <div class="container p-0 m-2">
-                        <div class="row">
-                            <div class="d-flex  justify-content-between">
-                                <div class="col-lg-8">
-                                    <h3>Targets</h3>
-                                </div>
-                                <div class="col-lg-4 text-lg-end mt-lg-0">
-                                    <button type="button" class="btn btn-primary">
-                                        <a href="{% url 'userapi:target-edit' %}" class="text-white">Add New<i class='bx bx-plus'></i></a>
-                                    </button>
-                                </div>
+                        <div class="d-flex justify-content-between align-items-center me-3">
+                            <div>
+                                <h3>Targets</h3>
+                            </div>
+                            <div class="text-center">
+                                <button type="button" class="btn btn-primary">
+                                    <a href="{% url 'userapi:target-edit' %}" class="text-white text-nowrap">Add New<i class='bx bx-plus'></i></a>
+                                </button>
                             </div>
                         </div>
                     </div>
-                    <div class="table-responsive ">
+                    <div class="table-responsive">
                         <table class="table table-hover align-middle">
                             <thead>
                                 <tr>
-                                    <th style="width: 64%;">Time stamp of target</th>
-                                    <th class="text-center" colspan="2">Actions</th>
+                                    <th>Time stamp of target</th>
+                                    <th class="text-center">Actions</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -63,16 +61,14 @@
                                 {% for target in targets %}
                                 <tr>
                                     <td>{{ target.time_stamp }}</td>
-                                    <td class="text-end">
-                                        <button type="button" class="btn btn-primary btn-sm me-2">
+                                    <td class="text-center">
+                                        <button type="button" class="btn btn-primary btn-sm mb-2 mb-sm-0 me-sm-2">
                                             <a href="{% url 'userapi:target-edit' target.id %}" class="text-white">
                                                 Edit
                                                 <i class="bx bx-edit"></i>
                                             </a>
                                         </button>
-                                    </td>
-                                    <td class="text-start">
-                                        <button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#deleteModal" onclick="setTargetID('{{ target.id }}')">
+                                        <button type="button" class="btn btn-danger btn-sm mb-2 mb-sm-0" data-bs-toggle="modal" data-bs-target="#deleteModal" onclick="setTargetID('{{ target.id }}')">
                                             Delete
                                             <i class='bx bx-trash'></i>
                                         </button>
