@@ -191,24 +191,27 @@ class TargetTemplateView(APIView):
                 url = request.POST.get("username")
                 match mod:
                     case "post":
-                        act, _ = Post.objects.get_or_create(url=url, user=request.user)
+                        act, _ = Post.objects.get_or_create(target=target, user=request.user)
+                        act.url = url
+                        act.type = opt
                     case "reels":
-                        act, _ = Reel.objects.get_or_create(url=url, user=request.user)
+                        act, _ = Reel.objects.get_or_create(target=target, user=request.user)
+                        act.url = url
+                        act.type = opt
                     case "hashtag":
-                        act, _ = Hashtag.objects.get_or_create(hashtag=url, user=request.user)
+                        act, _ = Hashtag.objects.get_or_create(target=target, user=request.user)
+                        act.hashtag = url
+                        act.type = opt
                     case "comment":
-                        act, _ = Comment.objects.get_or_create(comment=url, user=request.user)
+                        act, _ = Comment.objects.get_or_create(target=target, user=request.user)
+                        act.comment = url
                     case _:
                         raise Exception("Please select correct option!")
                     
-                act.type = opt
                 credential = get_object_or_404(Credential, id=insta_cred)
                 target.insta_user = credential
                 target.save()
-                act.target = target
                 act.save()
-                print(target.__dict__)
-                print(act.__dict__)
                 messages.success(
                     request,
                     "Target " + ("updated" if pk else "added") + " successfully!",
@@ -239,11 +242,7 @@ class InstaCredentialView(APIView):
         try:
             if request.user.is_authenticated:
                 pk = request.POST.get("previous_username")
-                credential = (
-                    get_object_or_404(Credential, user=request.user, username=pk)
-                    if pk
-                    else Credential(user=request.user)
-                )
+                credential = Credential.objects.filter(user=request.user, username=pk).first() if pk else Credential(user=request.user)
                 credential.username = request.POST.get("username")
                 credential.password = request.POST.get("password")
                 credential.save()
@@ -278,7 +277,7 @@ class InstaCredentialView(APIView):
                 )
                 credential.delete()
                 messages.success(
-                    request, f"Insta Credential {pk} deleted successfully."
+                    request, f"Insta Credential '{pk}' deleted successfully."
                 )
                 return Response(status=status.HTTP_204_NO_CONTENT)
             messages.error(request, "You need to login first.")

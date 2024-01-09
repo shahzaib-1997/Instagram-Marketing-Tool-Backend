@@ -181,7 +181,7 @@
                 </li>
                 {% if request.user.is_authenticated %}
                 <li class="nav-item login ml-auto">
-                    <a href={% url "userapi:profile" %} class="nav-link btn-c btn btn-primary nav-btn">View Profile</a>
+                    <a href={% url "userapi:profile" %} class="nav-link ">View Profile</a>
                 </li>
                 <li class="nav-item mr-3">
                     <a href={% url "userapi:logout" %} class="nav-link nav-login">Logout</a>
