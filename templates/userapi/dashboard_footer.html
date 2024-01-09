@@ -64,14 +64,14 @@
     <div class="offcanvas-body">
         <div class="user-wrapper">
             <div class="text-center p-3 bg-light rounded">
-                <img src="{% static '' %}bs/images/avatars/01.png" class="rounded-circle p-1 shadow mb-3" width="120" height="120" alt="">
+                <img src="{% static '' %}users/dummy.jpg" class="rounded-circle p-1 shadow mb-3" width="120" height="120" alt="">
                 <h5 class="user-name mb-0 fw-bold">{{ request.user }}</h5>
                 <!-- <p class="mb-0">Administrator</p> -->
             </div>
             <div class="list-group list-group-flush mt-3 profil-menu fw-bold">
                 <a href={% url "userapi:profile" %} class="list-group-item list-group-item-action d-flex align-items-center gap-2 border-top"><i class="material-icons-outlined">person_outline</i>Profile</a>
-                <a href="javascript:;" class="list-group-item list-group-item-action d-flex align-items-center gap-2"><i class="material-icons-outlined">local_bar</i>Setting</a>
-                <a href="javascript:;" class="list-group-item list-group-item-action d-flex align-items-center gap-2">
+                <a href="javascript:;" class="list-group-item list-group-item-action d-flex align-items-center gap-2"><i class="material-icons-outlined">local_bar</i>Settings</a>
+                <a href={% url "userapi:dashboard" %} class="list-group-item list-group-item-action d-flex align-items-center gap-2">
                     <i class="bx bx-home-alt bx-sm"></i>
                     Dashboard</a>
                 <a href={% url "userapi:logout" %} class="list-group-item list-group-item-action d-flex align-items-center gap-2 border-bottom"><i class="material-icons-outlined">power_settings_new</i>Logout</a>

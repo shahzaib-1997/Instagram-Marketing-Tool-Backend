@@ -156,14 +156,14 @@
     </div>
     <div class="quick-menu ps">
         <nav class="nav flex-column gap-1">
-            <a class="nav-link" href={% url "userapi:dashboard" %} data-toggle="tooltip" title="Dashboard">
+            <a class="nav-link" href={% url "userapi:dashboard" %} data-toggle="tooltip" data-bs-placement="right" title="Dashboard">
                 <i class="bx bx-home-alt bx-sm"></i>
             </a>
-            <a class="nav-link" href={% url "userapi:targets" %}><i class='bx bxs-layer bx-sm'></i></a>
-            <a class="nav-link" href={% url "userapi:insta-credentials" %}><i class='bx bxl-instagram bx-sm'></i></a>
-            <a class="nav-link" href="#"><i class="material-icons-outlined">poll</i></a>
-            <a class="nav-link" href="#"><i class='bx bx-history bx-sm'></i></a>
-            <a class="nav-link" href="#"><i class='bx bx-cog bx-sm'></i></a>
+            <a class="nav-link" href={% url "userapi:targets" %} data-toggle="tooltip" data-bs-placement="right" title="Targets"><i class='bx bxs-layer bx-sm'></i></a>
+            <a class="nav-link" href={% url "userapi:insta-credentials" %} data-toggle="tooltip" data-bs-placement="right" title="Insta Credentials"><i class='bx bxl-instagram bx-sm'></i></a>
+            <a class="nav-link" href="#" data-toggle="tooltip" data-bs-placement="right" title="Stats"><i class="material-icons-outlined">poll</i></a>
+            <a class="nav-link" href="#" data-toggle="tooltip" data-bs-placement="right" title="Activity Log"><i class='bx bx-history bx-sm'></i></a>
+            <a class="nav-link" href="#" data-toggle="tooltip" data-bs-placement="right" title="Settings"><i class='bx bx-cog bx-sm'></i></a>
         </nav>
     </div>
     <div class="mini-footer"></div>
