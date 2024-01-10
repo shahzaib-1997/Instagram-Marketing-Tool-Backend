@@ -390,6 +390,7 @@ class Stat(models.Model):
     followers = models.PositiveIntegerField()
     engagement_rate = models.FloatField()
     time_stamp = models.DateTimeField(auto_now_add=True, blank=True, null=True)
+    read = models.BooleanField(default=False)
 
     def __str__(self):
         """

@@ -10,32 +10,35 @@
                 <p style="text-align: center; margin-top: 10px !important;"><strong>{{ request.user }}</strong></p>
             </div>
         </div>
-        <ul class="navbar-nav gap-1 nav-right-links align-items-center">
-            <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle dropdown-toggle-nocaret position-relative" data-bs-auto-close="outside" data-bs-toggle="dropdown" href="javascript:;"><i class="material-icons-outlined">notifications</i>
-                    <span class="badge-notify">5</span>
-                </a>
-                <div class="dropdown-menu dropdown-notify dropdown-menu-end shadow">
-                    <div class="px-3 py-1 d-flex align-items-center justify-content-between border-bottom">
-                        <h5 class="notiy-title mb-0">Notifications</h5>
-                        <div class="dropdown">
-                            <button class="btn btn-secondary dropdown-toggle dropdown-toggle-nocaret option" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                <span class="material-icons-outlined">
-                                    more_vert
-                                </span>
-                            </button>
-                            <div class="dropdown-menu dropdown-option dropdown-menu-end shadow">
-                                <div><a class="dropdown-item d-flex align-items-center gap-2 py-2" href="javascript:;"><i class="material-icons-outlined fs-6">done_all</i>Mark all as read</a></div>
-                                <div><a class="dropdown-item d-flex align-items-center gap-2 py-2" href={% url "userapi:dashboard" %}><i class="bx bx-plus"></i> See More</a></div>
+        <form id="notifications-form">
+            {% csrf_token %}
+            <ul class="navbar-nav gap-1 nav-right-links align-items-center">
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle dropdown-toggle-nocaret position-relative" data-bs-auto-close="outside" data-bs-toggle="dropdown" href="javascript:;"><i class="material-icons-outlined">notifications</i>
+                        <span class="badge-notify d-none" id="newNotifications"></span>
+                    </a>
+                    <div class="dropdown-menu dropdown-notify dropdown-menu-end shadow">
+                        <div class="px-3 py-1 d-flex align-items-center justify-content-between border-bottom">
+                            <h5 class="notiy-title mb-0">Notifications</h5>
+                            <div class="dropdown">
+                                <button class="btn btn-secondary dropdown-toggle dropdown-toggle-nocaret option" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    <span class="material-icons-outlined">
+                                        more_vert
+                                    </span>
+                                </button>
+                                <div class="dropdown-menu dropdown-option dropdown-menu-end shadow">
+                                    <div><a class="dropdown-item d-flex align-items-center gap-2 py-2" href="javascript:;" id="markAllAsRead"><i class="material-icons-outlined fs-6">done_all</i>Mark all as read</a></div>
+                                    <div><a class="dropdown-item d-flex align-items-center gap-2 py-2" href={% url "userapi:dashboard" %}><i class="bx bx-plus"></i> See More</a></div>
+                                </div>
                             </div>
                         </div>
+                        <div class="notify-list" id="dynamic-notifications">
+                            <!-- Dynamic content will be added here -->
+                        </div>
                     </div>
-                    <div class="notify-list" id="dynamic-notifications">
-                        <!-- Dynamic content will be added here -->
-                    </div>
-                </div>
-            </li>
-        </ul>
+                </li>
+            </ul>
+        </form>
     </nav>
 </header>
 <!--end top header-->

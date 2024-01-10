@@ -40,6 +40,7 @@ urlpatterns = [
     path("signin/", views.LoginView.as_view(), name="login"),
     path("logout/", views.logout_user, name="logout"),
     path("dashboard/", views.DashboardView.as_view(), name="dashboard"),
+    path("notifications/", views.NotificationsView.as_view(), name="notifications"),
     path(
         "insta-credentials/",
         views.InstaCredentialView.as_view(),

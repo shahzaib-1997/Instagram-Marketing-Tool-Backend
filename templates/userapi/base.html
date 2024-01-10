@@ -31,9 +31,110 @@
   <body>
     {% block content %}{% endblock content %}
 
+    <script src="https://cdn.jsdelivr.net/npm/moment@2.30.1/moment.min.js"></script>
     <script>
       $(document).ready(function () {
+        fetch('/notifications/', {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        })
+          .then(response => response.json())
+          .then(data => {
+
+            // Clear existing notifications
+            $("#dynamic-notifications").empty();
+
+            let newNotifications = 0;
+
+            // Loop through the recent entries and add dynamic notifications
+            data.forEach(notification => {
+              const timestamp = moment(notification.time_stamp);
+              const timeAgo = timestamp.fromNow();
+
+              // Determine the class based on whether the notification is read or not
+              const highlightClass = notification.read ? '' : 'bg-primary-subtle';
+
+              if (!notification.read) {
+                newNotifications += 1;
+              }
+
+              $("#dynamic-notifications").append(`
+                  <div>
+                      <a class="dropdown-item border-bottom py-2 ${highlightClass}" href="javascript:;">
+                          <div class="d-flex align-items-center gap-3">
+                              <div class="">
+                                  <h5 class="notify-title">Followers: ${notification.followers}</h5>
+                                  <p class="mb-0 notify-desc">${notification.engagement_rate}</p>
+                                  <p class="mb-0 notify-time">${timeAgo}</p>
+                              </div>
+                          </div>
+                      </a>
+                  </div>
+              `);
+            });
+
+            if (newNotifications > 0) {
+              $("#newNotifications").removeClass('d-none');
+              $("#newNotifications").append(`${newNotifications}`);
+            }
+          })
+          .catch(error => {
+            // Handle network or other errors
+            alert('Error retrieving notifications:', error);
+          });
+
+        $("#markAllAsRead").click(function () {
+          let unread = document.getElementById("newNotifications").innerText;
+          if (unread) {
+            let form = document.getElementById('notifications-form');
+            let csrfToken = form.querySelector('input[name="csrfmiddlewaretoken"]').value;
+
+            fetch('/notifications/', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': csrfToken,
+              },
+            })
+              .then(response => {
+                if (!response.ok) {
+                  throw new Error('Failed to mark all notifications as read.');
+                }
+                return response.json();
+              })
+              .then(data => {
+                // Update the UI or perform any other necessary actions
+                $("#newNotifications").addClass('d-none');
+                let highlightedNotifications = $(".bg-primary-subtle");
+                highlightedNotifications.each(function (index, element) {
+                  $(element).removeClass("bg-primary-subtle");
+                });
+              })
+              .catch(error => {
+                console.error('Error marking notifications as read:', error);
+                alert('Error marking notifications as read.');
+              });
+          } else {
+            alert("No unread notification!");
+          }
+        });
+
         $('[data-toggle="tooltip"]').tooltip();
+
+        $("#show_hide_password a").on('click', function (event) {
+          event.preventDefault();
+          if ($('#show_hide_password input').attr("type") == "text") {
+            $('#show_hide_password input').attr('type', 'password');
+            $('#show_hide_password i').addClass("bi-eye-slash-fill");
+            $('#show_hide_password i').removeClass("bi-eye-fill");
+          } else if ($('#show_hide_password input').attr("type") == "password") {
+            $('#show_hide_password input').attr('type', 'text');
+            $('#show_hide_password i').removeClass("bi-eye-slash-fill");
+            $('#show_hide_password i').addClass("bi-eye-fill");
+          }
+        });
       });
 
       function handleMessages() {
@@ -51,92 +152,6 @@
       // Call the function when the DOM is loaded
       document.addEventListener('DOMContentLoaded', handleMessages);
 
-      $(document).ready(function () {
-        $("#show_hide_password a").on('click', function (event) {
-          event.preventDefault();
-          if ($('#show_hide_password input').attr("type") == "text") {
-            $('#show_hide_password input').attr('type', 'password');
-            $('#show_hide_password i').addClass("bi-eye-slash-fill");
-            $('#show_hide_password i').removeClass("bi-eye-fill");
-          } else if ($('#show_hide_password input').attr("type") == "password") {
-            $('#show_hide_password input').attr('type', 'text');
-            $('#show_hide_password i').removeClass("bi-eye-slash-fill");
-            $('#show_hide_password i').addClass("bi-eye-fill");
-          }
-        });
-      });
-
-      $(document).ready(function () {
-        let url = '/stat/';
-
-        fetch(url, {
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': "Token {{ request.session.token }}"
-          },
-        })
-          .then(response => response.json())
-          .then(data => {
-            // Clear existing notifications
-            const recentEntries = data.slice(0, 5);
-
-            // Clear existing notifications
-            $("#dynamic-notifications").empty();
-
-            // Function to calculate the time difference in a human-readable format
-            function timeDifference(current, previous) {
-              const msPerMinute = 60 * 1000;
-              const msPerHour = msPerMinute * 60;
-              const msPerDay = msPerHour * 24;
-              const msPerMonth = msPerDay * 30;
-              const msPerYear = msPerDay * 365;
-
-              const elapsed = current - previous;
-
-              if (elapsed < msPerMinute) {
-                return Math.round(elapsed / 1000) + ' seconds ago';
-              } else if (elapsed < msPerHour) {
-                return Math.round(elapsed / msPerMinute) + ' minutes ago';
-              } else if (elapsed < msPerDay) {
-                return Math.round(elapsed / msPerHour) + ' hours ago';
-              } else if (elapsed < msPerMonth) {
-                return Math.round(elapsed / msPerDay) + ' days ago';
-              } else if (elapsed < msPerYear) {
-                return Math.round(elapsed / msPerMonth) + ' months ago';
-              } else {
-                return Math.round(elapsed / msPerYear) + ' years ago';
-              }
-            }
-
-            // Loop through the recent entries and add dynamic notifications
-            recentEntries.forEach(notification => {
-              const timestamp = new Date(notification.time_stamp);
-              const timeAgo = timeDifference(new Date(), timestamp);
-
-              $("#dynamic-notifications").append(`
-                  <div>
-                      <a class="dropdown-item border-bottom py-2" href="javascript:;">
-                          <div class="d-flex align-items-center gap-3">
-                              <div class="">
-                                  <h5 class="notify-title">Followers: ${notification.followers}</h5>
-                                  <p class="mb-0 notify-desc">${notification.engagement_rate}</p>
-                                  <p class="mb-0 notify-time">${timeAgo}</p>
-                              </div>
-                              <div class="notify-close position-absolute end-0 me-3">
-                                  <i class="material-icons-outlined fs-6">close</i>
-                              </div>
-                          </div>
-                      </a>
-                  </div>
-              `);
-            });
-          })
-          .catch(error => {
-            // Handle network or other errors
-            alert('Error during delete request:', error);
-          });
-      });
     </script>
   </body>
 
