@@ -29,99 +29,20 @@
   </head>
 
   <body>
+    <script src="{% static '' %}bs/js/jquery.min.js"></script>
     {% block content %}{% endblock content %}
 
     <script src="https://cdn.jsdelivr.net/npm/moment@2.30.1/moment.min.js"></script>
     <script>
       $(document).ready(function () {
-        fetch('/notifications/', {
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        })
-          .then(response => response.json())
-          .then(data => {
+        $('.alert').each(function () {
+          const displayTime = parseInt($(this).data('display-time'));
 
-            // Clear existing notifications
-            $("#dynamic-notifications").empty();
-
-            let newNotifications = 0;
-
-            // Loop through the recent entries and add dynamic notifications
-            data.forEach(notification => {
-              const timestamp = moment(notification.time_stamp);
-              const timeAgo = timestamp.fromNow();
-
-              // Determine the class based on whether the notification is read or not
-              const highlightClass = notification.read ? '' : 'bg-primary-subtle';
-
-              if (!notification.read) {
-                newNotifications += 1;
-              }
-
-              $("#dynamic-notifications").append(`
-                  <div>
-                      <a class="dropdown-item border-bottom py-2 ${highlightClass}" href="javascript:;">
-                          <div class="d-flex align-items-center gap-3">
-                              <div class="">
-                                  <h5 class="notify-title">Followers: ${notification.followers}</h5>
-                                  <p class="mb-0 notify-desc">${notification.engagement_rate}</p>
-                                  <p class="mb-0 notify-time">${timeAgo}</p>
-                              </div>
-                          </div>
-                      </a>
-                  </div>
-              `);
-            });
-
-            if (newNotifications > 0) {
-              $("#newNotifications").removeClass('d-none');
-              $("#newNotifications").append(`${newNotifications}`);
-            }
-          })
-          .catch(error => {
-            // Handle network or other errors
-            alert('Error retrieving notifications:', error);
-          });
-
-        $("#markAllAsRead").click(function () {
-          let unread = document.getElementById("newNotifications").innerText;
-          if (unread) {
-            let form = document.getElementById('notifications-form');
-            let csrfToken = form.querySelector('input[name="csrfmiddlewaretoken"]').value;
-
-            fetch('/notifications/', {
-              method: 'POST',
-              headers: {
-                'Content-Type': 'application/json',
-                'X-CSRFToken': csrfToken,
-              },
-            })
-              .then(response => {
-                if (!response.ok) {
-                  throw new Error('Failed to mark all notifications as read.');
-                }
-                return response.json();
-              })
-              .then(data => {
-                // Update the UI or perform any other necessary actions
-                $("#newNotifications").addClass('d-none');
-                let highlightedNotifications = $(".bg-primary-subtle");
-                highlightedNotifications.each(function (index, element) {
-                  $(element).removeClass("bg-primary-subtle");
-                });
-              })
-              .catch(error => {
-                console.error('Error marking notifications as read:', error);
-                alert('Error marking notifications as read.');
-              });
-          } else {
-            alert("No unread notification!");
-          }
+          // Set a timeout to hide the message after the specified display time
+          setTimeout(() => {
+            $(this).hide();
+          }, displayTime);
         });
-
-        $('[data-toggle="tooltip"]').tooltip();
 
         $("#show_hide_password a").on('click', function (event) {
           event.preventDefault();
@@ -136,22 +57,6 @@
           }
         });
       });
-
-      function handleMessages() {
-        const messageDivs = document.querySelectorAll('.alert');
-
-        messageDivs.forEach((messageDiv) => {
-          const displayTime = parseInt(messageDiv.dataset.displayTime);
-
-          // Set a timeout to hide the message after the specified display time
-          setTimeout(() => {
-            messageDiv.style.display = 'none';
-          }, displayTime);
-        });
-      }
-      // Call the function when the DOM is loaded
-      document.addEventListener('DOMContentLoaded', handleMessages);
-
     </script>
   </body>
 

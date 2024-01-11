@@ -79,7 +79,7 @@ def user_targets(request):
             {"targets": targets, "insta_creds": insta_creds},
         )
     messages.error(request, "You need to login first.")
-    return redirect("userapi:login")
+    return redirect(f"/signin/?next={request.path}")
 
 
 def logout_user(request):
@@ -134,7 +134,7 @@ class LoginView(APIView):
     def get(self, request):
         if request.user.is_authenticated:
             return redirect("userapi:dashboard")
-        return render(request, "userapi/login.html")
+        return render(request, "userapi/login.html", {'next':request.GET.get("next", "")})
 
     def post(self, request):
         try:
@@ -149,6 +149,11 @@ class LoginView(APIView):
 
                 if user is not None:
                     login(request, user)
+                    token, _ = Token.objects.get_or_create(user=request.user)
+                    request.session["token"] = token.key
+                    next_url = request.GET.get("next")
+                    if next_url:
+                        return redirect(f"{next_url}")
                     return redirect("userapi:dashboard")
                 messages.error(request, "Password is incorrect!")
         except Exception as e:
@@ -159,23 +164,12 @@ class LoginView(APIView):
 class DashboardView(APIView):
     def get(self, request):
         if request.user.is_authenticated:
-            token, _ = Token.objects.get_or_create(user=request.user)
-            request.session["token"] = token.key
-            insta_creds = (
-                Credential.objects.filter(user=request.user)
-                .values("id", "username")
-                .order_by("id")
-            )
-            targets = Target.objects.select_related("target_type", "insta_user").filter(
-                user=request.user
-            )
             return render(
                 request,
                 "userapi/dashboard.html",
-                {"targets": targets, "insta_creds": insta_creds},
             )
         messages.error(request, "You need to login first.")
-        return redirect("userapi:login")
+        return redirect("/signin/")
 
 
 class TargetTemplateView(APIView):
@@ -199,7 +193,7 @@ class TargetTemplateView(APIView):
                     },
                 )
             messages.error(request, "You need to login first.")
-            return redirect("userapi:login")
+            return redirect(f"/signin/?next={request.path}")
         except Exception as e:
             messages.error(request, str(e))
         return redirect("userapi:dashboard")
@@ -240,7 +234,7 @@ class TargetTemplateView(APIView):
                 )
                 return redirect("userapi:targets")
             messages.error(request, "You need to login first.")
-            return redirect("userapi:login")
+            return redirect(f"/signin/?next={request.path}")
         except Exception as e:
             messages.error(request, str(e))
             return redirect("userapi:target-edit", pk=pk if pk else target.id)
@@ -258,7 +252,7 @@ class InstaCredentialView(APIView):
                 request, "userapi/insta_credentials.html", {"insta_creds": insta_creds}
             )
         messages.error(request, "You need to login first.")
-        return redirect("userapi:login")
+        return redirect(f"/signin/?next={request.path}")
 
     def post(self, request):
         try:
@@ -283,7 +277,7 @@ class InstaCredentialView(APIView):
                     {"insta_creds": insta_creds},
                 )
             messages.error(request, "You need to login first.")
-            return redirect("userapi:login")
+            return redirect(f"/signin/?next={request.path}")
         except Exception as e:
             if "UNIQUE" in str(e):
                 messages.error(request, "Username already exists against your account!")
@@ -303,7 +297,7 @@ class InstaCredentialView(APIView):
                 )
                 return Response(status=status.HTTP_204_NO_CONTENT)
             messages.error(request, "You need to login first.")
-            return redirect("userapi:login")
+            return redirect(f"/signin/?next={request.path}")
         except Exception as e:
             messages.error(request, str(e))
             return Response(status=status.HTTP_500_INTERNAL_SERVER_ERROR)
@@ -326,7 +320,7 @@ class ProfileView(APIView):
                     )
             else:
                 messages.error(request, "You need to login first.")
-                return redirect("userapi:login")
+                return redirect(f"/signin/?next={request.path}")
         except Exception as e:
             messages.error(request, str(e))
             return redirect("userapi:dashboard")
@@ -391,7 +385,7 @@ class PasswordChangeView(APIView):
                     update_session_auth_hash(request, user)
 
                     messages.success(request, "Password changed successfully.")
-                    return redirect("userapi:login")
+                    return redirect(f"/signin/?next={request.path}")
                 messages.error(request, "New Password is same as current password!")
             else:
                 for value in serializer.errors.values():
