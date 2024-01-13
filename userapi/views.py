@@ -8,6 +8,7 @@ from django.shortcuts import get_object_or_404, render, redirect
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout, update_session_auth_hash
 from django.contrib import messages
+from django.utils import timezone
 from .dry import BaseAPIView, RenderAPIView, szr_val_save, add_user
 from .models import (
     ActivityTime,
@@ -39,6 +40,7 @@ from .serializers import (
     TargetSerializer,
     ActionSerializer,
 )
+from datetime import datetime
 
 
 class NotificationsView(APIView):
@@ -64,28 +66,24 @@ class NotificationsView(APIView):
         
 
 def user_targets(request):
-    if request.user.is_authenticated:
-        insta_creds = (
-            Credential.objects.filter(user=request.user)
-            .values("id", "username")
-            .order_by("id")
-        )
-        targets = Target.objects.select_related("target_type", "insta_user").filter(
-            user=request.user
-        )
+    if not request.user.is_authenticated:
+        messages.error(request, "You need to login first.")
+        return redirect(f"/signin/?next={request.path}")
+    try:
+        targets = Target.objects.filter(user=request.user)
         return render(
             request,
             "userapi/targets.html",
-            {"targets": targets, "insta_creds": insta_creds},
+            {"targets": targets}
         )
-    messages.error(request, "You need to login first.")
-    return redirect(f"/signin/?next={request.path}")
+    except Exception as e:
+        messages.error(request, str(e))
+        return redirect("userapi:dashboard")
 
 
 def logout_user(request):
     if request.user.is_authenticated:
-        token = Token.objects.get(user=request.user)
-        token.delete()
+        Token.objects.get(user=request.user).delete()
         logout(request)
     return redirect("userapi:login")
 
@@ -106,10 +104,10 @@ class CreateToken(APIView):
 
 class SignupView(APIView):
     def get(self, request):
-        if not request.user.is_authenticated:
-            email = request.GET.get("email", "")
-            return render(request, "userapi/signup.html", {"email": email})
-        return redirect("userapi:dashboard")
+        if request.user.is_authenticated:
+            return redirect("userapi:dashboard")
+        email = request.GET.get("email", "")
+        return render(request, "userapi/signup.html", {"email": email})
 
     def post(self, request):
         try:
@@ -174,80 +172,87 @@ class DashboardView(APIView):
 
 class TargetTemplateView(APIView):
     def get(self, request, pk=None):
+        if not request.user.is_authenticated:
+            messages.error(request, "You need to login first.")
+            return redirect(f"/signin/?next={request.path}")
+
         try:
-            if request.user.is_authenticated:
+            insta_creds = Credential.objects.filter(user=request.user)
+            if insta_creds:
+                context = {"insta_creds": insta_creds}
                 if pk:
                     target = get_object_or_404(Target, id=pk, user=request.user)
-                insta_creds = (
-                    Credential.objects.filter(user=request.user)
-                    .values("id", "username")
-                    .order_by("id")
-                )
-                return render(
-                    request,
-                    "userapi/target.html",
-                    {
-                        "target": target if pk else "",
-                        "insta_creds": insta_creds,
-                        "pk": pk,
-                    },
-                )
-            messages.error(request, "You need to login first.")
-            return redirect(f"/signin/?next={request.path}")
+                    context["target"] = target
+                    target_type = target.target_type.type
+                    mod = target_type.split("-")[0]
+                    model_map = {
+                        "post": Post,
+                        "reels": Reel,
+                        "hashtag": Hashtag,
+                        "comment": Comment,
+                    }
+                    model = model_map.get(mod)
+                    act = model.objects.get(target=target, user=request.user)
+                    context["url"] = act.url
+                return render(request, "userapi/target.html", context=context)
+            messages.error(request, "Please add Insta Credentials against your account to add Target.")
+            return redirect("userapi:insta-credentials")
         except Exception as e:
             messages.error(request, str(e))
-        return redirect("userapi:dashboard")
+        return redirect("userapi:targets")
 
     def post(self, request, pk=None):
-        try:
-            if request.user.is_authenticated:
-                target = get_object_or_404(Target, id=pk) if pk else Target.objects.create(user=request.user)
-                insta_cred = request.POST.get("selected_insta_cred")
-                mod, opt = request.POST.get("type").split("-")
-                url = request.POST.get("username")
-                match mod:
-                    case "post":
-                        act, _ = Post.objects.get_or_create(target=target, user=request.user)
-                        act.url = url
-                        act.type = opt
-                    case "reels":
-                        act, _ = Reel.objects.get_or_create(target=target, user=request.user)
-                        act.url = url
-                        act.type = opt
-                    case "hashtag":
-                        act, _ = Hashtag.objects.get_or_create(target=target, user=request.user)
-                        act.hashtag = url
-                        act.type = opt
-                    case "comment":
-                        act, _ = Comment.objects.get_or_create(target=target, user=request.user)
-                        act.comment = url
-                    case _:
-                        raise Exception("Please select correct option!")
-                    
-                credential = get_object_or_404(Credential, id=insta_cred)
-                target.insta_user = credential
-                target.save()
-                act.save()
-                messages.success(
-                    request,
-                    "Target " + ("updated" if pk else "added") + " successfully!",
-                )
-                return redirect("userapi:targets")
+        if not request.user.is_authenticated:
             messages.error(request, "You need to login first.")
             return redirect(f"/signin/?next={request.path}")
+        try:
+            activity = request.POST.get("actTime")
+            activity = datetime.strptime(activity, '%H:%M').time()
+            activity_time = datetime.combine(datetime.now().date(), activity, tzinfo=timezone.get_current_timezone())
+            if pk:
+                target = get_object_or_404(Target, id=pk)
+                target.activity_time.time = activity_time
+                target.activity_time.save()
+            else:
+                target = Target.objects.create(user=request.user)
+                target.activity_time = ActivityTime.objects.create(time=activity_time, user=request.user)
+
+            insta_cred = request.POST.get("selected_insta_cred")
+            credential = get_object_or_404(Credential, id=insta_cred)
+            target.insta_user = credential
+
+            target_type = request.POST.get("type")
+            if target_type:
+                target.target_type = TargetType.objects.create(type=target_type, user=request.user)
+            else:
+                target_type = target.target_type.type
+
+            target.save()
+
+            model_map = {
+                "post": Post,
+                "reels": Reel,
+                "hashtag": Hashtag,
+                "comment": Comment,
+            }
+            mod = target_type.split("-")[0]
+            model = model_map.get(mod)
+
+            act, _ = model.objects.get_or_create(target=target, user=request.user)
+            act.url = request.POST.get("username")
+            act.save()
+
+            messages.success(request, "Target " + ("updated" if pk else "added") + " successfully!")
+            return redirect("userapi:targets")
         except Exception as e:
             messages.error(request, str(e))
-            return redirect("userapi:target-edit", pk=pk if pk else target.id)
+            return redirect("userapi:target-edit", pk=target.id)
 
 
 class InstaCredentialView(APIView):
     def get(self, request):
         if request.user.is_authenticated:
-            insta_creds = (
-                Credential.objects.filter(user=request.user)
-                .values("id", "username")
-                .order_by("id")
-            )
+            insta_creds = Credential.objects.filter(user=request.user)
             return render(
                 request, "userapi/insta_credentials.html", {"insta_creds": insta_creds}
             )
@@ -255,49 +260,40 @@ class InstaCredentialView(APIView):
         return redirect(f"/signin/?next={request.path}")
 
     def post(self, request):
-        try:
-            if request.user.is_authenticated:
-                pk = request.POST.get("previous_username")
-                credential = Credential.objects.filter(user=request.user, username=pk).first() if pk else Credential(user=request.user)
-                credential.username = request.POST.get("username")
-                credential.password = request.POST.get("password")
-                credential.save()
-                messages.success(
-                    request,
-                    "Details " + ("updated" if pk else "added") + " successfully!",
-                )
-                insta_creds = (
-                    Credential.objects.filter(user=request.user)
-                    .values("id", "username")
-                    .order_by("id")
-                )
-                return render(
-                    request,
-                    "userapi/insta_credentials.html",
-                    {"insta_creds": insta_creds},
-                )
+        if not request.user.is_authenticated:
             messages.error(request, "You need to login first.")
             return redirect(f"/signin/?next={request.path}")
+        try:
+            pk = request.POST.get("previous_username")
+            credential, _ = Credential.objects.get_or_create(user=request.user, username=pk)
+            credential.username = request.POST.get("username")
+            credential.password = request.POST.get("password")
+            credential.save()
+            messages.success(request, "Details " + ("updated" if pk else "added") + " successfully!")
+            insta_creds = Credential.objects.filter(user=request.user)
+            return render(
+                request, "userapi/insta_credentials.html", {"insta_creds": insta_creds}
+            )
         except Exception as e:
             if "UNIQUE" in str(e):
                 messages.error(request, "Username already exists against your account!")
             else:
                 messages.error(request, str(e))
-        return redirect("userapi:insta-credentials")
+            return redirect("userapi:insta-credentials")
 
     def delete(self, request, pk):
-        try:
-            if request.user.is_authenticated:
-                credential = get_object_or_404(
-                    Credential, username=pk, user=request.user
-                )
-                credential.delete()
-                messages.success(
-                    request, f"Insta Credential '{pk}' deleted successfully."
-                )
-                return Response(status=status.HTTP_204_NO_CONTENT)
+        if not request.user.is_authenticated:
             messages.error(request, "You need to login first.")
             return redirect(f"/signin/?next={request.path}")
+        try:
+            credential = get_object_or_404(
+                Credential, username=pk, user=request.user
+            )
+            credential.delete()
+            messages.success(
+                request, f"Insta Credential '{pk}' deleted successfully."
+            )
+            return Response(status=status.HTTP_204_NO_CONTENT)
         except Exception as e:
             messages.error(request, str(e))
             return Response(status=status.HTTP_500_INTERNAL_SERVER_ERROR)
@@ -305,22 +301,21 @@ class InstaCredentialView(APIView):
 
 class ProfileView(APIView):
     def get(self, request):
+        if not request.user.is_authenticated:
+            messages.error(request, "You need to login first.")
+            return redirect(f"/signin/?next={request.path}")
         try:
-            if request.user.is_authenticated:
-                serializer = ProfileSerializer(request.user)
-                if request.path == "/profile/":
-                    return render(
-                        request, "userapi/profile.html", {"data": serializer.data}
-                    )
-                else:
-                    return render(
-                        request,
-                        "userapi/update_profile.html",
-                        {"data": serializer.data},
-                    )
+            serializer = ProfileSerializer(request.user)
+            if request.path == "/profile/":
+                return render(
+                    request, "userapi/profile.html", {"data": serializer.data}
+                )
             else:
-                messages.error(request, "You need to login first.")
-                return redirect(f"/signin/?next={request.path}")
+                return render(
+                    request,
+                    "userapi/update_profile.html",
+                    {"data": serializer.data},
+                )
         except Exception as e:
             messages.error(request, str(e))
             return redirect("userapi:dashboard")

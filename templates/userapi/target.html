@@ -29,10 +29,9 @@
         </div>
         <div class="col-12">
             <div class="container mb-2">
-                <strong class="text-danger" id="message"></strong>
                 {% if messages %}
                 {% for message in messages %}
-                <div class="alert {% if message.tags == 'error' %}text-danger{% elif message.tags == 'success' %}text-success{% endif %}" data-display-time="6000">
+                <div class="alert {% if message.tags == 'error' %}text-danger{% elif message.tags == 'success' %}text-success{% endif %}">
                     <strong>{{ message }}</strong>
                 </div>
                 {% endfor %}
@@ -40,14 +39,11 @@
             </div>
             <div class="card">
                 <div class="card-body">
-                    <form class="row g-3" action="{% if pk %}{% url 'userapi:target-edit' pk %}{% else %}{% url 'userapi:target-edit' %}{% endif %}" method="post" onsubmit="return checkForm()">
+                    <form class="row g-3" action="{% if target %}{% url 'userapi:target-edit' target.id %}{% else %}{% url 'userapi:target-edit' %}{% endif %}" method="post" onsubmit="return checkForm()">
                         {% csrf_token %}
-                        <div class="d-flex justify-content-between m-3">
-                            <h2>Target Edit</h2>
-                            <button type="button" class="btn btn-primary mx-3" data-bs-toggle="modal" data-bs-target="#instaUser">
-                                Settings
-                                <i class='bx bx-cog'></i>
-                            </button>
+                        <div class="d-flex justify-content-between mt-3">
+                            <h2 class="col-7">Target Edit</h2>
+                            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#instaUser">Select Instagram Account</button>
                             <!-- Settings Modal -->
                             <div class="modal fade" id="instaUser" tabindex="-1" aria-hidden="true">
                                 <div class="modal-dialog modal-dialog-centered">
@@ -60,22 +56,16 @@
                                         </div>
                                         <div class="modal-body">
                                             <div class="d-flex align-items-center">
-                                                {% if insta_creds %}
                                                 <select class="form-select text-center" id="settingsDropdown" name="selected_insta_cred">
                                                     <option value="#">------</option>
                                                     {% for insta_cred in insta_creds %}
                                                     <option value="{{ insta_cred.id }}" {% if insta_cred.id == target.insta_user.id %} selected {% endif %}>{{ insta_cred.username }} </option>
                                                     {% endfor %}
                                                 </select>
-                                                {% else %}
-                                                <strong>No Insta Account Found against Your Account!</strong>
-                                                {% endif %}
                                             </div>
                                         </div>
                                         <div class="modal-footer">
-                                            {% if insta_creds %}
                                             <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Select</button>
-                                            {% endif %}
                                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                                         </div>
                                     </div>
@@ -92,6 +82,11 @@
                                 </h2>
                                 <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne">
                                     <div class="accordion-body text-center">
+                                        {% if target.target_type.type %}
+                                        <h3 class="text-start mb-3">
+                                            Target for {{ target.target_type.type }}
+                                        </h3>
+                                        {% else %}
                                         <div class="d-flex justify-content-center flex-wrap gap-3 mb-3">
                                             <div class="form-check">
                                                 <input class="form-check-input" type="radio" name="type" id="post-like" value="post-like" required>
@@ -142,6 +137,7 @@
                                                 </label>
                                             </div>
                                         </div>
+                                        {% endif %}
                                         <div class="d-flex justify-content-center flex-wrap gap-3">
                                             <div class="col-12 col-md-6 col-lg-2">
                                                 <button type="button" class="btn ripple btn-primary w-75" data-bs-toggle="modal" data-bs-target="#listModal">
@@ -161,38 +157,29 @@
                                         <div class="row justify-content-center m-3">
                                             <div class="col-lg-6 col-md-8 col-sm-10 col-12">
                                                 <div class="form-group d-flex">
-                                                    <input class="form-control" id="username" placeholder="Enter Username or complete URL" type="text" oninput="preventSpaces(event)">
+                                                    <input class="form-control" id="username" placeholder="Enter Username or complete URL" type="text">
                                                     <button class="btn btn-primary ms-3" type="button" onclick="insertTarget()">Insert</button>
                                                 </div>
+                                            </div>
+                                        </div>
+                                        <div class="d-flex align-items-center justify-content-center flex-wrap">
+                                            <div class="form-group">
+                                                <label for="actTime" class="w-100 mb-2">Select Activity time:</label>
+                                                <input type="time" id="actTime" name="actTime" class="form-control w-100" value="{{ target.activity_time.time|time:'H:i' }}" required>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <div class="accordion">
-                            <div class="accordion-item">
-                                <h2 class="accordion-header" id="headingTwo">
-                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
-                                        Activity Time Settings
-                                    </button>
-                                </h2>
-                                <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo">
-                                    <div class="accordion-body text-center">
-                                        <p>
-                                            Activity Time Div
-                                        </p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="text-center m-3">
+                        <div class="text-center mt-3">
                             <button class="btn btn-primary ripple px-5" type="submit">
                                 Save Target
                             </button>
+                            <p class="text-danger mt-2"><strong id="message"></strong></p>
                         </div>
                         <!-- List Modal -->
-                        <div class="modal fade" id="listModal" tabindex="-1" aria-hidden="true">
+                        <div class="modal fade" id="listModal" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false" aria-hidden="true">
                             <div class="modal-dialog modal-dialog-centered">
                                 <div class="modal-content">
                                     <div class="modal-header">
@@ -200,10 +187,11 @@
                                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                     </div>
                                     <div class="modal-body">
-                                        <textarea class="form-control w-100" name="username" rows="6" id="targetList" oninput="preventSpaces(event)"></textarea>
+                                        <textarea class="form-control w-100" name="username" rows="6" id="targetList">{{ url }}</textarea>
+                                        <p class="text-danger mt-2 mb-0" id="inform"></p>
                                     </div>
                                     <div class="modal-footer">
-                                        <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Save</button>
+                                        <button type="button" class="btn btn-primary" id="saveContent">Save</button>
                                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                                     </div>
                                 </div>
@@ -219,7 +207,7 @@
                                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                     </div>
                                     <div class="modal-body">
-                                        <textarea class="form-control w-100" rows="6" id="targetView" readonly></textarea>
+                                        <textarea class="form-control w-100" rows="6" id="targetView" readonly>{{ url }}</textarea>
                                     </div>
                                     <div class="modal-footer">
                                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -239,67 +227,108 @@
 {% include "userapi/dashboard_footer.html" %}
 
 <script>
-    document.getElementById('targetList').addEventListener('input', function () {
-        let targetViewElement = document.getElementById('targetView');
-        targetViewElement.value = this.value;
+    $('#targetList').on('keydown', function (e) {
+        if (e.key === 'Enter') {
+            let cursorPosition = this.selectionStart;
+            let text = $(this).val();
+            let lineStart = text.lastIndexOf('\n', cursorPosition - 1) + 1;
+            let currentLine = text.substring(lineStart, cursorPosition).trim();
+
+            if (currentLine === '') {
+                // Prevent creating a new line if the current line is empty
+                e.preventDefault();
+            }
+        }
+        $('#inform').css('display', 'block');
+        $('#inform').text('Make sure to click on Save to update list otherwise changes will not update.');
     });
 
-    function preventSpaces(event) {
+    // $('#targetList').on('input', function () {
+    // });
+
+    $('#saveContent').on('click', function () {
+        let listContent = $('#targetList').val().split('\n').map(line => line.trim()).join('\n');
+        $('#targetView').val(listContent);
+        $('#targetList').val(listContent);
+        // Close the modal
+        $('#listModal').modal('hide');
+        $('#inform').css('display', 'none');
+    });
+
+    $('#listModal').on('hidden.bs.modal', function (event) {
+        if ($('#inform').css('display') == "block") {
+            $('#targetList').val($('#targetView').val());
+        }
+        $('#inform').css('display', 'none');
+    });
+
+    // Function to prevent spaces
+    $('#username, #targetList').on('input', function (event) {
         const inputValue = event.target.value.replace(/[^\S\n]/g, ''); // Remove spaces
-        event.target.value = inputValue;
-    }
+        $(event.target).val(inputValue);
+    });
 
-    document.getElementById('username').addEventListener('input', preventSpaces);
-    document.getElementById('targetList').addEventListener('input', preventSpaces);
 
+    // Function to Insert Target
     function insertTarget() {
-        let inputElement = document.getElementById('username');
-        let targetListElement = document.getElementById('targetList');
-        let targetViewElement = document.getElementById('targetView');
+        let inputElement = $('#username');
+        let targetListElement = $('#targetList');
+        let targetViewElement = $('#targetView');
+        let inputValue = inputElement.val();
+        let targetListValue = targetListElement.val().trim();
 
-        // Remove leading and trailing spaces from the input value
-        let inputValue = inputElement.value.trim();
+        if (inputValue) {
+            targetListValue = targetListValue ? (targetListValue + '\n' + inputValue) : inputValue;
+            targetListElement.val(targetListValue);
+            targetViewElement.val(targetListValue);
 
-        if (inputValue !== "") {
-            // If targetListElement already has some content, add a new line before appending
-            if (targetListElement.value.trim() !== "") {
-                targetListElement.value += '\n';
-            }
-
-            // Append the trimmed value to targetListElement
-            targetListElement.value += inputValue;
-            targetViewElement.value = targetListElement.value;
             // Clear the input field
-            inputElement.value = "";
+            inputElement.val("");
 
         } else {
             // Provide feedback if the input field is empty or contains only spaces
-            document.getElementById("message").innerText = "Please enter a valid value before inserting.";
+            showMessage("Please enter a valid value before inserting.");
 
             // Focus on the input field for convenience
             inputElement.focus();
         }
     }
 
+    // Function to validate form before submitting
     function checkForm() {
-        let instaAccount = document.getElementById('settingsDropdown').value;
-        let val = null;
+        let instaAccount = $('#settingsDropdown').val();
+        let msg = "";
         if (instaAccount === '#') {
-            val = 'Please select an Insta Account.';
+            msg = '<p>Please select Instagram Account for the Target.</p>';
         }
 
-        let targetListElement = document.getElementById('targetList');
-        console.log(targetListElement.value);
-        if (!targetListElement.value) {
-            val = val + " Please insert username or url";
+        let targetListElement = $('#targetList');
+        if (!targetListElement.val()) {
+            msg += '<p>Please insert username or URL.</p>';
         }
 
-        if (val) {
-            document.getElementById("message").innerText = val;
+        let currentTime = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false });
+        // Handle the case where midnight is represented as '24:00'
+        currentTime = currentTime.replace(/^24/, '00');
+        if (currentTime >= $('#actTime').val()) {
+            msg += '</p>Please select correct activity time. It should be after current time.</p>';
+        }
+
+        if (msg) {
+            showMessage(msg);
             return false;
         }
 
         return true;
+    }
+
+    // Function to display error msgs
+    function showMessage(message) {
+        // Display the message
+        $("#message").append(message);
+        setTimeout(function () {
+            $("#message").text("");
+        }, 7000);
     }
 </script>
 
