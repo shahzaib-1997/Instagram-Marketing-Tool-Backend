@@ -84,6 +84,9 @@ class Credential(models.Model):
     profile_id = models.CharField(max_length=255, blank=True, null=True)
     time_stamp = models.DateTimeField(auto_now_add=True, blank=True, null=True)
 
+    class Meta:
+        unique_together = ("user", "username")
+
     def __str__(self):
         """
         method __str__(): Returns a string representation of the object.
@@ -103,7 +106,16 @@ class TargetType(models.Model):
         __str__: Returns a string representation of the object.
     """
 
-    options = (("hashtags", "hashtags"), ("posts", "posts"), ("reels", "reels"), ("comments", "comments"))
+    options = (
+        ("post-like", "post-like"),
+        ("post-comment", "post-comment"),
+        ("comment-like", "comment-like"),
+        ("reels-view", "reels-view"),
+        ("reels-like", "reels-like"),
+        ("reels-comment", "reels-comment"),
+        ("hashtag-like", "hashtag-like"),
+        ("hashtag-comment", "hashtag-comment"),
+    )
 
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     type = models.CharField(max_length=255, choices=options)
@@ -160,11 +172,14 @@ class Target(models.Model):
     """
 
     options = [
-        (0, 'Not Started'),
-        (1, 'Running'),
-        (2, 'Completed'),
-    ]    
+        (0, "Not Started"),
+        (1, "Running"),
+        (2, "Completed"),
+    ]
     user = models.ForeignKey(User, on_delete=models.CASCADE)
+    insta_user = models.ForeignKey(
+        Credential, on_delete=models.CASCADE, null=True, blank=True
+    )
     target_type = models.ForeignKey(
         TargetType, on_delete=models.CASCADE, null=True, blank=True
     )
@@ -179,7 +194,7 @@ class Target(models.Model):
         """
         method __str__(): Returns a string representation of the object.
         """
-        return f"{self.user.username} - {self.target_type.type}"
+        return f"{self.user.username} - {dict(self.options).get(self.status)}"
 
 
 class Hashtag(models.Model):
@@ -199,7 +214,13 @@ class Hashtag(models.Model):
         "username - user_defined_hashtag"
     """
 
-    hashtag = models.CharField(max_length=255)
+    options = (
+        ("like", "like"),
+        ("comment", "comment"),
+    )
+
+    type = models.CharField(max_length=255, choices=options, null=True, blank=True)
+    url = models.TextField(default="")
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     target = models.ForeignKey(Target, on_delete=models.CASCADE, null=True, blank=True)
     time_stamp = models.DateTimeField(auto_now_add=True, blank=True, null=True)
@@ -257,6 +278,12 @@ class Post(models.Model):
         "username - post_url"
     """
 
+    options = (
+        ("like", "like"),
+        ("comment", "comment"),
+    )
+
+    type = models.CharField(max_length=255, choices=options, null=True, blank=True)
     url = models.TextField()
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     target = models.ForeignKey(Target, on_delete=models.CASCADE, null=True, blank=True)
@@ -270,7 +297,7 @@ class Post(models.Model):
 
 
 class Comment(models.Model):
-    comment = models.TextField()
+    url = models.TextField(default="")
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     target = models.ForeignKey(Target, on_delete=models.CASCADE, null=True, blank=True)
     time_stamp = models.DateTimeField(auto_now_add=True, blank=True, null=True)
@@ -279,7 +306,7 @@ class Comment(models.Model):
         """
         method __str__(): Returns a string representation of the object.
         """
-        return f"{self.user.username} - {self.comment[:25]}"
+        return f"{self.user.username} - {self.url[:25]}"
 
 
 class Reel(models.Model):
@@ -299,6 +326,13 @@ class Reel(models.Model):
         "username - reel_url"
     """
 
+    options = (
+        ("like", "like"),
+        ("comment", "comment"),
+        ("view", "view"),
+    )
+
+    type = models.CharField(max_length=255, choices=options, null=True, blank=True)
     url = models.TextField()
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     target = models.ForeignKey(Target, on_delete=models.CASCADE, null=True, blank=True)
@@ -360,6 +394,7 @@ class Stat(models.Model):
     followers = models.PositiveIntegerField()
     engagement_rate = models.FloatField()
     time_stamp = models.DateTimeField(auto_now_add=True, blank=True, null=True)
+    read = models.BooleanField(default=False)
 
     def __str__(self):
         """

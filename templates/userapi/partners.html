@@ -1,0 +1,78 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+        {% include "userapi/head.html" %}
+        <title>Partners - Earn with us - MassNova</title>
+        <meta name="description" content="Learn more about MassNova Partnership Program! Here's everything how you can earn money by reselling our service.">
+        <meta name="twitter:title" content="Partners - Earn with us - MassNova" />
+        <meta property="og:title" content="Partners - Earn with us - MassNova" />
+        <meta property="og:description" content="Learn more about MassNova Partnership Program! Here's everything how you can earn money by reselling our service." />
+        <meta name="twitter:description" content="Learn more about MassNova Partnership Program! Here's everything how you can earn money by reselling our service." />
+        <meta property="og:url" content={% url "userapi:partners" %} />
+        <link rel="canonical" href={% url "userapi:partners" %} />
+        <link rel="alternate" href={% url "userapi:partners" %} hreflang="x-default" />
+    </head>
+
+    <body class="h-100">
+        {% include "userapi/header.html" %}
+        <section id="hero" class="pt-0 py-lg-5">
+            <div class="container">
+                <div class="row justify-content-center">
+                    <div class="my-3 my-lg-5 col-12">
+                        <h1>Partner program</h1>
+                        <br>
+                        <h2>What is MassNova</h2>
+                        <p><b>MassNova</b> is a Social Media marketing solution for automated Organic Growth on Instagram.</p>
+                        <h2>How does MassNova work</h2>
+                        <p>By automating your account on Instagram (primarily follow and unfollow interactions), we make sure that you're getting followbacks only from real profiles that will actually engage with your content.</p>
+                        <p>Once the Instagram account is connected to the MassNova growth system, there are a couple of steps that need to be done in order to see results:</p>
+                        <ol>
+                            <li>Target other Instagram accounts or hashtags</li>
+                            <li>Wait for a 2-5 day warmup period to end</li>
+                            <li>After the warmup, your account will start doing interactions with other profiles</li>
+                            <li>Keep an eye on your analytics and optimize your targeting for even more growth.</li>
+                        </ol>
+                        <p>For more information about our growth system please refer to our <a href={% url "userapi:how" %}>How it Works</a>, <a href={% url "userapi:pricing" %}>Pricing</a>, and <a href={% url "userapi:features" %}>Features</a> pages.</p>
+                        <h2>Brand guide</h2>
+                        <h4>Name</h4>
+                        <p>Always refer to us as "MassNova", as it's part of our brand identity.</p>
+                        <h4>Logo</h4>
+                        <p>Feel free to use our logo anywhere to represent our company. Follow these rules to keep our brand consistent:</p>
+                        <ol>
+                            <li>Don't change the colors, shapes, or spacing of the logo.</li>
+                            <li>Maintain the logo's ratio if scaling.</li>
+                            <li>Use the logo with text and visual together, as it gives more context.</li>
+                            <li>Contact us if you need a different version of the logo instead of creating a new one.</li>
+                        </ol>
+                        <h4>Color</h4>
+                        <p>Our <b>primary colors</b> are black (#252525) and blue (#4443FF), and <b>complementary colors</b> are green (#0FC46D), lightblue (#DFE1FF) and lightgreen (#00AD5A).</p>
+                        <h2>Affiliate partnership</h2>
+                        <ol>
+                            <li>If you haven't already, create an Affiliate account at <a href={% url "userapi:affiliate" %}>affiliates.massnova.com</a></li>
+                            <li><b>Login</b> to your affiliate portal <a href={% url "userapi:affiliate" %}>affiliates.massnova.com/login</a></li>
+                            <li>Get <b>25% commission every month</b> for every paying customer you bring, and it's <b>recurring</b> until they stop using our service.</li>
+                            <li>Payouts are done via <b>PayPal</b> in <b>USD</b>.</li>
+                            <li>To get paid out, you need to earn <b>at least $100</b> and stay within our <b>Affiliate Guidelines</b> – be sure to read them in the next section below!</li>
+                            <li>Payouts are done during the <b>first week</b> of every month.</li>
+                            <li>Use your referral URL in your marketing channels (https://massnova.com?ref={your_id}).</li>
+                            <li>You can find <b>your referral URL</b> on your Dashboard in the Assets tab.</li>
+                            <li>If you have any questions, feel free to reach out to us via live chat!</li>
+                        </ol>
+                        <h2>Affiliate guidelines</h2>
+                        <ol>
+                            <li><b>Don't do false advertising</b> - please stay consistent with the MassNova service and expected growth results - customer satisfaction is our top priority.</li>
+                            <li>Please don't recreate, change, or misrepresent MassNova or its brand assets.</li>
+                            <li>The affiliate program is for reselling our service, not for personal use. You need to convert <b>at least 2 Customers</b> in order to be eligible for payout.</li>
+                            <li>After the <b>payout</b> (minimum $100), if your marketing channels aren't confirmed or clear expect to receive an email from our Partner Relationships Specialist. In order to <b>stay eligible</b> for future payouts it is important that we confirm your marketing channels.</li>
+                        </ol>
+                        <p><u>Violating any of these guidelines will make you ineligible for future commission.</u></p>
+                    </div>
+                </div>
+            </div>
+        </section>
+        {% include "userapi/footer.html" %}
+    </body>
+
+</html>

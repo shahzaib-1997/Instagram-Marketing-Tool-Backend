@@ -1,0 +1,82 @@
+{% extends "userapi/base.html" %}
+{% load static %}
+
+{% block head %}
+<title>Sign Up | MassNova </title>
+<meta property="og:url" content={% url "userapi:signup" %} />
+<link rel="canonical" href={% url "userapi:signup" %} />
+<link rel="alternate" href={% url "userapi:signup" %} hreflang="x-default" />
+{% endblock %}
+
+{% block content %}
+<!--authentication-->
+
+<div class="section-authentication-cover">
+  <div class="">
+    <div class="row g-0">
+      <div class="col-12 col-xl-7 col-xxl-8 auth-cover-left justify-content-center d-none d-xl-flex border-end">
+        <div class="card rounded-0 mb-0 border-0 shadow-none bg-transparent">
+          <div class="card-body">
+            <img src="{% static '' %}bs/images/auth/register1.png" class="img-fluid auth-img-cover-login" width="500" alt="">
+          </div>
+        </div>
+      </div>
+      <div class="col-12 col-xl-5 col-xxl-4 auth-cover-right justify-content-center">
+        <div class="card rounded-0 m-2 border-0 shadow-none">
+          <div class="card-body">
+            <a href={% url "userapi:index" %}><img src="{% static '' %}media/Logo Black Font re.png" class="mb-4" width="145" alt=""></a>
+            <h4 class="fw-bold">Sign Up to MassNova Now</h4>
+            <p class="mb-0">We're about to level up your Instagram Together! Enter your details to get started 👈🏻</p>
+            <div class="container mb-2">
+              {% if messages %}
+              {% for message in messages %}
+              <div class="alert {% if message.tags == 'error' %}text-danger{% elif message.tags == 'success' %}text-success{% endif %}">
+                <strong>{{ message }}</strong>
+              </div>
+              {% endfor %}
+              {% endif %}
+            </div>
+            <div class="form-body mt-4">
+              <form class="row g-3" method="POST" action={%url "userapi:signup" %}>
+                <div class="col-12">
+                  <label for="inputUsername" class="form-label">Username</label>
+                  <input type="name" class="form-control" name="username" id="inputUsername" placeholder="John Doe" required>
+                </div>
+                <div class="col-12">
+                  <label for="inputEmailAddress" class="form-label">Email Address</label>
+                  <input type="email" class="form-control" name="email" id="inputEmailAddress" placeholder="example@user.com" value="{{ email }}" required>
+                </div>
+                <div class="col-12">
+                  <label for="inputChoosePassword" class="form-label">Password</label>
+                  <div class="input-group" id="show_hide_password">
+                    <input type="password" class="form-control" name="password" id="inputChoosePassword" placeholder="Enter Password" required>
+                    <a href="#" class="input-group-text bg-transparent"><i class="bi bi-eye-slash-fill"></i></a>
+                  </div>
+                </div>
+                <div class="col-12">
+                  <div class="form-check form-switch">
+                    <input class="form-check-input" type="checkbox" id="flexSwitchCheckChecked" required>
+                    <label class="form-check-label" for="flexSwitchCheckChecked">I read and agree to <a href={% url "userapi:terms-condition" %}>Terms &amp; Conditions</a></label>
+                  </div>
+                </div>
+                <div class="col-12">
+                  <div class="d-grid">
+                    <button type="submit" class="btn btn-primary">Register</button>
+                  </div>
+                </div>
+                <div class="col-12">
+                  <div class="text-start">
+                    <p class="mb-0">Already have an account? <a href={% url "userapi:login" %}>Sign in here</a></p>
+                  </div>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!--end row-->
+  </div>
+</div>
+<!--authentication-->
+{% endblock content %}

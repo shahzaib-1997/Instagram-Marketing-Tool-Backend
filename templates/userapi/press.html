@@ -1,0 +1,95 @@
+{% load static %}
+<!doctype html>
+<html lang="en">
+
+    <head>
+        {% include "userapi/head.html" %}
+        <title>Press & Media Kits - MassNova</title>
+        <meta name="description" content="Download all of MassNova's brand assets and a media kit here, and learn more about featuring us in the press!">
+        <meta name="twitter:title" content="Press & Media Kits - MassNova" />
+        <meta property="og:title" content="Press & Media Kits - MassNova" />
+        <meta property="og:description" content="Download all of MassNova's brand assets and a media kit here, and learn more about featuring us in the press!" />
+        <meta name="twitter:description" content="Download all of MassNova's brand assets and a media kit here, and learn more about featuring us in the press!" />
+        <meta property="og:url" content={% url "userapi:press" %} />
+        <link rel="canonical" href={% url "userapi:press" %} />
+        <link rel="alternate" href={% url "userapi:press" %} hreflang="x-default" />
+    </head>
+
+    <body class="h-100">
+        {% include "userapi/header.html" %}
+        <section id="hero" class="pt-0 py-lg-5">
+            <div class="container">
+                <div class="row justify-content-center text-center">
+                    <div class="my-3 my-lg-5 col-md-12 col-lg-6 col-xl-6">
+                        <div class="label py-2 px-2 mb-3 preheader">Brand Assets</div>
+                        <h1 class="mb-3">Press Kit</h1>
+                        <p class="lead text-black-50">For media inquiries, partnerships, and other press related matters, please use our <a href={% url "userapi:contact" %}>contact</a> form to get in touch. Press on the button below to download our press kit. You may use this press kit in case you were looking to feature us on your site or on other media types.</p>
+                        <a href="{% static '' %}nitreo-press-kit.zip" class="btn btn-primary btn-lg">Download Our Press Kit</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <section class="pt-0">
+            <div class="container">
+                <div class="row justify-content-center my-0 my-lg-5">
+                    <div class="col-lg-5">
+                        <p class="h4 mb-3">
+                            Do not:
+                        </p>
+                        <ul class="list-unstyled cross text-dark">
+                            <li class="list-item">
+                                Recreate, change, or misrepresent MassNova, its images or its logo.
+                            </li>
+                            <li class="list-item">
+                                Change any brand asset to better align your brand with ours
+                            </li>
+                            <li class="list-item">
+                                Falsely associate MassNova in any way or form
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="col-lg-4 mt-5 mt-lg-0">
+                        <p class="h4 mb-3">
+                            You may use this press kit to:
+                        </p>
+                        <ul class="list-unstyled check text-dark">
+                            <li class="list-item">
+                                To write your reviews
+                            </li>
+                            <li class="list-item">
+                                For press releases
+                            </li>
+                            <li class="list-item">
+                                For other media publications
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <section id="faq" class="pt-0">
+            <div class="container">
+                <div class="row mt-0 mt-lg-5">
+                    <div class="col-lg-12">
+                        <div class="row">
+                            <div class="col-lg-4 mt-5">
+                                <h3 class="h4">What's MassNova again?</h3>
+                                <p class="text-black-50">MassNova is a social media tool that helps you get more followers on Instagram. MassNova follows, likes, views stories, and more on your behalf - getting you more followers in the process.</p>
+                            </div>
+                            <div class="col-lg-4 mt-5">
+                                <h3 class="h4">Media Inquiries</h3>
+                                <p class="text-black-50">Want to feature us on your website? Or maybe you want to get in touch for a statement, press details, or something else. Get in touch with us through our <a href={% url "userapi:contact" %}>contact form</a> and we'll get back to you ASAP! Thank you. </p>
+                            </div>
+                            <div class="col-lg-4 mt-5">
+                                <h3 class="h4">I want to partner up!</h3>
+                                <p class="text-black-50">MassNova offers <a href={% url "userapi:instagram-agency" %}>Instagram agency</a> perks, including pricing, in case you were looking to re-sell or whitelabel. if you're a non-profit and need some help growing your Instagram, <a href={% url "userapi:contact" %}>reach out to us</a> and we'll be sure to support you and your cause.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        {% include "userapi/footer.html" %}
+    </body>
+
+</html>

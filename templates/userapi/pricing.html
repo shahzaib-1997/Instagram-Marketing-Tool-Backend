@@ -1,0 +1,843 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+        {% include "userapi/head.html" %}
+        <title>Simple Pricing - MassNova</title>
+        <meta name="description" content="Learn more about all of MassNova's pricing plans! Pricing is affordable for businesses, creators, and agencies. Inquire about bulk discounts.">
+        <meta name="twitter:title" content="Pricing - MassNova" />
+        <meta property="og:title" content="Pricing - MassNova" />
+        <meta property="og:description" content="Learn more about all of MassNova's pricing plans! Pricing is affordable for businesses, creators, and agencies. Inquire about bulk discounts." />
+        <meta name="twitter:description" content="Learn more about all of MassNova's pricing plans! Pricing is affordable for businesses, creators, and agencies. Inquire about bulk discounts." />
+        <meta property="og:url" content={% url "userapi:pricing" %} />
+        <link rel="canonical" href={% url "userapi:pricing" %} />
+        <link rel="alternate" href={% url "userapi:pricing" %} hreflang="x-default" />
+    </head>
+
+    <body class="h-100">
+        {% include "userapi/header.html" %}
+        <section id="hero" class="py-5">
+            <div class="container">
+                <div class="row align-items-center">
+                    <div class="my-3 my-lg-5 col-md-12 col-lg-6 col-xl-6">
+                        <div class="label py-2 px-2 mb-3 preheader">Our Pricing</div>
+                        <h1 class="mb-3">Affordable, <br>no frills pricing</h1>
+                        <p class="lead text-black-50">Your MassNova experience can begin for less than a cup of coffee per day! Grow your Instagram for as little as $69 a month. Learn more about how we're priced and why on this page.</p>
+                        <p class="d-none d-lg-block lead text-black-50">Get started with your email address, or learn more below!</p>
+                        <div class="d-inline-block my-3">
+                            <form class="form-inline formoid">
+                                <div class="input-group">
+                                    <input type="email" class="form-control signUpForm" placeholder="Your Email Address" required>
+                                </div>
+                                <button type="submit" class="btn btn-primary w-sm-100 w-lg-auto">Sign Up Now 👈</button>
+                            </form>
+                            <div class="text-black-50 small my-3">2 Minutes Setup • Real Results • Get More Instagram Followers</div>
+                        </div>
+                    </div>
+                    <div class="col-md-12 offset-lg-1 col-lg-4 col-xl-5">
+                        <div class="shadow-2 text-right o-hidden">
+                            <div class="pt-5 pb-2 px-5">
+                                <div class="d-flex justify-content-between align-items-center my-3">
+                                    <img src="{% static '' %}img/organic-instagram-growth.svg" width="96px">
+                                    <div>
+                                        <div class="px-2 py-2 preheader gray h4 text-black-50 mr-0 text-right">☕ $3.96 per day</div>
+                                        <p class="text-black-50 font-weight-bold mr-0 mr-lg-1">Billed at $119<sub>/ mo</sub></p>
+                                    </div>
+                                </div>
+                                <div class="text-left pt-3">
+                                    <p class="h3 my-3">The Speed Plan</p>
+                                    <ul class="list-unstyled check text-left text-black-50">
+                                        <li class="list-item">
+                                            A suite of growth tools that grow your Instagram
+                                        </li>
+                                        <li class="list-item">
+                                            Attract real, organic Instagram followers
+                                        </li>
+                                        <li class="list-item">
+                                            Build up your community & audience on Insta
+                                        </li>
+                                        <li class="list-item">
+                                            Help & industry insights from a dedicated Growth Strategist
+                                        </li>
+                                        <li class="list-item">
+                                            For less than a cup of coffee per day ☕
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <a href="{% url 'userapi:signup' %}?plan=speed-plan-usd-monthly" class="mt-5 btn btn-success btn-block">Choose this plan 👈</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <style>
+            section.pricing .top {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                margin: 40px auto;
+            }
+
+            section.pricing input,
+            section.pricing label {
+                display: inline-block;
+                vertical-align: middle;
+                margin: 10px 0;
+            }
+
+            section.pricing .switch {
+                position: relative;
+                display: inline-block;
+                width: 60px;
+                height: 34px;
+            }
+
+            section.pricing .switch input {
+                opacity: 0;
+                width: 0;
+                height: 0;
+            }
+
+            section.pricing .slider {
+                position: absolute;
+                cursor: pointer;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background-color: #4443FF;
+                -webkit-transition: 0.4s;
+                /*box-shadow: 2px 6px 25px #e6e6e6;*/
+                transform: translate(0px, 0px);
+                transition: 0.6s ease transform, 0.6s box-shadow;
+            }
+
+            section.pricing .slider:before {
+                position: absolute;
+                content: "";
+                height: 26px;
+                width: 26px;
+                left: 4px;
+                bottom: 4px;
+                background-color: white;
+                -webkit-transition: 0.4s;
+                transition: 0.4s;
+            }
+
+            section.pricing input:checked+.slider {
+                background-color: #0fc46d;
+            }
+
+            section.pricing input:checked+.slider:before {
+                -webkit-transform: translateX(26px);
+                -ms-transform: translateX(26px);
+                transform: translateX(26px);
+            }
+
+            section.pricing .slider.round {
+                border-radius: 34px;
+            }
+
+            section.pricing .slider.round:before {
+                border-radius: 50%;
+            }
+
+            section.pricing {
+                display: block;
+                width: 100%;
+                margin-bottom: 20px;
+                padding-top: 0 !important;
+                padding-bottom: 0 !important;
+                /*float: left;*/
+            }
+
+            section.pricing div.pricing-container {
+                width: 100%;
+                /*min-width: 1170px;*/
+                max-width: 1170px;
+                display: block;
+                /*float: left;*/
+                margin: 0 auto;
+            }
+
+            section.pricing div.pricing-container th {
+                background-color: #FFF;
+                width: 25%;
+            }
+
+            section.pricing div.pricing-container tr th:first-child {
+                font-weight: 700;
+                font-size: 18px;
+            }
+
+            section.pricing div.pricing-container tr td:first-child {
+                color: #121214;
+            }
+
+            section.pricing div.pricing-container tr {
+                height: 50px;
+            }
+
+            section.pricing div.pricing-container h2 {
+                font-size: 22px;
+                line-height: 33px;
+                font-weight: 600;
+                color: #121214;
+                text-align: center;
+            }
+
+            section.pricing div.pricing-container p.price {
+                margin-bottom: 0;
+                font-size: 52px;
+                line-height: 80px;
+                font-weight: 700 !important;
+                color: #121214;
+                text-align: center;
+            }
+
+            section.pricing div.pricing-container p:last-child {
+                margin-bottom: 1.85714286em;
+            }
+
+            section.pricing div.pricing-container .pricing-info {
+                font-size: 14px;
+                line-height: 21px;
+                font-weight: 400;
+                color: #c4c4c4;
+                text-align: center;
+            }
+
+            section.pricing div.pricing-container .pricing-cta {
+                display: block;
+                width: 90%;
+                max-width: 300px;
+                margin: 0 auto;
+                text-transform: none;
+            }
+
+            section.pricing div.pricing-container .btn-primary:hover {
+                transition: none !important;
+                padding: 1.25rem 24px !important;
+            }
+
+            section.pricing div.pricing-container .pricing-description {
+                margin-bottom: 30px;
+                font-size: 16px;
+                line-height: 24px;
+                font-weight: 400;
+                color: #121214;
+                text-align: center;
+            }
+
+            section.pricing div.pricing-container .guaranteed-count {
+                font-weight: 700;
+                font-size: 20px;
+                line-height: 30px;
+                color: #121214;
+                text-align: center;
+            }
+
+            section.pricing div.pricing-container table img {
+                display: block;
+                margin: 0 auto;
+                width: 20px;
+            }
+
+            section.pricing div.pricing-container span.coming-soon-tag {
+                display: table;
+                font-weight: 500;
+                font-size: 12px;
+                line-height: 15px;
+                color: #FFF;
+                background-color: #EF4D4B;
+                border-radius: 10px;
+                padding: 2px 8px;
+                text-align: center;
+                margin: 0 auto;
+            }
+
+            .large-table table {
+                box-sizing: border-box;
+            }
+
+            .large-table table td,
+            .large-table table th {
+                border: 1px solid #C3C3C3;
+                box-sizing: border-box;
+            }
+
+            .large-table table tr:first-child th {
+                border-top: 0;
+            }
+
+            .large-table table tr:last-child td {
+                border-bottom: 0;
+            }
+
+            .large-table table tr td:first-child,
+            .large-table table tr th:first-child {
+                border-left: 0;
+            }
+
+            .large-table table tr td:last-child,
+            .large-table table tr th:last-child {
+                border-right: 0;
+            }
+
+            section.pricing div.pricing-container.large-table {
+                display: block;
+            }
+
+            section.pricing div.pricing-container.small-table {
+                display: none;
+            }
+
+            @media only screen and (max-width: 1200px) {
+                section.pricing div.pricing-container tr th:first-child {
+                    font-size: 16px;
+                }
+
+                section.pricing div.pricing-container h2 {
+                    font-size: 18px;
+                    line-height: 33px;
+                }
+
+                section.pricing div.pricing-container p.price {
+                    font-size: 52px;
+                    line-height: 80px;
+                }
+
+                section.pricing div.pricing-container .pricing-info {
+                    font-size: 14px;
+                    line-height: 21px;
+                }
+
+                section.pricing div.pricing-container .pricing-cta {
+                    width: 90%;
+                    max-width: 300px;
+                }
+
+                section.pricing div.pricing-container .guaranteed-count {
+                    font-size: 20px;
+                    line-height: 30px;
+                }
+            }
+
+            @media only screen and (max-width: 768px) {
+                section.pricing .top {
+                    margin-top: 40px;
+                    margin-bottom: 12px;
+                }
+
+                section.pricing div.pricing-container.large-table {
+                    display: none;
+                }
+
+                section.pricing div.pricing-container.small-table {
+                    display: block;
+                }
+
+                section.pricing div.pricing-container tr th:first-child {
+                    font-size: 14px;
+                }
+
+                section.pricing div.pricing-container h2 {
+                    font-size: 16px;
+                    line-height: 28px;
+                }
+
+                section.pricing div.pricing-container p.price {
+                    font-size: 22px;
+                    line-height: 33px;
+                    margin-bottom: .78787878787879em;
+                }
+
+                section.pricing div.pricing-container .pricing-info {
+                    font-size: 14px;
+                    line-height: 21px;
+                    margin-bottom: 12px;
+                }
+
+                section.pricing div.pricing-container .guaranteed-count {
+                    font-size: 14px;
+                    line-height: 30px;
+                }
+
+                section.pricing div.pricing-container span.coming-soon-tag {
+                    font-size: 10px;
+                }
+
+                .small-table table {
+                    box-sizing: border-box;
+                }
+
+                .small-table table td,
+                .small-table table th {
+                    border: 1px solid #C3C3C3;
+                    box-sizing: border-box;
+                }
+
+                .small-table table tr:last-child td {
+                    border-bottom: 2px solid #C3C3C3;
+                }
+            }
+
+            @media only screen and (max-width: 560px) {
+                th.price {
+                    padding: 8px;
+                }
+
+                td.guaranteed-growth,
+                td {
+                    padding: 8px !important;
+                }
+
+                section.pricing div.pricing-container .pricing-cta {
+                    width: 100%;
+                    max-width: 100px;
+                    font-size: 12px;
+                    padding: 12px 0;
+                }
+
+                section.pricing div.pricing-container .pricing-info {
+                    font-size: 12px;
+                    line-height: 18px;
+                }
+
+                section.pricing div.pricing-container p.price {
+                    font-size: 16px;
+                    line-height: 24px;
+                }
+            }
+        </style>
+        <section class="pricing">
+            <div class="container">
+                <div class="row align-items-center justify-content-center my-5">
+                    <div class="col-md-12 col-lg-10 col-xl-8 text-left text-lg-center">
+                        <div class="label py-2 px-2 mb-3 preheader">Unbeatably priced</div>
+                        <h2 class="mb-3">Straightforward pricing</h2>
+                        <p class="lead text-black-50">MassNova is affordable so you can scale your Instagram growth <em>without</em> worrying about costs. MassNova offers two plans that are priced to support you. And with MassNova being so feature rich, you'll be championing your Instagram in no time. </p>
+                        <a href={% url "userapi:signup" %} class="btn btn-primary my-3" data-toggle="modal" data-target="#signup">Get Started Now</a>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="top">
+                        <div class="toggle-btn">
+                            <span style="margin: 0.8em;">Monthly</span>
+                            <label class="switch">
+                                <input type="checkbox" id="checbox" onclick="check()" ; />
+                                <span class="slider round"></span>
+                            </label>
+                            <span style="margin: 0.8em;">Yearly</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="pricing-container large-table">
+                        <table>
+                            <tr>
+                                <th style="vertical-align:bottom;">Features</th>
+                                <th class="price">
+                                    <h2>Essential</h2>
+                                    <p class="text1 price">&dollar;49</p>
+                                    <p class="text2 price">&dollar;69</p>
+                                    <p class="pricing-info text1">Billed $590 annualy. Cancel anytime.</p>
+                                    <p class="pricing-info text2">Billed monthly. Cancel anytime.</p>
+                                    <p class="pricing-description">Great for personal accounts, businesses and upcoming influencers looking for organic growth.</p>
+                                    <a href="{% url 'userapi:signup' %}?plan=essential-plan-usd-yearly" class="btn btn-primary mt-3 mb-4 pricing-cta text1">Get Started</a>
+                                    <a href="{% url 'userapi:signup' %}?plan=essential-plan-usd-monthly" class="btn btn-primary mt-3 mb-4 pricing-cta text2">Get Started</a>
+                                </th>
+                                <th class="price">
+                                    <h2>Speed</h2>
+                                    <p class="text1 price">&dollar;82</p>
+                                    <p class="text2 price">&dollar;119</p>
+                                    <p class="pricing-info text1">Billed $990 annualy. Cancel anytime.</p>
+                                    <p class="pricing-info text2">Billed monthly. Cancel anytime.</p>
+                                    <p class="pricing-description">Level up your Instagram game with advanced features and a <b>Dedicated Growth Strategist</b>.</p>
+                                    <a href="{% url 'userapi:signup' %}?plan=speed-plan-usd-yearly" class="btn btn-primary mt-3 mb-4 pricing-cta text1">Get Started</a>
+                                    <a href="{% url 'userapi:signup' %}?plan=speed-plan-usd-monthly" class="btn btn-primary mt-3 mb-4 pricing-cta text2">Get Started</a>
+                                </th>
+                                <th class="price">
+                                    <h2>Nitro</h2>
+                                    <p class="text1 price">&dollar;166</p>
+                                    <p class="text2 price">&dollar;239</p>
+                                    <p class="pricing-info text1">Billed $1,990 annualy. Cancel anytime.</p>
+                                    <p class="pricing-info text2">Billed monthly. Cancel anytime.</p>
+                                    <p class="pricing-description">Supercharge your growth with Follower Bursts. Get everything from the Speed Plan + even more exposure!</p>
+                                    <a href="{% url 'userapi:signup' %}?plan=nitro-plan-usd-yearly" class="btn btn-primary mt-3 mb-4 pricing-cta text1">Get Started</a>
+                                    <a href="{% url 'userapi:signup' %}?plan=nitro-plan-usd-monthly" class="btn btn-primary mt-3 mb-4 pricing-cta text2">Get Started</a>
+                                </th>
+                            </tr>
+                            <tr>
+                                <td>Instagram Followers</td>
+                                <td class="guaranteed-count">400+</td>
+                                <td class="guaranteed-count">1,000+</td>
+                                <td class="guaranteed-count">2,500+</td>
+                            </tr>
+                            <tr>
+                                <td>Follow/Unfollow Automation</td>
+                                <td><img src="{% static '' %}img/check.png"></td>
+                                <td><img src="{% static '' %}img/check.png"></td>
+                                <td><img src="{% static '' %}img/check.png"></td>
+                            </tr>
+                            <tr>
+                                <td>Real & Organic Growth</td>
+                                <td><img src="{% static '' %}img/check.png"></td>
+                                <td><img src="{% static '' %}img/check.png"></td>
+                                <td><img src="{% static '' %}img/check.png"></td>
+                            </tr>
+                            <tr>
+                                <td>Target by Account</td>
+                                <td><img src="{% static '' %}img/check.png"></td>
+                                <td><img src="{% static '' %}img/check.png"></td>
+                                <td><img src="{% static '' %}img/check.png"></td>
+                            </tr>
+                            <tr>
+                                <td>Target by Hashtag</td>
+                                <td><img src="{% static '' %}img/check.png"></td>
+                                <td><img src="{% static '' %}img/check.png"></td>
+                                <td><img src="{% static '' %}img/check.png"></td>
+                            </tr>
+                            <tr>
+                                <td>Suggested Targets by Industry</td>
+                                <td><img src="{% static '' %}img/check.png"></td>
+                                <td><img src="{% static '' %}img/check.png"></td>
+                                <td><img src="{% static '' %}img/check.png"></td>
+                            </tr>
+                            <tr>
+                                <td>Whitelist & Blacklist</td>
+                                <td><img src="{% static '' %}img/check.png"></td>
+                                <td><img src="{% static '' %}img/check.png"></td>
+                                <td><img src="{% static '' %}img/check.png"></td>
+                            </tr>
+                            <tr>
+                                <td>Auto-Whitelist</td>
+                                <td><img src="{% static '' %}img/check.png"></td>
+                                <td><img src="{% static '' %}img/check.png"></td>
+                                <td><img src="{% static '' %}img/check.png"></td>
+                            </tr>
+                            <tr>
+                                <td>Like after Follow</td>
+                                <td><img src="{% static '' %}img/check.png"></td>
+                                <td><img src="{% static '' %}img/check.png"></td>
+                                <td><img src="{% static '' %}img/check.png"></td>
+                            </tr>
+                            <tr>
+                                <td>Dedicated Growth Strategist</td>
+                                <td><img src="{% static '' %}img/close.png"></td>
+                                <td><img src="{% static '' %}img/check.png"></td>
+                                <td><img src="{% static '' %}img/check.png"></td>
+                            </tr>
+                            <tr>
+                                <td>Welcome DM Automation</td>
+                                <td><img src="{% static '' %}img/close.png"></td>
+                                <td><img src="{% static '' %}img/check.png"></td>
+                                <td><img src="{% static '' %}img/check.png"></td>
+                            </tr>
+                            <tr>
+                                <td>Story Liker & Viewer</td>
+                                <td><img src="{% static '' %}img/close.png"></td>
+                                <td><img src="{% static '' %}img/check.png"></td>
+                                <td><img src="{% static '' %}img/check.png"></td>
+                            </tr>
+                            <tr>
+                                <td>Filter by Gender</td>
+                                <td><img src="{% static '' %}img/close.png"></td>
+                                <td><img src="{% static '' %}img/check.png"></td>
+                                <td><img src="{% static '' %}img/check.png"></td>
+                            </tr>
+                            <tr>
+                                <td>Filter by Location</td>
+                                <td><img src="{% static '' %}img/close.png"></td>
+                                <td><img src="{% static '' %}img/check.png"></td>
+                                <td><img src="{% static '' %}img/check.png"></td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="pricing-container small-table">
+                        <table class="small-table">
+                            <tr>
+                                <th class="price">
+                                    <h2>Essential</h2>
+                                    <p class="text1 price">&dollar;49</p>
+                                    <p class="text2 price">&dollar;69</p>
+                                    <p class="pricing-info text1">Billed $590 annualy. Cancel anytime.</p>
+                                    <p class="pricing-info text2">Billed monthly. Cancel anytime.</p>
+                                    <a href="{% url 'userapi:signup' %}?plan=essential-plan-usd-yearly" class="btn btn-primary mt-3 mb-4 pricing-cta text1">Get Started</a>
+                                    <a href="{% url 'userapi:signup' %}?plan=essential-plan-usd-monthly" class="btn btn-primary mt-3 mb-4 pricing-cta text2">Get Started</a>
+                                </th>
+                                <th class="price">
+                                    <h2>Speed</h2>
+                                    <p class="text1 price">&dollar;82</p>
+                                    <p class="text2 price">&dollar;119</p>
+                                    <p class="pricing-info text1">Billed $990 annualy. Cancel anytime.</p>
+                                    <p class="pricing-info text2">Billed monthly. Cancel anytime.</p>
+                                    <a href="{% url 'userapi:signup' %}?plan=speed-plan-usd-yearly" class="btn btn-primary mt-3 mb-4 pricing-cta text1">Get Started</a>
+                                    <a href="{% url 'userapi:signup' %}?plan=speed-plan-usd-monthly" class="btn btn-primary mt-3 mb-4 pricing-cta text2">Get Started</a>
+                                </th>
+                                <th class="price">
+                                    <h2>Nitro</h2>
+                                    <p class="text1 price">&dollar;166</p>
+                                    <p class="text2 price">&dollar;239</p>
+                                    <p class="pricing-info text1">Billed $1,990 annualy. Cancel anytime.</p>
+                                    <p class="pricing-info text2">Billed monthly. Cancel anytime.</p>
+                                    <a href="{% url 'userapi:signup' %}?plan=nitro-plan-usd-yearly" class="btn btn-primary mt-3 mb-4 pricing-cta text1">Get Started</a>
+                                    <a href="{% url 'userapi:signup' %}?plan=nitro-plan-usd-monthly" class="btn btn-primary mt-3 mb-4 pricing-cta text2">Get Started</a>
+                                </th>
+                            </tr>
+                            <tr>
+                                <td colspan="3" style="background-color: #FBFBFB;">Instagram Followers</td>
+                            </tr>
+                            <tr>
+                                <td class="guaranteed-count">400+</td>
+                                <td class="guaranteed-count">1,000+</td>
+                                <td class="guaranteed-count">2,500+</td>
+                            </tr>
+                            <tr>
+                                <td colspan="3" style="background-color: #FBFBFB;">Follow/Unfollow Automation</td>
+                            </tr>
+                            <tr>
+                                <td><img src="{% static '' %}img/check.png"></td>
+                                <td><img src="{% static '' %}img/check.png"></td>
+                                <td><img src="{% static '' %}img/check.png"></td>
+                            </tr>
+                            <tr>
+                                <td colspan="3" style="background-color: #FBFBFB;">Real & Organic Growth</td>
+                            </tr>
+                            <tr>
+                                <td><img src="{% static '' %}img/check.png"></td>
+                                <td><img src="{% static '' %}img/check.png"></td>
+                                <td><img src="{% static '' %}img/check.png"></td>
+                            </tr>
+                            <tr>
+                                <td colspan="3" style="background-color: #FBFBFB;">Target by Account</td>
+                            </tr>
+                            <tr>
+                                <td><img src="{% static '' %}img/check.png"></td>
+                                <td><img src="{% static '' %}img/check.png"></td>
+                                <td><img src="{% static '' %}img/check.png"></td>
+                            </tr>
+                            <tr>
+                                <td colspan="3" style="background-color: #FBFBFB;">Target by Hashtag</td>
+                            </tr>
+                            <tr>
+                                <td><img src="{% static '' %}img/check.png"></td>
+                                <td><img src="{% static '' %}img/check.png"></td>
+                                <td><img src="{% static '' %}img/check.png"></td>
+                            </tr>
+                            <tr>
+                                <td colspan="3" style="background-color: #FBFBFB;">Suggested Targets by Industry</td>
+                            </tr>
+                            <tr>
+                                <td><img src="{% static '' %}img/check.png"></td>
+                                <td><img src="{% static '' %}img/check.png"></td>
+                                <td><img src="{% static '' %}img/check.png"></td>
+                            </tr>
+                            <tr>
+                                <td colspan="3" style="background-color: #FBFBFB;">Whitelist & Blacklist</td>
+                            </tr>
+                            <tr>
+                                <td><img src="{% static '' %}img/check.png"></td>
+                                <td><img src="{% static '' %}img/check.png"></td>
+                                <td><img src="{% static '' %}img/check.png"></td>
+                            </tr>
+                            <tr>
+                                <td colspan="3" style="background-color: #FBFBFB;">Auto-Whitelist</td>
+                            </tr>
+                            <tr>
+                                <td><img src="{% static '' %}img/check.png"></td>
+                                <td><img src="{% static '' %}img/check.png"></td>
+                                <td><img src="{% static '' %}img/check.png"></td>
+                            </tr>
+                            <tr>
+                                <td colspan="3" style="background-color: #FBFBFB;">Like after Follow</td>
+                            </tr>
+                            <tr>
+                                <td><img src="{% static '' %}img/check.png"></td>
+                                <td><img src="{% static '' %}img/check.png"></td>
+                                <td><img src="{% static '' %}img/check.png"></td>
+                            </tr>
+                            <tr>
+                                <td colspan="3" style="background-color: #FBFBFB;">Dedicated Growth Strategist</td>
+                            </tr>
+                            <tr>
+                                <td><img src="{% static '' %}img/close.png"></td>
+                                <td><img src="{% static '' %}img/check.png"></td>
+                                <td><img src="{% static '' %}img/check.png"></td>
+                            </tr>
+                            <tr>
+                                <td colspan="3" style="background-color: #FBFBFB;">Welcome DM Automation</td>
+                            </tr>
+                            <tr>
+                                <td><img src="{% static '' %}img/close.png"></td>
+                                <td><img src="{% static '' %}img/check.png"></td>
+                                <td><img src="{% static '' %}img/check.png"></td>
+                            </tr>
+                            <tr>
+                                <td colspan="3" style="background-color: #FBFBFB;">Story Liker & Viewer</td>
+                            </tr>
+                            <tr>
+                                <td><img src="{% static '' %}img/close.png"></td>
+                                <td><img src="{% static '' %}img/check.png"></td>
+                                <td><img src="{% static '' %}img/check.png"></td>
+                            </tr>
+                            <tr>
+                                <td colspan="3" style="background-color: #FBFBFB;">Filter by Gender</td>
+                            </tr>
+                            <tr>
+                                <td><img src="{% static '' %}img/close.png"></td>
+                                <td><img src="{% static '' %}img/check.png"></td>
+                                <td><img src="{% static '' %}img/check.png"></td>
+                            </tr>
+                            <tr>
+                                <td colspan="3" style="background-color: #FBFBFB;">Filter by Location</td>
+                            </tr>
+                            <tr>
+                                <td><img src="{% static '' %}img/close.png"></td>
+                                <td><img src="{% static '' %}img/check.png"></td>
+                                <td><img src="{% static '' %}img/check.png"></td>
+                            </tr>
+                            <tr>
+                                <td colspan="3" style="background-color: #FBFBFB;">Location filter</td>
+                            </tr>
+                            <tr>
+                                <td><img src="{% static '' %}img/close.png"></td>
+                                <td><img src="{% static '' %}img/check.png"></td>
+                                <td><img src="{% static '' %}img/check.png"></td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="row justify-content-center my-5">
+                        <div class="col-lg-8">
+                            <div class="alert bg-green text-green px-5 py-3">
+                                <p class="font-weight-bold my-3">💡 Agencies</p>
+                                <p class="text-black-50">Run an Instagram agency and you're looking to scale your business? We offer agency pricing as well. <a href={% url "userapi:instagram-agency" %} class="instagram-agency-cta-home">Learn more</a> or get in touch with our success team.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <section id="faq">
+            <div class="container">
+                <div class="row align-items-center justify-content-center my-5">
+                    <div class="col-md-12 col-lg-10 col-xl-6 text-left text-lg-center">
+                        <div class="label py-2 px-2 mb-3 preheader">You may have questions</div>
+                        <h2 class="mb-3">Frequently asked questions</h2>
+                        <p class="lead text-black-50"><a href={% url "userapi:contact" %}>Reach out to our customer success team</a> if any of your questions aren't covered below. Otherwise, here's a list of questions we get all the time!</p>
+                        <a href={% url "userapi:signup" %} class="btn btn-primary my-3">Get Started Now</a>
+                    </div>
+                </div>
+                <div class="row mt-0 mt-lg-5">
+                    <div class="col-lg-12">
+                        <div class="row justify-content-center">
+                            <div class="col-lg-5 mt-5">
+                                <h3 class="h4">What's the difference between each plan?</h3>
+                                <p class="text-black-50">To keep things incredibly simple - <strong>the essential plan</strong> will get you Instagram followers faster, offering a streamlined, 'essential' experience when growing your account. <strong>The speed plan</strong> has no feature restrictions and will get you better results, faster. Speed members have priority support.</p>
+                            </div>
+                            <div class="col-lg-5 mt-5">
+                                <h3 class="h4">What's the growth like?</h3>
+                                <p class="text-black-50">The majority of MassNova customers see growth of hundreds of followers in the first few days to two weeks. These results improve over time as your settings are improved.</p>
+                            </div>
+                            <div class="col-lg-5 mt-5">
+                                <h3 class="h4">Is this cost-effective?</h3>
+                                <p class="text-black-50">Based on our comparisons with <em>all</em> of our competitors - yes. We're confident when we say that there's no other service that can get you the same quality results, let alone at the price point we're offering. If you're unsure, feel free to give it a try first.</p>
+                            </div>
+                            <div class="col-lg-5 mt-5">
+                                <h3 class="h4">Why is there no free trial?</h3>
+                                <p class="text-black-50">We're committed to providing the absolute best service in our industry, and as such, MassNova's success team cannot support the free trial model. But for $2.3 a day and 1 month plans... signing up should be a no-brainer by now 😊. <a href={% url "userapi:contact" %} class="text-underline">Reach out to our success team</a> with your concerns if you're still unsure.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <section class="pt-0">
+            <div class="container">
+                <div class="row my-5 justify-content-center text-left text-lg-center">
+                    <div class="col-lg-8">
+                        <div class="label py-2 px-2 mb-3 preheader green">Start Growing Now</div>
+                        <p class="h2 mb-3">Start for just $2.3 a day ☕ </p>
+                    </div>
+                </div>
+                <div class="row my-5 justify-content-center align-items-center">
+                    <div class="col-md-12 col-lg-5 col-xl-4">
+                        <p class="lead text-black-50 lead">MassNova is one of the most cost effective ways of growing your Instagram. Without having to spend thousands of bucks on ads to get your account growing, MassNova has a suite of growth tools and a unique growth strategy lined up for you. Get started today!</p>
+                        <ul class="list-unstyled check text-left text-black-50 my-5">
+                            <li class="list-item">
+                                A suite of growth tools that grow your Instagram
+                            </li>
+                            <li class="list-item">
+                                Attract real, organic Instagram followers
+                            </li>
+                            <li class="list-item">
+                                Build up your community & audience on Insta
+                            </li>
+                            <li class="list-item">
+                                Help & industry insights from a dedicated Growth Strategist
+                            </li>
+                            <li class="list-item">
+                                For less than a cup of coffee per day ☕
+                            </li>
+                        </ul>
+                        <form class="form-inline formoid">
+                            <div class="input-group">
+                                <input type="email" class="form-control signUpForm" placeholder="Your Email Address" required>
+                            </div>
+                            <button type="submit" class="btn btn-primary w-sm-100 w-lg-auto">Join MassNova</button>
+                        </form>
+                    </div>
+                    <div class="col-lg-6 col-xl-4 offset-xl-1 mt-5 mt-lg-0">
+                        <div class="asset-container mx-auto br-0 shadow-none">
+                            <div class="asset-support">
+                                <img class="hashtag-1 zi-1 lazy" data-src="{% static '' %}img/get-nitreo-user.png">
+                                <img class="hashtag-2 zi-1 lazy" data-src="{% static '' %}img/get-nitreo-hashtag.png">
+                            </div>
+                            <video class="br-24 shadow-2" src="{% static '' %}video/get-nitreo-instagram-growth.mp4" poster="{% static '' %}img/get-nitreo-instagram-growth-poster.png" autoplay loop muted preload="auto"></video>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <section id="mentions" class="py-5 bg-primary-lightest">
+            <div class="container">
+                <div class="row py-5 align-items-center justify-content-center opacity-50">
+                    <div class="col">
+                        <img class="lazy" data-src="{% static '' %}img/buzzfeed.png">
+                    </div>
+                    <div class="col">
+                        <img class="lazy" data-src="{% static '' %}img/nypost.png">
+                    </div>
+                    <div class="col">
+                        <img class="lazy" data-src="{% static '' %}img/forbes.png">
+                    </div>
+                    <div class="col d-none d-lg-flex">
+                        <img class="lazy" data-src="{% static '' %}img/adage.png">
+                    </div>
+                    <div class="col d-none d-lg-flex" loading="lazy">
+                        <img class="lazy" data-src="{% static '' %}img/cosmopolitan.png">
+                    </div>
+                    <div class="col d-none d-lg-flex">
+                        <img class="lazy" data-src="{% static '' %}img/vm.png">
+                    </div>
+                    <div class="col d-none d-lg-flex">
+                        <img class="lazy" data-src="{% static '' %}img/og.png">
+                    </div>
+                    <div class="col d-none d-lg-flex">
+                        <img class="lazy" data-src="{% static '' %}img/hsnob.png">
+                    </div>
+                    <div class="col d-none d-lg-flex">
+                        <img class="lazy" data-src="{% static '' %}img/sme.png">
+                    </div>
+                    <div class="col d-none d-lg-flex">
+                        <img class="lazy" data-src="{% static '' %}img/ph.png">
+                    </div>
+                </div>
+            </div>
+        </section>
+        {% include "userapi/footer.html" %}
+    </body>
+
+</html>

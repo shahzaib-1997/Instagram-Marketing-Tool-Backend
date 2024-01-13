@@ -1,0 +1,291 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+        {% include "userapi/head.html" %}
+        <title>Testimonials | MassNova</title>
+        <meta name="description" content="The verdict is in and MassNova is loved by thousands of users! Read what our customers have to say about MassNova.">
+        <meta name="twitter:title" content="Wall of Love - MassNova" />
+        <meta property="og:title" content="Wall of Love - MassNova" />
+        <meta property="og:description" content="The verdict is in and MassNova is loved by thousands of users! Read what our customers have to say about MassNova." />
+        <meta name="twitter:description" content="The verdict is in and MassNova is loved by thousands of users! Read what our customers have to say about MassNova." />
+        <meta property="og:url" content={% url "userapi:testimonials" %} />
+        <link rel="canonical" href={% url "userapi:testimonials" %} />
+        <link rel="alternate" href={% url "userapi:testimonials" %} hreflang="x-default" />
+    </head>
+
+    <body class="h-100">
+        {% include "userapi/header.html" %}
+        <section id="hero" class="pt-5 pb-0">
+            <div class="container">
+                <div class="row">
+                    <div class="my-3 my-lg-5 col-md-12 col-lg-6 col-xl-6">
+                        <div class="label py-2 px-2 mb-3 preheader">Testimonials</div>
+                        <h1 class="h2 mb-3">Our Wall of Love ❤️</h1>
+                        <p class="lead text-black-50">The MassNova community is brimming with thousands of happy members. Over the past few months we've graciously gathered some feedback from our users. <strong>And they couldn't be happier</strong> with the value MassNova brings to their Instagram experience. Check out some testimonials of our users! </p>
+                        <p class="d-none d-lg-block lead text-black-50">Want to join MassNova too? Enter your email to get started.</p>
+                        <div class="d-inline-block my-3">
+                            <form class="form-inline formoid">
+                                <div class="input-group">
+                                    <input type="email" class="form-control signUpForm" placeholder="Your Email Address" required>
+                                </div>
+                                <button type="submit" class="btn btn-primary w-sm-100 w-lg-auto">Sign Up Now 👈</button>
+                            </form>
+                            <div class="text-black-50 small my-3">2 Minutes Setup • Real Results • Get More Instagram Followers</div>
+                        </div>
+                    </div>
+                    <div class="col-md-12 col-lg-4 col-xl-6 align-self-end">
+                        <img data-src="{% static '' %}img/happy-testimonial.jpg" class="lazy">
+                    </div>
+                </div>
+            </div>
+        </section>
+        <section id="mentions" class="py-5 bg-primary-lightest">
+            <div class="container">
+                <div class="row py-5 align-items-center justify-content-center opacity-50">
+                    <div class="col">
+                        <img class="lazy" data-src="{% static '' %}img/buzzfeed.png">
+                    </div>
+                    <div class="col">
+                        <img class="lazy" data-src="{% static '' %}img/nypost.png">
+                    </div>
+                    <div class="col">
+                        <img class="lazy" data-src="{% static '' %}img/forbes.png">
+                    </div>
+                    <div class="col d-none d-lg-flex">
+                        <img class="lazy" data-src="{% static '' %}img/adage.png">
+                    </div>
+                    <div class="col d-none d-lg-flex" loading="lazy">
+                        <img class="lazy" data-src="{% static '' %}img/cosmopolitan.png">
+                    </div>
+                    <div class="col d-none d-lg-flex">
+                        <img class="lazy" data-src="{% static '' %}img/vm.png">
+                    </div>
+                    <div class="col d-none d-lg-flex">
+                        <img class="lazy" data-src="{% static '' %}img/og.png">
+                    </div>
+                    <div class="col d-none d-lg-flex">
+                        <img class="lazy" data-src="{% static '' %}img/hsnob.png">
+                    </div>
+                    <div class="col d-none d-lg-flex">
+                        <img class="lazy" data-src="{% static '' %}img/sme.png">
+                    </div>
+                    <div class="col d-none d-lg-flex">
+                        <img class="lazy" data-src="{% static '' %}img/ph.png">
+                    </div>
+                </div>
+            </div>
+        </section>
+        <section class="bg-light pt-0">
+            <div class="container bg-primary-2 br-24 py-5 px-5">
+                <div class="row justify-content-center">
+                    <div class="col-lg-10">
+                        <div class="bg-white px-5 pl-lg-0 py-5 pt-lg-5 pb-lg-0 br-24">
+                            <div class="row align-items-center">
+                                <div class="col-lg-4"><img class="br-24 lazy" data-src="{% static '' %}img/ahmir-side-testimonial.jpg"></div>
+                                <div class="col-lg-7 offset-lg-1">
+                                    <p class="font-weight-bold d-block d-lg-flex align-items-center text-center"><img class="d-block d-lg-inline-flex lazy br-24 mx-auto mx-lg-0 my-2 my-lg-0 mr-lg-2" data-src="{% static '' %}img/hl-avatar.jpg" width="24px">@henrywatch <img class="lazy ml-1 mx-lg-2" data-src="{% static '' %}img/verified-badge.jpg"> <span class="d-block d-lg-inline-flex small text"> / 44.4k Followers</span></p>
+                                    <blockquote class="lead text-black-50">We connect with watch lovers all over the world with MassNova. Automatic engagement is our favourite feature and the improvements suggested are spot on. The amount of DMs we're getting is fantastic. MassNova adds value to our biz, plain and simple!</blockquote>
+                                    <p class="my-3 font-weight-bold"><img class="lazy mr-2 d-inline-flex" data-src="{% static '' %}img/gb-flag.jpg" width="32px">Ahmir, Social Media Manager</p>
+                                    <div class="pb-0 pb-lg-5"><img class="lazy" data-src="{% static '' %}img/4-5-stars.jpg"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row my-5 align-items-center justify-content-center">
+                    <div class="col-lg-6">
+                        <div class="bg-white px-5 pl-lg-0 py-5 pt-lg-3 pb-lg-0 br-24">
+                            <div class="row no-gutters text-center text-lg-left">
+                                <div class="col-lg-5 align-self-end d-none d-lg-flex px-0"><img class="lazy br-24" data-src='{% static "" %}img/annie-side-testimonial.jpg'></div>
+                                <div class="col-lg-7 align-self-lg-end">
+                                    <p class="font-weight-bold d-block d-lg-flex align-items-center text-center"><img class="d-block d-lg-inline-flex lazy br-24 mx-auto mx-lg-0 my-2 my-lg-0 mr-lg-2" data-src="{% static '' %}img/annie-avatar.jpg" width="24px">@annietrips <span class="d-block d-lg-inline-flex small text"> / 2.9k Followers</span></p>
+                                    <blockquote class="lead text-black-50">My travel account gets way more impressions ever since I started using MassNova. New followers engage, which is pretty important for me! Hugely recommended.</blockquote>
+                                    <p class="my-3 font-weight-bold"><img class="lazy mr-2 d-inline-flex" data-src="{% static '' %}img/usa-flag.svg" width="32px">Annie, Travel Photographer</p>
+                                    <div class="pb-0 pb-lg-5"><img class="lazy" data-src="{% static '' %}img/stars.jpg"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-6 mt-5 mt-lg-0">
+                        <div class="bg-white px-5 pr-lg-0 py-5 pt-lg-3 pb-lg-0 br-24">
+                            <div class="row no-gutters text-center text-lg-left">
+                                <div class="col-lg-7 align-self-lg-end">
+                                    <p class="font-weight-bold d-block d-lg-flex align-items-center text-center"><img class="d-block d-lg-inline-flex lazy br-24 mx-auto mx-lg-0 my-2 my-lg-0 mr-lg-2" data-src="{% static '' %}img/6for-avatar.jpg" width="24px">@6forest_toys <span class="d-block d-lg-inline-flex small text"> / 15.9k Followers</span></p>
+                                    <blockquote class="lead text-black-50">A lot of art junkies love toys, but we weren't really getting in front of them. With MassNova, we were able to tap into our market on Instagram. They are a big help.</blockquote>
+                                    <p class="my-3 font-weight-bold"><img class="lazy mr-2 d-inline-flex" data-src="{% static '' %}img/es-flag.jpg" width="32px">Gonçalo, Brand Manager</p>
+                                    <div class="pb-0 pb-lg-5"><img class="lazy" data-src="{% static '' %}img/4-5-stars.jpg"></div>
+                                </div>
+                                <div class="col-lg-5 align-self-end d-none d-lg-flex px-0"><img class="br-24" src='{% static "" %}img/6for-side-testimonial.jpg' alt="portrait photo of a MassNova user"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="mt-5 mt-lg-0">
+                    <div class="row mx-0 px-3 px-lg-5 py-5 my-lg-5 text-left align-items-center position-relative justify-content-center bg-primary-2 border border-primary text-light br-24 o-hidden">
+                        <img class="background-image d-none d-lg-flex right bottom position-absolute opacity-10 rotate-min-30 lazy" data-src="{% static '' %}img/instagram-carousel-background-small.png" alt="a carousel of Instagram posts">
+                        <div class="col-md-12 col-lg-6">
+                            <div class="alert alert-primary bg-primary-light br-24 d-inline-block small">Updated on <span class="date"></span></div>
+                            <p class="h2">Signups close in <span id="deadline" class="d-inline"><span class="values text-success"></span></span></p>
+                            <hr class="border border-primary">
+                            <p class="my-2">If you're convinced, sign up before it's too late! We close signups regularly to ensure our success team can provide the best experience to our users. Get started today and start getting more Instagram followers!</p>
+                        </div>
+                        <div class="col-md-12 col-lg-5 offset-lg-1">
+
+                            <div class="d-inline-block z-index-2">
+                                <p>Enter your email to start growing your Instagram:</p>
+                                <form class="form-inline formoid">
+                                    <div class="input-group">
+                                        <input type="email" class="form-control signUpForm" placeholder="Your Email Address" required>
+                                    </div>
+                                    <button type="submit" class="btn btn-primary w-sm-100 w-lg-auto">Sign Up Now 👈</button>
+                                </form>
+                                <span class="d-block text-light-50 small my-3">2 Minutes Setup • Real Results • Grow Your Instagram</span>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="row align-items-center my-5">
+                    <div class="col-lg-6">
+                        <div class="bg-white px-5 py-5 br-24">
+                            <p class="font-weight-bold d-block d-lg-flex align-items-center text-center"><img class="d-block d-lg-inline-flex lazy br-24 mx-auto mx-lg-0 my-2 my-lg-0 mr-lg-2" data-src="{% static '' %}img/testimonial-2.jpg" width="24px">@amazingnaturex <span class="d-block d-lg-inline-flex small text"> / 19.6k Followers</span></p>
+                            <blockquote class="lead text-black-50">This works reaaally well. I run this account with purely reposted content and I know when to engage. Curating content and getting followers easily is pretty much my dream scenario. MassNova helps with the follower part, and they're engaging constantly with whatever I post.</blockquote>
+                            <div class="d-lg-flex justify-content-between align-items-center my-3 text-center text-lg-left">
+                                <div>
+                                    <p class="my-3 font-weight-bold"><img class="lazy mr-2 d-inline-flex" data-src="{% static '' %}img/za-flag.svg" width="32px">Darren, Travel Account</p>
+                                </div>
+                                <div class="pb-5 pb-lg-0"><img class="lazy" data-src="{% static '' %}img/stars.jpg"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6 mt-5 mt-lg-0">
+                        <div class="bg-white px-5 py-5 br-24">
+                            <p class="font-weight-bold d-block d-lg-flex align-items-center text-center"><img class="d-block d-lg-inline-flex lazy br-24 mx-auto mx-lg-0 my-2 my-lg-0 mr-lg-2" data-src="{% static '' %}img/testimonial-1.jpg" width="24px">@crossfitjunkiesociety <span class="d-block d-lg-inline-flex small text"> / 18.2k Followers</span></p>
+                            <blockquote class="lead text-black-50">MassNova works well for me and it's something I use daily. I've been told I have great content on my IG but could never really figure out how to grow my audience. MassNova figured that part out without me really doing much. I'm launching a YouTube channel next!</blockquote>
+                            <div class="d-lg-flex justify-content-between align-items-center my-3 text-center text-lg-left">
+                                <div>
+                                    <p class="my-3 font-weight-bold"><img class="lazy mr-2 d-inline-flex" data-src="{% static '' %}img/usa-flag.svg" width="32px">Kelly, Lifestyle Niche</p>
+                                </div>
+                                <div class="pb-5 pb-lg-0"><img class="lazy" data-src="{% static '' %}img/stars.jpg"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="row align-items-center justify-content-center">
+                    <div class="col-lg-6">
+                        <div class="bg-white px-5 pl-lg-0 py-5 pb-lg-0 br-24">
+                            <div class="row no-gutters text-center text-lg-left">
+                                <div class="col-lg-4 align-self-end d-none d-lg-flex px-0"><img class="lazy br-24" data-src='{% static "" %}img/untold-side-testimonial.jpg'></div>
+                                <div class="col-lg-7 offset-lg-1 align-self-lg-end">
+                                    <p class="font-weight-bold d-block d-lg-flex align-items-center text-center"><img class="d-block d-lg-inline-flex lazy br-24 mx-auto mx-lg-0 my-2 my-lg-0 mr-lg-2" data-src="{% static '' %}img/untold-avatar.jpg" width="24px">@muitobommedia <img class="lazy ml-1 mx-lg-2" data-src="{% static '' %}img/verified-badge.jpg"> <span class="d-block d-lg-inline-flex small text"> / 176k Followers</span></p>
+                                    <blockquote class="lead text-black-50">We let MassNova handle all our Instagram engagement by targeting stories and hashtags for our customer accounts. As the social media guy, MassNova basically makes my job easy.</blockquote>
+                                    <p class="my-3 font-weight-bold">Henrique, Social Media Manager</p>
+                                    <div class="pb-0 pb-lg-5"><img class="lazy" data-src="{% static '' %}img/4-stars.jpg"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6 mt-5 mt-lg-0">
+                        <div class="bg-white px-5 pr-lg-0 py-5 pt-lg-5 pb-lg-0 br-24">
+                            <div class="row no-gutters text-center text-lg-left">
+                                <div class="col-lg-7 align-self-lg-end">
+                                    <p class="font-weight-bold d-block d-lg-flex align-items-center text-center"><img class="d-block d-lg-inline-flex lazy br-24 mx-auto mx-lg-0 my-2 my-lg-0 mr-lg-2" data-src="{% static '' %}img/glow-gigi-avatar.jpg" width="24px">@glow.gigi <span class="d-block d-lg-inline-flex small text"> / 83.4k Followers</span></p>
+                                    <blockquote class="lead text-black-50">I'm getting so many make-up enthusiasts following me. Compared to other tools I've used, these results are actually something I'm happy with (which makes a change haha). Isabelle is a great help too!</blockquote>
+                                    <p class="my-3 font-weight-bold"><img class="lazy mr-2 d-inline-flex" data-src="{% static '' %}img/aus-flag.svg" width="32px">Gigi, Make Up Artist</p>
+                                    <div class="pb-0 pb-lg-5"><img class="lazy" data-src="{% static '' %}img/stars.jpg"></div>
+                                </div>
+                                <div class="col-lg-5 align-self-end d-none d-lg-flex px-0"><img class="br-24" src='{% static "" %}img/gigi-side-testimonial.jpg' alt="portrait photo of gigi using MassNova"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="mt-5 mt-lg-0">
+                    <div class="row mx-0 px-3 px-lg-5 py-5 my-lg-5 text-left align-items-center position-relative justify-content-center bg-primary-2 border border-primary text-light br-24 o-hidden">
+                        <img class="background-image d-none d-lg-flex right bottom position-absolute opacity-10 rotate-min-30 lazy" data-src="{% static '' %}img/instagram-carousel-background-small.png" alt="a carousel of Instagram posts">
+                        <div class="col-md-12 col-lg-6">
+                            <div class="label py-2 px-2 mb-3 preheader">Add to the wall</div>
+                            <p class="h2">Want to contribute?</p>
+                            <hr class="border border-primary">
+                            <p class="my-2">Our customers are frequently contacted for feedback and their thoughts on using MassNova. If you're already a member and would like to contribute your own testimonial, please <a href={% url "userapi:contact" %} class="text-success text-underline">get in touch</a> with your customer success manager and we'll make sure you're added to our wall of love. Thanks!</p>
+                        </div>
+                        <div class="col-md-12 col-lg-5 offset-lg-1">
+
+                            <div class="d-inline-block z-index-2">
+                                <p>Not already a member? Start growing your Instagram now!</p>
+                                <form class="form-inline formoid">
+                                    <div class="input-group">
+                                        <input type="email" class="form-control signUpForm" placeholder="Your Email Address" required>
+                                    </div>
+                                    <button type="submit" class="btn btn-primary w-sm-100 w-lg-auto">Sign Up Now 👈</button>
+                                </form>
+                                <span class="d-block text-light-50 small my-3">2 Minutes Setup • Real Results • Grow Your Instagram</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row justify-content-center my-5 my-lg-0">
+                    <div class="col-lg-10">
+                        <div class="bg-white px-5 pr-lg-0 py-5 pt-lg-5 pb-lg-0 br-24">
+                            <div class="row align-items-center">
+                                <div class="col-lg-7">
+                                    <div class="label py-2 px-2 preheader gray">Agency</div>
+                                    <div class="link my-3"><a href={% url "userapi:instagram-agency" %} class="font-weight-bold text-uppercase small">Read about agency solutions ❯</a></div>
+                                    <p class="font-weight-bold d-block d-lg-flex align-items-center text-center"><img class="d-block d-lg-inline-flex lazy br-24 mx-auto mx-lg-0 my-2 my-lg-0 mr-lg-2" data-src="{% static '' %}img/cm-avatar.jpg" width="24px">@starstheagency <span class="d-block d-lg-inline-flex small text"> / 1.5k Followers</span> </p>
+                                    <blockquote class="lead text-black-50">Stars started working with MassNova for its select clients that don't really have a big social presence. Our clients get results fast. The only time we put in any effort is improving our targeting. MassNova seems to get this right the first time anyway. I highly endorse you guys, thanks!</blockquote>
+                                    <p class="my-3 font-weight-bold"><img class="lazy mr-2 d-inline-flex" data-src="{% static '' %}img/usa-flag.svg" width="32px">Eustuce, Agency Owner</p>
+
+                                    <div class="pb-0 pb-lg-5"><img class="lazy" data-src="{% static '' %}img/4-5-stars.jpg"></div>
+
+                                </div>
+                                <div class="col-lg-4 offset-lg-1 my-5 my-lg-0 align-self-end"><img class="br-24 lazy" data-src="{% static '' %}img/eustuce-side-testimonial.jpg"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <section class="pt-0">
+
+            <div class="container">
+                <div class="row my-5 justify-content-center text-left text-lg-center">
+                    <div class="col-lg-8">
+                        <div class="label py-2 px-2 mb-3 preheader green">Start Growing Now</div>
+                        <p class="h2 mb-3">Join MassNova Today</p>
+                        <p class="text-black-50 lead">MassNova helps you connect with your audience, getting you loyal followers in the process. Get started now!</p>
+                    </div>
+                </div>
+                <div class="row my-5 justify-content-center align-items-center">
+                    <div class="col-md-12 col-lg-5 col-xl-4">
+                        <div class="label py-2 px-2 mb-3 preheader gray">Get Started</div>
+                        <h2 class="h3 mb-3">Over 77000 happy MassNova members 💌</h2>
+                        <p class="lead text-black-50">Our MassNova community is thrilled with what we do for them, and your experience should be the same. Empower your Instagram experience today and start getting more followers with MassNova.</p>
+                        <form class="form-inline formoid">
+                            <div class="input-group">
+                                <input type="email" class="form-control signUpForm" placeholder="Your Email Address" required>
+                            </div>
+                            <button type="submit" class="btn btn-primary w-sm-100 w-lg-auto">Join MassNova</button>
+                        </form>
+                        <span class="d-block text-black-50 small my-3">2 Minutes Setup • Real Results • Get Instagram Followers Fast</span>
+                        <div class="link my-3"><a href={% url "userapi:how" %} class="font-weight-bold text-uppercase small">Or learn how MassNova works ❯</a></div>
+                    </div>
+                    <div class="col-lg-6 col-xl-4 offset-xl-1 mt-5 mt-lg-0">
+                        <div class="asset-container mx-auto br-0 shadow-none">
+                            <div class="asset-support">
+                                <img class="hashtag-1 zi-1 lazy" data-src="{% static '' %}img/get-nitreo-user.png">
+                                <img class="hashtag-2 zi-1 lazy" data-src="{% static '' %}img/get-nitreo-hashtag.png">
+
+                            </div>
+                            <video class="shadow-2 br-24" src="{% static '' %}video/focus-on-content.mp4" poster="{% static '' %}img/focus-on-content-poster.png" autoplay loop muted preload="auto"></video>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        {% include "userapi/footer.html" %}
+    </body>
+
+</html>

@@ -1,0 +1,315 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+        {% include "userapi/head.html" %}
+        <title>How MassNova Works - MassNova</title>
+        <meta name="description" content="Discover how MassNova helps you get more Instagram followers, and our great list of features that help power your Instagram growth.">
+        <meta name="twitter:title" content="How MassNova Works - MassNova" />
+        <meta property="og:title" content="How MassNova Works - MassNova" />
+        <meta property="og:description" content="Discover how MassNova helps you get more Instagram followers, and our great list of features that help power your Instagram growth." />
+        <meta name="twitter:description" content="Discover how MassNova helps you get more Instagram followers, and our great list of features that help power your Instagram growth." />
+        <meta property="og:url" content={% url "userapi:how" %} />
+        <link rel="canonical" href={% url "userapi:how" %} />
+        <link rel="alternate" href={% url "userapi:how" %} hreflang="x-default" />
+    </head>
+
+    <body class="h-100">
+        {% include "userapi/header.html" %}
+        <section id="hero" class="py-5">
+            <div class="container">
+                <div class="row align-items-center">
+                    <div class="col-md-12 col-lg-5 col-xl-5">
+                        <div class="label py-2 px-2 mb-3 preheader">MassNova Grows Your Instagram</div>
+                        <h1 class="mb-3">How MassNova Works</h1>
+                        <p class="lead text-black-50">Discover how MassNova helps thousands of Instagrammers grow, what types of customers we have, and what this all means for you and your own Instagram!</p>
+                        <p class="d-none d-lg-block lead text-black-50">Enter your email to get started or learn more below!</p>
+                        <div class="d-inline-block my-3">
+                            <form class="form-inline formoid">
+                                <div class="input-group">
+                                    <input type="email" class="form-control signUpForm" placeholder="Your Email Address" required>
+                                </div>
+                                <button type="submit" class="btn btn-primary w-sm-100 w-lg-auto">Sign Up Now 👈</button>
+                            </form>
+                            <div class="text-black-50 small my-3">2 Minutes Setup • Real Results • Get More Instagram Followers</div>
+                        </div>
+                    </div>
+                    <div class="col-md-12 col-lg-6 offset-lg-1">
+                        <div class="video-wrapper shadow-2"><video src="https://nitreo.com/video/nitreo-how-it-works.mp4" class="w-100 br-24" poster="{% static '' %}img/how-nitreo-works-poster.png" preload="false"></video></div>
+                        <div class="d-block text-center mt-3"><img class="lazy" data-src="{% static '' %}img/play-me-arrow.jpg" alt="arrow pointing upwards"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <section id="setup" class="pt-5">
+            <div class="container">
+                <div class="row mt-5">
+                    <div class="col-md-12 col-lg-12 px-lg-0">
+                        <div class="row mt-lg-5">
+                            <div class="col-lg-3">
+                                <div class="square content">
+                                    <img class="w64" src="{% static '' %}img/easy-to-set-up.svg" alt="an icon showing how easy it is to set up MassNova">
+                                    <h3 class="my-3 h4">Add Your Account</h3>
+                                    <p class="text-black-50 lead">Add your Instagram account and tell us what type of account you run.</p>
+                                </div>
+                            </div>
+                            <div class="col-lg-3">
+                                <div class="square content">
+                                    <img class="w64" src="{% static '' %}img/more-followers.svg" alt="an icon showing how you can get more followers on Instagram">
+                                    <h3 class="my-3 h4">Hashtags, Similar Users</h3>
+                                    <p class="text-black-50 lead">Add niche-specific hashtags and accounts similar to yours. Choose between genders too! </p>
+                                </div>
+                            </div>
+                            <div class="col-lg-3">
+                                <div class="square content">
+                                    <img class="w64" src="{% static '' %}img/engagement-grows.svg" alt="an icon showing growth in Instagram engagement">
+                                    <h3 class="my-3 h4">MassNova Starts</h3>
+                                    <p class="text-black-50 lead">MassNova gets going to give your Instagram account the boost it deserves.</p>
+                                </div>
+                            </div>
+                            <div class="col-lg-3">
+                                <div class="square content">
+                                    <img class="w64" src="{% static '' %}img/organic-instagram-growth.svg">
+                                    <h3 class="my-3 h4">Get Results That Are <em>Real</em></h3>
+                                    <p class="text-black-50 lead">Watch your Instagram grow with likes, story views, profile visits, and real <strong>followers</strong>.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <section id="audience" class="py-5">
+            <div class="container">
+                <div class="row align-items-center justify-content-center">
+                    <div class="col-lg-4">
+                        <div class="label py-2 px-2 mb-3 preheader">Grow Your Audience</div>
+                        <h2 class="h3 mb-3">The magic starts when you signup ✨</h2>
+
+                        <p class="lead text-black-50">As soon as you hit that big signup button below, you will be asked to choose your plan and get access to your dashboard, where you will securely log in your Instagram account. This takes about 2 minutes of your time. With the information you provide, we're able to do a few things:</p>
+                        <ul class="list-unstyled check text-dark my-5">
+                            <li class="list-item">
+                                Learn exactly what niche you're targeting
+                            </li>
+                            <li class="list-item">
+                                Engage on your behalf to grow your account
+                            </li>
+                            <li class="list-item">
+                                Give your account manager context to help you faster
+                            </li>
+                        </ul>
+
+                        <a href="#" class="btn btn-primary my-3" data-toggle="modal" data-target="#signup">Get More Followers Now</a>
+                    </div>
+                    <div class="offset-lg-1 col-lg-5 my-5 my-lg-0">
+                        <div class="asset-container mx-auto">
+                            <div class="asset-support">
+                                <img class="discovery-1 br-24 shadow-2 zi-1 lazy" data-src="{% static '' %}img/categorize-account.jpg" data-aos="fade-up" alt="a screenshot of a MassNova user categorizing their account">
+
+                            </div>
+                            <img class="br-24 shadow-2" src="{% static '' %}img/sign-up.jpg" alt="a screenshot of the MassNova sign up page">
+                        </div>
+                    </div>
+                </div>
+                <div class="row justify-content-center mt-5">
+                    <div class="col-lg-10 mt-5 mt-lg-0">
+                        <div class="alert bg-green text-green px-5 py-3">
+                            <p class="font-weight-bold my-3">📢 Heads Up</p>
+                            <p class="text-black-50"><strong>MassNova uses SHA-3 cryptographic encryption with Advanced Encryption Standard (Rijndael AES).</strong> Your password is not stored by us, but it is instead one-way encrypted. In other words, your account is <strong>really, really safe</strong> with us. Account security has always been top of mind since MassNova began development!</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <section id="signup-banner">
+            <div class="container">
+                <div class="row mx-0 px-3 px-lg-5 py-5 my-lg-5 text-left align-items-center position-relative justify-content-center bg-pattern-light border border-light o-hidden">
+                    <img class="background-image d-none d-lg-flex right bottom position-absolute opacity-10 rotate-min-30 lazy" data-src="{% static '' %}img/instagram-carousel-background-small.png" alt="a carousel of Instagram posts">
+                    <div class="col-md-12 col-lg-6">
+                        <div class="alert alert-primary bg-primary-light br-24 d-inline-block small">Updated on <span class="date"></span></div>
+                        <p class="h2">Signups close in <span id="deadline" class="d-inline"><span class="values text-dark"></span></span></p>
+                        <hr class="border border-primary">
+                        <p class="my-2">We're limiting signup slots to the public to ensure our customers get the best experience possible. Get started today and start getting more Instagram followers!</p>
+                    </div>
+                    <div class="col-md-12 col-lg-5 offset-lg-1">
+
+                        <div class="d-inline-block z-index-2">
+                            <p>Enter your email to start growing your Instagram:</p>
+                            <form class="form-inline formoid">
+                                <div class="input-group">
+                                    <input type="email" class="form-control signUpForm" placeholder="Your Email Address" required>
+                                </div>
+                                <button type="submit" class="btn btn-primary w-sm-100 w-lg-auto">Sign Up Now </button>
+                            </form>
+                            <span class="d-block text-light-50 small my-3">2 Minutes Setup • Real Results • Grow Your Instagram</span>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+        <section id="targeting" class="py-5">
+            <div class="container">
+                <div class="row align-items-center justify-content-center">
+                    <div class="col-lg-5">
+                        <div class="label py-2 px-2 mb-3 preheader">Hashtag + User Targeting</div>
+                        <h2 class="h3 mb-3">Setting up your targets</h2>
+
+                        <p class="lead text-black-50">Once you've synced up your Instagram profile, make sure to add relevant targets so MassNova knows what types of followers you want to attract and engage with. Of course, you can also set filters to further narrow down your audience. MassNova then automatically engages with the accounts and hashtags you've added.</p>
+                        <p class="lead text-black-50">When you add accounts similar to yours, MassNova engages with that account's followers. Going through this step lets MassNova:</p>
+                        <ul class="list-unstyled check text-dark my-5">
+                            <li class="list-item">
+                                Target the right hashtags and users for you
+                            </li>
+                            <li class="list-item">
+                                Use your filters to find the best accounts for you
+                            </li>
+                            <li class="list-item">
+                                Accurately log performance of each target
+                            </li>
+                            <li class="list-item">
+                                Let your account manager jump in to refine your settings
+                            </li>
+                        </ul>
+
+                        <a href="#" class="btn btn-primary my-3" data-toggle="modal" data-target="#signup">Start Growing Your Instagram</a>
+                    </div>
+                    <div class="offset-lg-1 col-lg-4 my-5 my-lg-0">
+                        <div class="asset-container mx-auto">
+                            <div class="asset-support">
+                                <img class="hashtag-1 zi-1 lazy" data-src="{% static '' %}img/user-2.png" data-aos="fade-up">
+                                <img class="hashtag-2 zi-1 lazy" data-src="{% static '' %}img/user-3.png" data-aos="fade-up">
+
+                            </div>
+                            <img class="br-24 shadow-2" src="{% static '' %}img/similar-users.jpg" alt="a screenshot of a MassNova member adding similar Instagram users">
+                        </div>
+                    </div>
+                </div>
+                <div class="row justify-content-center mt-5">
+                    <div class="col-lg-10">
+                        <div class="alert alert-primary text-green px-5 py-3">
+                            <p class="font-weight-bold my-3">💡 Targeting Tip</p>
+                            <p>When choosing accounts to target, it's never a bad idea to look at the current champions of your niche, and who's hitting the explore page. You can ask our success team if you're running dry on ideas.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <section id="results">
+            <div class="container">
+                <div class="row align-items-center justify-content-center">
+                    <div class="col-lg-5">
+                        <div class="label py-2 px-2 mb-3 preheader">Results, Results, Results</div>
+                        <h2 class="h3 mb-3">Your account starts growing</h2>
+
+                        <p class="lead text-black-50">MassNova identifies and queues up tasks for your Instagram. Since MassNova only engages with real and active Instagram users, you'll see a noticeable difference in engagement on your account within a few days.</p>
+                        <p class="lead text-black-50">When you've gotten MassNova set up, here's what you should expect:</p>
+                        <ul class="list-unstyled check text-dark my-5">
+                            <li class="list-item">
+                                More people liking and engaging with your posts
+                            </li>
+                            <li class="list-item">
+                                A flurry of Instagram visitors checking out your profile
+                            </li>
+                            <li class="list-item">
+                                More people viewing your stories
+                            </li>
+                            <li class="list-item">
+                                Real, organic Instagram followers that like your content!
+                            </li>
+
+                        </ul>
+
+                        <a href="#" class="btn btn-primary my-3" data-toggle="modal" data-target="#signup">Get More Followers Now</a>
+                    </div>
+                    <div class="offset-lg-1 col-lg-4 my-5 my-lg-0">
+                        <div class="asset-container mx-auto">
+                            <div class="position-absolute o-hidden h-100 br-24 vertical-gradient vertical-gradient-md zi-0">
+                                <img class="rellax rellax-fix" data-rellax-speed="2" src="{% static '' %}img/list-of-new-instagram-followers.jpg" alt="list of new Instagram followers">
+                            </div>
+                            <div class="asset-support">
+                                <img class="faster-1 zi-1 br-24 shadow-2 d-none d-lg-flex lazy" data-src="{% static '' %}img/graph-1.png" data-aos="fade-up">
+                                <img class="hashtag-2 zi-2 br-24 shadow-2 lazy" data-src="{% static '' %}img/graph-organic-instagram-followers.jpg" data-aos="fade-up">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <section id="optimize">
+            <div class="container">
+                <div class="row align-items-center justify-content-center">
+                    <div class="col-lg-5">
+                        <div class="label py-2 px-2 mb-3 preheader">Optimizing Your Account</div>
+                        <h2 class="h3 mb-3">Improvements & suggestions</h2>
+                        <p class="lead text-black-50">While you're getting results, MassNova logs all activities and scores the performance of all your added similar users and hashtags. Coupled with data we collect about your niche, you will have all the information you need to further optimize your targets and make consistent improvements to your performance.</p>
+                        <p class="lead text-black-50">Make sure to track:</p>
+                        <ul class="list-unstyled check text-dark my-5">
+                            <li class="list-item">
+                                The number of new followers you’re gaining with MassNova
+                            </li>
+                            <li class="list-item">
+                                Performance for each and every one of your Targets
+                            </li>
+                            <li class="list-item">
+                                All the Follows and Unfollows that MassNova did for you
+                            </li>
+                        </ul>
+
+                        <a href="#" class="btn btn-primary my-3" data-toggle="modal" data-target="#signup">Join MassNova Now</a>
+                    </div>
+                    <div class="offset-lg-1 col-lg-4 my-5 my-lg-0">
+                        <div class="asset-container mx-auto mb-5 mb-lg-0">
+                            <div class="position-absolute o-hidden h-100 br-24 vertical-gradient vertical-gradient-md zi-0">
+                                <img class="rellax" data-rellax-speed="2" src="{% static '' %}img/optimize.jpg" alt="a screenshot of a MassNova user optimizing their account">
+                            </div>
+                            <div class="asset-support">
+                                <img class="discovery-1 zi-1 br-24 shadow-2 lazy" data-src="{% static '' %}img/activity-feed.jpg" data-aos="fade-up" alt="activity feed screenshot from MassNova's dashboard">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <section>
+            <div class="container">
+                <div class="row my-5 justify-content-center text-left text-lg-center">
+                    <div class="col-lg-8">
+                        <div class="label py-2 px-2 mb-3 preheader green">Start Growing Now</div>
+                        <p class="h2 mb-3">Join MassNova Today</p>
+                        <p class="text-black-50 lead">There's an easy way to grow your Instagram account - and that's with MassNova. Get started today!</p>
+                    </div>
+                </div>
+                <div class="row my-5 justify-content-center align-items-center">
+                    <div class="col-md-12 col-lg-5 col-xl-4">
+                        <div class="label py-2 px-2 mb-3 preheader gray">Learn More</div>
+                        <h2 class="h3 mb-3">MassNova is feature rich</h2>
+                        <p class="lead text-black-50">Did you know, MassNova's more than just a way to get more Instagram followers. We're feature rich with analytics, suggestions, improvements, and even a way to export your performance. <a href={% url "userapi:features" %}>Learn more about our features</a> or discover them yourself by signing up!</p>
+                        <form class="form-inline formoid">
+                            <div class="input-group">
+                                <input type="email" class="form-control signUpForm" placeholder="Your Email Address" required>
+                            </div>
+                            <button type="submit" class="btn btn-primary w-sm-100 w-lg-auto">Join MassNova</button>
+                        </form>
+                    </div>
+                    <div class="col-lg-6 col-xl-4 offset-xl-1 mt-5 mt-lg-0">
+                        <div class="asset-container mx-auto br-0 shadow-none">
+                            <div class="asset-support">
+                                <img class="hashtag-1 zi-1 lazy" data-src="{% static '' %}img/get-nitreo-user.png">
+                                <img class="hashtag-2 zi-1 lazy" data-src="{% static '' %}img/get-nitreo-hashtag.png">
+
+                            </div>
+                            <video class="br-24 shadow-2" src="{% static '' %}video/get-nitreo-instagram-growth.mp4" poster="{% static '' %}img/get-nitreo-instagram-growth-poster.png" autoplay loop muted preload="auto"></video>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        {% include "userapi/footer.html" %}
+
+        <script src="{% static '' %}js/play.min.js" type="text/javascript"></script>
+
+    </body>
+
+</html>

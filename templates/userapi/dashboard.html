@@ -1,0 +1,110 @@
+{% extends "userapi/base.html" %}
+{% load static %}
+
+{% block head %}
+    <title>Dashboard - MassNova</title>
+{% endblock %}
+
+{% block content %}
+    {% include "userapi/dashboard_header.html" %}
+    <!--start main wrapper-->
+    <main class="main-wrapper">
+      <div class="main-content">
+        <!--breadcrumb-->
+        <div class="page-breadcrumb d-none d-sm-flex align-items-center mb-3">
+          <div class="breadcrumb-title pe-3">MassNova</div>
+          <div class="ps-3">
+            <nav aria-label="breadcrumb">
+              <ol class="breadcrumb mb-0 p-0">
+                <i class="bx bx-home-alt bx-sm"></i>
+                <li class="breadcrumb-item active" aria-current="page">Dashboard</li>
+              </ol>
+            </nav>
+          </div>
+          <div class="ms-auto">
+            <button type="button" class="btn btn-primary">
+              <a href={% url "userapi:insta-credentials" %} style="color: white;">
+                Settings
+                <i class="bx bx-cog"></i>
+              </a>
+            </button>
+          </div>
+        </div>
+        <!--end breadcrumb-->
+      </div>
+    </main>
+    <!--end main wrapper-->
+
+    {% include "userapi/dashboard_footer.html" %}
+
+    <script>
+      function togglePopup(popupId, isOpen, instaID = false) {
+        var dropdown = document.getElementById('settingsDropdown');
+        var instaUsername = dropdown ? dropdown.value : null;
+        if (instaUsername === "all" && instaID == true) {
+          document.getElementById("no-account").innerText = "Please select account to Edit!";
+        }
+        else {
+          document.getElementById("no-account").innerText = "";
+          document.getElementById(popupId).style.display = isOpen ? 'block' : 'none';
+          document.body.classList.toggle('popup-open', isOpen);
+          if (!instaID || instaUsername === "all") {
+            instaUsername = "";
+          }
+          else {
+            if (popupId === "instaPopup") {
+              var form = document.getElementById('instaForm');
+
+              // Check if the hidden input already exists
+              var existingInput = form.querySelector('input[name="previous_usernme"]');
+
+              if (existingInput) {
+                // If it exists, update its value
+                existingInput.value = instaUsername;
+              } else {
+                // If it doesn't exist, create a new input element
+                var hiddenInput = document.createElement('input');
+                hiddenInput.type = 'hidden';
+                hiddenInput.name = 'previous_usernme';
+                hiddenInput.value = instaUsername;
+
+                // Append the hidden input to the form
+                form.appendChild(hiddenInput);
+              }
+            }
+          }
+          document.getElementById('username').value = instaUsername;
+          document.getElementById('password-input').value = "";
+        }
+      }
+
+      function displayInstaTargets() {
+        var instaUsername = document.getElementById('settingsDropdown').value;
+        var allTargets = document.querySelectorAll('.target-item');
+        var targetsFound = false;
+
+        allTargets.forEach(function (target) {
+          var targetInstaUsername = target.getAttribute('data-insta-username');
+          if (instaUsername === 'all' || targetInstaUsername === instaUsername) {
+            target.classList.add('d-flex');
+            target.classList.remove('d-none');
+            targetsFound = true;
+          } else {
+            target.classList.remove('d-flex');
+            target.classList.add('d-none');
+          }
+        });
+
+        // Show or hide the message based on whether targets are found
+        if (!targetsFound && allTargets.length > 0) {
+          document.getElementById('noTargetsMessage').addClass('d-flex').removeClass('d-none');
+        }
+        else {
+          document.getElementById('noTargetsMessage').innerText = "";
+        }
+
+        // Close the popup
+        togglePopup('settingsPopup', false);
+      }
+    </script>
+{% endblock %}

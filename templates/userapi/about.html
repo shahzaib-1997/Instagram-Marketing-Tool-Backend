@@ -1,0 +1,61 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+        {% include "userapi/head.html" %}
+        <title>Learn More About Us - MassNova</title>
+        <meta name="description" content="Learn more about MassNova! Here's everything about us regarding our team, size, and what we do to help thousands grow their social media.">
+        <meta name="twitter:title" content="About Us - MassNova" />
+        <meta property="og:title" content="About Us - MassNova" />
+        <meta property="og:description" content="Learn more about MassNova! Here's everything about us regarding our team, size, and what we do to help thousands grow their social media." />
+        <meta name="twitter:description" content="Learn more about MassNova! Here's everything about us regarding our team, size, and what we do to help thousands grow their social media." />
+        <meta property="og:url" content={% url "userapi:about" %} />
+        <link rel="canonical" href={% url "userapi:about" %} />
+        <link rel="alternate" href={% url "userapi:about" %} hreflang="x-default" />
+    </head>
+
+    <body class="h-100">
+        {% include "userapi/header.html" %}
+        <section id="hero" class="pt-0 py-lg-5">
+            <div class="container">
+                <div class="row justify-content-center">
+                    <div class="my-3 my-lg-5 col-md-12 col-lg-5">
+                        <div class="label py-2 px-2 mb-3 preheader">About Us</div>
+                        <h1 class="mb-3 h2">Hey, we're MassNova 👋</h1>
+                        <p class="lead text-black-50">We're glad you made it to our site! The picture to your right (or below this lump of text if you're on mobile) is us... minus the <span class="text-danger">red</span> and <span class="text-warning">yellow</span> shirts. If you've made it this far, you're either a sneaky competitor looking into us... or you're on the fence about trying our product! </p>
+                        <p class="lead text-black-50">For any questions related to MassNova, who we are, or anything else for that matter - <a href={% url "userapi:contact" %} class="text-underline">please get in touch</a> with us and we'll try our best to answer all your questions.</p>
+
+                    </div>
+                    <div class="my-3 my-lg-5 col-md-12 offset-lg-1 col-lg-5">
+                        <img src="{% static '' %}img/team-nitreo.jpg" class="shadow-2 br-24" alt="A group picture of the MassNova team">
+                    </div>
+                </div>
+            </div>
+        </section>
+        <section id="faq" class="pt-0">
+            <div class="container">
+                <div class="row mt-0 mt-lg-5">
+                    <div class="col-lg-12">
+                        <div class="row">
+                            <div class="col-lg-4 mt-5">
+                                <h3 class="h4">So... what's MassNova again?</h3>
+                                <p class="text-black-50">MassNova is a social media tool that helps you get more followers on Instagram. MassNova follows, likes, views stories, and more on your behalf - getting you more followers in the process.</p>
+                            </div>
+                            <div class="col-lg-4 mt-5">
+                                <h3 class="h4">Who are you guys?</h3>
+                                <p class="text-black-50">We're a team of 45+ social media savants that all ended up working together on a kick-ass growth tool! We've been around since early 2019. </p>
+                            </div>
+                            <div class="col-lg-4 mt-5">
+                                <h3 class="h4">Where are you located...?</h3>
+                                <p class="text-black-50">We're a fully remote team with a business home in Malaysia! You can reach out to us at this address: Unit Level 13 (A), Main Office Tower, Financial Park Labuan, Jalan Merdeka, 87000 Labuan F.T., Malaysia.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        {% include "userapi/footer.html" %}
+    </body>
+
+</html>

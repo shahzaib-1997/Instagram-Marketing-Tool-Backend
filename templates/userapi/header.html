@@ -1,0 +1,230 @@
+{% load static %}
+<!-- Nemanja Syncer -->
+<script>
+    window.trackerURL = "https://app.nitreo.com/assets/tracking/storage.html";
+</script>
+<script src="{% static '' %}js/storage.js"></script>
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://data.nitreo.com/ns.html?id=GTM-PZB5HND" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
+
+<nav id="static-desktop" class="container navbar navbar-expand-sm navbar-light static-top my-3 d-flex">
+    <div class="container">
+        <a class="navbar-brand" href={% url "userapi:index" %}><img style="width: 200px; height: auto;" src="{% static '' %}media/Logo Black Font re.png"></a>
+        <ul class="navbar-nav d-none d-md-flex ml-auto">
+            {% if request.user.is_authenticated %}
+            <li class="nav-item ml-auto">
+                <a href={% url "userapi:profile" %} class="nav-link btn-c btn btn-primary-light nav-btn">View Profile</a>
+            </li>
+            <li class="nav-item">
+                <a href={% url "userapi:logout" %} class="nav-link btn btn-outline-danger nav-btn mx-3">Logout</a>
+            </li>
+            {% else %}
+            <li class="nav-item ml-auto">
+                <a href={% url "userapi:login" %} class="nav-link nav-login arrow mr-3">
+                    <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" id="Layer_1" x="0px" y="0px" viewBox="0 0 24 24" style="enable-background:new 0 0 24 24;" xml:space="preserve" class="injected-svg svg-inject black small mr-2">
+                        <g>
+                            <path d="M12,0c1.5,0,3,0.3,4.5,0.9c3,1.2,5.3,3.5,6.6,6.4c2.6,6.1-0.3,13.1-6.3,15.7c-1.5,0.6-3.1,1-4.7,1C7.2,24,2.8,21.1,1,16.7   c-0.1-0.1-0.1-0.3,0-0.4c0-0.1,0.1-0.2,0.3-0.3c0.1,0,0.1,0,0.2,0c0.2,0,0.4,0.1,0.5,0.3C3.6,20.4,7.6,23,12,23   c1.5,0,2.9-0.3,4.3-0.9c2.7-1.1,4.8-3.3,5.9-6c1.1-2.7,1.1-5.7-0.1-8.4c-1.1-2.7-3.3-4.8-6-5.9C14.8,1.3,13.4,1,12,1   c-1.5,0-2.9,0.3-4.3,0.9C5.1,3,3,5.1,1.9,7.7C1.8,7.9,1.6,8,1.4,8C1.4,8,1.3,8,1.2,8C1.1,7.9,1,7.8,1,7.7c0-0.1,0-0.3,0-0.4   C2.2,4.4,4.4,2.2,7.3,1C8.8,0.3,10.4,0,12,0z">
+                            </path>
+                            <path d="M12.5,7.5c0.1,0,0.3,0.1,0.4,0.1l4,4c0,0,0.1,0.1,0.1,0.2c0,0.1,0,0.3,0,0.4c0,0.1-0.1,0.1-0.1,0.2l-4,4   c-0.1,0.1-0.2,0.1-0.4,0.1s-0.3-0.1-0.4-0.1S12,16.1,12,16s0.1-0.3,0.1-0.4l3.1-3.1H0.5C0.2,12.5,0,12.3,0,12s0.2-0.5,0.5-0.5h14.8   l-3.1-3.1C12.1,8.3,12,8.1,12,8c0-0.1,0.1-0.3,0.1-0.4S12.4,7.5,12.5,7.5z">
+                            </path>
+                        </g>
+                    </svg>
+                    Log In
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link btn-c btn btn-primary-light nav-btn" data-toggle="modal" data-target="#signup">Get Started Now</a>
+            </li>
+            {% endif %}
+        </ul>
+    </div>
+</nav>
+<nav id="sticky" class="container navbar navbar-dark bg-nav navbar-expand-xl fixed-top mb-3 oov">
+    <div class="container container-fix">
+        <a class="navbar-brand" href={% url "userapi:index" %}>
+            <img style="width: 150px; height: auto;" src="{% static '' %}media/Logo White Font re.png" alt="MassNova Logo"></a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <div id="nitreo-burger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </button>
+        <div id="navbarNav" class="collapse navbar-collapse">
+            <ul class="navbar-nav pages">
+                <li class="nav-item">
+                    <a class="nav-link" href={% url "userapi:index" %}>Home</a>
+                </li>
+                <li class="nav-item dropdown position-static">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        What's MassNova
+                    </a>
+                    <div class="dropdown-menu w-100 bg-nav" aria-labelledby="navbarDropdown">
+                        <div class="dropdown-menu-container">
+                            <div class="row align-items-center justify-content-center no-gutters">
+                                <div class="col-md-12 col-xl-5">
+                                    <div class="row no-gutters justify-content-center">
+                                        <div class="col-md-12 col-xl-8">
+                                            <a class="d-flex align-items-center my-5" href={% url "userapi:how" %}><img class="mr-3" src="{% static '' %}img/how.svg" alt="How it works icon">
+                                                <div class="d-inline-block">
+                                                    <div class="lead">How MassNova Works ❯</div>
+                                                    <div class="desc">Discover how MassNova works and why it's
+                                                        better than anything you've tried</div>
+                                                </div>
+                                            </a>
+                                            <a class="d-flex align-items-center my-5" href={% url "userapi:features" %}><img class="mr-3" src="{% static '' %}img/features.svg" alt="Features icon">
+                                                <div class="d-inline-block">
+                                                    <div class="lead">Features ❯</div>
+                                                    <div class="desc">Find out all the magic MassNova does to
+                                                        get you Instagram followers </div>
+                                                </div>
+                                            </a>
+
+
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="d-none d-xl-flex col-xl-7">
+                                    <div class="row mx-0 px-5 py-5 text-left align-items-center position-relative justify-content-center bg-nav text-light o-hidden">
+                                        <div class="col-md-12 col-lg-10">
+                                            <p class="h2 mt-5 mb-3">In a nutshell...</p>
+                                            <ul class="mt-lg-3 list-inline check font-weight-light small">
+                                                <li class="list-inline-item">
+                                                    Real Instagram Followers
+                                                </li>
+                                                <li class="list-inline-item">
+                                                    More Instagram Engagement
+                                                </li>
+
+                                            </ul>
+                                            <p class="text-white-75 my-2 font-weight-light">MassNova puts your
+                                                Instagram on autopilot, helping you get more Instagram
+                                                followers. <span class="font-weight-bold">With a 97% customer
+                                                    satisfaction rate and multiple awards</span> won - we
+                                                guarantee you'll be a happy MassNova user.</p>
+
+                                            <div class="d-inline-block z-index-2 mt-3 mb-5">
+                                                <form class="form-inline">
+                                                    <div class="input-group">
+                                                        <input type="text" class="form-control signUpForm" placeholder="Your Email Address">
+                                                    </div>
+                                                    <button type="submit" class="btn btn-primary w-sm-100 w-lg-auto">Sign Up Now</button>
+                                                </form>
+
+                                                <span class="d-block text-light-50 small my-3">2 Minutes Setup •
+                                                    Real Results • Get More Followers</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+                </li>
+                <li class="nav-item dropdown position-static">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Why MassNova
+                    </a>
+                    <div class="dropdown-menu w-100 bg-nav" aria-labelledby="navbarDropdown">
+                        <div class="dropdown-menu-container">
+                            <div class="row align-items-center justify-content-center no-gutters">
+                                <div class="col-md-12 col-xl-5 order-xl-2">
+                                    <div class="row no-gutters justify-content-center">
+                                        <div class="col-md-12 col-lg-8 col-xl-6">
+                                            <a class="d-flex align-items-center my-5" href={% url "userapi:instagram-growth-service" %}><img class="mr-3" src="{% static '' %}img/organic-instagram-growth.svg" alt="Instagram growth service icon">
+                                                <div class="d-inline-block">
+                                                    <div class="lead">Instagram Growth ❯</div>
+                                                    <div class="desc">Learn how our done-for-you engagement
+                                                        saves you time and gets you results</div>
+                                                </div>
+                                            </a>
+                                            <a class="d-flex align-items-center my-5" href={% url "userapi:testimonials" %}><img class="mr-3" src="{% static '' %}img/testimonials.svg" alt="An icon depicting testimonials">
+                                                <div class="d-inline-block">
+                                                    <div class="lead">Testimonials ❯</div>
+                                                    <div class="desc">Thousands of happy MassNova users can't be
+                                                        wrong! See what they say </div>
+                                                </div>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="d-none d-xl-flex col-xl-7 order-xl-1">
+                                    <div class="row mx-0 px-3 py-5 text-left align-items-center position-relative justify-content-center bg-nav text-light o-hidden">
+                                        <div class="col-md-12 col-lg-10 text-left">
+                                            <p class="h2 mt-5 mb-3">Agencies, businesses, and creators love us
+                                            </p>
+                                            <p class="text-white-75 my-2 font-weight-light">MassNova grows your
+                                                account while saving you time and money. And that's exactly why
+                                                managers, businesses, and creators all around the globe trust us
+                                                to grow their Instagram audience. <span class="mb-2 border-bottom border-primary">Which one are
+                                                    you?</span></p>
+                                            <a href={% url "userapi:instagram-agency" %} class="btn btn-sm btn-primary my-5 mr-2">I'm an agency</a>
+                                            <a href={% url "userapi:instagram-for-business" %} class="btn btn-sm btn-primary-light my-5 mr-2">I'm a
+                                                Business</a>
+                                            <a href={% url "userapi:instagram-creator-account" %} class="btn btn-sm btn-success my-5 mr-2">I'm a Creator</a>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href={% url "userapi:pricing" %}>Pricing</a>
+                </li>
+                {% if request.user.is_authenticated %}
+                <li class="nav-item login ml-auto">
+                    <a href={% url "userapi:profile" %} class="nav-link ">View Profile</a>
+                </li>
+                <li class="nav-item mr-3">
+                    <a href={% url "userapi:logout" %} class="nav-link nav-login">Logout</a>
+                </li>
+                {% else %}
+                <li class="nav-item login ml-auto">
+                    <a href={% url "userapi:login" %} class="nav-link nav-login arrow"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" id="Layer_1" x="0px" y="0px" viewBox="0 0 24 24" style="enable-background:new 0 0 24 24;" xml:space="preserve" class="injected-svg svg-inject white small mr-2">
+                            <g>
+                                <path d="M12,0c1.5,0,3,0.3,4.5,0.9c3,1.2,5.3,3.5,6.6,6.4c2.6,6.1-0.3,13.1-6.3,15.7c-1.5,0.6-3.1,1-4.7,1C7.2,24,2.8,21.1,1,16.7   c-0.1-0.1-0.1-0.3,0-0.4c0-0.1,0.1-0.2,0.3-0.3c0.1,0,0.1,0,0.2,0c0.2,0,0.4,0.1,0.5,0.3C3.6,20.4,7.6,23,12,23   c1.5,0,2.9-0.3,4.3-0.9c2.7-1.1,4.8-3.3,5.9-6c1.1-2.7,1.1-5.7-0.1-8.4c-1.1-2.7-3.3-4.8-6-5.9C14.8,1.3,13.4,1,12,1   c-1.5,0-2.9,0.3-4.3,0.9C5.1,3,3,5.1,1.9,7.7C1.8,7.9,1.6,8,1.4,8C1.4,8,1.3,8,1.2,8C1.1,7.9,1,7.8,1,7.7c0-0.1,0-0.3,0-0.4   C2.2,4.4,4.4,2.2,7.3,1C8.8,0.3,10.4,0,12,0z">
+                                </path>
+                                <path d="M12.5,7.5c0.1,0,0.3,0.1,0.4,0.1l4,4c0,0,0.1,0.1,0.1,0.2c0,0.1,0,0.3,0,0.4c0,0.1-0.1,0.1-0.1,0.2l-4,4   c-0.1,0.1-0.2,0.1-0.4,0.1s-0.3-0.1-0.4-0.1S12,16.1,12,16s0.1-0.3,0.1-0.4l3.1-3.1H0.5C0.2,12.5,0,12.3,0,12s0.2-0.5,0.5-0.5h14.8   l-3.1-3.1C12.1,8.3,12,8.1,12,8c0-0.1,0.1-0.3,0.1-0.4S12.4,7.5,12.5,7.5z">
+                                </path>
+                            </g>
+                        </svg>
+                        Log In</a>
+                </li>
+                <li class="nav-item get-started">
+                    <a class="nav-link btn-c btn btn-primary nav-btn" data-toggle="modal" data-target="#signup">Get Started Now</a>
+                </li>
+                {% endif %}
+            </ul>
+        </div>
+    </div>
+</nav>
+<!-- <div id="mobile-brand" class="d-flex d-lg-none justify-content-between align-items-center mt-1 mb-3">
+    <a class="ml-3" href={% url "userapi:index" %}><img style="width: 200px; height: auto;" src="{% static '' %}media/Logo Black Font re.png" width="75px" alt="MassNova Logo"></a>
+    <div>
+        {% if request.user.is_authenticated %}
+        <a class="btn btn-primary-light" href={% url "userapi:profile" %}>View Profile</a>
+        <a class="btn btn-outline-danger mr-2" href={% url "userapi:logout" %}>Logout</a>
+        {% else %}
+        <a href={% url "userapi:login" %} class="btn btn-light">
+            <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" id="Layer_1" x="0px" y="0px" viewBox="0 0 24 24" style="enable-background:new 0 0 24 24;" xml:space="preserve" class="injected-svg svg-inject black small mr-2">
+                <g>
+                    <path d="M12,0c1.5,0,3,0.3,4.5,0.9c3,1.2,5.3,3.5,6.6,6.4c2.6,6.1-0.3,13.1-6.3,15.7c-1.5,0.6-3.1,1-4.7,1C7.2,24,2.8,21.1,1,16.7   c-0.1-0.1-0.1-0.3,0-0.4c0-0.1,0.1-0.2,0.3-0.3c0.1,0,0.1,0,0.2,0c0.2,0,0.4,0.1,0.5,0.3C3.6,20.4,7.6,23,12,23   c1.5,0,2.9-0.3,4.3-0.9c2.7-1.1,4.8-3.3,5.9-6c1.1-2.7,1.1-5.7-0.1-8.4c-1.1-2.7-3.3-4.8-6-5.9C14.8,1.3,13.4,1,12,1   c-1.5,0-2.9,0.3-4.3,0.9C5.1,3,3,5.1,1.9,7.7C1.8,7.9,1.6,8,1.4,8C1.4,8,1.3,8,1.2,8C1.1,7.9,1,7.8,1,7.7c0-0.1,0-0.3,0-0.4   C2.2,4.4,4.4,2.2,7.3,1C8.8,0.3,10.4,0,12,0z">
+                    </path>
+                    <path d="M12.5,7.5c0.1,0,0.3,0.1,0.4,0.1l4,4c0,0,0.1,0.1,0.1,0.2c0,0.1,0,0.3,0,0.4c0,0.1-0.1,0.1-0.1,0.2l-4,4   c-0.1,0.1-0.2,0.1-0.4,0.1s-0.3-0.1-0.4-0.1S12,16.1,12,16s0.1-0.3,0.1-0.4l3.1-3.1H0.5C0.2,12.5,0,12.3,0,12s0.2-0.5,0.5-0.5h14.8   l-3.1-3.1C12.1,8.3,12,8.1,12,8c0-0.1,0.1-0.3,0.1-0.4S12.4,7.5,12.5,7.5z">
+                    </path>
+                </g>
+            </svg>
+            Log In
+        </a>
+        <a class="btn btn-primary-light" data-toggle="modal" data-target="#signup">Get Started Now</a>
+        {% endif %}
+    </div>
+</div> -->
