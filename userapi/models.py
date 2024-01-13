@@ -85,7 +85,7 @@ class Credential(models.Model):
     time_stamp = models.DateTimeField(auto_now_add=True, blank=True, null=True)
 
     class Meta:
-        unique_together = ('user', 'username')
+        unique_together = ("user", "username")
 
     def __str__(self):
         """
@@ -107,10 +107,14 @@ class TargetType(models.Model):
     """
 
     options = (
-        ("hashtags", "hashtags"),
-        ("posts", "posts"),
-        ("reels", "reels"),
-        ("comments", "comments"),
+        ("post-like", "post-like"),
+        ("post-comment", "post-comment"),
+        ("comment-like", "comment-like"),
+        ("reels-view", "reels-view"),
+        ("reels-like", "reels-like"),
+        ("reels-comment", "reels-comment"),
+        ("hashtag-like", "hashtag-like"),
+        ("hashtag-comment", "hashtag-comment"),
     )
 
     user = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -216,7 +220,7 @@ class Hashtag(models.Model):
     )
 
     type = models.CharField(max_length=255, choices=options, null=True, blank=True)
-    hashtag = models.CharField(max_length=255)
+    url = models.TextField(default="")
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     target = models.ForeignKey(Target, on_delete=models.CASCADE, null=True, blank=True)
     time_stamp = models.DateTimeField(auto_now_add=True, blank=True, null=True)
@@ -293,7 +297,7 @@ class Post(models.Model):
 
 
 class Comment(models.Model):
-    comment = models.TextField()
+    url = models.TextField(default="")
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     target = models.ForeignKey(Target, on_delete=models.CASCADE, null=True, blank=True)
     time_stamp = models.DateTimeField(auto_now_add=True, blank=True, null=True)
@@ -302,7 +306,7 @@ class Comment(models.Model):
         """
         method __str__(): Returns a string representation of the object.
         """
-        return f"{self.user.username} - {self.comment[:25]}"
+        return f"{self.user.username} - {self.url[:25]}"
 
 
 class Reel(models.Model):
