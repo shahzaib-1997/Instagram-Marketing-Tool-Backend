@@ -36,12 +36,10 @@
     <script>
       $(document).ready(function () {
         $('.alert').each(function () {
-          const displayTime = parseInt($(this).data('display-time'));
-
           // Set a timeout to hide the message after the specified display time
           setTimeout(() => {
             $(this).hide();
-          }, displayTime);
+          }, 10000);
         });
 
         $("#show_hide_password a").on('click', function (event) {
