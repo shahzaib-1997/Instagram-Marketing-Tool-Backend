@@ -229,7 +229,7 @@ class Hashtag(models.Model):
         """
         method __str__(): Returns a string representation of the object.
         """
-        return f"{self.user.username} - {self.hashtag}"
+        return f"{self.user.username} - {self.url}"
 
 
 class TargetUser(models.Model):

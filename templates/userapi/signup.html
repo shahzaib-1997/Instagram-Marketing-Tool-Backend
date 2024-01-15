@@ -27,15 +27,7 @@
             <a href={% url "userapi:index" %}><img src="{% static '' %}media/Logo Black Font re.png" class="mb-4" width="145" alt=""></a>
             <h4 class="fw-bold">Sign Up to MassNova Now</h4>
             <p class="mb-0">We're about to level up your Instagram Together! Enter your details to get started 👈🏻</p>
-            <div class="container mb-2">
-              {% if messages %}
-              {% for message in messages %}
-              <div class="alert {% if message.tags == 'error' %}text-danger{% elif message.tags == 'success' %}text-success{% endif %}">
-                <strong>{{ message }}</strong>
-              </div>
-              {% endfor %}
-              {% endif %}
-            </div>
+            {% include "userapi/messages_snippet.html" %}
             <div class="form-body mt-4">
               <form class="row g-3" method="POST" action={%url "userapi:signup" %}>
                 <div class="col-12">

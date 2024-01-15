@@ -28,15 +28,8 @@
             </div>
         </div>
         <div class="col-12">
-            <div class="container mb-2">
-                {% if messages %}
-                {% for message in messages %}
-                <div class="alert {% if message.tags == 'error' %}text-danger{% elif message.tags == 'success' %}text-success{% endif %}">
-                    <strong>{{ message }}</strong>
-                </div>
-                {% endfor %}
-                {% endif %}
-            </div>
+            {% include "userapi/messages_snippet.html" %}
+
             <div class="card">
                 <div class="card-body">
                     <form class="row g-3" action="{% if target %}{% url 'userapi:target-edit' target.id %}{% else %}{% url 'userapi:target-edit' %}{% endif %}" method="post" onsubmit="return checkForm()">

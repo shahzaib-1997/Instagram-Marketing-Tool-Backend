@@ -34,15 +34,7 @@
             <div class="col-12 col-lg-8 col-xl-9">
                 <div class="card overflow-hidden">
                     <div class="card-body">
-                        <div class="container">
-                            {% if messages %}
-                            {% for message in messages %}
-                            <div class="alert {% if message.tags == 'error' %}text-danger{% elif message.tags == 'success' %}text-success{% endif %}">
-                                <strong>{{ message }}</strong>
-                            </div>
-                            {% endfor %}
-                            {% endif %}
-                        </div>
+                        {% include "userapi/messages_snippet.html" %}
 
                         <div class="position-relative">
                             <img src="{% static '' %}bs/images/carousels/22.png" class="img-fluid rounded" alt="">

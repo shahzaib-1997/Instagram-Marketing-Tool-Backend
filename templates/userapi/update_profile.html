@@ -57,15 +57,8 @@
             <div class="col-lg-7">
                 <div class="user-all-form">
                     <div class="contact-form">
-                        <div class="container">
-                            {% if messages %}
-                            {% for message in messages %}
-                            <div class="alert {% if message.tags == 'error' %}alert-danger{% elif message.tags == 'success' %}alert-success{% endif %}">
-                                <strong>{{ message }}</strong>
-                            </div>
-                            {% endfor %}
-                            {% endif %}
-                        </div>
+                        {% include "userapi/messages_snippet.html" %}
+
                         <form action={% url "userapi:update-profile" %} method="POST">
                             {% csrf_token %}
                             <div class="row">
