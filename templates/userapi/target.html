@@ -28,15 +28,8 @@
             </div>
         </div>
         <div class="col-12">
-            <div class="container mb-2">
-                {% if messages %}
-                {% for message in messages %}
-                <div class="alert {% if message.tags == 'error' %}text-danger{% elif message.tags == 'success' %}text-success{% endif %}">
-                    <strong>{{ message }}</strong>
-                </div>
-                {% endfor %}
-                {% endif %}
-            </div>
+            {% include "userapi/messages_snippet.html" %}
+
             <div class="card">
                 <div class="card-body">
                     <form class="row g-3" action="{% if target %}{% url 'userapi:target-edit' target.id %}{% else %}{% url 'userapi:target-edit' %}{% endif %}" method="post" onsubmit="return checkForm()">
@@ -148,10 +141,10 @@
                                                 <button type="button" class="btn ripple btn-primary w-75" data-bs-toggle="modal" data-bs-target="#viewModal">View</button>
                                             </div>
                                             <div class="col-12 col-md-6 col-lg-2">
-                                                <button type="button" class="btn ripple btn-primary w-75">Copy</button>
+                                                <button type="button" class="btn ripple btn-primary w-75" id="copyButton">Copy</button>
                                             </div>
                                             <div class="col-12 col-md-6 col-lg-2">
-                                                <button type="button" class="btn ripple btn-primary w-75">Clear</button>
+                                                <button type="button" class="btn ripple btn-primary w-75" data-bs-toggle="modal" data-bs-target="#clearModal">Clear</button>
                                             </div>
                                         </div>
                                         <div class="row justify-content-center m-3">
@@ -179,7 +172,7 @@
                             <p class="text-danger mt-2"><strong id="message"></strong></p>
                         </div>
                         <!-- List Modal -->
-                        <div class="modal fade" id="listModal" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false" aria-hidden="true">
+                        <div class="modal fade" id="listModal" tabindex="-1" aria-hidden="true">
                             <div class="modal-dialog modal-dialog-centered">
                                 <div class="modal-content">
                                     <div class="modal-header">
@@ -203,7 +196,7 @@
                             <div class="modal-dialog modal-dialog-centered">
                                 <div class="modal-content">
                                     <div class="modal-header">
-                                        <h5 class="modal-title"> All Usernames </h5>
+                                        <h5 class="modal-title"> All Usernames and URLs </h5>
                                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                     </div>
                                     <div class="modal-body">
@@ -216,6 +209,24 @@
                             </div>
                         </div>
                         <!-- View Modal End -->
+                        <!-- Clear Modal -->
+                        <div class="modal fade" id="clearModal" tabindex="-1" aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-centered">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title"> Clear All Usernames and URLs </h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <p><strong>This will clear all the username and urls from the List</strong></p>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-primary" id="clearList">Ok</button>
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </form>
                 </div>
             </div>
@@ -227,109 +238,134 @@
 {% include "userapi/dashboard_footer.html" %}
 
 <script>
-    $('#targetList').on('keydown', function (e) {
-        if (e.key === 'Enter') {
-            let cursorPosition = this.selectionStart;
-            let text = $(this).val();
-            let lineStart = text.lastIndexOf('\n', cursorPosition - 1) + 1;
-            let currentLine = text.substring(lineStart, cursorPosition).trim();
+    $(document).ready(function () {
+        $('#targetList').on('keydown', function (e) {
+            if (e.key === 'Enter') {
+                let cursorPosition = this.selectionStart;
+                let text = $(this).val();
+                let lineStart = text.lastIndexOf('\n', cursorPosition - 1) + 1;
+                let currentLine = text.substring(lineStart, cursorPosition).trim();
 
-            if (currentLine === '') {
-                // Prevent creating a new line if the current line is empty
-                e.preventDefault();
+                if (currentLine === '') {
+                    // Prevent creating a new line if the current line is empty
+                    e.preventDefault();
+                }
+            }
+            $('#inform').css('display', 'block');
+            $('#inform').text('Make sure to click on Save to update list otherwise changes will not update.');
+        });
+
+        $('#saveContent').click(function () {
+            let listContent = $('#targetList').val().trim();
+            $('#targetView').val(listContent);
+            $('#targetList').val(listContent);
+            // Close the modal
+            $('#listModal').modal('hide');
+            $('#inform').css('display', 'none');
+        });
+
+        $('#listModal').on('hidden.bs.modal', function (event) {
+            if ($('#inform').css('display') == "block") {
+                $('#targetList').val($('#targetView').val());
+            }
+            $('#inform').css('display', 'none');
+        });
+        
+        // Function to prevent spaces
+        $('#username, #targetList').on('input', function (event) {
+            const inputValue = event.target.value.replace(/[^\S\n]/g, ''); // Remove spaces
+            $(event.target).val(inputValue);
+        });
+        
+        $('#copyButton').click(function () {
+            // Get the text area
+            let textToCopy = $('#targetList').val();
+            let tempTextarea = $('<textarea>');
+            $('body').append(tempTextarea);
+            tempTextarea.val(textToCopy).select();
+
+            // Copy the selected text to the clipboard
+            try {
+                const successful = document.execCommand('copy');
+                const msg = successful ? 'Copied!' : 'Unable to copy';
+                alert(msg);
+            } catch (err) {
+                console.error('Failed to copy: ', err);
+            }
+
+            tempTextarea.remove();
+        });
+
+        $('#clearList').click(function () {
+            $('#targetList').val("");
+            $('#targetView').val("");
+
+            // Close the modal
+            $('#clearModal').modal('hide');
+        });
+        
+        // Function to Insert Target
+        function insertTarget() {
+            let inputElement = $('#username');
+            let targetListElement = $('#targetList');
+            let targetViewElement = $('#targetView');
+            let inputValue = inputElement.val();
+            let targetListValue = targetListElement.val().trim();
+
+            if (inputValue) {
+                targetListValue = targetListValue ? (targetListValue + '\n' + inputValue) : inputValue;
+                targetListElement.val(targetListValue);
+                targetViewElement.val(targetListValue);
+
+                // Clear the input field
+                inputElement.val("");
+
+            } else {
+                // Provide feedback if the input field is empty or contains only spaces
+                showMessage("Please enter a valid value before inserting.");
+
+                // Focus on the input field for convenience
+                inputElement.focus();
             }
         }
-        $('#inform').css('display', 'block');
-        $('#inform').text('Make sure to click on Save to update list otherwise changes will not update.');
+
+        // Function to validate form before submitting
+        function checkForm() {
+            let instaAccount = $('#settingsDropdown').val();
+            let msg = "";
+            if (instaAccount === '#') {
+                msg = '<p>Please select Instagram Account for the Target.</p>';
+            }
+
+            let targetListElement = $('#targetList');
+            if (!targetListElement.val()) {
+                msg += '<p>Please insert username or URL.</p>';
+            }
+
+            let currentTime = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false });
+            // Handle the case where midnight is represented as '24:00'
+            currentTime = currentTime.replace(/^24/, '00');
+            if (currentTime >= $('#actTime').val()) {
+                msg += '</p>Please select correct activity time. It should be after current time.</p>';
+            }
+
+            if (msg) {
+                showMessage(msg);
+                return false;
+            }
+
+            return true;
+        }
+
+        // Function to display error msgs
+        function showMessage(message) {
+            // Display the message
+            $("#message").append(message);
+            setTimeout(function () {
+                $("#message").text("");
+            }, 7000);
+        }
     });
-
-    // $('#targetList').on('input', function () {
-    // });
-
-    $('#saveContent').on('click', function () {
-        let listContent = $('#targetList').val().split('\n').map(line => line.trim()).join('\n');
-        $('#targetView').val(listContent);
-        $('#targetList').val(listContent);
-        // Close the modal
-        $('#listModal').modal('hide');
-        $('#inform').css('display', 'none');
-    });
-
-    $('#listModal').on('hidden.bs.modal', function (event) {
-        if ($('#inform').css('display') == "block") {
-            $('#targetList').val($('#targetView').val());
-        }
-        $('#inform').css('display', 'none');
-    });
-
-    // Function to prevent spaces
-    $('#username, #targetList').on('input', function (event) {
-        const inputValue = event.target.value.replace(/[^\S\n]/g, ''); // Remove spaces
-        $(event.target).val(inputValue);
-    });
-
-
-    // Function to Insert Target
-    function insertTarget() {
-        let inputElement = $('#username');
-        let targetListElement = $('#targetList');
-        let targetViewElement = $('#targetView');
-        let inputValue = inputElement.val();
-        let targetListValue = targetListElement.val().trim();
-
-        if (inputValue) {
-            targetListValue = targetListValue ? (targetListValue + '\n' + inputValue) : inputValue;
-            targetListElement.val(targetListValue);
-            targetViewElement.val(targetListValue);
-
-            // Clear the input field
-            inputElement.val("");
-
-        } else {
-            // Provide feedback if the input field is empty or contains only spaces
-            showMessage("Please enter a valid value before inserting.");
-
-            // Focus on the input field for convenience
-            inputElement.focus();
-        }
-    }
-
-    // Function to validate form before submitting
-    function checkForm() {
-        let instaAccount = $('#settingsDropdown').val();
-        let msg = "";
-        if (instaAccount === '#') {
-            msg = '<p>Please select Instagram Account for the Target.</p>';
-        }
-
-        let targetListElement = $('#targetList');
-        if (!targetListElement.val()) {
-            msg += '<p>Please insert username or URL.</p>';
-        }
-
-        let currentTime = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false });
-        // Handle the case where midnight is represented as '24:00'
-        currentTime = currentTime.replace(/^24/, '00');
-        if (currentTime >= $('#actTime').val()) {
-            msg += '</p>Please select correct activity time. It should be after current time.</p>';
-        }
-
-        if (msg) {
-            showMessage(msg);
-            return false;
-        }
-
-        return true;
-    }
-
-    // Function to display error msgs
-    function showMessage(message) {
-        // Display the message
-        $("#message").append(message);
-        setTimeout(function () {
-            $("#message").text("");
-        }, 7000);
-    }
 </script>
 
 {% endblock %}

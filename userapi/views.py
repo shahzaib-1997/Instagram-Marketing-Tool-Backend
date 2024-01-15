@@ -137,12 +137,12 @@ class LoginView(APIView):
     def post(self, request):
         try:
             value = request.POST.get("username")
-            password = request.POST.get("password")
             user = User.objects.filter(Q(username=value) | Q(email=value)).first()
             if user is None:
                 messages.error(request, "Username or Email is incorrect!")
             else:
                 username = user.username
+                password = request.POST.get("password")
                 user = authenticate(request, username=username, password=password)
 
                 if user is not None:
