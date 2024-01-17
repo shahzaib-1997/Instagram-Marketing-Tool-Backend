@@ -268,6 +268,7 @@ class InstaCredentialView(APIView):
             credential, _ = Credential.objects.get_or_create(user=request.user, username=pk)
             credential.username = request.POST.get("username")
             credential.password = request.POST.get("password")
+            credential.profile_id = "fcdb64f3-bcea-4b02-94c3-848b87c4f0ef"
             credential.save()
             messages.success(request, "Details " + ("updated" if pk else "added") + " successfully!")
             insta_creds = Credential.objects.filter(user=request.user)
