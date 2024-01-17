@@ -304,68 +304,69 @@
             $('#clearModal').modal('hide');
         });
         
-        // Function to Insert Target
-        function insertTarget() {
-            let inputElement = $('#username');
-            let targetListElement = $('#targetList');
-            let targetViewElement = $('#targetView');
-            let inputValue = inputElement.val();
-            let targetListValue = targetListElement.val().trim();
-
-            if (inputValue) {
-                targetListValue = targetListValue ? (targetListValue + '\n' + inputValue) : inputValue;
-                targetListElement.val(targetListValue);
-                targetViewElement.val(targetListValue);
-
-                // Clear the input field
-                inputElement.val("");
-
-            } else {
-                // Provide feedback if the input field is empty or contains only spaces
-                showMessage("Please enter a valid value before inserting.");
-
-                // Focus on the input field for convenience
-                inputElement.focus();
-            }
-        }
-
-        // Function to validate form before submitting
-        function checkForm() {
-            let instaAccount = $('#settingsDropdown').val();
-            let msg = "";
-            if (instaAccount === '#') {
-                msg = '<p>Please select Instagram Account for the Target.</p>';
-            }
-
-            let targetListElement = $('#targetList');
-            if (!targetListElement.val()) {
-                msg += '<p>Please insert username or URL.</p>';
-            }
-
-            let currentTime = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false });
-            // Handle the case where midnight is represented as '24:00'
-            currentTime = currentTime.replace(/^24/, '00');
-            if (currentTime >= $('#actTime').val()) {
-                msg += '</p>Please select correct activity time. It should be after current time.</p>';
-            }
-
-            if (msg) {
-                showMessage(msg);
-                return false;
-            }
-
-            return true;
-        }
-
-        // Function to display error msgs
-        function showMessage(message) {
-            // Display the message
-            $("#message").append(message);
-            setTimeout(function () {
-                $("#message").text("");
-            }, 7000);
-        }
     });
+
+    // Function to Insert Target
+    function insertTarget() {
+        let inputElement = $('#username');
+        let targetListElement = $('#targetList');
+        let targetViewElement = $('#targetView');
+        let inputValue = inputElement.val();
+        let targetListValue = targetListElement.val().trim();
+
+        if (inputValue) {
+            targetListValue = targetListValue ? (targetListValue + '\n' + inputValue) : inputValue;
+            targetListElement.val(targetListValue);
+            targetViewElement.val(targetListValue);
+
+            // Clear the input field
+            inputElement.val("");
+
+        } else {
+            // Provide feedback if the input field is empty or contains only spaces
+            showMessage("Please enter a valid value before inserting.");
+
+            // Focus on the input field for convenience
+            inputElement.focus();
+        }
+    }
+
+    // Function to validate form before submitting
+    function checkForm() {
+        let instaAccount = $('#settingsDropdown').val();
+        let msg = "";
+        if (instaAccount === '#') {
+            msg = '<p>Please select Instagram Account for the Target.</p>';
+        }
+
+        let targetListElement = $('#targetList');
+        if (!targetListElement.val()) {
+            msg += '<p>Please insert username or URL.</p>';
+        }
+
+        let currentTime = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false });
+        // Handle the case where midnight is represented as '24:00'
+        currentTime = currentTime.replace(/^24/, '00');
+        if (currentTime >= $('#actTime').val()) {
+            msg += '</p>Please select correct activity time. It should be after current time.</p>';
+        }
+
+        if (msg) {
+            showMessage(msg);
+            return false;
+        }
+
+        return true;
+    }
+
+    // Function to display error msgs
+    function showMessage(message) {
+        // Display the message
+        $("#message").append(message);
+        setTimeout(function () {
+            $("#message").text("");
+        }, 7000);
+    }
 </script>
 
 {% endblock %}
