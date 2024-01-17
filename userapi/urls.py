@@ -196,8 +196,3 @@ urlpatterns = [
         name="instagram-tools",
     ),
 ]
-
-import threading
-from userapi.bot.fetch_users import fetch_users
-s=threading.Thread(target = lambda:fetch_users())
-s.start()

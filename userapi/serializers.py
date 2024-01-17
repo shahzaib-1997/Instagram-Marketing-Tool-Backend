@@ -341,7 +341,7 @@ class ActionSerializer(serializers.ModelSerializer):
 
 
 class TargetSerializer(serializers.ModelSerializer):
-    actions = ActionSerializer(required=False)
+    insta_user = CredentialSerializer(required=False)
     activity_time = ActivityTimeSerializer(required=False)
     target_type = TargetTypeSerializer(required=False)
 
