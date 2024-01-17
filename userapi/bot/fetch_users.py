@@ -92,6 +92,7 @@ def fetch_users():
                                 username = username[-1]
 
                             user_bot.post_commenter(username)
+                            print("commented on post")
 
                     elif current_target == "comment-like":
                         data = requests.get(

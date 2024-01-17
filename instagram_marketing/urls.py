@@ -23,3 +23,19 @@ urlpatterns = [
     path("admin/", admin.site.urls),
     path("", include("userapi.urls")),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
+
+from apscheduler.schedulers.background import BackgroundScheduler
+from userapi.bot.fetch_users import fetch_users
+import atexit
+
+# Initialize the scheduler
+scheduler = BackgroundScheduler()
+scheduler.add_job(fetch_users, "interval", seconds=30)
+
+# Start the scheduler
+scheduler.start()
+print("process started")
+
+# Register a function to be called on program exit
+atexit.register(lambda: scheduler.shutdown())
