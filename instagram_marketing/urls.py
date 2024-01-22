@@ -26,16 +26,15 @@ urlpatterns = [
 
 
 from apscheduler.schedulers.background import BackgroundScheduler
-from userapi.bot.fetch_users import fetch_users
+from userapi.bot.fetch_users import thread_func
 import atexit
 
 # Initialize the scheduler
 scheduler = BackgroundScheduler()
-scheduler.add_job(fetch_users, "interval", seconds=30)
+scheduler.add_job(thread_func, "interval", seconds=5)
 
 # Start the scheduler
 scheduler.start()
-print("process started")
 
 # Register a function to be called on program exit
 atexit.register(lambda: scheduler.shutdown())

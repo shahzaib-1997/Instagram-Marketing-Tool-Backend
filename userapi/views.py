@@ -859,7 +859,7 @@ class TargetTypeView(BaseAPIView, RenderAPIView):
 class TargetView(BaseAPIView, RenderAPIView):
     def get(self, request):
         try:
-            targets = Target.objects.filter(user=request.user)
+            targets = Target.objects.filter(user=request.user, status=0)
             serializer = TargetSerializer(targets, many=True)
             return Response(serializer.data)
         except Exception as e:
