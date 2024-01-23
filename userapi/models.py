@@ -366,6 +366,7 @@ class ActivityLog(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     activity = models.CharField(max_length=255)
     time_stamp = models.DateTimeField(auto_now_add=True, blank=True, null=True)
+    read = models.BooleanField(default=False)
 
     def __str__(self):
         """
