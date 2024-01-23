@@ -46,8 +46,8 @@ from datetime import datetime
 class NotificationsView(APIView):
     def get(self, request):
         try:
-            notifications = Stat.objects.filter(user=request.user).order_by("-time_stamp")[:5]
-            serializer = StatSerializer(notifications, many=True)
+            notifications = ActivityLog.objects.filter(user=request.user).order_by("-time_stamp")[:5]
+            serializer = ActivityLogSerializer(notifications, many=True)
             return Response(serializer.data)
         except Exception as e:
             return Response(
@@ -57,7 +57,7 @@ class NotificationsView(APIView):
 
     def post(self, request):
         try:
-            Stat.objects.filter(user=request.user, read=False).update(read=True)
+            ActivityLog.objects.filter(user=request.user, read=False).update(read=True)
             return Response({"message": "All Notifications mark as read."}, status=status.HTTP_200_OK)
         except Exception as e:
             return Response(
