@@ -5,7 +5,7 @@ from datetime import datetime
 
 
 def fetch_users():
-    url_string = "http://127.0.0.1:8000/"
+    url_string = "https://instabotminsoft.pythonanywhere.com/"
     users = requests.get(f"{url_string}all-users/").json()
     for user in users:
         header = requests.post(f"{url_string}token/", data={"user_id": user}).json()
