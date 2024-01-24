@@ -34,7 +34,7 @@
                             {% endcomment %}
                         </div>
                         <div class="notify-list mb-0" id="dynamic-notifications" style="max-height: 285px; height:auto;"><!-- Dynamic content will be added here --></div>
-                        <a class="dropdown-item text-end" href={% url "userapi:dashboard" %}>See More...</a>
+                        <a class="dropdown-item text-end" href={% url "userapi:activity-logs" %}>See More...</a>
                     </div>
                 </li>
             </ul>
@@ -55,8 +55,7 @@
             <a class="nav-link" href={% url "userapi:dashboard" %} data-toggle="tooltip" data-bs-placement="right" title="Dashboard"><i class="bx bx-home-alt bx-sm"></i></a>
             <a class="nav-link" href={% url "userapi:instagram-accounts" %} data-toggle="tooltip" data-bs-placement="right" title="Instagram Accounts"><i class='bx bxl-instagram bx-sm'></i></a>
             <a class="nav-link" href={% url "userapi:targets" %} data-toggle="tooltip" data-bs-placement="right" title="Targets"><i class='bx bxs-layer bx-sm'></i></a>
-            <a class="nav-link" href="#" data-toggle="tooltip" data-bs-placement="right" title="Stats"><i class="material-icons-outlined">poll</i></a>
-            <a class="nav-link" href="#" data-toggle="tooltip" data-bs-placement="right" title="Activity Log"><i class='bx bx-history bx-sm'></i></a>
+            <a class="nav-link" href={% url "userapi:activity-logs" %} data-toggle="tooltip" data-bs-placement="right" title="Activity Logs"><i class='bx bx-history bx-sm'></i></a>
             <a class="nav-link" href="#" data-toggle="tooltip" data-bs-placement="right" title="Settings"><i class='bx bx-cog bx-sm'></i></a>
         </nav>
     </div>

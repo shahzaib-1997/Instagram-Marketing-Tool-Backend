@@ -46,7 +46,7 @@ from datetime import datetime
 class NotificationsView(APIView):
     def get(self, request):
         try:
-            notifications = ActivityLog.objects.filter(user=request.user).order_by("-time_stamp")[:5]
+            notifications = ActivityLog.objects.filter(user=request.user).order_by("-time_stamp")
             serializer = ActivityLogSerializer(notifications, many=True)
             return Response(serializer.data)
         except Exception as e:
