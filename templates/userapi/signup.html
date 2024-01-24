@@ -32,7 +32,11 @@
               <form class="row g-3" method="POST" action={%url "userapi:signup" %}>
                 <div class="col-12">
                   <label for="inputUsername" class="form-label">Username</label>
-                  <input type="name" class="form-control" name="username" id="inputUsername" placeholder="John Doe" required>
+                  <input type="name" class="form-control" name="username" id="inputUsername" placeholder="johndoe" required>
+                </div>
+                <div class="col-12">
+                  <label for="inputFullname" class="form-label">Full Name</label>
+                  <input type="name" class="form-control" name="fullname" id="inputFullname" placeholder="John Doe" required>
                 </div>
                 <div class="col-12">
                   <label for="inputEmailAddress" class="form-label">Email Address</label>

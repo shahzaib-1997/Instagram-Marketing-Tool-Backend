@@ -42,14 +42,14 @@ urlpatterns = [
     path("dashboard/", views.DashboardView.as_view(), name="dashboard"),
     path("notifications/", views.NotificationsView.as_view(), name="notifications"),
     path(
-        "insta-credentials/",
+        "instagram-accounts/",
         views.InstaCredentialView.as_view(),
-        name="insta-credentials",
+        name="instagram-accounts",
     ),
     path(
-        "insta-credential/<str:pk>/",
+        "instagram-account/<str:pk>/",
         views.InstaCredentialView.as_view(),
-        name="insta-credential",
+        name="instagram-account",
     ),
     path("target-edit/", views.TargetTemplateView.as_view(), name="target-edit"),
     path(

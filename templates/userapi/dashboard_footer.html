@@ -13,43 +13,37 @@
             <ul class="metismenu" id="sidenav">
                 <li>
                     <a href={% url "userapi:dashboard" %} title="Dashboard">
-                        <div class="parent-icon"> <i class="bx bx-home-alt bx-sm"></i>
-                        </div>
+                        <div class="parent-icon"><i class="bx bx-home-alt bx-sm"></i></div>
                         <div class="menu-title">Dashboard</div>
                     </a>
                 </li>
                 <li>
+                    <a href={% url "userapi:instagram-accounts" %}>
+                        <div class="parent-icon"><i class='bx bxl-instagram bx-sm'></i></div>
+                        <div class="menu-title">Instagram Accounts</div>
+                    </a>
+                </li>
+                <li>
                     <a href={% url "userapi:targets" %}>
-                        <div class="parent-icon"><i class='bx bxs-layer bx-sm'></i>
-                        </div>
+                        <div class="parent-icon"><i class='bx bxs-layer bx-sm'></i></div>
                         <div class="menu-title">Targets</div>
                     </a>
                 </li>
                 <li>
-                    <a href={% url "userapi:insta-credentials" %}>
-                        <div class="parent-icon"><i class='bx bxl-instagram bx-sm'></i>
-                        </div>
-                        <div class="menu-title">Insta Credentials</div>
-                    </a>
-                </li>
-                <li>
                     <a href="#">
-                        <div class="parent-icon"><i class="material-icons-outlined">poll</i>
-                        </div>
+                        <div class="parent-icon"><i class="material-icons-outlined">poll</i></div>
                         <div class="menu-title">Stats</div>
                     </a>
                 </li>
                 <li>
                     <a href="#">
-                        <div class="parent-icon"><i class='bx bx-history'></i>
-                        </div>
+                        <div class="parent-icon"><i class='bx bx-history'></i></div>
                         <div class="menu-title">Activity</div>
                     </a>
                 </li>
                 <li>
                     <a href="#">
-                        <div class="parent-icon"><i class='bx bx-cog bx-sm'></i>
-                        </div>
+                        <div class="parent-icon"><i class='bx bx-cog bx-sm'></i></div>
                         <div class="menu-title">Settings</div>
                     </a>
                 </li>
@@ -65,7 +59,7 @@
         <div class="user-wrapper">
             <div class="text-center p-3 bg-light rounded">
                 <img src="{% static '' %}users/dummy.jpg" class="rounded-circle p-1 shadow mb-3" width="120" height="120" alt="">
-                <h5 class="user-name mb-0 fw-bold">{{ request.user }}</h5>
+                <h5 class="user-name mb-0 fw-bold">{{ request.user.first_name }} {{ request.user.last_name }}</h5>
                 <!-- <p class="mb-0">Administrator</p> -->
             </div>
             <div class="list-group list-group-flush mt-3 profil-menu fw-bold">
@@ -121,8 +115,7 @@
                       <a class="dropdown-item border-bottom py-2 ${highlightClass}" href="javascript:;">
                           <div class="d-flex align-items-center gap-3">
                               <div class="">
-                                  <h5 class="notify-title">${notification.activity}</h5>
-                                  {% comment %} <p class="mb-0 notify-desc">${notification.engagement_rate}</p> {% endcomment %}
+                                  <h5 class="text-truncate notify-title" style="max-width: 325px;">${notification.activity}</h5>
                                   <p class="mb-0 notify-time">${timeAgo}</p>
                               </div>
                           </div>
