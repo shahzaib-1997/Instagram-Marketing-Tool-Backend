@@ -111,9 +111,9 @@ class SignupView(APIView):
 
     def post(self, request):
         try:
-            serializer = RegistrationSerializer(
-                data=request.POST, context={"request": request}
-            )
+            user_data = request.data.copy()
+            user_data["first_name"], user_data["last_name"] = (user_data.pop("fullname")[0].split() + [""])[:2]
+            serializer = RegistrationSerializer(data=user_data, context={"request": request})
             if serializer.is_valid():
                 validated_data = serializer.validated_data
                 User.objects.create_user(**validated_data)
@@ -195,8 +195,8 @@ class TargetTemplateView(APIView):
                     act = model.objects.get(target=target, user=request.user)
                     context["url"] = act.url
                 return render(request, "userapi/target.html", context=context)
-            messages.error(request, "Please add Insta Credentials against your account to add Target.")
-            return redirect("userapi:insta-credentials")
+            messages.error(request, "Please add Instagram Accounts against your account to add Target.")
+            return redirect("userapi:instagram-accounts")
         except Exception as e:
             messages.error(request, str(e))
         return redirect("userapi:targets")
@@ -280,7 +280,7 @@ class InstaCredentialView(APIView):
                 messages.error(request, "Username already exists against your account!")
             else:
                 messages.error(request, str(e))
-            return redirect("userapi:insta-credentials")
+            return redirect("userapi:instagram-accounts")
 
     def delete(self, request, pk):
         if not request.user.is_authenticated:
@@ -292,7 +292,7 @@ class InstaCredentialView(APIView):
             )
             credential.delete()
             messages.success(
-                request, f"Insta Credential '{pk}' deleted successfully."
+                request, f"Instagram Account '{pk}' deleted successfully."
             )
             return Response(status=status.HTTP_204_NO_CONTENT)
         except Exception as e:
@@ -483,7 +483,7 @@ class CredentialView(BaseAPIView, RenderAPIView):
             credential = get_object_or_404(Credential, pk=pk, user=request.user)
             credential.delete()
             return Response(
-                {"message": "Insta Credential deleted successfully."},
+                {"message": "Instagram Account deleted successfully."},
                 status=status.HTTP_204_NO_CONTENT,
             )
         except Exception as e:

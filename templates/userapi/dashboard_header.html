@@ -7,7 +7,7 @@
         </div>
         <div class="search-bar w-50">
             <div class="position-relative">
-                <p style="text-align: center; margin-top: 10px !important;"><strong>{{ request.user }}</strong></p>
+                <p style="text-align: center; margin-top: 10px !important;"><strong>{{ request.user.first_name }} {{ request.user.last_name }}</strong></p>
             </div>
         </div>
         <form id="notifications-form">
@@ -19,22 +19,22 @@
                     </a>
                     <div class="dropdown-menu dropdown-notify dropdown-menu-end shadow">
                         <div class="px-3 py-1 d-flex align-items-center justify-content-between border-bottom">
-                            <h5 class="notiy-title mb-0">Notifications</h5>
-                            <div class="dropdown">
-                                <button class="btn btn-secondary dropdown-toggle dropdown-toggle-nocaret option" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                    <span class="material-icons-outlined">
-                                        more_vert
-                                    </span>
-                                </button>
-                                <div class="dropdown-menu dropdown-option dropdown-menu-end shadow">
-                                    <div><a class="dropdown-item d-flex align-items-center gap-2 py-2" href="javascript:;" id="markAllAsRead"><i class="material-icons-outlined fs-6">done_all</i>Mark all as read</a></div>
-                                    <div><a class="dropdown-item d-flex align-items-center gap-2 py-2" href={% url "userapi:dashboard" %}><i class="bx bx-plus"></i> See More</a></div>
+                            <h3 class="fw-bold">Notifications</h3>
+                            <a class="notify-time" href="javascript:;" id="markAllAsRead">Mark all as read</a>
+                            {% comment %}
+                            <button class="btn btn-secondary dropdown-toggle dropdown-toggle-nocaret option" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                <span class="material-icons-outlined">
+                                    more_vert
+                                </span>
+                            </button>
+                            <div class="dropdown-menu dropdown-option dropdown-menu-end shadow">
+                                <div>
                                 </div>
                             </div>
+                            {% endcomment %}
                         </div>
-                        <div class="notify-list" id="dynamic-notifications">
-                            <!-- Dynamic content will be added here -->
-                        </div>
+                        <div class="notify-list mb-0" id="dynamic-notifications" style="max-height: 285px; height:auto;"><!-- Dynamic content will be added here --></div>
+                        <a class="dropdown-item text-end" href={% url "userapi:dashboard" %}>See More...</a>
                     </div>
                 </li>
             </ul>
@@ -52,11 +52,9 @@
     </div>
     <div class="quick-menu ps">
         <nav class="nav flex-column gap-1">
-            <a class="nav-link" href={% url "userapi:dashboard" %} data-toggle="tooltip" data-bs-placement="right" title="Dashboard">
-                <i class="bx bx-home-alt bx-sm"></i>
-            </a>
+            <a class="nav-link" href={% url "userapi:dashboard" %} data-toggle="tooltip" data-bs-placement="right" title="Dashboard"><i class="bx bx-home-alt bx-sm"></i></a>
+            <a class="nav-link" href={% url "userapi:instagram-accounts" %} data-toggle="tooltip" data-bs-placement="right" title="Instagram Accounts"><i class='bx bxl-instagram bx-sm'></i></a>
             <a class="nav-link" href={% url "userapi:targets" %} data-toggle="tooltip" data-bs-placement="right" title="Targets"><i class='bx bxs-layer bx-sm'></i></a>
-            <a class="nav-link" href={% url "userapi:insta-credentials" %} data-toggle="tooltip" data-bs-placement="right" title="Insta Credentials"><i class='bx bxl-instagram bx-sm'></i></a>
             <a class="nav-link" href="#" data-toggle="tooltip" data-bs-placement="right" title="Stats"><i class="material-icons-outlined">poll</i></a>
             <a class="nav-link" href="#" data-toggle="tooltip" data-bs-placement="right" title="Activity Log"><i class='bx bx-history bx-sm'></i></a>
             <a class="nav-link" href="#" data-toggle="tooltip" data-bs-placement="right" title="Settings"><i class='bx bx-cog bx-sm'></i></a>
