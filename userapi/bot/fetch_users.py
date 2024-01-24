@@ -13,10 +13,13 @@ def fetch_users():
 
         for target in targets:
             current_status = target["status"]
-            target_time = target["activity_time"]["time"][:-4]
-            current_time = datetime.now().strftime("%Y-%m-%dT%H:%M")
+            target_time = target["activity_time"]["time"]
+            target_datetime = datetime.fromisoformat(target_time)
+            current_datetime = datetime.now()
+            target_hour, target_minute = target_datetime.hour, target_datetime.minute
+            current_hour, current_minute = current_datetime.hour, current_datetime.minute
 
-            if current_status == 0 and target_time == current_time:
+            if current_status == 0 and target_hour == current_hour and target_minute == current_minute:
                 current_id = target["id"]
                 target["status"] = 1
                 update_status = requests.put(
