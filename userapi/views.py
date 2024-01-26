@@ -161,13 +161,25 @@ class LoginView(APIView):
 
 class DashboardView(APIView):
     def get(self, request):
-        if request.user.is_authenticated:
-            return render(
-                request,
-                "userapi/dashboard.html",
-            )
-        messages.error(request, "You need to login first.")
-        return redirect("/signin/")
+        if not request.user.is_authenticated:
+            messages.error(request, "You need to login first.")
+            return redirect(f"/signin/?next={request.path}")
+        try:
+            result_dict = dict()
+            insta_account = request.GET.get("insta_account", None)
+            if insta_account:
+                stats_data = Stat.objects.filter(user=request.user, insta_account__username=insta_account)
+                result_dict = {opt : [] for opt, _ in Stat.options}
+                for stat in stats_data:
+                    result_dict[stat.type].append(stat.count)
+
+            insta_creds = Credential.objects.filter(user=request.user)
+            result_dict["insta_creds"] = CredentialSerializer(insta_creds, many=True).data
+            
+            return render(request, "userapi/dashboard.html", context=result_dict)
+        except Exception as e:
+            messages.error(request, str(e))
+            return redirect("userapi:logout")
 
 
 class TargetTemplateView(APIView):
