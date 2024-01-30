@@ -165,21 +165,31 @@ class DashboardView(APIView):
             messages.error(request, "You need to login first.")
             return redirect(f"/signin/?next={request.path}")
         try:
-            result_dict = dict()
-            insta_account = request.GET.get("insta_account", None)
-            if insta_account:
-                stats_data = Stat.objects.filter(user=request.user, insta_account__username=insta_account)
-                result_dict = {opt : [] for opt, _ in Stat.options}
-                for stat in stats_data:
-                    result_dict[stat.type].append(stat.count)
+            insta_creds = Credential.objects.filter(user=request.user).values_list('username', flat=True)
+            if insta_creds:
+                context = {opt : [] for opt, _ in Stat.options}
+                context["insta_creds"] = insta_creds
 
-            insta_creds = Credential.objects.filter(user=request.user)
-            result_dict["insta_creds"] = CredentialSerializer(insta_creds, many=True).data
-            
-            return render(request, "userapi/dashboard.html", context=result_dict)
+                insta_account = request.GET.get("insta_account", insta_creds[0])
+                stats_filter = {
+                    "user": request.user,
+                    "insta_account__username": insta_account
+                }
+
+                from_date, to_date = request.GET.get("from"), request.GET.get("to")
+                if from_date and to_date:
+                    stats_filter["time_stamp__date__range"] = (from_date, to_date)
+
+                stats_data = Stat.objects.filter(**stats_filter)
+                for stat in stats_data:
+                    context[stat.type].append(stat.count)
+                
+                return render(request, "userapi/dashboard.html", context=context)
+            messages.error(request, "Please add Instagram Accounts first.")
+            return redirect("userapi:instagram-accounts")
         except Exception as e:
             messages.error(request, str(e))
-            return redirect("userapi:logout")
+            return render(request, "userapi/dashboard.html", status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
 class TargetTemplateView(APIView):

@@ -17,7 +17,7 @@
 <main class="main-wrapper">
   <div class="main-content">
     <!--breadcrumb-->
-    <div class="page-breadcrumb d-none d-sm-flex align-items-center mb-3">
+    <div class="page-breadcrumb d-flex align-items-center mb-3">
       <div class="breadcrumb-title pe-3">MassNova</div>
       <div class="ps-3">
         <nav aria-label="breadcrumb">
@@ -26,20 +26,13 @@
           </ol>
         </nav>
       </div>
+      <div class="ms-auto">
+        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#instaUser">Options</button>
+      </div>
     </div>
     <!--end breadcrumb-->
     {% include "userapi/messages_snippet.html" %}
     <p class="text-danger my-2"><strong id="message"></strong></p>
-    <div class="container">
-      <div class="d-flex align-items-center justify-content-center my-2">
-        <input type="text" class="datepicker form-control" name="from" id="from" placeholder="dd-mm-yyyy">
-        <span class="mx-2"> to </span>
-        <input type="text" class="datepicker form-control" name="to" id="to" placeholder="dd-mm-yyyy">
-        <div class="ms-3">
-          <button type="button" class="btn btn-primary btn-sm text-md-nowrap" data-bs-toggle="modal" data-bs-target="#instaUser">Select Insta Account</button>
-        </div>
-      </div>
-    </div>
     <!-- Charts -->
     <div class="row">
       <div class="col-12 col-xl-6">
@@ -83,46 +76,49 @@
 </main>
 <!--end main wrapper-->
 
-<!-- Settings Modal -->
+<!-- Options Modal -->
 <div class="modal fade" id="instaUser" tabindex="-1" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
-      <form method="get" onsubmit="return check()">
+      <form method="get">
         <div class="modal-header">
-                <h5 class="modal-title">
-                  Select Instagram Account
-                </h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          <h5 class="modal-title">
+            Select Instagram Account
+          </h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
-            <div class="d-flex align-items-center">
-                <select class="form-select text-center" id="settingsDropdown" name="insta_account">
-                    <option value="#">------</option>
-                    {% for insta_cred in insta_creds %}
-                    <option value="{{ insta_cred.username }}" {% if request.GET.insta_account == insta_cred.username %} selected {% endif %}>
-                      {{ insta_cred.username }}
-                    </option>
-                    {% endfor %}
-                </select>
-            </div>
+          <div class="d-flex align-items-center">
+            <select class="form-select text-center" id="settingsDropdown" name="insta_account">
+              {% for insta_cred in insta_creds %}
+              <option value="{{ insta_cred }}" {% if request.GET.insta_account == insta_cred %} selected {% endif %}>
+                {{ insta_cred }}
+              </option>
+              {% endfor %}
+            </select>
+          </div>
+          <div class="d-flex align-items-center justify-content-center my-2">
+            <input type="text" class="datepicker form-control" name="from" id="from" placeholder="yyyy-mm-dd" value="{{ request.GET.from }}" autocomplete="off">
+            <span class="mx-2"> to </span>
+            <input type="text" class="datepicker form-control" name="to" id="to" placeholder="yyyy-mm-dd" value="{{ request.GET.to }}" autocomplete="off">
+          </div>
         </div>
         <div class="modal-footer">
-            <button type="submit" class="btn btn-primary" data-bs-dismiss="modal">Select</button>
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <button type="submit" class="btn btn-primary" data-bs-dismiss="modal">Submit</button>
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
         </div>
       </form>
     </div>
   </div>
 </div>
-<!-- Settings Modal End-->
+<!-- Options Modal End-->
 
 {% include "userapi/dashboard_footer.html" %}
 
 <script src="{% static '' %}bs/plugins/apexchart/apexcharts.min.js"></script>
-<script src="https://code.jquery.com/jquery-3.6.0.js"></script>
 <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
 <script>
-  $(document).ready(function () { 
+  $(document).ready(function () {
     var options = {
       chart: {
         type: "area",
@@ -241,28 +237,10 @@
 
     new ApexCharts($("#likeCommentChart")[0], options).render();
 
-    var userOffset = new Date().getTimezoneOffset();
-    var userToday = new Date(Date.now() - userOffset * 60000);
-
-    // Format the date as "YYYY-MM-DD"
-    var formattedDate = userToday.toISOString().split("T")[0];
-
     $('.datepicker').datepicker({
-      dateFormat: "dd-mm-yy"
+      dateFormat: "yy-mm-dd",
+      maxDate: "0d"
     });
   });
-
-  function check() {
-    if ($('#settingsDropdown').val() == '#') {
-      let message = 'Please select Instagram Account.';
-      // Display the message
-      $("#message").append(message);
-      setTimeout(function () {
-          $("#message").text("");
-      }, 7000);
-      return false;
-    }
-    return true;
-  }
 </script>
 {% endblock %}
