@@ -109,6 +109,7 @@ urlpatterns = [
     path("post/<int:pk>/", views.PostView.as_view(), name="post"),
     path("reel/", views.ReelView.as_view(), name="reel"),
     path("reel/<int:pk>/", views.ReelView.as_view(), name="reel"),
+    path("activity-logs/", TemplateView.as_view(template_name="userapi/activity_log.html"), name="activity-logs"),
     path("activity-log/", views.ActivityLogView.as_view(), name="activity-log"),
     path(
         "activity-log/<int:pk>/", views.ActivityLogView.as_view(), name="activity-log"

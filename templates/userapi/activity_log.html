@@ -1,0 +1,98 @@
+{% extends "userapi/base.html" %}
+{% load static %}
+
+{% block head %}
+<title>Activity Logs - MassNova</title>
+{% endblock %}
+
+{% block content %}
+{% include "userapi/dashboard_header.html" %}
+<!--start main wrapper-->
+<main class="main-wrapper">
+  <div class="main-content">
+    <!--breadcrumb-->
+    <div class="page-breadcrumb d-none d-sm-flex align-items-center mb-3">
+      <div class="breadcrumb-title pe-3">MassNova</div>
+      <div class="ps-3">
+        <nav aria-label="breadcrumb">
+          <ol class="breadcrumb mb-0 p-0">
+            <li class="breadcrumb-item active" aria-current="page">Activity Logs</li>
+          </ol>
+        </nav>
+      </div>
+    </div>
+    <!--end breadcrumb-->
+    <!-- Activity logs -->
+    <div class="col-12">
+      {% include "userapi/messages_snippet.html" %}
+
+      <div class="card">
+        <div class="card-body">
+          <div class="container p-0 m-2">
+            <div class="d-flex align-items-center me-3">
+              <h3>Activity Logs</h3>
+            </div>
+          </div>
+          <div class="table-responsive">
+            <table class="table table-hover align-middle">
+              <thead>
+                <tr>
+                  <th>Activity</th>
+                  <th class="text-center">Time</th>
+                </tr>
+              </thead>
+              <tbody id="logs-body"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Activity logs Area End -->
+  </div>
+</main>
+<!--end main wrapper-->
+
+{% include "userapi/dashboard_footer.html" %}
+
+<script>
+  $(document).ready(function () {
+    fetch('/notifications/', {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    })
+      .then(response => response.json())
+      .then(data => {
+        if (data.length) {
+          data.forEach(element => {
+            // Convert the timestamp to a Date object
+            const options = { day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false };
+            let timestamp = new Date(element.time_stamp).toLocaleDateString('en-US', options).replace(',', '');
+
+            $("#logs-body").append(`
+            <tr>
+              <td> ${element.activity} </td>
+              <td class="text-center">${timestamp}</td>
+            </tr>
+          `);
+          });
+        }
+        else {
+          $("#logs-body").append(`
+            <tr>
+              <td colspan="3" class="text-center">
+                <strong>No Activity Yet!</strong>
+              </td>
+            </tr>
+          `);
+        }
+      })
+      .catch(error => {
+        // Handle errors here
+        console.error('Error fetching notifications:', error);
+      });
+  });
+</script>
+
+{% endblock %}

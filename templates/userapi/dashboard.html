@@ -3,6 +3,12 @@
 
 {% block head %}
 <title>Dashboard - MassNova</title>
+<link rel="stylesheet" href="//code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
+<style>
+  .apexcharts-toolbar {
+    z-index: 1 !important;
+  }
+</style>
 {% endblock %}
 
 {% block content %}
@@ -11,28 +17,237 @@
 <main class="main-wrapper">
   <div class="main-content">
     <!--breadcrumb-->
-    <div class="page-breadcrumb d-none d-sm-flex align-items-center mb-3">
+    <div class="page-breadcrumb d-flex align-items-center mb-3">
       <div class="breadcrumb-title pe-3">MassNova</div>
       <div class="ps-3">
         <nav aria-label="breadcrumb">
           <ol class="breadcrumb mb-0 p-0">
-            <i class="bx bx-home-alt bx-sm"></i>
             <li class="breadcrumb-item active" aria-current="page">Dashboard</li>
           </ol>
         </nav>
       </div>
       <div class="ms-auto">
-        <a href={% url "userapi:instagram-accounts" %} class="btn btn-primary" style="color: white;">
-          Settings
-          <i class="bx bx-cog"></i>
-        </a>
+        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#instaUser">Options</button>
       </div>
     </div>
     <!--end breadcrumb-->
+    {% include "userapi/messages_snippet.html" %}
+    <p class="text-danger my-2"><strong id="message"></strong></p>
+    <!-- Charts -->
+    <div class="row">
+      <div class="col-12 col-xl-6">
+        <div class="card">
+          <div class="card-header py-3">
+            <div class="d-flex align-items-center justify-content-between">
+              <h5 class="mb-0">Followers History</h5>
+            </div>
+          </div>
+          <div class="card-body">
+            <div id="followersChart"></div>
+          </div>
+        </div>
+      </div>
+      <div class="col-12 col-xl-6">
+        <div class="card">
+          <div class="card-header py-3">
+            <div class="d-flex align-items-center justify-content-between">
+              <h5 class="mb-0">Engagement Rate</h5>
+            </div>
+          </div>
+          <div class="card-body">
+            <div id="engagementRateChart"></div>
+          </div>
+        </div>
+      </div>
+      <div class="col-12">
+        <div class="card">
+          <div class="card-header py-3">
+            <div class="d-flex align-items-center justify-content-between">
+              <h5 class="mb-0">Likes and Comments</h5>
+            </div>
+          </div>
+          <div class="card-body">
+            <div id="likeCommentChart"></div>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </main>
 <!--end main wrapper-->
 
+<!-- Options Modal -->
+<div class="modal fade" id="instaUser" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <form method="get">
+        <div class="modal-header">
+          <h5 class="modal-title">
+            Select Instagram Account
+          </h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div class="d-flex align-items-center">
+            <select class="form-select text-center" id="settingsDropdown" name="insta_account">
+              {% for insta_cred in insta_creds %}
+              <option value="{{ insta_cred }}" {% if request.GET.insta_account == insta_cred %} selected {% endif %}>
+                {{ insta_cred }}
+              </option>
+              {% endfor %}
+            </select>
+          </div>
+          <div class="d-flex align-items-center justify-content-center my-2">
+            <input type="text" class="form-control text-center" name="from" id="from" placeholder="yyyy-mm-dd" value="{{ request.GET.from }}" autocomplete="off">
+            <span class="mx-2"> to </span>
+            <input type="text" class="form-control text-center" name="to" id="to" placeholder="yyyy-mm-dd" value="{{ request.GET.to }}" autocomplete="off">
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-primary" data-bs-dismiss="modal">Submit</button>
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+<!-- Options Modal End-->
+
 {% include "userapi/dashboard_footer.html" %}
 
+<script src="{% static '' %}bs/plugins/apexchart/apexcharts.min.js"></script>
+<script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
+<script>
+  $(document).ready(function () {
+    var options = {
+      chart: {
+        type: "area",
+      },
+      dataLabels: {
+        enabled: false
+      },
+      series: [{
+        name: 'Followers',
+        data: {{ followers }}
+      }],
+      colors: ["#0000FF"],
+      xaxis: {
+        categories: {{ followers_time | safe }}
+      },
+      stroke: {
+        curve: 'smooth',
+      }
+    }
+
+    new ApexCharts($("#followersChart")[0], options).render();
+
+    var engagementRateData = {{ engagement_rate }};
+    var engagementRateValue = engagementRateData.length > 0 ? engagementRateData[0] : 0;
+
+    var options = {
+      chart: {
+        type: "radialBar",
+        height: 395,
+      },
+      series: [engagementRateValue],
+      colors: ["#00DD00"],
+      plotOptions: {
+        radialBar: {
+          dataLabels: {
+            name: {
+              show: true,
+              color: "#888",
+              offsetY: -10,
+            },
+            value: {
+              fontSize: "30px",
+              show: true
+            }
+          }
+        }
+      },
+      fill: {
+        type: "gradient",
+        gradient: {
+          shade: "light",
+          type: "horizontal",
+          stops: [0, 100]
+        }
+      },
+      stroke: {
+        lineCap: "butt"
+      },
+      labels: ["Average"]
+    };
+
+    new ApexCharts($("#engagementRateChart")[0], options).render();
+
+    var options = {
+      series: [{
+        name: 'Likes',
+        data: {{ like }}
+      },
+      {
+        name: 'Comments',
+        data: {{ comment }}
+      }],
+      chart: {
+        width: "100%",
+        height: 380,
+        type: 'bar',
+      },
+      plotOptions: {
+        bar: {
+          horizontal: false,
+          columnWidth: '70%',
+          endingShape: 'rounded'
+        },
+      },
+      stroke: {
+        show: true,
+        width: 4,
+        colors: ['transparent']
+      },
+      dataLabels: {
+        enabled: true,
+        offsetY: -10,
+        style: {
+          colors: ["#888"],
+        }
+      },
+      colors: ["#00D4F9", "#00E647"],
+      xaxis: {
+        categories: {{ like_time | safe }},
+      },
+      yaxis: {
+        title: {
+          text: 'Count'
+        }
+      },
+    };
+
+    new ApexCharts($("#likeCommentChart")[0], options).render();
+
+    $("#from, #to").datepicker({
+      dateFormat: "yy-mm-dd",
+      onSelect: function (selectedDate, inst) {
+        if (inst.id === "from") {
+          // Get the selected "from" date
+          var fromDate = $(this).datepicker('getDate');
+          
+          // If "to" date is selected
+          if ($('#to').datepicker('getDate') !== null) {
+            // Compare the dates and update if needed
+            if (fromDate > $('#to').datepicker('getDate')) {
+              $('#to').datepicker('setDate', '');
+            }
+          }
+          $('#to').datepicker('option', 'minDate', selectedDate);
+        }
+        $('button[type="submit"]').focus();
+      },
+      maxDate: "0d"
+    });
+  });
+</script>
 {% endblock %}

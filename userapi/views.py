@@ -1,4 +1,4 @@
-import json
+import json, requests
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.authtoken.models import Token
@@ -10,6 +10,7 @@ from django.contrib.auth import authenticate, login, logout, update_session_auth
 from django.contrib import messages
 from django.utils import timezone
 from .dry import BaseAPIView, RenderAPIView, szr_val_save, add_user
+from .create_incogniton_profile import create_profile
 from .models import (
     ActivityTime,
     Credential,
@@ -46,7 +47,7 @@ from datetime import datetime
 class NotificationsView(APIView):
     def get(self, request):
         try:
-            notifications = ActivityLog.objects.filter(user=request.user).order_by("-time_stamp")[:5]
+            notifications = ActivityLog.objects.filter(user=request.user).order_by("-time_stamp")
             serializer = ActivityLogSerializer(notifications, many=True)
             return Response(serializer.data)
         except Exception as e:
@@ -161,13 +162,36 @@ class LoginView(APIView):
 
 class DashboardView(APIView):
     def get(self, request):
-        if request.user.is_authenticated:
-            return render(
-                request,
-                "userapi/dashboard.html",
-            )
-        messages.error(request, "You need to login first.")
-        return redirect("/signin/")
+        if not request.user.is_authenticated:
+            messages.error(request, "You need to login first.")
+            return redirect(f"/signin/?next={request.path}")
+        try:
+            insta_creds = Credential.objects.filter(user=request.user).values_list('username', flat=True)
+            if insta_creds:
+                context = {opt: [] for opt, _ in Stat.options} | {f"{opt}_time": [] for opt, _ in Stat.options}
+                context["insta_creds"] = insta_creds
+
+                insta_account = request.GET.get("insta_account", insta_creds[0])
+                stats_filter = {
+                    "user": request.user,
+                    "insta_account__username": insta_account
+                }
+
+                from_date, to_date = request.GET.get("from"), request.GET.get("to")
+                if from_date and to_date:
+                    stats_filter["time_stamp__date__range"] = (from_date, to_date)
+
+                stats_data = Stat.objects.filter(**stats_filter)
+                for stat in stats_data:
+                    context[stat.type].append(stat.count)
+                    context[f"{stat.type}_time"].append(f"{stat.time_stamp.date()}")
+
+                return render(request, "userapi/dashboard.html", context=context)
+            messages.error(request, "Please add Instagram Accounts first.")
+            return redirect("userapi:instagram-accounts")
+        except Exception as e:
+            messages.error(request, str(e))
+            return render(request, "userapi/dashboard.html", status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
 class TargetTemplateView(APIView):
@@ -265,11 +289,15 @@ class InstaCredentialView(APIView):
             return redirect(f"/signin/?next={request.path}")
         try:
             pk = request.POST.get("previous_username")
-            credential, _ = Credential.objects.get_or_create(user=request.user, username=pk)
-            credential.username = request.POST.get("username")
-            credential.password = request.POST.get("password")
-            credential.profile_id = "fcdb64f3-bcea-4b02-94c3-848b87c4f0ef"
-            credential.save()
+            username = request.POST.get("username")
+            password = request.POST.get("password")
+            if pk is None:
+                credential = Credential.objects.create(user=request.user, username=username, password = password)
+                profile_id = create_profile(f"{request.user} - {credential.id}")
+                credential.profile_id = profile_id
+                credential.save()
+            else:
+                Credential.objects.filter(user=request.user, username=pk).update(username=username, password=password)
             messages.success(request, "Details " + ("updated" if pk else "added") + " successfully!")
             insta_creds = Credential.objects.filter(user=request.user)
             return render(
@@ -290,6 +318,7 @@ class InstaCredentialView(APIView):
             credential = get_object_or_404(
                 Credential, username=pk, user=request.user
             )
+            requests.get(f"http://localhost:35000/profile/delete/{credential.profile_id}")
             credential.delete()
             messages.success(
                 request, f"Instagram Account '{pk}' deleted successfully."

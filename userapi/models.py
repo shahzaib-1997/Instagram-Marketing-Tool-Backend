@@ -391,14 +391,22 @@ class Stat(models.Model):
         "username - followers_count"
     """
 
+    options = (
+        ("like", "like"),
+        ("comment", "comment"),
+        ("followers", "followers"),
+        ("engagement_rate", "engagement_rate")
+    )
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    followers = models.PositiveIntegerField()
-    engagement_rate = models.FloatField()
+    insta_account = models.ForeignKey(
+        Credential, on_delete=models.CASCADE, null=True, blank=True
+    )
+    type = models.CharField(max_length=255, choices=options, null=True, blank=True)
+    count = models.PositiveIntegerField()
     time_stamp = models.DateTimeField(auto_now_add=True, blank=True, null=True)
-    read = models.BooleanField(default=False)
 
     def __str__(self):
         """
         method __str__(): Returns a string representation of the object.
         """
-        return f"{self.user.username} - {self.followers}"
+        return f"{self.user.username} - {self.type} - {self.count} - {self.time_stamp.date()}"
