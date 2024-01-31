@@ -5,7 +5,7 @@ from datetime import datetime
 
 
 def fetch_users():
-    url_string = "https://instabotminsoft.pythonanywhere.com/"
+    url_string = "http://localhost:8000/"
     users = requests.get(f"{url_string}all-users/").json()
     for user in users:
         header = requests.post(f"{url_string}token/", data={"user_id": user}).json()
@@ -174,6 +174,15 @@ def fetch_users():
                     headers=header,
                     data=target,
                 )
+
+                insta_account = target["insta_user"]["username"]
+                activity_log= {"activity": f"{current_target} for {insta_account}"}
+                update_activity = requests.post(
+                    f"{url_string}activity-log/",
+                    headers= header,
+                    data = activity_log,
+                )
+                print(activity_log["activity"])
 
                 try:
                     user_bot.driver.close()
