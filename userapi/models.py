@@ -409,4 +409,4 @@ class Stat(models.Model):
         """
         method __str__(): Returns a string representation of the object.
         """
-        return f"{self.user.username} - {self.type} - {self.count}"
+        return f"{self.user.username} - {self.type} - {self.count} - {self.time_stamp.date()}"

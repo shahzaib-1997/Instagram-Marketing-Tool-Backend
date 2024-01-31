@@ -98,9 +98,9 @@
             </select>
           </div>
           <div class="d-flex align-items-center justify-content-center my-2">
-            <input type="text" class="datepicker form-control" name="from" id="from" placeholder="yyyy-mm-dd" value="{{ request.GET.from }}" autocomplete="off">
+            <input type="text" class="form-control text-center" name="from" id="from" placeholder="yyyy-mm-dd" value="{{ request.GET.from }}" autocomplete="off">
             <span class="mx-2"> to </span>
-            <input type="text" class="datepicker form-control" name="to" id="to" placeholder="yyyy-mm-dd" value="{{ request.GET.to }}" autocomplete="off">
+            <input type="text" class="form-control text-center" name="to" id="to" placeholder="yyyy-mm-dd" value="{{ request.GET.to }}" autocomplete="off">
           </div>
         </div>
         <div class="modal-footer">
@@ -131,17 +131,8 @@
         data: {{ followers }}
       }],
       colors: ["#0000FF"],
-      fill: {
-        type: "gradient",
-        gradient: {
-          shadeIntensity: 1,
-          opacityFrom: 0.7,
-          opacityTo: 0.9,
-          stops: [0, 90, 100]
-        }
-      },
       xaxis: {
-        categories: [1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999]
+        categories: {{ followers_time | safe }}
       },
       stroke: {
         curve: 'smooth',
@@ -156,21 +147,17 @@
     var options = {
       chart: {
         type: "radialBar",
+        height: 395,
       },
       series: [engagementRateValue],
-      colors: ["#00FF00"],
+      colors: ["#00DD00"],
       plotOptions: {
         radialBar: {
-          startAngle: -135,
-          endAngle: 135,
-          track: {
-            background: '#333',
-            startAngle: -135,
-            endAngle: 135,
-          },
           dataLabels: {
             name: {
-              show: false,
+              show: true,
+              color: "#888",
+              offsetY: -10,
             },
             value: {
               fontSize: "30px",
@@ -182,7 +169,7 @@
       fill: {
         type: "gradient",
         gradient: {
-          shade: "dark",
+          shade: "light",
           type: "horizontal",
           stops: [0, 100]
         }
@@ -190,7 +177,7 @@
       stroke: {
         lineCap: "butt"
       },
-      labels: ["Progress"]
+      labels: ["Average"]
     };
 
     new ApexCharts($("#engagementRateChart")[0], options).render();
@@ -222,11 +209,15 @@
         colors: ['transparent']
       },
       dataLabels: {
-        enabled: false
+        enabled: true,
+        offsetY: -10,
+        style: {
+          colors: ["#888"],
+        }
       },
       colors: ["#00D4F9", "#00E647"],
       xaxis: {
-        categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+        categories: {{ like_time | safe }},
       },
       yaxis: {
         title: {
@@ -237,8 +228,24 @@
 
     new ApexCharts($("#likeCommentChart")[0], options).render();
 
-    $('.datepicker').datepicker({
+    $("#from, #to").datepicker({
       dateFormat: "yy-mm-dd",
+      onSelect: function (selectedDate, inst) {
+        if (inst.id === "from") {
+          // Get the selected "from" date
+          var fromDate = $(this).datepicker('getDate');
+          
+          // If "to" date is selected
+          if ($('#to').datepicker('getDate') !== null) {
+            // Compare the dates and update if needed
+            if (fromDate > $('#to').datepicker('getDate')) {
+              $('#to').datepicker('setDate', '');
+            }
+          }
+          $('#to').datepicker('option', 'minDate', selectedDate);
+        }
+        $('button[type="submit"]').focus();
+      },
       maxDate: "0d"
     });
   });

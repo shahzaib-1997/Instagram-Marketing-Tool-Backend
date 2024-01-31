@@ -167,7 +167,7 @@ class DashboardView(APIView):
         try:
             insta_creds = Credential.objects.filter(user=request.user).values_list('username', flat=True)
             if insta_creds:
-                context = {opt : [] for opt, _ in Stat.options}
+                context = {opt: [] for opt, _ in Stat.options} | {f"{opt}_time": [] for opt, _ in Stat.options}
                 context["insta_creds"] = insta_creds
 
                 insta_account = request.GET.get("insta_account", insta_creds[0])
@@ -183,7 +183,8 @@ class DashboardView(APIView):
                 stats_data = Stat.objects.filter(**stats_filter)
                 for stat in stats_data:
                     context[stat.type].append(stat.count)
-                
+                    context[f"{stat.type}_time"].append(f"{stat.time_stamp.date()}")
+
                 return render(request, "userapi/dashboard.html", context=context)
             messages.error(request, "Please add Instagram Accounts first.")
             return redirect("userapi:instagram-accounts")
