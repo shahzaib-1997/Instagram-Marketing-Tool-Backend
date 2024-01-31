@@ -346,11 +346,6 @@
             msg += '<p>Please insert username or URL.</p>';
         }
 
-        let currentTime = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false });
-        if (currentTime >= $('#actTime').val()) {
-            msg += '</p>Please select correct activity time. It should be after current time.</p>';
-        }
-
         if (msg) {
             showMessage(msg);
             return false;

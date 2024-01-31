@@ -1,4 +1,4 @@
-import json
+import json, requests
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.authtoken.models import Token
@@ -10,6 +10,7 @@ from django.contrib.auth import authenticate, login, logout, update_session_auth
 from django.contrib import messages
 from django.utils import timezone
 from .dry import BaseAPIView, RenderAPIView, szr_val_save, add_user
+from .create_incogniton_profile import create_profile
 from .models import (
     ActivityTime,
     Credential,
@@ -288,11 +289,15 @@ class InstaCredentialView(APIView):
             return redirect(f"/signin/?next={request.path}")
         try:
             pk = request.POST.get("previous_username")
-            credential, _ = Credential.objects.get_or_create(user=request.user, username=pk)
-            credential.username = request.POST.get("username")
-            credential.password = request.POST.get("password")
-            credential.profile_id = "fcdb64f3-bcea-4b02-94c3-848b87c4f0ef"
-            credential.save()
+            username = request.POST.get("username")
+            password = request.POST.get("password")
+            if pk is None:
+                credential = Credential.objects.create(user=request.user, username=username, password = password)
+                profile_id = create_profile(f"{request.user} - {credential.id}")
+                credential.profile_id = profile_id
+                credential.save()
+            else:
+                Credential.objects.filter(user=request.user, username=pk).update(username=username, password=password)
             messages.success(request, "Details " + ("updated" if pk else "added") + " successfully!")
             insta_creds = Credential.objects.filter(user=request.user)
             return render(
@@ -313,6 +318,7 @@ class InstaCredentialView(APIView):
             credential = get_object_or_404(
                 Credential, username=pk, user=request.user
             )
+            requests.get(f"http://localhost:35000/profile/delete/{credential.profile_id}")
             credential.delete()
             messages.success(
                 request, f"Instagram Account '{pk}' deleted successfully."
