@@ -251,6 +251,7 @@ class TargetTemplateView(APIView):
             else:
                 target_type = target.target_type.type
 
+            target.user_comment = request.POST.get("comment")
             target.save()
 
             model_map = {

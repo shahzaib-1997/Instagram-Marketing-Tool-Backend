@@ -187,6 +187,7 @@ class Target(models.Model):
         ActivityTime, on_delete=models.CASCADE, null=True, blank=True
     )
     actions = models.ForeignKey(Action, on_delete=models.CASCADE, null=True, blank=True)
+    user_comment = models.TextField(default="")
     time_stamp = models.DateTimeField(auto_now_add=True, blank=True, null=True)
     status = models.IntegerField(choices=options, default=0)
 
