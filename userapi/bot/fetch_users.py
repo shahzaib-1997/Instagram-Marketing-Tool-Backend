@@ -52,8 +52,9 @@ def fetch_users():
                     ).json()
                     # perform hashtag function
                     hashtags = data[0]["url"].split("\r\n")
+                    comment = target["user_comment"]
                     for current_hashtag in hashtags:
-                        user_bot.hashtag_postCommenter(current_hashtag)
+                        user_bot.hashtag_postCommenter(current_hashtag, comment)
 
                 elif current_target == "post-like":
                     data = requests.get(
@@ -87,7 +88,8 @@ def fetch_users():
                         else:
                             username = username[-1]
 
-                        user_bot.post_commenter(username)
+                        comment = target["user_comment"]
+                        user_bot.post_commenter(username, comment)
 
                 elif current_target == "comment-like":
                     data = requests.get(
@@ -154,7 +156,8 @@ def fetch_users():
                         else:
                             username = username[-1]
 
-                        user_bot.reel_commenter(username)
+                        comment = target["user_comment"]
+                        user_bot.reel_commenter(username, comment)
 
                 elif current_target == "reels":
                     data = requests.get(

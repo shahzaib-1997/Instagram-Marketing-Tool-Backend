@@ -251,6 +251,7 @@ class TargetTemplateView(APIView):
             else:
                 target_type = target.target_type.type
 
+            target.user_comment = request.POST.get("comment")
             target.save()
 
             model_map = {
@@ -271,7 +272,6 @@ class TargetTemplateView(APIView):
         except Exception as e:
             messages.error(request, str(e))
             return redirect("userapi:target-edit", pk=target.id)
-
 
 class InstaCredentialView(APIView):
     def get(self, request):

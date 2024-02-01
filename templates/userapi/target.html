@@ -132,6 +132,15 @@
                                             </div>
                                         </div>
                                         {% endif %}
+                                        <!-- Add an input text box initially hidden -->
+                                        <div class="row justify-content-center">
+                                            <div class="col-lg-6 col-md-8 col-sm-10 col-12">
+                                                <div id="commentInput" class="form-group d-none align-items-center mb-3">
+                                                    <label for="comment" class="text-nowrap">Enter Comment:</label>
+                                                    <input type="text" id="comment" name="comment" class="ms-3 form-control" value="{{ target.user_comment }}">
+                                                </div>
+                                            </div>
+                                        </div>
                                         <div class="d-flex justify-content-center flex-wrap gap-3">
                                             <div class="col-12 col-md-6 col-lg-2">
                                                 <button type="button" class="btn ripple btn-primary w-75" data-bs-toggle="modal" data-bs-target="#listModal">
@@ -306,6 +315,27 @@
             // Close the modal
             $('#clearModal').modal('hide');
         });
+
+        if ("{{ target.target_type.type }}".includes('-comment')) {
+            $('#commentInput').addClass('d-flex').removeClass('d-none');
+            $('#comment').prop('required', true);
+        }
+
+        $('input[name="type"]').change(function () {
+            // Get the value of the selected radio button
+            var selectedValue = $('input[name="type"]:checked').val();
+
+            // Check if the selected value contains the word "comment"
+            if (selectedValue.includes('-comment')) {
+                // Show input text box
+                $('#commentInput').addClass('d-flex').removeClass('d-none');
+                $('#comment').prop('required', true);
+            } else {
+                // Hide input text box if the value doesn't contain "comment"
+                $('#commentInput').removeClass('d-flex').addClass('d-none');
+                $('#comment').prop('required', false);
+            }
+        });
     });
 
     // Function to Insert Target
@@ -338,12 +368,12 @@
         let instaAccount = $('#settingsDropdown').val();
         let msg = "";
         if (instaAccount === '#') {
-            msg = '<p>Please select Instagram Account for the Target.</p>';
+            msg = 'Please select Instagram Account for the Target. <br>';
         }
 
         let targetListElement = $('#targetList');
         if (!targetListElement.val()) {
-            msg += '<p>Please insert username or URL.</p>';
+            msg += 'Please insert username or URL.';
         }
 
         if (msg) {
@@ -358,6 +388,7 @@
     function showMessage(message) {
         // Display the message
         $("#message").append(message);
+        $('html, body').animate({ scrollTop: $(document).height() }, 'slow');
         setTimeout(function () {
             $("#message").text("");
         }, 7000);
