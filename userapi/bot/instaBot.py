@@ -11,9 +11,9 @@ from selenium.webdriver.common.action_chains import ActionChains
 class InstaBot:
 
     def __init__(self, profile_id):
-        
         # profile_id = initiatebrowser.get_profiles()[0]
         self.profile_id = profile_id
+
     def start_browser(self):
         self.driver = initiatebrowser.initiate_driver(self.profile_id)
         # self.driver.maximize_window()
@@ -85,7 +85,7 @@ class InstaBot:
         except Exception as error:
             print(f"There is an {error}. Please Retry!")
 
-    def post_commenter(self, username):
+    def post_commenter(self, username, comment):
         try:
             link_list = []
             random_number = random.randint(0, 5)
@@ -93,7 +93,6 @@ class InstaBot:
             self.wait.until(EC.presence_of_all_elements_located((By.XPATH,  '//div[@class="_aagw"]')))
             link_list = self.driver.find_elements(By.XPATH,  '//div[@class="_aagw"]')
             link_list[random_number].click()
-            comment = "Amazing collections of car"
             time.sleep(5)
             self.wait.until(EC.presence_of_element_located((By.XPATH,  "//textarea[contains(@aria-label,'Add a comment')]")))
             commenter = self.driver.find_element("xpath","//textarea[contains(@aria-label,'Add a comment')]")
@@ -182,57 +181,31 @@ class InstaBot:
         try:
             link_list = []
             random_number = random.randint(0, 5)
-            hashtag_loop = True
-            while hashtag_loop == True:
-                if '#' in user_input:
-                    if user_input[0] == '#':
-                        link = user_input.replace('#', '')
-                        self.driver.get("https://www.instagram.com/explore/tags/" + link)
-                        time.sleep(5)
-                        link_list = self.driver.find_elements(by= 'xpath', value= '//div[@class="_aagu"]')
-                        link_list[random_number].click()
-                        time.sleep(5)
-                        self.driver.find_element(by= 'xpath', value= '//div[@class="x6s0dn4 x78zum5 xdt5ytf xl56j7k"]//span').click()
-                        time.sleep(7)
-                        hashtag_loop = False
-                    else:
-                        print("The # is not in 1st position. This is a Hashtag post!")
-                        user_input = input("Enter a Hastag: ")
-
-                else:
-                    print("There is no # in your Input. This is a Hashtag post!")
-                    user_input = input("Enter a Hastag: ")
+            link = user_input.replace('#', '')
+            self.driver.get("https://www.instagram.com/explore/tags/" + link)
+            time.sleep(5)
+            link_list = self.driver.find_elements(by= 'xpath', value= '//div[@class="_aagu"]')
+            link_list[random_number].click()
+            time.sleep(5)
+            self.driver.find_element(by= 'xpath', value= '//div[@class="x6s0dn4 x78zum5 xdt5ytf xl56j7k"]//span').click()
+            time.sleep(7)
 
         except Exception as error:
             print(f"There is an {error}. Please Retry!")
     
 
-    def hashtag_postCommenter(self, user_input):
+    def hashtag_postCommenter(self, user_input, comment):
         try:
             link_list = []
             random_number = random.randint(0, 5)
-            hashtag_loop = True
-            while hashtag_loop == True:
-                if '#' in user_input:
-                    if user_input[0] == '#':
-                        link = user_input.replace('#', '')
-                        self.driver.get("https://www.instagram.com/explore/tags/" + link)
-                        time.sleep(7)
-                        link_list = self.driver.find_elements(by= 'xpath', value= '//div[@class="_aagw"]')
-                        link_list[random_number].click()
-                        comment = "Nice picture"
-                        self.wait.until(EC.presence_of_element_located((By.XPATH,  "//textarea[contains(@aria-label,'Add a comment')]")))
-                        commenter = self.driver.find_element("xpath","//textarea[contains(@aria-label,'Add a comment')]")
-                        self.action.send_keys_to_element(commenter,comment+Keys.ENTER).perform()
-                        hashtag_loop = False
-
-                    else:
-                        print("The # is not in 1st position. This is a Hashtag post!")
-                        user_input = input("Enter a Hastag: ")
-
-                else:
-                    print("There is no # in your Input. This is a Hashtag post!")
-                    user_input = input("Enter a Hastag: ")
+            link = user_input.replace('#', '')
+            self.driver.get("https://www.instagram.com/explore/tags/" + link)
+            time.sleep(7)
+            link_list = self.driver.find_elements(by= 'xpath', value= '//div[@class="_aagw"]')
+            link_list[random_number].click()
+            self.wait.until(EC.presence_of_element_located((By.XPATH,  "//textarea[contains(@aria-label,'Add a comment')]")))
+            commenter = self.driver.find_element("xpath","//textarea[contains(@aria-label,'Add a comment')]")
+            self.action.send_keys_to_element(commenter,comment+Keys.ENTER).perform()
 
         except Exception as error:
             print(f"There is an {error}. Please Retry!")
@@ -299,7 +272,7 @@ class InstaBot:
         span_element.click()
         time.sleep(3)
 
-    def reel_commenter(self, username):
+    def reel_commenter(self, username, comment):
         try:
             link_list = []
             random_number = random.randint(0, 5)
@@ -307,7 +280,6 @@ class InstaBot:
             self.wait.until(EC.presence_of_all_elements_located((By.XPATH,  '//div[@class="_aajy"]')))
             link_list = self.driver.find_elements(By.XPATH,  '//div[@class="_aajy"]')
             link_list[random_number].click()
-            comment = "Nice Car"
             self.wait.until(EC.presence_of_element_located((By.XPATH,  "//textarea[contains(@aria-label,'Add a comment')]")))
             commenter = self.driver.find_element("xpath","//textarea[contains(@aria-label,'Add a comment')]")
             self.action.send_keys_to_element(commenter,comment+Keys.ENTER).perform()
@@ -318,7 +290,7 @@ class InstaBot:
 
     def single_reel_liker(self, url):
         try:
-            url=url.replace("reel","reels")
+            url=url.replace("reel/","reels/")
             self.driver.get(url)
             self.wait.until(EC.presence_of_element_located((By.XPATH, '//div[@class="html-div xe8uvvx xdj266r x11i5rnm x1mh8g0r xexx8yu x4uap5 x18d9i69 xkhd6sd x6s0dn4 x1ypdohk x78zum5 xdt5ytf xieb3on"]//span')))
             like_button = self.driver.find_element(By.XPATH, '//div[@class="html-div xe8uvvx xdj266r x11i5rnm x1mh8g0r xexx8yu x4uap5 x18d9i69 xkhd6sd x6s0dn4 x1ypdohk x78zum5 xdt5ytf xieb3on"]//span')
