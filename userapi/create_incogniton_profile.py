@@ -1,4 +1,6 @@
-import requests, json
+import requests, json, time
+from .bot.instaBot import InstaBot
+
 
 def create_profile(profile_name):
     url = "http://localhost:35000/profile/add"
@@ -22,3 +24,13 @@ def create_profile(profile_name):
     print(res)
 
     return res["profile_browser_id"]
+
+
+def insta_login(profile_id, username, password):
+    user_bot = InstaBot(profile_id)
+    user_bot.start_browser()
+    time.sleep(5)
+    check = user_bot.login(username, password)
+    time.sleep(5)
+    user_bot.driver.close()
+    return check

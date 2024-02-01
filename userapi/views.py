@@ -10,7 +10,7 @@ from django.contrib.auth import authenticate, login, logout, update_session_auth
 from django.contrib import messages
 from django.utils import timezone
 from .dry import BaseAPIView, RenderAPIView, szr_val_save, add_user
-from .create_incogniton_profile import create_profile
+from .create_incogniton_profile import create_profile, insta_login
 from .models import (
     ActivityTime,
     Credential,
@@ -273,7 +273,6 @@ class TargetTemplateView(APIView):
             messages.error(request, str(e))
             return redirect("userapi:target-edit", pk=target.id)
 
-
 class InstaCredentialView(APIView):
     def get(self, request):
         if request.user.is_authenticated:
@@ -297,9 +296,15 @@ class InstaCredentialView(APIView):
                 profile_id = create_profile(f"{request.user} - {credential.id}")
                 credential.profile_id = profile_id
                 credential.save()
+                check = insta_login(profile_id, username, password)
+                if not check:
+                    messages.error(request, "Provided credentials are incorrect!")
+                    self.delete(request, username)
+                else:
+                    messages.success(request, "Instagram Account added successfully!")
             else:
                 Credential.objects.filter(user=request.user, username=pk).update(username=username, password=password)
-            messages.success(request, "Details " + ("updated" if pk else "added") + " successfully!")
+                messages.success(request, "Details updated successfully!")
             insta_creds = Credential.objects.filter(user=request.user)
             return render(
                 request, "userapi/insta_credentials.html", {"insta_creds": insta_creds}
@@ -321,9 +326,6 @@ class InstaCredentialView(APIView):
             )
             requests.get(f"http://localhost:35000/profile/delete/{credential.profile_id}")
             credential.delete()
-            messages.success(
-                request, f"Instagram Account '{pk}' deleted successfully."
-            )
             return Response(status=status.HTTP_204_NO_CONTENT)
         except Exception as e:
             messages.error(request, str(e))
