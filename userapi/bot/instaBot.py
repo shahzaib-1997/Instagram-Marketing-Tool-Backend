@@ -27,16 +27,13 @@ class InstaBot:
             password = self.driver.find_element(By.XPATH, '//input[@aria-label="Password"]').send_keys(password)
             login = self.wait.until(EC.element_to_be_clickable((By.XPATH,  '//button[@class=" _acan _acap _acas _aj1- _ap30"]')))
             login.click()
-            try:
-                not_now1 = self.wait.until(EC.presence_of_element_located((By.XPATH,  '//div[@class="_ac8f"]')))
-                not_now1.click()
-                not_now2 = self.wait.until(EC.presence_of_element_located((By.XPATH,  '//div[@class="_a9-z"]//button[@class="_a9-- _ap36 _a9_1"]')))
-                not_now2.click()
-            except:
-                print(f"There is an {error}. Please Retry!")
-
-        except Exception as error:
-            print(f"There is an {error}. Please Retry!")
+            not_now1 = self.wait.until(EC.presence_of_element_located((By.XPATH,  '//div[@class="_ac8f"]')))
+            not_now1.click()
+            not_now2 = self.wait.until(EC.presence_of_element_located((By.XPATH,  '//div[@class="_a9-z"]//button[@class="_a9-- _ap36 _a9_1"]')))
+            not_now2.click()
+            return True
+        except:
+            return False
 
 
     def story_viewer(self, username):
