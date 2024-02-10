@@ -12,6 +12,7 @@ from django.utils import timezone
 from .dry import BaseAPIView, RenderAPIView, szr_val_save, add_user
 from .create_incogniton_profile import create_profile, insta_login
 from .models import (
+    UserData,
     ActivityTime,
     Credential,
     Hashtag,
@@ -117,7 +118,8 @@ class SignupView(APIView):
             serializer = RegistrationSerializer(data=user_data, context={"request": request})
             if serializer.is_valid():
                 validated_data = serializer.validated_data
-                User.objects.create_user(**validated_data)
+                user = User.objects.create_user(**validated_data)
+                UserData.objects.create(user=user, country=request.data["country"])
                 messages.success(request, "User registered successfully.")
                 return redirect("userapi:login")
             else:
