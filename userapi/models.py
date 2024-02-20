@@ -33,6 +33,11 @@ from django.db import models
 from django.contrib.auth.models import User
 
 
+class UserData(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    country = models.CharField(max_length=255)
+    image = models.ImageField(upload_to="User/", default="User/dummy.jpg")
+
 class ActivityTime(models.Model):
     """
     Model to store user activity time.
@@ -395,7 +400,9 @@ class Stat(models.Model):
     options = (
         ("like", "like"),
         ("comment", "comment"),
+        ("posts", "posts"),
         ("followers", "followers"),
+        ("following", "following"),
         ("engagement_rate", "engagement_rate")
     )
     user = models.ForeignKey(User, on_delete=models.CASCADE)

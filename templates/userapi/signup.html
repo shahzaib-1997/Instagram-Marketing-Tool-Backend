@@ -6,11 +6,11 @@
 <meta property="og:url" content={% url "userapi:signup" %} />
 <link rel="canonical" href={% url "userapi:signup" %} />
 <link rel="alternate" href={% url "userapi:signup" %} hreflang="x-default" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/country-select-js/2.1.1/css/countrySelect.min.css">
 {% endblock %}
 
 {% block content %}
 <!--authentication-->
-
 <div class="section-authentication-cover">
   <div class="">
     <div class="row g-0">
@@ -36,7 +36,7 @@
                 </div>
                 <div class="col-12">
                   <label for="inputFullname" class="form-label">Full Name</label>
-                  <input type="name" class="form-control" name="fullname" id="inputFullname" placeholder="John Doe" required>
+                  <input type="text" class="form-control" name="fullname" id="inputFullname" placeholder="John Doe" required>
                 </div>
                 <div class="col-12">
                   <label for="inputEmailAddress" class="form-label">Email Address</label>
@@ -45,9 +45,13 @@
                 <div class="col-12">
                   <label for="inputChoosePassword" class="form-label">Password</label>
                   <div class="input-group" id="show_hide_password">
-                    <input type="password" class="form-control" name="password" id="inputChoosePassword" placeholder="Enter Password" required>
+                    <input type="password" class="form-control" name="password" id="inputChoosePassword" minlength="8" placeholder="Enter Password" required>
                     <a href="#" class="input-group-text bg-transparent"><i class="bi bi-eye-slash-fill"></i></a>
                   </div>
+                </div>
+                <div class="col-12">
+                  <label for="country" class="form-label me-3">Your Country</label>
+                  <input type="text" class="form-control" name="country" id="country" required>
                 </div>
                 <div class="col-12">
                   <div class="form-check form-switch">
@@ -75,4 +79,10 @@
   </div>
 </div>
 <!--authentication-->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/country-select-js/2.1.1/js/countrySelect.min.js"></script>
+<script>
+  $(document).ready(function () {
+    $("#country").countrySelect();
+  });
+</script>
 {% endblock content %}

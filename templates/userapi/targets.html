@@ -44,7 +44,7 @@
                         <table class="table table-hover align-middle">
                             <thead>
                                 <tr>
-                                    <th>Time stamp of target</th>
+                                    <th>Target Details</th>
                                     <th class="text-center">Actions</th>
                                 </tr>
                             </thead>
@@ -52,7 +52,7 @@
                                 {% if targets %}
                                 {% for target in targets %}
                                 <tr>
-                                    <td>{{ target.time_stamp }}</td>
+                                    <td>{{target.insta_user.username}} - {{target.target_type.type}} </td>
                                     <td class="text-center">
                                         <button type="button" class="btn btn-primary btn-sm mb-2 mb-sm-0 me-sm-2">
                                             <a href="{% url 'userapi:target-edit' target.id %}" class="text-white">
