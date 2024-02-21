@@ -70,7 +70,6 @@ class InstaBot:
 
     def post_liker(self, username):
         try:
-            link_list = []
             random_number = random.randint(0, 5)
             self.driver.get("https://www.instagram.com/" + username)
             self.wait.until(EC.presence_of_all_elements_located((By.XPATH,  '//div[@class="_aagw"]')))
@@ -84,7 +83,6 @@ class InstaBot:
 
     def post_commenter(self, username, comment):
         try:
-            link_list = []
             random_number = random.randint(0, 5)
             self.driver.get("https://www.instagram.com/" + username)
             self.wait.until(EC.presence_of_all_elements_located((By.XPATH,  '//div[@class="_aagw"]')))
@@ -100,7 +98,6 @@ class InstaBot:
 
     def likes_scrapper(self, username):
         try:
-            link_list = []
             likers_names = []
             random_number = random.randint(0, 5)
             self.driver.get("https://www.instagram.com/" + username)
@@ -176,7 +173,6 @@ class InstaBot:
 
     def hashtag_postLiker(self, user_input):
         try:
-            link_list = []
             random_number = random.randint(0, 5)
             link = user_input.replace('#', '')
             self.driver.get("https://www.instagram.com/explore/tags/" + link)
@@ -193,7 +189,6 @@ class InstaBot:
 
     def hashtag_postCommenter(self, user_input, comment):
         try:
-            link_list = []
             random_number = random.randint(0, 5)
             link = user_input.replace('#', '')
             self.driver.get("https://www.instagram.com/explore/tags/" + link)
@@ -211,7 +206,6 @@ class InstaBot:
     def hashtag_postLike_scrapper(self, user_input):
         try:
             hashtag_loop = True
-            link_list = []
             likers_names = []
             random_number = random.randint(0, 5)
             while hashtag_loop == True:
@@ -245,7 +239,6 @@ class InstaBot:
 
     def reel_viewer(self, username):
         try:
-            link_list = []
             random_number = random.randint(0, 5)
             self.driver.get("https://www.instagram.com/" + username + '/reels')
             self.wait.until(EC.presence_of_all_elements_located((By.XPATH, '//div[@class="_aajy"]')))
@@ -271,7 +264,6 @@ class InstaBot:
 
     def reel_commenter(self, username, comment):
         try:
-            link_list = []
             random_number = random.randint(0, 5)
             self.driver.get("https://www.instagram.com/" + username + '/reels')
             self.wait.until(EC.presence_of_all_elements_located((By.XPATH,  '//div[@class="_aajy"]')))

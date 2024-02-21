@@ -1,16 +1,22 @@
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
-from initiatebrowser import initiatebrowser
-import time
+from selenium.webdriver.common.action_chains import ActionChains
+from .initiatebrowser import initiatebrowser
+import requests
 
-profile_id = "8f03f922-0c14-423f-8bf8-13cda5d329e2"
-driver = initiatebrowser.initiate_driver(profile_id)
-wait = WebDriverWait(driver, 10)
 
-while True:
-    username = input("Enter Username or press enter to exit:")
-    if username:
+def get_profile_data():
+    url = "http://localhost:8000"
+    credentials = requests.get(f"{url}/all-credentials/").json()
+
+    profile_id = credentials[0]["profile_id"]
+    driver = initiatebrowser.initiate_driver(profile_id)
+    driver.maximize_window()
+    wait = WebDriverWait(driver, 10)
+    for credential in credentials:
+        username = credential["username"]
+        data = {'user': credential['user'], 'insta_account': credential['id']}
         try:
             driver.get(f"https://www.instagram.com/{username}")
             wait.until(
@@ -21,91 +27,114 @@ while True:
                     )
                 )
             )
-            posts = driver.find_element(
+            no_of_posts = driver.find_element(
                 By.XPATH,
                 '//span[@class="html-span xdj266r x11i5rnm xat24cr x1mh8g0r xexx8yu x4uap5 x18d9i69 xkhd6sd x1hl2dhg x16tdsg8 x1vvkbs"]',
-            )
-            no_of_posts = int(posts.text)
-            print(f"Number of posts = {no_of_posts}")
+            ).text
+            if "K" in no_of_posts:
+                count = int(float(no_of_posts.split("K")[0]) * 1000)
+            elif "M" in no_of_posts:
+                count = int(float(no_of_posts.split("M")[0]) * 1000000)
+            else:
+                count = int(no_of_posts.replace(',', ''))
+            data['type'] = "posts"
+            data['count'] = count
+            requests.post(f"{url}/all-credentials/", data=data)
 
             # followers scrapper
             followers = driver.find_element(
                 By.XPATH,
                 '(//span[@class="html-span xdj266r x11i5rnm xat24cr x1mh8g0r xexx8yu x4uap5 x18d9i69 xkhd6sd x1hl2dhg x16tdsg8 x1vvkbs"])[2]',
             ).text
-
-            print("Total Followers: ", followers)
+            if "K" in followers:
+                count = int(float(followers.split("K")[0]) * 1000)
+            elif "M" in followers:
+                count = int(float(followers.split("M")[0]) * 1000000)
+            else:
+                count = int(followers.replace(',', ''))
+            data['type'] = "followers"
+            data['count'] = count
+            requests.post(f"{url}/all-credentials/", data=data)
 
             # Following scrapper
-            numberof_following = driver.find_element(
+            following = driver.find_element(
                 By.XPATH,
                 '(//span[@class="html-span xdj266r x11i5rnm xat24cr x1mh8g0r xexx8yu x4uap5 x18d9i69 xkhd6sd x1hl2dhg x16tdsg8 x1vvkbs"])[3]',
             ).text
-            print("Total Following: ", numberof_following)
+            if "K" in following:
+                count = int(float(following.split("K")[0]) * 1000)
+            elif "M" in following:
+                count = int(float(following.split("M")[0]) * 1000000)
+            else:
+                count = int(following.replace(',', ''))
+            data['type'] = "following"
+            data['count'] = count
+            requests.post(f"{url}/all-credentials/", data=data)
 
-            if no_of_posts:
+            total_likes = 0
+            total_comments = 0
+            if no_of_posts != '0':
                 wait.until(
                     EC.presence_of_all_elements_located(
                         (By.XPATH, '//div[@class="_aagu"]')
                     )
                 )
                 posts = driver.find_elements(By.XPATH, '//div[@class="_aagu"]')
-                for e, i in enumerate(posts[:5], 2):
-                    i.click()
-                    print(f"Post {e+1}:")
+
+                try:
+                    pinned = len(
+                        driver.find_elements(
+                            By.CSS_SELECTOR, "svg[aria-label='Pinned post icon']"
+                        )
+                    )
+                except:
+                    pinned = 0
+
+                for i in posts[pinned:5+pinned]:
+                    # Create an ActionChains object
+                    actions = ActionChains(driver)
+
+                    # Move the cursor to the element
+                    actions.move_to_element(i).perform()
+
                     try:
-                        wait.until(
-                            EC.presence_of_all_elements_located(
-                                (By.XPATH, '//ul[@class="_a9ym"]//div[@class="_a9zs"]')
-                            )
-                        )
-                        time.sleep(1.5)
-                        comments = driver.find_elements(
-                            By.XPATH, '//ul[@class="_a9ym"]//div[@class="_a9zs"]'
-                        )
-                        print(f"Number of comments: {len(comments)}")
+                        likes = driver.find_element(By.XPATH, '//li[@class="_abpm"]').text
+                        print("likes:", likes)
+                        if "K" in likes:
+                            count = int(float(likes.split("K")[0]) * 1000)
+                        elif "M" in likes:
+                            count = int(float(likes.split("M")[0]) * 1000000)
+                        else:
+                            count = int(likes.replace(',', ''))
+                        total_likes += count
                     except:
-                        print("Comments on this post: 0 comments")
-                    likes = driver.find_element(
-                        By.XPATH, '//section[@class="_ae5m _ae5n _ae5o"]'
-                    ).text
-                    if "Be the first to like this" in likes:
-                        print("Likes on this post: 0 likes")
-                    elif ("Liked by" or "and" or "others") in likes:
-                        wait.until(
-                            EC.presence_of_element_located(
-                                (
-                                    By.XPATH,
-                                    '(//div[@class="x9f619 xjbqb8w x78zum5 x168nmei x13lgxp2 x5pf9jr xo71vjh xr1yuqi xkrivgy x4ii5y1 x1gryazu x1n2onr6 x1plvlek xryxfnj x1iyjqo2 x2lwn1j xeuugli xdt5ytf x1a02dak xqjyukv x1cy8zhl x1oa3qoh x1nhvcw1"]//a)[2]',
-                                )
-                            )
-                        )
-                        others_button = driver.find_element(
-                            By.XPATH,
-                            '(//div[@class="x9f619 xjbqb8w x78zum5 x168nmei x13lgxp2 x5pf9jr xo71vjh xr1yuqi xkrivgy x4ii5y1 x1gryazu x1n2onr6 x1plvlek xryxfnj x1iyjqo2 x2lwn1j xeuugli xdt5ytf x1a02dak xqjyukv x1cy8zhl x1oa3qoh x1nhvcw1"]//a)[2]',
-                        ).click()
-                        time.sleep(5)
-                        other_likes = driver.find_elements(
-                            By.XPATH,
-                            '//div[@class="x1dm5mii x16mil14 xiojian x1yutycm x1lliihq x193iq5w xh8yej3"]',
-                        )
-                        total_likes = 1 + len(other_likes)
-                        print(f"Number of Likes: {total_likes}")
-                        close_button = driver.find_element(
-                            By.XPATH, '//div[@class="_ac7b _ac7d"]//button'
-                        ).click()
-                    else:
-                        print(f"Number of Likes: {likes}")
-                    driver.find_element(
-                        By.XPATH,
-                        '//div[@class="x160vmok x10l6tqk x1eu8d0j x1vjfegm"]//div[@class="x6s0dn4 x78zum5 xdt5ytf xl56j7k"]',
-                    ).click()
+                        pass
+
+                    try:
+                        comments = driver.find_element(By.XPATH, '(//li[@class="_abpm"])[2]').text
+                        print("comments:", comments)
+                        if "K" in comments:
+                            count = int(float(comments.split("K")[0]) * 1000)
+                        elif "M" in comments:
+                            count = int(float(comments.split("M")[0]) * 1000000)
+                        else:
+                            count = int(comments.replace(',', ''))
+                        total_comments += count
+                    except:
+                        pass
             else:
-                print("No posts yet.")
+                print(f"No posts yet by {username}.")
+
+            data['type'] = "like"
+            data['count'] = total_likes
+            requests.post(f"{url}/all-credentials/", data=data)
+
+            data['type'] = "comment"
+            data['count'] = total_comments
+            requests.post(f"{url}/all-credentials/", data=data)
+
         except Exception as e:
             print(e)
-            break
-    else:
-        break
 
-driver.close()
+    driver.close()
+    print("Got all profiles stats.")

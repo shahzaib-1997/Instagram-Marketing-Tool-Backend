@@ -35,6 +35,7 @@ app_name = "userapi"
 urlpatterns = [
     path("", TemplateView.as_view(template_name="userapi/index.html"), name="index"),
     path("all-users/", views.GetAllUsers.as_view(), name="all-users"),
+    path("all-credentials/", views.AllCredentials.as_view(), name="all-credentials"),
     path("token/", views.CreateToken.as_view(), name="token"),
     path("signup/", views.SignupView.as_view(), name="signup"),
     path("signin/", views.LoginView.as_view(), name="login"),

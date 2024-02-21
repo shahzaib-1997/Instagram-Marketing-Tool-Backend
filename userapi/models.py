@@ -29,6 +29,7 @@ Example:
     >>> print(activity_time)
     "username - timestamp"
 """
+
 from django.db import models
 from django.contrib.auth.models import User
 
@@ -37,6 +38,7 @@ class UserData(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     country = models.CharField(max_length=255)
     image = models.ImageField(upload_to="User/", default="User/dummy.jpg")
+
 
 class ActivityTime(models.Model):
     """

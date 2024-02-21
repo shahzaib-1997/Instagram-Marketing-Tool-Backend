@@ -11,6 +11,7 @@ from .models import (
     Target,
     TargetType,
     Action,
+    UserData,
     Comment
 )
 
@@ -26,3 +27,4 @@ admin.site.register(TargetType)
 admin.site.register(Target)
 admin.site.register(Action)
 admin.site.register(Comment)
+admin.site.register(UserData)

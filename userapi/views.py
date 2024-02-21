@@ -45,6 +45,23 @@ from .serializers import (
 from datetime import datetime
 
 
+class AllCredentials(APIView):
+    def get(self, request):
+        try:
+            credentials = Credential.objects.all()
+            szr = CredentialSerializer(credentials, many=True)
+            return Response(szr.data)
+        except Exception as e:
+            print(e)
+            return Response(e)
+
+    def post(self, request):
+        szr = StatSerializer(data=request.data)
+        if szr_val_save(szr):
+            return Response(szr.data)
+        print(szr.errors)
+        return Response(szr.errors)
+
 class NotificationsView(APIView):
     def get(self, request):
         try:

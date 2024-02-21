@@ -128,11 +128,11 @@
       },
       series: [{
         name: 'Followers',
-        data: {{ followers }}
+        data: [0].concat({{ followers }})
       }],
       colors: ["#0000FF"],
       xaxis: {
-        categories: {{ followers_time | safe }}
+        categories: [0].concat({{ followers_time | safe }})
       },
       stroke: {
         curve: 'smooth',

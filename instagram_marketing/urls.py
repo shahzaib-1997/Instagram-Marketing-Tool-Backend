@@ -27,11 +27,16 @@ urlpatterns = [
 
 from apscheduler.schedulers.background import BackgroundScheduler
 from userapi.bot.fetch_users import thread_func
+from userapi.bot.profileScrapper import get_profile_data
 import atexit
 
 # Initialize the scheduler
 scheduler = BackgroundScheduler()
-scheduler.add_job(thread_func, "interval", seconds=5)
+scheduler.add_job(thread_func, "interval", seconds=10)
+
+# Schedule the second function to run once a day at a specific time
+# For example, let's say you want it to run every day at 5 AM
+scheduler.add_job(get_profile_data, "cron", hour=5)
 
 # Start the scheduler
 scheduler.start()
