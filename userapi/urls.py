@@ -198,4 +198,5 @@ urlpatterns = [
         TemplateView.as_view(template_name="userapi/instagram-tools.html"),
         name="instagram-tools",
     ),
+    path("target-update/", views.TargetUpdateView.as_view(), name="target-update"),
 ]
