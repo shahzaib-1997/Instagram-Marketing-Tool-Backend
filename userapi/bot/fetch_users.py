@@ -63,13 +63,16 @@ def fetch_users():
                     # perform post function
                     urls = data[0]["url"].split("\r\n")
                     for url in urls:
-                        username = url.split("/")
-                        if username[-1] == "":
-                            username = username[-2]
+                        if "/p/" in url:
+                            user_bot.post_liker_url(url)
                         else:
-                            username = username[-1]
+                            username = url.split("/")
+                            if username[-1] == "":
+                                username = username[-2]
+                            else:
+                                username = username[-1]
 
-                        user_bot.post_liker(username)
+                            user_bot.post_liker(username)
 
                 elif current_target == "post-comment":
                     data = requests.get(
@@ -80,18 +83,21 @@ def fetch_users():
                     # perform post function
                     urls = data[0]["url"].split("\r\n")
                     for url in urls:
-                        username = url.split("/")
-                        if username[-1] == "":
-                            username = username[-2]
-                        else:
-                            username = username[-1]
-
                         comment = target["user_comment"]
-                        user_bot.post_commenter(username, comment)
+                        if "/p/" in url:
+                            user_bot.post_comment_url(url, comment)
+                        else:
+                            username = url.split("/")
+                            if username[-1] == "":
+                                username = username[-2]
+                            else:
+                                username = username[-1]
+
+                            user_bot.post_commenter(username, comment)
 
                 elif current_target == "comment-like":
                     data = requests.get(
-                        f"{url_string}post/",
+                        f"{url_string}comment/",
                         params={"target_id": current_id},
                         headers=header,
                     ).json()
@@ -115,13 +121,17 @@ def fetch_users():
                     # perform post function
                     urls = data[0]["url"].split("\r\n")
                     for url in urls:
-                        username = url.split("/")
-                        if username[-1] == "":
-                            username = username[-2]
+                        url = url.replace('/reel/', '/reels/')
+                        if "/reels/" in url:
+                            user_bot.reel_viewer_url(url)
                         else:
-                            username = username[-1]
+                            username = url.split("/")
+                            if username[-1] == "":
+                                username = username[-2]
+                            else:
+                                username = username[-1]
 
-                        user_bot.reel_viewer(username)
+                            user_bot.reel_viewer(username)
 
                 elif current_target == "reels-like":
                     data = requests.get(
@@ -132,13 +142,17 @@ def fetch_users():
                     # perform post function
                     urls = data[0]["url"].split("\r\n")
                     for url in urls:
-                        username = url.split("/")
-                        if username[-1] == "":
-                            username = username[-2]
+                        url = url.replace('/reel/', '/reels/')
+                        if "/reels/" in url:
+                            user_bot.single_reel_liker(url)
                         else:
-                            username = username[-1]
+                            username = url.split("/")
+                            if username[-1] == "":
+                                username = username[-2]
+                            else:
+                                username = username[-1]
 
-                        user_bot.reel_liker(username)
+                            user_bot.reel_liker(username)
 
                 elif current_target == "reels-comment":
                     data = requests.get(
@@ -148,26 +162,19 @@ def fetch_users():
                     ).json()
                     urls = data[0]["url"].split("\r\n")
                     for url in urls:
-                        username = url.split("/")
-                        if username[-1] == "":
-                            username = username[-2]
-                        else:
-                            username = username[-1]
-
+                        url = url.replace('/reels/', '/reel/')
                         comment = target["user_comment"]
-                        user_bot.reel_commenter(username, comment)
+                        if "/reel/" in url:
+                            user_bot.reel_commenter_url(url, comment)
+                        else:
+                            username = url.split("/")
+                            if username[-1] == "":
+                                username = username[-2]
+                            else:
+                                username = username[-1]
 
-                elif current_target == "reels":
-                    data = requests.get(
-                        f"{url_string}reel/",
-                        params={"target_id": current_id},
-                        headers=header,
-                    ).json()
-                    # perform reels function
-                    for reel_url in data:
-                        url = reel_url["url"]
+                            user_bot.reel_commenter(username, comment)
 
-                        user_bot.single_reel_liker(url)
 
                 target["status"] = 2
                 update_status = requests.put(

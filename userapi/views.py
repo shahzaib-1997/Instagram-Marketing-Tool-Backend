@@ -41,6 +41,7 @@ from .serializers import (
     TargetTypeSerializer,
     TargetSerializer,
     ActionSerializer,
+    CommentSerializer
 )
 from datetime import datetime
 
@@ -641,6 +642,23 @@ class TargetUserView(BaseAPIView, RenderAPIView):
                 {"message": "Target User deleted successfully."},
                 status=status.HTTP_204_NO_CONTENT,
             )
+        except Exception as e:
+            return Response(
+                {"message": f"Error: {e}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
+
+
+class CommentView(BaseAPIView, RenderAPIView):
+    def get(self, request):
+        try:
+            target_id = request.GET.get("target_id")
+
+            if target_id:
+                comments = Comment.objects.filter(target=target_id)
+            else:
+                comments = Comment.objects.filter(user=request.user)
+            serializer = CommentSerializer(comments, many=True)
+            return Response(serializer.data)
         except Exception as e:
             return Response(
                 {"message": f"Error: {e}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR

@@ -106,6 +106,7 @@ urlpatterns = [
     path("hashtag/<int:pk>/", views.HashtagView.as_view(), name="hashtag"),
     path("target-user/", views.TargetUserView.as_view(), name="target-user"),
     path("target-user/<int:pk>/", views.TargetUserView.as_view(), name="target-user"),
+    path("comment/", views.CommentView.as_view(), name="comment"),
     path("post/", views.PostView.as_view(), name="post"),
     path("post/<int:pk>/", views.PostView.as_view(), name="post"),
     path("reel/", views.ReelView.as_view(), name="reel"),
