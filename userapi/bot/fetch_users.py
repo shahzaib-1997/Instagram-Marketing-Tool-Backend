@@ -208,3 +208,7 @@ def fetch_users():
 def thread_func():
     s = threading.Thread(target=lambda: fetch_users())
     s.start()
+
+
+def daily_update_target():
+    resp = requests.get("http://localhost:8000/target-update/")

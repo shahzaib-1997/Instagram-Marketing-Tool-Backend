@@ -1024,3 +1024,13 @@ class ActionView(BaseAPIView, RenderAPIView):
             return Response(
                 {"message": f"Error: {e}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR
             )
+
+
+class TargetUpdateView(APIView):
+    def get(self, request):
+        try:
+            count = Target.objects.all().update(status=0)
+            return Response(count)
+        except Exception as e:
+            print(e)
+            return Response(e)
