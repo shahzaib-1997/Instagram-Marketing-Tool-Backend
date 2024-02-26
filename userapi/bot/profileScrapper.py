@@ -4,10 +4,11 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.common.action_chains import ActionChains
 from .initiatebrowser import initiatebrowser
 import requests
+from userapi.host_url import BASE_URL
 
 
 def get_profile_data():
-    url = "http://localhost:8000"
+    url = BASE_URL
     credentials = requests.get(f"{url}/all-credentials/").json()
 
     profile_id = credentials[0]["profile_id"]
