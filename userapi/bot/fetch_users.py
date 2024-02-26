@@ -2,10 +2,11 @@ import requests
 import threading
 from .instaBot import InstaBot
 from datetime import datetime
+from userapi.host_url import BASE_URL
 
 
 def fetch_users():
-    url_string = "http://localhost:8000/"
+    url_string = BASE_URL
     users = requests.get(f"{url_string}all-users/").json()
     for user in users:
         header = requests.post(f"{url_string}token/", data={"user_id": user}).json()
@@ -17,7 +18,7 @@ def fetch_users():
             target_datetime = datetime.fromisoformat(target_time)
             current_datetime = datetime.now()
 
-            if current_status == 0 and target_datetime.hour == current_datetime.hour and target_datetime.minute == current_datetime.minute:
+            if current_status == 0 and target_datetime.hour == current_datetime.hour and target_datetime.minute <= current_datetime.minute:
                 current_id = target["id"]
                 target["status"] = 1
                 update_status = requests.put(
@@ -29,154 +30,158 @@ def fetch_users():
                 profile_id = target["insta_user"]["profile_id"]
                 # create insta bot object with relevant profile_id
                 user_bot = InstaBot(profile_id)
-                user_bot.start_browser()
+                check = user_bot.start_browser()
+                status = False
 
-                if current_target == "hashtag-like":
-                    data = requests.get(
-                        f"{url_string}hashtag/",
-                        params={"target_id": current_id},
-                        headers=header,
-                    ).json()
-                    # perform hashtag function
-                    hashtags = data[0]["url"].split("\r\n")
-                    for current_hashtag in hashtags:
-                        user_bot.hashtag_postLiker(current_hashtag)
+                if check:
+                    if current_target == "hashtag-like":
+                        data = requests.get(
+                            f"{url_string}hashtag/",
+                            params={"target_id": current_id},
+                            headers=header,
+                        ).json()
+                        # perform hashtag function
+                        hashtags = data[0]["url"].split("\r\n")
+                        for current_hashtag in hashtags:
+                            status = user_bot.hashtag_postLiker(current_hashtag)
 
-                elif current_target == "hashtag-comment":
-                    data = requests.get(
-                        f"{url_string}hashtag/",
-                        params={"target_id": current_id},
-                        headers=header,
-                    ).json()
-                    # perform hashtag function
-                    hashtags = data[0]["url"].split("\r\n")
-                    comment = target["user_comment"]
-                    for current_hashtag in hashtags:
-                        user_bot.hashtag_postCommenter(current_hashtag, comment)
-
-                elif current_target == "post-like":
-                    data = requests.get(
-                        f"{url_string}post/",
-                        params={"target_id": current_id},
-                        headers=header,
-                    ).json()
-                    # perform post function
-                    urls = data[0]["url"].split("\r\n")
-                    for url in urls:
-                        if "/p/" in url:
-                            user_bot.post_liker_url(url)
-                        else:
-                            username = url.split("/")
-                            if username[-1] == "":
-                                username = username[-2]
-                            else:
-                                username = username[-1]
-
-                            user_bot.post_liker(username)
-
-                elif current_target == "post-comment":
-                    data = requests.get(
-                        f"{url_string}post/",
-                        params={"target_id": current_id},
-                        headers=header,
-                    ).json()
-                    # perform post function
-                    urls = data[0]["url"].split("\r\n")
-                    for url in urls:
+                    elif current_target == "hashtag-comment":
+                        data = requests.get(
+                            f"{url_string}hashtag/",
+                            params={"target_id": current_id},
+                            headers=header,
+                        ).json()
+                        # perform hashtag function
+                        hashtags = data[0]["url"].split("\r\n")
                         comment = target["user_comment"]
-                        if "/p/" in url:
-                            user_bot.post_comment_url(url, comment)
-                        else:
+                        for current_hashtag in hashtags:
+                            status = user_bot.hashtag_postCommenter(current_hashtag, comment)
+
+                    elif current_target == "post-like":
+                        data = requests.get(
+                            f"{url_string}post/",
+                            params={"target_id": current_id},
+                            headers=header,
+                        ).json()
+                        # perform post function
+                        urls = data[0]["url"].split("\r\n")
+                        for url in urls:
+                            if "/p/" in url:
+                                status = user_bot.post_liker_url(url)
+                            else:
+                                username = url.split("/")
+                                if username[-1] == "":
+                                    username = username[-2]
+                                else:
+                                    username = username[-1]
+
+                                status = user_bot.post_liker(username)
+
+                    elif current_target == "post-comment":
+                        data = requests.get(
+                            f"{url_string}post/",
+                            params={"target_id": current_id},
+                            headers=header,
+                        ).json()
+                        # perform post function
+                        urls = data[0]["url"].split("\r\n")
+                        for url in urls:
+                            comment = target["user_comment"]
+                            if "/p/" in url:
+                                status = user_bot.post_comment_url(url, comment)
+                            else:
+                                username = url.split("/")
+                                if username[-1] == "":
+                                    username = username[-2]
+                                else:
+                                    username = username[-1]
+
+                                status = user_bot.post_commenter(username, comment)
+
+                    elif current_target == "comment-like":
+                        data = requests.get(
+                            f"{url_string}comment/",
+                            params={"target_id": current_id},
+                            headers=header,
+                        ).json()
+                        # perform post function
+                        urls = data[0]["url"].split("\r\n")
+                        for url in urls:
                             username = url.split("/")
                             if username[-1] == "":
                                 username = username[-2]
                             else:
                                 username = username[-1]
 
-                            user_bot.post_commenter(username, comment)
+                            status = user_bot.comment_liker(username)
 
-                elif current_target == "comment-like":
-                    data = requests.get(
-                        f"{url_string}comment/",
-                        params={"target_id": current_id},
-                        headers=header,
-                    ).json()
-                    # perform post function
-                    urls = data[0]["url"].split("\r\n")
-                    for url in urls:
-                        username = url.split("/")
-                        if username[-1] == "":
-                            username = username[-2]
-                        else:
-                            username = username[-1]
-
-                        user_bot.comment_liker(username)
-
-                elif current_target == "reels-view":
-                    data = requests.get(
-                        f"{url_string}reel/",
-                        params={"target_id": current_id},
-                        headers=header,
-                    ).json()
-                    # perform post function
-                    urls = data[0]["url"].split("\r\n")
-                    for url in urls:
-                        url = url.replace('/reel/', '/reels/')
-                        if "/reels/" in url:
-                            user_bot.reel_viewer_url(url)
-                        else:
-                            username = url.split("/")
-                            if username[-1] == "":
-                                username = username[-2]
+                    elif current_target == "reels-view":
+                        data = requests.get(
+                            f"{url_string}reel/",
+                            params={"target_id": current_id},
+                            headers=header,
+                        ).json()
+                        # perform post function
+                        urls = data[0]["url"].split("\r\n")
+                        for url in urls:
+                            url = url.replace('/reel/', '/reels/')
+                            if "/reels/" in url:
+                                status = user_bot.reel_viewer_url(url)
                             else:
-                                username = username[-1]
+                                username = url.split("/")
+                                if username[-1] == "":
+                                    username = username[-2]
+                                else:
+                                    username = username[-1]
 
-                            user_bot.reel_viewer(username)
+                                status = user_bot.reel_viewer(username)
 
-                elif current_target == "reels-like":
-                    data = requests.get(
-                        f"{url_string}reel/",
-                        params={"target_id": current_id},
-                        headers=header,
-                    ).json()
-                    # perform post function
-                    urls = data[0]["url"].split("\r\n")
-                    for url in urls:
-                        url = url.replace('/reel/', '/reels/')
-                        if "/reels/" in url:
-                            user_bot.single_reel_liker(url)
-                        else:
-                            username = url.split("/")
-                            if username[-1] == "":
-                                username = username[-2]
+                    elif current_target == "reels-like":
+                        data = requests.get(
+                            f"{url_string}reel/",
+                            params={"target_id": current_id},
+                            headers=header,
+                        ).json()
+                        # perform post function
+                        urls = data[0]["url"].split("\r\n")
+                        for url in urls:
+                            url = url.replace('/reel/', '/reels/')
+                            if "/reels/" in url:
+                                status = user_bot.single_reel_liker(url)
                             else:
-                                username = username[-1]
+                                username = url.split("/")
+                                if username[-1] == "":
+                                    username = username[-2]
+                                else:
+                                    username = username[-1]
 
-                            user_bot.reel_liker(username)
+                                status = user_bot.reel_liker(username)
 
-                elif current_target == "reels-comment":
-                    data = requests.get(
-                        f"{url_string}reel/",
-                        params={"target_id": current_id},
-                        headers=header,
-                    ).json()
-                    urls = data[0]["url"].split("\r\n")
-                    for url in urls:
-                        url = url.replace('/reels/', '/reel/')
-                        comment = target["user_comment"]
-                        if "/reel/" in url:
-                            user_bot.reel_commenter_url(url, comment)
-                        else:
-                            username = url.split("/")
-                            if username[-1] == "":
-                                username = username[-2]
+                    elif current_target == "reels-comment":
+                        data = requests.get(
+                            f"{url_string}reel/",
+                            params={"target_id": current_id},
+                            headers=header,
+                        ).json()
+                        urls = data[0]["url"].split("\r\n")
+                        for url in urls:
+                            url = url.replace('/reels/', '/reel/')
+                            comment = target["user_comment"]
+                            if "/reel/" in url:
+                                status = user_bot.reel_commenter_url(url, comment)
                             else:
-                                username = username[-1]
+                                username = url.split("/")
+                                if username[-1] == "":
+                                    username = username[-2]
+                                else:
+                                    username = username[-1]
 
-                            user_bot.reel_commenter(username, comment)
+                                status = user_bot.reel_commenter(username, comment)
 
-
-                target["status"] = 2
+                if status:
+                    target["status"] = 2
+                else:
+                    target["status"] = 0
                 update_status = requests.put(
                     f"{url_string}target/{current_id}/",
                     headers=header,
