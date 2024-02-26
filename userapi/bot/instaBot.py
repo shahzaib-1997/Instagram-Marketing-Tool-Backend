@@ -18,9 +18,12 @@ class InstaBot:
     def start_browser(self):
         self.driver = initiatebrowser.initiate_driver(self.profile_id)
         # self.driver.maximize_window()
-        self.driver.get("https://www.instagram.com/")
-        self.wait = WebDriverWait(self.driver, 10)
-        self.action = ActionChains(self.driver)
+        if self.driver:
+            self.wait = WebDriverWait(self.driver, 10)
+            self.action = ActionChains(self.driver)
+            return True
+        return False
+
 
     def login(self, username, password):
         try:
@@ -261,8 +264,10 @@ class InstaBot:
             comment_list = self.driver.find_elements(By.XPATH, '//span[@class="_a9zu"]')
             comment_list[random_number].click()
             time.sleep(3)
+            return True
         except Exception as error:
-            print(f"There is an {error}. Please Retry!")
+            print(f"Error: {error}")
+            return False
 
     def hashtag_postLiker(self, user_input):
         try:
@@ -280,9 +285,10 @@ class InstaBot:
                 value='//div[@class="x6s0dn4 x78zum5 xdt5ytf xl56j7k"]//span',
             ).click()
             time.sleep(7)
-
+            return True
         except Exception as error:
-            print(f"There is an {error}. Please Retry!")
+            print(f"Error: {error}")
+            return False
 
     def hashtag_postCommenter(self, user_input, comment):
         try:
@@ -303,9 +309,10 @@ class InstaBot:
                 "xpath", "//textarea[contains(@aria-label,'Add a comment')]"
             )
             self.action.send_keys_to_element(commenter, comment + Keys.ENTER).perform()
-
+            return True
         except Exception as error:
-            print(f"There is an {error}. Please Retry!")
+            print(f"Error: {error}")
+            return False
 
     def post_liker(self, username):
         try:
@@ -323,8 +330,10 @@ class InstaBot:
             )
             like_button.click()
             time.sleep(3)
+            return True
         except Exception as error:
-            print(f"There is an {error}. Please Retry!")
+            print(f"Error: {error}")
+            return False
 
     def post_liker_url(self, url):
         try:
@@ -334,8 +343,10 @@ class InstaBot:
                 EC.presence_of_element_located((By.XPATH, '//span[@class="xp7jhwk"]'))
             )
             like_button.click()
-        except Exception as e:
-            print(f"Error:{e}")
+            return True
+        except Exception as error:
+            print(f"Error: {error}")
+            return False
 
     def post_comment_url(self, url, comment):
         try:
@@ -350,8 +361,10 @@ class InstaBot:
                 "xpath", "//textarea[contains(@aria-label,'Add a comment')]"
             )
             self.action.send_keys_to_element(commenter, comment + Keys.ENTER).perform()
+            return True
         except Exception as error:
             print(f"Error: {error}")
+            return False
 
     def post_commenter(self, username, comment):
         try:
@@ -373,8 +386,10 @@ class InstaBot:
             )
             self.action.send_keys_to_element(commenter, comment + Keys.ENTER).perform()
             time.sleep(3)
+            return True
         except Exception as error:
-            print(f"There is an {error}. Please Retry!")
+            print(f"Error: {error}")
+            return False
 
     def reel_viewer(self, username):
         try:
@@ -386,42 +401,51 @@ class InstaBot:
             link_list = self.driver.find_elements(By.XPATH, '//div[@class="_aajy"]')
             link_list[random_number].click()
             time.sleep(5)
+            return True
         except Exception as error:
-            print(f"There is an {error}. Please Retry!")
+            print(f"Error: {error}")
+            return False
 
     def reel_viewer_url(self, url):
         try:
             self.driver.get(url)
             time.sleep(5)
+            return True
         except Exception as error:
-            print(f"There is an {error}. Please Retry!")
+            print(f"Error: {error}")
+            return False
 
     def reel_liker(self, username):
-        link_list = []
-        random_number = random.randint(0, 5)
-        self.driver.get("https://www.instagram.com/" + username + "/reels")
-        self.wait.until(
-            EC.presence_of_all_elements_located((By.XPATH, '//div[@class="_aajy"]'))
-        )
-        link_list = self.driver.find_elements(By.XPATH, '//div[@class="_aajy"]')
-        link_list[random_number].click()
-        current_url = self.driver.current_url
-        modified_url = current_url.replace("reel", "reels")
-        self.driver.get(modified_url)
-        self.wait.until(
-            EC.presence_of_element_located(
-                (
-                    By.XPATH,
-                    '//div[@class="html-div xe8uvvx xdj266r x11i5rnm x1mh8g0r xexx8yu x4uap5 x18d9i69 xkhd6sd x6s0dn4 x1ypdohk x78zum5 xdt5ytf xieb3on"]//span',
+        try:
+            link_list = []
+            random_number = random.randint(0, 5)
+            self.driver.get("https://www.instagram.com/" + username + "/reels")
+            self.wait.until(
+                EC.presence_of_all_elements_located((By.XPATH, '//div[@class="_aajy"]'))
+            )
+            link_list = self.driver.find_elements(By.XPATH, '//div[@class="_aajy"]')
+            link_list[random_number].click()
+            current_url = self.driver.current_url
+            modified_url = current_url.replace("reel", "reels")
+            self.driver.get(modified_url)
+            self.wait.until(
+                EC.presence_of_element_located(
+                    (
+                        By.XPATH,
+                        '//div[@class="html-div xe8uvvx xdj266r x11i5rnm x1mh8g0r xexx8yu x4uap5 x18d9i69 xkhd6sd x6s0dn4 x1ypdohk x78zum5 xdt5ytf xieb3on"]//span',
+                    )
                 )
             )
-        )
-        span_element = self.driver.find_element(
-            By.XPATH,
-            '//div[@class="html-div xe8uvvx xdj266r x11i5rnm x1mh8g0r xexx8yu x4uap5 x18d9i69 xkhd6sd x6s0dn4 x1ypdohk x78zum5 xdt5ytf xieb3on"]//span',
-        )
-        span_element.click()
-        time.sleep(3)
+            span_element = self.driver.find_element(
+                By.XPATH,
+                '//div[@class="html-div xe8uvvx xdj266r x11i5rnm x1mh8g0r xexx8yu x4uap5 x18d9i69 xkhd6sd x6s0dn4 x1ypdohk x78zum5 xdt5ytf xieb3on"]//span',
+            )
+            span_element.click()
+            time.sleep(3)
+            return True
+        except Exception as error:
+            print(f"Error: {error}")
+            return False
 
     def reel_commenter(self, username, comment):
         try:
@@ -442,8 +466,10 @@ class InstaBot:
             )
             self.action.send_keys_to_element(commenter, comment + Keys.ENTER).perform()
             time.sleep(3)
+            return True
         except Exception as error:
-            print(f"There is an {error}. Please Retry!")
+            print(f"Error: {error}")
+            return False
 
     def reel_commenter_url(self, url, comment):
         try:
@@ -458,8 +484,10 @@ class InstaBot:
                 "xpath", "//textarea[contains(@aria-label,'Add a comment')]"
             )
             self.action.send_keys_to_element(commenter, comment + Keys.ENTER).perform()
+            return True
         except Exception as error:
             print(f"Error: {error}")
+            return False
 
     def single_reel_liker(self, url):
         try:
@@ -478,5 +506,7 @@ class InstaBot:
             )
             like_button.click()
             time.sleep(2)
-        except Exception as e:
-            print(f"Error in liking reel: {e}")
+            return True
+        except Exception as error:
+            print(f"Error: {error}")
+            return False
