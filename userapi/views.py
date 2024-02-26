@@ -257,20 +257,16 @@ class TargetTemplateView(APIView):
                 target = get_object_or_404(Target, id=pk)
                 target.activity_time.time = activity_time
                 target.activity_time.save()
+                target_type = target.target_type.type
             else:
                 target = Target.objects.create(user=request.user)
                 target.activity_time = ActivityTime.objects.create(time=activity_time, user=request.user)
+                target_type = request.POST.get("type")
+                target.target_type = TargetType.objects.create(type=target_type, user=request.user)
 
             insta_cred = request.POST.get("selected_insta_cred")
             credential = get_object_or_404(Credential, id=insta_cred)
             target.insta_user = credential
-
-            target_type = request.POST.get("type")
-            if target_type:
-                target.target_type = TargetType.objects.create(type=target_type, user=request.user)
-            else:
-                target_type = target.target_type.type
-
             target.user_comment = request.POST.get("comment")
             target.save()
 

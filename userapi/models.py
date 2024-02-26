@@ -194,7 +194,7 @@ class Target(models.Model):
         ActivityTime, on_delete=models.CASCADE, null=True, blank=True
     )
     actions = models.ForeignKey(Action, on_delete=models.CASCADE, null=True, blank=True)
-    user_comment = models.TextField(default="")
+    user_comment = models.TextField(default="", null=True, blank=True)
     time_stamp = models.DateTimeField(auto_now_add=True, blank=True, null=True)
     status = models.IntegerField(choices=options, default=0)
 
@@ -202,7 +202,7 @@ class Target(models.Model):
         """
         method __str__(): Returns a string representation of the object.
         """
-        return f"{self.user.username} - {dict(self.options).get(self.status)}"
+        return f"{self.user.username} - {self.target_type.type} - {dict(self.options).get(self.status)}"
 
 
 class Hashtag(models.Model):
