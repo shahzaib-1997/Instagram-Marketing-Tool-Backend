@@ -238,6 +238,11 @@ class TargetTemplateView(APIView):
                     model = model_map.get(mod)
                     act = model.objects.get(target=target, user=request.user)
                     context["url"] = act.url
+                else:
+                    opt = request.GET.get("opt")
+                    if opt is None:
+                        return redirect("userapi:dashboard")
+                    context["opt"] = opt
                 return render(request, "userapi/target.html", context=context)
             messages.error(request, "Please add Instagram Accounts against your account to add Target.")
             return redirect("userapi:instagram-accounts")

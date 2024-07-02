@@ -8,6 +8,17 @@
   .apexcharts-toolbar {
     z-index: 1 !important;
   }
+
+  .radio {
+    background-color: white;
+    border-radius: 3px;
+    border-style: solid;
+    border-color: transparent;
+  }
+
+  .radio a, .radio i {
+    color: gray;
+  }
 </style>
 {% endblock %}
 
@@ -27,12 +38,84 @@
         </nav>
       </div>
       <div class="ms-auto">
-        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#instaUser">Options</button>
+        <button type="button" class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#instaUser">Options</button>
       </div>
     </div>
     <!--end breadcrumb-->
     {% include "userapi/messages_snippet.html" %}
     <p class="text-danger my-2"><strong id="message"></strong></p>
+    <!-- Options -->
+    <div class="container mb-3">
+      <div class="row g-2">
+        <div class="col-12 col-md-6 col-lg-3">
+          <div class="d-flex radio flex-column align-items-center text-center p-3">
+            <i class='bx bx-heart bx-md'></i>
+            <h4>
+              <a href='{% url "userapi:target-edit"%}?opt=post-like'>Post (like)</a>
+            </h4>
+          </div>
+        </div>
+        <div class="col-12 col-md-6 col-lg-3">
+          <div class="d-flex radio flex-column align-items-center text-center p-3">
+            <i class='bx bx-comment bx-md'></i>
+            <h4>
+              <a href='{% url "userapi:target-edit"%}?opt=post-comment'>Post (comment)</a>
+            </h4>
+          </div>
+        </div>
+        <div class="col-12 col-md-6 col-lg-3">
+          <div class="d-flex radio flex-column align-items-center text-center p-3">
+            <i class='bx bx-video bx-md'></i>
+            <h4>
+              <a href='{% url "userapi:target-edit"%}?opt=reels-view'>Reels (view)</a>
+            </h4>
+          </div>
+        </div>
+        <div class="col-12 col-md-6 col-lg-3">
+          <div class="d-flex radio flex-column align-items-center text-center p-3">
+            <i class='bx bx-comment bx-md'></i>
+            <h4>
+              <a href='{% url "userapi:target-edit"%}?opt=reels-comment'>Reels (comment)</a>
+            </h4>
+          </div>
+        </div>
+      </div>
+      <div class="row g-2 mt-2">
+        <div class="col-12 col-md-6 col-lg-3">
+          <div class="d-flex radio flex-column align-items-center text-center p-3">
+            <i class='bx bx-heart bx-md'></i>
+            <h4>
+              <a href='{% url "userapi:target-edit"%}?opt=reels-like'>Reels (like)</a>
+            </h4>
+          </div>
+        </div>
+        <div class="col-12 col-md-6 col-lg-3">
+          <div class="d-flex radio flex-column align-items-center text-center p-3">
+            <i class='bx bx-heart bx-md'></i>
+            <h4>
+              <a href='{% url "userapi:target-edit"%}?opt=comment-like'>Comment (like)</a>
+            </h4>
+          </div>
+        </div>
+        <div class="col-12 col-md-6 col-lg-3">
+          <div class="d-flex radio flex-column align-items-center text-center p-3">
+            <i class='bx bx-heart bx-md'></i>
+            <h4>
+              <a href='{% url "userapi:target-edit"%}?opt=hashtag-like'>#Hashtags (like)</a>
+            </h4>
+          </div>
+        </div>
+        <div class="col-12 col-md-6 col-lg-3">
+          <div class="d-flex radio flex-column align-items-center text-center p-3">
+            <i class='bx bx-comment bx-md'></i>
+            <h4>
+              <a class="button" href='{% url "userapi:target-edit"%}?opt=hashtag-comment'>#Hashtags (comment)</a>
+            </h4>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- End Options -->
     <!-- Charts -->
     <div class="row">
       <div class="col-12 col-xl-6">
@@ -104,7 +187,7 @@
           </div>
         </div>
         <div class="modal-footer">
-          <button type="submit" class="btn btn-primary" data-bs-dismiss="modal">Submit</button>
+          <button type="submit" class="btn btn-dark" data-bs-dismiss="modal">Submit</button>
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
         </div>
       </form>
