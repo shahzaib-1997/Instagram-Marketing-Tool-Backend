@@ -1,0 +1,348 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en-US">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
+        <meta name="theme-color" content="#fff">
+        <meta name="description" content="Instagram Growth Tool - Stellation Media">
+        <meta name="keywords" content="instagram, growth tool, instagram growth, instagram targeted growth, Instagram followers">
+        <link rel="icon" href="{% static '' %}Targeting Settings_files/sisomade-66a2a8e5a60ed.png" type="image/x-icon">
+        <link rel="shortcut icon" href="{% static '' %}Targeting Settings_files/sisomade-66a2a8e5a60ed.png" type="image/x-icon">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/simple-line-icons@2.5.5/css/simple-line-icons.min.css">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@mdi/font@7.4.47/css/materialdesignicons.min.css">
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Fira+Sans:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+        <link rel="stylesheet" type="text/css" href="{% static '' %}Targeting Settings_files/plugins.css">
+        <link rel="stylesheet" type="text/css" href="{% static '' %}Targeting Settings_files/core.css">
+        <link rel="stylesheet" type="text/css" href="{% static '' %}Targeting Settings_files/core(1).css">
+        <title>Add New Account</title>
+        <style id="popupstyles">
+            body.js-popup-opened {
+                padding-right: 5px;
+                overflow: hidden;
+            }
+
+            .js-popup {
+                overflow-y: scroll;
+            }
+        </style>
+    </head>
+
+    <body>
+        {% include "nav.html" %}
+        <div class="skeleton proxy-manager-pro" id="pmp-account">
+            <div class="section-header back-button-wh none pt-10">
+                <a href="/accounts">
+                    <span class="mdi mdi-reply"></span>Back </a>
+            </div>
+            <form action="/instagram-accounts/" method="POST" autocomplete="off">
+                {% csrf_token %}
+                <div class="container-1200">
+                    <div class="row clearfix">
+                        <div class="col s12 m8 l4 mb-20">
+                            <div class="clearfix">
+                                <div class="col s12 m12 l12 js-hide-aa-notice">
+                                    <section class="section mb-20">
+                                        <div class="section-content aa-notice ">
+                                            <p>We have a <strong>100% success connecting accounts.&nbsp;</strong><br>
+                                                If you are having issues, check out
+                                                <a href="#">this help guide</a>.
+                                            </p>
+                                            <div>
+                                            </div>
+                                        </div>
+                                    </section>
+                                </div>
+                            </div>
+                            <section class="section">
+                                <div class="section-content">
+                                    <div class="form-result">
+                                    </div>
+                                    <div class="js-login">
+                                        <div class="mb-20">
+                                            <label class="form-label">
+                                                Username </label>
+                                            <input class="input" name="username" type="text" placeholder="Enter username" maxlength="70">
+                                        </div>
+                                        <div class="mb-20">
+                                            <label class="form-label">
+                                                Password </label>
+                                            <input class="input" name="password" type="password" placeholder="Enter password">
+                                        </div>
+                                        <div class="mb-20">
+                                            <a href="javascript:void(0)" class="pmpa-platform-toggler pmpa-toggler-button opened"><span class="mdi icon mr-3 mdi-arrow-up"></span>Platform</a>
+                                        </div>
+                                        <div class="clearfix pmpa-platform">
+                                            <div class="mb-10">
+                                                <label class="form-label">
+                                                    Platform </label>
+                                                <select class="input" name="platform">
+                                                    <option value="mobile">Mobile</option>
+                                                    <option value="desktop">Desktop</option>
+                                                </select>
+                                                <ul class="field-tips">
+                                                    <li>Here you can select the platform for the emulated device. There is
+                                                        no big difference, optionally.</li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                        <!-- Wesley Start Mod -->
+                                        <!-- Wesley End Mod -->
+                                        <div class="mb-20">
+                                            <a href="javascript:void(0)" class="pmpa-verification-toggler pmpa-toggler-button opened"><span class="mdi icon mr-3 mdi-arrow-up"></span>Verification</a>
+                                        </div>
+                                        <div class="clearfix pmpa-verification">
+                                            <div class="mb-20">
+                                                <label class="form-label">
+                                                    Verification </label>
+                                                <select class="input" name="choice">
+                                                    <option value="1">E-mail</option>
+                                                    <option value="2">Mobile phone</option>
+                                                    <option value="4">Login confirm from trusted device</option>
+                                                    <option value="5">Backup codes</option>
+                                                    <option value="6">WhatsApp</option>
+                                                </select>
+                                                <ul class="field-tips">
+                                                    <li>Sometimes Instagram can ask you to verify your identity, choose
+                                                        preferred verification method.</li>
+                                                    <li>Email method is used by default.</li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="js-browser-extension none">
+                                        <input type="hidden" name="iacid" disabled>
+                                        <div class="mb-20">
+                                            <label class="form-label">
+                                                Attach Instagram Cookies </label>
+                                            <ul class="field-tips-ext">
+                                                <li class="mb-5">By this link install <a href="https://chrome.google.com/webstore/detail/cookie-downloader/epldkbdhmpdcdgcolndopgkigelnmlmo" target="_blank">Cookie Downloader</a> extension for Google Chrome,
+                                                    Opera and Firefox.</li>
+                                                <li class="mb-5">Go to <a target="_blank" href="https://www.instagram.com/">Instagram</a> website and login to
+                                                    your account.</li>
+                                                <li class="mb-5">Download cookie file by clicking <b>Download</b> button in
+                                                    extension.</li>
+                                                <li class="mb-5">Attach cookie to the form below.</li>
+                                            </ul>
+                                        </div>
+                                        <div class="mb-20 cookie-file-extension" style="display: none;">
+                                            <label class="form-label">Cookie file</label>
+                                            <div class="pos-r">
+                                                <input class="input inputfile-session rightpad" name="cookie-file-extension" type="file" id="cookie-file-extension">
+                                                <label class="input cookie-file-label" for="cookie-file-extension">
+                                                    <span>Choose file username-cookie.dat</span>
+                                                    <span class="mdi mdi-folder field-icon--right"></span>
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="js-2fa none">
+                                        <input type="hidden" name="2faid" disabled>
+                                        <div class="js-2fa-security-code mb-20">
+                                            <label class="form-label">
+                                                Security Code <span class="compulsory-field-indicator">*</span>
+                                            </label>
+                                            <input class="input" name="twofa-security-code" type="text" placeholder="Enter security code" maxlength="8" disabled>
+                                        </div>
+                                        <div>
+                                            <div class="js-not-received-security-code">
+                                                Didn't get a security code? <a class="resend-btn" href="javascript:void(0)">
+                                                    Resend it <span class="timer" data-text="after {seconds} seconds"></span>
+                                                </a>
+                                            </div>
+                                            <div class="resend-result color-danger fz-12"></div>
+                                        </div>
+                                    </div>
+                                    <div class="js-challenge none">
+                                        <input type="hidden" name="challengeid" disabled>
+                                        <div class="js-challenge">
+                                            <div class="mb-20">
+                                                <label class="form-label">
+                                                    Security Code <span class="compulsory-field-indicator">*</span>
+                                                </label>
+                                                <input class="input js-required" name="challenge-security-code" type="text" placeholder="Enter security code" maxlength="6" disabled>
+                                            </div>
+                                            <div>
+                                                <div class="js-not-received-security-code">
+                                                    Didn't get a security code?
+                                                    <a class="resend-btn" href="javascript:void(0)">
+                                                        Resend it <span class="timer" data-text="after {seconds} seconds"></span>
+                                                    </a>
+                                                </div>
+                                                <div class="resend-result color-danger fz-12"></div>
+                                            </div>
+                                            <p class="backup-note">
+                                                You should receive the 6 digit security code sent by Instagram. </p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="js-login">
+                                    <input class="fluid button button--footer js-login" type="submit" value="Add account">
+                                </div>
+                                <div class="js-2fa js-challenge js-browser-extension none">
+                                    <input class="fluid button button--footer" type="submit" value="Confirm">
+                                </div>
+                                <div class="js-edit-mode-fields none">
+                                    <input class="fluid button button--footer" type="submit" value="Save">
+                                </div>
+                            </section>
+                        </div>
+                        <div class="col s12 m8 l8 mr-0 js-hide-aa-message">
+                            <section class="section">
+                                <div class="section-content aa-message">
+                                    <p><strong>ACCOUNT CONNECT CHECKLIST&nbsp;</strong></p>
+                                    <ol>
+                                        <li>
+                                            <p>Make sure you are logged into your Instagram account on your smartphone</p>
+                                        </li>
+                                        <li>
+                                            <p>Make sure that the password,email and phone numbers linked to your Instagram
+                                                are correct</p>
+                                        </li>
+                                        <li>
+                                            <p>Once you connect, select <strong>THIS WAS ME</strong>&nbsp;"We noticed a new
+                                                login from Netherlands"</p>
+                                        </li>
+                                        <li>
+                                            <p>If you did not recieve a 6 digit code via SMS, wait 60 seconds then click
+                                                RESEND</p>
+                                        </li>
+                                        <li>
+                                            <p>If you did not recieve a 6 digit code via EMAIL, check your SPAM and SOCIAL
+                                                tabs</p>
+                                        </li>
+                                    </ol>
+                                    <p><strong>CANT CONNECT?</strong></p>
+                                    <ol>
+                                        <li>
+                                            <p>Delete your accounts recent login activity.&nbsp;&nbsp;<a href="https://help.instagram.com/2761108904184084" target="_blank">Check
+                                                    out this guide</a> from Instagram</p>
+                                        </li>
+                                        <li>
+                                            <p>Change your Instagram password and reconnect your account, this resets the
+                                                API</p>
+                                        </li>
+                                        <li>
+                                            <p>If you are still unable to connect, come back in a couple hours and try again
+                                            </p>
+                                        </li>
+                                        <li>
+                                            <p>You can also turn off 2FA. <a href="https://help.instagram.com/1124604297705184" target="_blank">Check
+                                                    out this guide</a> from Instagram</p>
+                                        </li>
+                                        <li>
+                                            <p>If you are still having problems, please contact live chat or&nbsp;<a href="mailto:support@stellationmedia.com?subject=I%20Can%27t%20Connect%20My%20Account&amp;body=Hey%20Support%20Team%2C%0A%0AI%20am%20having%20trouble%20connecting%20my%20account.%20%0A%0ACan%20you%20please%20help%20me%20out%3F%0A%0AThanks">email
+                                                    us</a>.&nbsp;</p>
+                                        </li>
+                                    </ol>
+                                    <div>
+                                    </div>
+                                </div>
+                            </section>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <script type="text/javascript" src="{% static '' %}Targeting Settings_files/plugins.js"></script>
+        <script type="text/javascript" charset="utf-8">
+            var __ = function (msgid) {
+                return window.i18n[msgid] || msgid;
+            };
+            window.i18n = {
+                // Cache Refresh modification
+                'Cache successfully cleared': 'Cache successfully cleared',
+                'Are you sure?': 'Are you sure?',
+                'It is not possible to get back removed data!': 'It is not possible to get back removed data!',
+                'Yes, Delete': 'Yes, Delete',
+                'Cancel': 'Cancel',
+                'Fill required fields': 'Fill required fields.',
+                'Please select at least 2 media album post.': 'Please select at least 2 media album post.',
+                'Please select one media for story post.': 'Please select one media for story post.',
+                'Please select one media for post.': 'Please select one media for post.',
+                'Please select an Instagram account to post.': 'Please select an Instagram account to post.',
+                'Oops! An error occured. Please try again later!': 'Oops! An error occured. Please try again later!',
+                'Use the TAB key to insert emoji faster': 'Use the TAB key to insert emoji faster',
+                'Total Posts': 'Total Posts',
+                'Followers': 'Followers',
+                'Following': 'Following',
+                'Uploading...': 'Uploading...',
+                'Do you really want to cancel automatic payments?': 'Do you really want to cancel automatic payments?',
+                'Yes, cancel automatic payments': 'Yes, cancel automatic payments',
+                'No': 'No',
+                'Verification': 'Verification',
+                'Searching for %s': 'Searching for %s...',
+                '+%s more': '+%s more',
+                // Account Login Activity
+                "Login Activity": 'Login Activity',
+                "Active now": 'Active now',
+                "Log Out": 'Log Out',
+                "This Apple iPhone": 'This Apple iPhone',
+                "Apple iPhone": 'Apple iPhone',
+                "Where You're Logged in": 'Where You\'re Logged in',
+                "Was This You?": 'Was This You?',
+                "This Was Me": 'This Was Me',
+                "This Wasn’t Me": 'This Wasn’t Me',
+                // Account Change Password
+                "New Password": 'New Password',
+                "Change Password": 'Change Password',
+                "Update Password": 'Update Password',
+                // Insights Basic
+                "Date": 'Date',
+                "Month": 'Month',
+                "Day of the week": 'Day of the week',
+                "Instagram-report": 'Instagram-report',
+                "Export data": 'Export data',
+                "for a week": 'for a week',
+                "for a month": 'for a month',
+                "for a year": 'for a year'
+            };
+            $.fn.datepicker.language['en-US'] = {
+                days: ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'],
+                daysShort: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
+                daysMin: ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'],
+                months: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
+                monthsShort: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+                today: 'Today',
+                clear: 'Clear',
+                dateFormat: 'mm/dd/yyyy',
+                timeFormat: 'hh:ii aa',
+                firstDay: 1
+            };
+            if (typeof $.fn.oneFileManager !== 'undefined') {
+                $.fn.oneFileManager.i18n["en-US"] = {
+                    selectFiles: 'Select files',
+                    loadMoreFiles: 'Load more',
+                    viewFile: 'View',
+                    deleteFile: 'Delete',
+                    urlInputPlaceholder: 'Paste your link here...',
+                    emptyVolume: 'Your media volume is empty. <br /> Drag some files here.',
+                    dropFilesHere: 'Drop files here to upload',
+                    deleteFileConfirm: 'This file and all uncompleted posts which this file is assigned to will be removed. This process cannot be undone. Do you want to proceed?',
+                    bigFileSizeError: 'File size exceeds max allowed file size.',
+                    fileTypeError: 'File type is not allowed.',
+                    noEnoughVolumeError: 'There is not enough storage to upload this file',
+                    queueSizeLimit: 'There are so many files in upload queue. Please try again after current upload queue finishes.',
+                    deleteMessage: '{count} file(s) selected.',
+                    deleteMessageBtn: 'Remove?',
+                    removeSelectionConfirmation: 'Do you want to remove the selected files? This process can not be undone.',
+                    usedXofY: 'Used {used} of {total}',
+                    usedX: 'Used {used}',
+                    total: 'Total',
+                    xfiles: '{count} files',
+                    remainingStorage: 'Remaining storage',
+                    maxUploadSize: 'Max. file size to upload',
+                    unlimitedStorage: 'Unlimited storage',
+                    clearStorage: 'Clear storage',
+                    clearStorageConfirm: 'Do you really want to remove all of your files? Your scheduled posts will not be published. This action not be undone.',
+                };
+            }
+        </script>
+        <script type="text/javascript" src="{% static '' %}Targeting Settings_files/core.js"></script>
+        <script type="text/javascript" src="{% static '' %}Targeting Settings_files/core(1).js"></script>
+    </body>
+
+</html>

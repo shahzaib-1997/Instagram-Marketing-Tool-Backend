@@ -40,15 +40,14 @@ urlpatterns = [
     path("signup/", views.SignupView.as_view(), name="signup"),
     path("signin/", views.LoginView.as_view(), name="login"),
     path("logout/", views.logout_user, name="logout"),
-    path("dashboard/", views.DashboardView.as_view(), name="dashboard"),
-    path("notifications/", views.NotificationsView.as_view(), name="notifications"),
+    # path("dashboard/", views.DashboardView.as_view(), name="dashboard"),
     path(
-        "instagram-accounts/",
+        "accounts/",
         views.InstaCredentialView.as_view(),
         name="instagram-accounts",
     ),
     path(
-        "instagram-account/<str:pk>/",
+        "account/<str:pk>/",
         views.InstaCredentialView.as_view(),
         name="instagram-account",
     ),
@@ -111,7 +110,8 @@ urlpatterns = [
     path("post/<int:pk>/", views.PostView.as_view(), name="post"),
     path("reel/", views.ReelView.as_view(), name="reel"),
     path("reel/<int:pk>/", views.ReelView.as_view(), name="reel"),
-    path("activity-logs/", TemplateView.as_view(template_name="userapi/activity_log.html"), name="activity-logs"),
+    path("activity-logs/", views.ActivityLogsView.as_view(), name="activity-logs"),
+    path("activity-logs/<int:id>/", views.ActivityLogsView.as_view(), name="activity-logs"),
     path("activity-log/", views.ActivityLogView.as_view(), name="activity-log"),
     path(
         "activity-log/<int:pk>/", views.ActivityLogView.as_view(), name="activity-log"
@@ -197,6 +197,16 @@ urlpatterns = [
         "instagram-tools/",
         TemplateView.as_view(template_name="userapi/instagram-tools.html"),
         name="instagram-tools",
+    ),
+    path(
+        "accounts/new",
+        TemplateView.as_view(template_name="Add New Account.html"),
+        name="add-account",
+    ),
+    path(
+        "stats/",
+        TemplateView.as_view(template_name="Stats.html"),
+        name="stats",
     ),
     path("target-update/", views.TargetUpdateView.as_view(), name="target-update"),
 ]

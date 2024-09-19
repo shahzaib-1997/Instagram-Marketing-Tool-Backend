@@ -1,0 +1,47 @@
+.button--account-filters {
+  font-weight: 400;
+}
+
+.box-filters-title {
+  text-transform: uppercase;
+  opacity: 0.5;
+  font-size: 12px;
+}
+
+.verified-meta-label-afm { 
+  color: rgb(0 149 246);
+  margin-left: 3px;
+}
+
+.account-search .cancel-icon {
+  visibility: hidden;
+  opacity: 0;
+  -webkit-transition: all ease 0.2s;
+  -moz-transition: all ease 0.2s;
+  transition: all ease 0.2s;
+  -webkit-transform: rotateZ(60deg);
+  -moz-transform: rotateZ(60deg);
+  -ms-transform: rotateZ(60deg);
+  -o-transform: rotateZ(60deg);
+  transform: rotateZ(60deg);
+}
+
+.account-search.search-performed .cancel-icon {
+  visibility: visible;
+  opacity: 1;
+  -webkit-transform: rotateZ(0deg);
+  -moz-transform: rotateZ(0deg);
+  -ms-transform: rotateZ(0deg);
+  -o-transform: rotateZ(0deg);
+  transform: rotateZ(0deg);
+}
+
+.account-search.search-performed .search-icon {
+  visibility: hidden;
+  opacity: 0;
+  -webkit-transform: rotateZ(-60deg);
+  -moz-transform: rotateZ(-60deg);
+  -ms-transform: rotateZ(-60deg);
+  -o-transform: rotateZ(-60deg);
+  transform: rotateZ(-60deg);
+}

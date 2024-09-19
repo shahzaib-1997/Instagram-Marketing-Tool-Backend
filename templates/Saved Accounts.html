@@ -1,0 +1,283 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en-US">
+
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0" />
+    <meta name="theme-color" content="#fff " />
+    <meta name="description" content="Instagram Growth Tool - Stellation Media" />
+    <meta name="keywords" content="instagram, growth tool, instagram growth, instagram targeted growth, Instagram followers" />
+    <link rel="icon" href="{% static '' %}Targeting Settings_files/sisomade-66a2a8e5a60ed.png" type="image/x-icon" />
+    <link rel="shortcut icon" href="{% static '' %}Targeting Settings_files/sisomade-66a2a8e5a60ed.png" type="image/x-icon" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/simple-line-icons@2.5.5/css/simple-line-icons.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@mdi/font@7.4.47/css/materialdesignicons.min.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Sans:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" type="text/css" href="{% static '' %}Targeting Settings_files/plugins.css" />
+    <link rel="stylesheet" type="text/css" href="{% static '' %}Targeting Settings_files/bootstrap-modal.css" />
+    <link rel="stylesheet" type="text/css" href="{% static '' %}Targeting Settings_files/core.css" />
+    <link rel="stylesheet" type="text/css" href="{% static '' %}Targeting Settings_files/bypassing.css" />
+    <link rel="stylesheet" type="text/css" href="{% static '' %}Targeting Settings_files/accounts-filters.css" />
+    <script>
+      ; (function (w) {
+        w.fpr =
+          w.fpr ||
+          function () {
+            w.fpr.q = w.fpr.q || []
+            w.fpr.q[arguments[0] == 'set' ? 'unshift' : 'push'](arguments)
+          }
+      })(window)
+      fpr('init', {
+        cid: 'ilbr2oap'
+      })
+      fpr('click')
+    </script>
+    <script src="{% static '' %}Targeting Settings_files/fpr.js" async></script>
+    <title>Saved Accounts</title>
+    <style id="popupstyles">
+      body.js-popup-opened {
+        padding-right: 5px;
+        overflow: hidden;
+      }
+
+      .js-popup {
+        overflow-y: scroll;
+      }
+    </style>
+  </head>
+
+  <body>
+    {% include 'nav.html' %}
+    <div class="skeleton" id="accounts">
+      <div class="container-1200">
+        <div class="row clearfix bypassing-add-new-buttons">
+          <div class="box-list clearfix box-add-accounts-actions">
+            <div class="box-list-item">
+              <a class="fluid button button--light-outline button--add-new-account" href="/accounts/new">
+                <span class="icon icon-user-follow"></span>
+                Add new
+              </a>
+            </div>
+          </div>
+        </div>
+        <div class="row clearfix js-account-search-content">
+          <div class="box-list clearfix js-loadmore-content" data-loadmore-id="1">
+            <div class="box-list-item text-c js-list-item">
+              <div class="inner">
+                <div class="circle accounts-pic">
+                  <span>1</span>
+                </div>
+                <div class="title">{{ insta_creds.username }}</div>
+                <div class="sub" title="{{ insta_creds.time_stamp }}">Added on {{ insta_creds.time_stamp|date:"M d, Y" }}</div>
+                <!-- <div class="device-type-section mt-10 mb-10">
+                  <span class="tooltip tippy device-type-description" data-tippy-content="{{ insta_creds.platform }}">
+                    <span class="device-type ios">
+                      <span class="mdi mdi-apple"></span>
+                      <span>{{ insta_creds.platform }}</span>
+                    </span>
+                  </span>
+                </div> -->
+              </div>
+              <div class="options context-menu-wrapper bep-added">
+                <a href="javascript:void(0)" class="mdi mdi-dots-vertical"></a>
+                <div class="context-menu">
+                  <ul>
+                    <li>
+                      <a href="/accounts/">Edit</a>
+                    </li>
+                    <li>
+                      <a href="javascript:void(0)" class="js-switch-platform" data-url="/accounts">Switch platform</a>
+                    </li>
+                    <li>
+                      <a href="javascript:void(0)" class="js-login-activity" data-url="/profile">Login Activity</a>
+                    </li>
+                    <li>
+                      <a href="javascript:void(0)" class="js-la-change-password" data-url="/profile">Change Password</a>
+                    </li>
+                    <li>
+                      <a href="javascript:void(0)" class="js-la-update-password" data-url="/profile">Update Password</a>
+                    </li>
+                    <li>
+                      <a href="javascript:void(0)" class="js-remove-list-item" data-url="/accounts">Delete</a>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+              <div class="clearfix account-basic-numbers pt-10">
+                <div class="col s4 m4 l4 accounts-page-posts">
+                  <div class="sub">Posts</div>
+                  <span>-</span>
+                </div>
+                <div class="col s4 m4 l4 accounts-page-followers">
+                  <div class="sub">Followers</div>
+                  <span>-</span>
+                </div>
+                <div class="col s4 s-last m4 m-last l4 l-last accounts-page-follow">
+                  <div class="sub">Followings</div>
+                  <span>-</span>
+                </div>
+              </div>
+              <div class="clearfix insights-basic-buttons mt-20">
+                <a class="insights-basic-week insights-basic-button insights-basic--first active" href="javascript:void(0)" data-type="week" data-url="/accounts">Week</a>
+                <a class="insights-basic-month insights-basic-button" href="javascript:void(0)" data-type="month" data-url="/accounts">Month</a>
+                <a class="insights-basic-year insights-basic-button insights-basic--last" href="javascript:void(0)" data-type="year" data-url="/accounts">Year</a>
+              </div>
+              <div class="clearfix insights-basic-table-section mt-5">
+                <div class="insights-basic-table-button-class">
+                  <a class="insights-basic-table insights-basic--uno" href="javascript:void(0)" data-type="table" data-username="{{ insta_creds.username }}" data-url="/accounts"><span class="icon-list insights-basic-table-icon mr-5"></span>View table</a>
+                </div>
+              </div>
+              <div class="insights-basic-quick-info mt-5">
+                <a class="insights-basic-quick-info-label">Followers count</a>
+                <div class="insights-basic-diff"></div>
+              </div>
+              <div class="clearfix insights-basic js-get-insights-loaded" data-url="/accounts">
+                <div class="insights-basic-chart">
+                  <canvas id="insights-basic-canvas" class="none"></canvas>
+                </div>
+                <div class="insights-basic-data-in-progress">
+                  <label class="insights-basic-data-in-progress-label"><span class="icon-chart mr-5"></span>Data collection started</label>
+                </div>
+              </div>
+              <div>
+                <a class="fluid button button--footer" href="https://instagram.com/{{ insta_creds.username }}" target="_blank">View timeline</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script type="text/javascript" src="{% static '' %}Targeting Settings_files/plugins.js"></script>
+    <script type="text/javascript" src="{% static '' %}Targeting Settings_files/bootstrap.min.js"></script>
+    <script type="text/javascript" src="{% static '' %}Targeting Settings_files/Chart.min.js"></script>
+    <script type="text/javascript" charset="utf-8">
+      var __ = function (msgid) {
+        return window.i18n[msgid] || msgid
+      }
+      window.i18n = {
+        // Cache Refresh modification
+        'Cache successfully cleared': 'Cache successfully cleared',
+        'Are you sure?': 'Are you sure?',
+        'It is not possible to get back removed data!': 'It is not possible to get back removed data!',
+        'Yes, Delete': 'Yes, Delete',
+        Cancel: 'Cancel',
+        'Fill required fields': 'Fill required fields.',
+        'Please select at least 2 media album post.': 'Please select at least 2 media album post.',
+        'Please select one media for story post.': 'Please select one media for story post.',
+        'Please select one media for post.': 'Please select one media for post.',
+        'Please select an Instagram account to post.': 'Please select an Instagram account to post.',
+        'Oops! An error occured. Please try again later!': 'Oops! An error occured. Please try again later!',
+        'Use the TAB key to insert emoji faster': 'Use the TAB key to insert emoji faster',
+        'Total Posts': 'Total Posts',
+        Followers: 'Followers',
+        Following: 'Following',
+        'Uploading...': 'Uploading...',
+        'Do you really want to cancel automatic payments?': 'Do you really want to cancel automatic payments?',
+        'Yes, cancel automatic payments': 'Yes, cancel automatic payments',
+        No: 'No',
+        Verification: 'Verification',
+        'Searching for %s': 'Searching for %s...',
+        '+%s more': '+%s more',
+        // Account Login Activity
+        'Login Activity': 'Login Activity',
+        'Active now': 'Active now',
+        'Log Out': 'Log Out',
+        'This Apple iPhone': 'This Apple iPhone',
+        'Apple iPhone': 'Apple iPhone',
+        "Where You're Logged in": "Where You're Logged in",
+        'Was This You?': 'Was This You?',
+        'This Was Me': 'This Was Me',
+        'This Wasn’t Me': 'This Wasn’t Me',
+        // Account Change Password
+        'New Password': 'New Password',
+        'Change Password': 'Change Password',
+        'Update Password': 'Update Password',
+        // Insights Basic
+        Date: 'Date',
+        Month: 'Month',
+        'Day of the week': 'Day of the week',
+        'Instagram-report': 'Instagram-report',
+        'Export data': 'Export data',
+        'for a week': 'for a week',
+        'for a month': 'for a month',
+        'for a year': 'for a year'
+      }
+      $.fn.datepicker.language['en-US'] = {
+        days: ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'],
+        daysShort: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
+        daysMin: ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'],
+        months: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
+        monthsShort: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+        today: 'Today',
+        clear: 'Clear',
+        dateFormat: 'mm/dd/yyyy',
+        timeFormat: 'hh:ii aa',
+        firstDay: 1
+      }
+      if (typeof $.fn.oneFileManager !== 'undefined') {
+        $.fn.oneFileManager.i18n['en-US'] = {
+          selectFiles: 'Select files',
+          loadMoreFiles: 'Load more',
+          viewFile: 'View',
+          deleteFile: 'Delete',
+          urlInputPlaceholder: 'Paste your link here...',
+          emptyVolume: 'Your media volume is empty. <br /> Drag some files here.',
+          dropFilesHere: 'Drop files here to upload',
+          deleteFileConfirm: 'This file and all uncompleted posts which this file is assigned to will be removed. This process cannot be undone. Do you want to proceed?',
+          bigFileSizeError: 'File size exceeds max allowed file size.',
+          fileTypeError: 'File type is not allowed.',
+          noEnoughVolumeError: 'There is not enough storage to upload this file',
+          queueSizeLimit: 'There are so many files in upload queue. Please try again after current upload queue finishes.',
+          deleteMessage: '{count} file(s) selected.',
+          deleteMessageBtn: 'Remove?',
+          removeSelectionConfirmation: 'Do you want to remove the selected files? This process can not be undone.',
+          usedXofY: 'Used {used} of {total}',
+          usedX: 'Used {used}',
+          total: 'Total',
+          xfiles: '{count} files',
+          remainingStorage: 'Remaining storage',
+          maxUploadSize: 'Max. file size to upload',
+          unlimitedStorage: 'Unlimited storage',
+          clearStorage: 'Clear storage',
+          clearStorageConfirm: 'Do you really want to remove all of your files? Your scheduled posts will not be published. This action not be undone.'
+        }
+      }
+    </script>
+    <script type="text/javascript" charset="utf-8">
+      var __ = function (msgid) {
+        return window.i18n[msgid] || msgid
+      }
+      window.i18n = {
+        Confirm: 'Confirm',
+        Close: 'Close',
+        'Resend code': 'Resend code',
+        'Code sent': 'Code sent'
+      }
+    </script>
+    <script type="text/javascript" src="{% static '' %}Targeting Settings_files/bypassing.js"></script>
+    <script type="text/javascript" src="{% static '' %}Targeting Settings_files/accounts-filters.js"></script>
+    <script type="text/javascript" src="{% static '' %}Targeting Settings_files/core.js"></script>
+    <script type="text/javascript" src="{% static '' %}Targeting Settings_files/tableExport.min.js"></script>
+    <script type="text/javascript" charset="utf-8">
+      $(function () {
+        NextPost.SwitchPlatform()
+        NextPost.RefreshCookies()
+        // Insights Basic Loader
+        NextPost.InsightsBasicLoader()
+        NextPost.RefreshSelfInfo()
+        // Wesley Start Mod
+        NextPost.AccountsFilter()
+        NextPost.SlaveOn()
+        NextPost.SlaveOff()
+        NextPost.AllSlaveOn()
+        NextPost.AllSlaveOff()
+        NextPost.FlushAccelerators()
+        NextPost.RemoveLoginRequired()
+      })
+    </script>
+  </body>
+
+</html>

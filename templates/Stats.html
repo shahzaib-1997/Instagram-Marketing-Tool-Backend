@@ -1,0 +1,495 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en-US">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
+        <meta name="theme-color" content="#fff">
+        <meta name="description" content="Instagram Growth Tool - Stellation Media">
+        <meta name="keywords" content="instagram, growth tool, instagram growth, instagram targeted growth, Instagram followers">
+        <link rel="icon" href="{% static '' %}Targeting Settings_files/sisomade-66a2a8e5a60ed.png" type="image/x-icon">
+        <link rel="shortcut icon" href="{% static '' %}Targeting Settings_files/sisomade-66a2a8e5a60ed.png" type="image/x-icon">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/simple-line-icons@2.5.5/css/simple-line-icons.min.css">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@mdi/font@7.4.47/css/materialdesignicons.min.css">
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Fira+Sans:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+        <link rel="stylesheet" type="text/css" href="{% static '' %}Targeting Settings_files/plugins.css">
+        <link rel="stylesheet" type="text/css" href="{% static '' %}Targeting Settings_files/core.css">
+        <link rel="stylesheet" type="text/css" href="{% static '' %}Targeting Settings_files/filemanager.css">
+        <link rel="stylesheet" type="text/css" href="{% static '' %}Targeting Settings_files/core(1).css">
+        <link rel="stylesheet" type="text/css" href="{% static '' %}Targeting Settings_files/bootstrap-modal.css">
+        <link rel="stylesheet" type="text/css" href="{% static '' %}Targeting Settings_files/nouislider.min.css">
+        <link rel="stylesheet" type="text/css" href="{% static '' %}Targeting Settings_files/selectize.bootstrap3.css">
+        <link rel="stylesheet" type="text/css" href="{% static '' %}Targeting Settings_files/jquery.dataTables.css">
+        <link rel="stylesheet" type="text/css" href="{% static '' %}Targeting Settings_files/bypassing.css">
+        <title>Stats</title>
+    </head>
+    <body>
+        {% include "nav.html" %}
+        <div class="skeleton skeleton--full" id="reactions-pro" style="display: block;">
+            <div class="clearfix">
+                {% include "search-results.html" %}
+                <section class="skeleton-content" style="height: 578px;">
+                    <div class="section-header back-button-wh none">
+                        <a href="/target-edit/">
+                            <span class="mdi mdi-reply"></span>Back </a>
+                    </div>
+                    <div class="react-tab-heads pb-15 clearfix">
+                        <a href='{% url "userapi:target-edit" %}'>Settings</a>
+                        <a href='{% url "userapi:activity-logs" %}'>Activity Log</a>
+                        <a href='/stats/' class="active">Stats </a>
+                        <ic-anchor-point class="intercom-namespace" style="position: relative; display: inline-block; width: 77.375px;">
+                            <div id="tooltip-anchor-41563" aria-describedby="intercom-tooltip-41563" aria-label="Tooltip anchor" class="e63435j4 intercom-with-namespace-3pzvtu e63435j5" role="button" tabindex="0">5 Min Setup</div>
+                        </ic-anchor-point>
+                    </div>
+                    <div class="section-content">
+                        <div class="col s12 m6 l8 mb-10">
+                            <div class="clearfix mb-20 pos-r">
+                                <label class="react-stats-title mb-10">Today<span class="fz-12 color-mid ml-10" style="line-height: 20px;">(reactions)</span></label>
+                                <div class="source-tracking-filters mb-10">
+                                    <div class="col s12 m6 l4 mt-5 mr-5 att-action">
+                                        <div class="fluid button button--light-outline att-action-in js-source-tracking-filter" data-sort-type="best">Best results</div>
+                                    </div>
+                                    <div class="col s12 m6 l4 mt-5 mr-5 att-action">
+                                        <div class="fluid button button--light-outline att-action-in js-source-tracking-filter" data-sort-type="like">Sort by likes</div>
+                                    </div>
+                                    <div class="col s12 m6 m-last l4 l-last mt-5 mr-5 att-action">
+                                        <div class="fluid button button--light-outline att-action-in js-source-tracking-filter" data-sort-type="follow">Sort by follows</div>
+                                    </div>
+                                </div>
+                                There is no stats at the moment.
+                            </div>
+                        </div>
+                        <div class="clearfix col s12 m6 l8 mb-10">
+                            <div class="clearfix mb-20 pos-r">
+                                <label class="react-stats-title mb-10">This Month<span class="fz-12 color-mid ml-10" style="line-height: 20px;">(reactions/day)</span></label>
+                                <div class="chart-container pos-r stories-weekly-stats" data-url="/target-edit/stats?account=">
+                                    <div id="total-line-chart"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </div>
+        <script type="text/javascript" src="{% static '' %}Targeting Settings_files/plugins.js"></script>
+        <script type="text/javascript" src="{% static '' %}Targeting Settings_files/filemanager.js"></script>
+        <script type="text/javascript" src="{% static '' %}Targeting Settings_files/apexcharts.min.js"></script>
+        <script type="text/javascript" charset="utf-8">
+            var __ = function (msgid) {
+                return window.i18n[msgid] || msgid;
+            };
+            window.i18n = {
+                ' (followings)': ' (followings)',
+                ' (followers)': ' (followers)',
+                ' (likers)': ' (likers)',
+                ' (reel likers)': ' (reel likers)',
+                'Close': 'Close',
+                'Copied': 'Copied',
+                'Inserted': 'Inserted',
+                'Selected': 'Selected',
+                'Cleared': 'Cleared',
+                'Randomized': 'Randomized',
+                'Paused': 'Paused',
+                'Active': 'Active',
+                'Inactive': 'Inactive',
+                'Custom ID\'s': 'Custom ID\'s',
+                'user(s)': 'user(s)',
+                'Settings copied to clipboard': 'Settings copied to clipboard',
+                'Settings copied': 'Settings copied',
+                'Task settings is empty': 'Task settings is empty',
+                'Clipboard data is invalid': 'Clipboard data is invalid',
+                'Clipboard is empty': 'Clipboard is empty',
+                'Continue': 'Continue',
+                'Scheduled': 'Scheduled',
+                'Insert ID': 'Insert ID',
+                'Copy ID': 'Copy ID',
+                'Targets list': 'Targets list',
+                'Copy targets': 'Copy targets',
+                'Welcome DM': 'Welcome DM',
+                'Send DM': 'Send DM',
+                'Reply to pending DM': 'Reply to pending DM',
+                'Comments': 'Comments',
+                'Answers': 'Answers',
+                'Views': 'Views',
+                'Days': 'Days',
+                'Are you sure that you want to restart the task from the beginning?': 'Are you sure that you want to restart the task from the beginning?',
+                'You can use the Restart button to continue the task from the same position.': 'You can use the Restart button to continue the task from the same position.',
+                'Yes, I understand that': 'Yes, I understand that',
+                'Cancel': 'Cancel',
+                'Oops! An error occured. Please try again later!': 'Oops! An error occured. Please try again later!',
+                'Cancel': 'Cancel',
+                'No': 'No',
+                'Oops!': 'Oops!',
+                'An error occured. Please try again later!': 'An error occured. Please try again later!',
+                "Copy link": 'Copy link',
+                "Archive": 'Archive',
+                "Delete": 'Delete',
+                "Load More": 'Load More',
+                "Link copied": 'Link copied',
+                "Unarchive": 'Unarchive',
+                "Your post will be deleted from Instagram. You will can't revert changes.": 'Your post will be deleted from Instagram. You will can\'t revert changes.',
+                "Your story will be deleted from Instagram. You will can't revert changes.": 'Your story will be deleted from Instagram. You will can\'t revert changes.',
+                "Edit Caption": 'Edit Caption',
+                "Save": 'Save',
+                "Code": 'Code',
+                'Download': 'Download',
+                "Date": 'Date',
+                "Month": 'Month',
+                "Day of the week": 'Day of the week',
+                "Instagram-report": 'Instagram-report',
+                "Export data": 'Export data',
+                "for a week": 'for a week',
+                "for a month": 'for a month',
+                "for a year": 'for a year',
+                "New Password": 'New Password',
+                "Change Password": 'Change Password',
+                "Update Password": 'Update Password',
+                "Login Activity": 'Login Activity',
+                "Active now": 'Active now',
+                "Log Out": 'Log Out',
+                "This Apple iPhone": 'This Apple iPhone',
+                "Apple iPhone": 'Apple iPhone',
+                "Where You're Logged in": 'Where You\'re Logged in',
+                "Was This You?": 'Was This You?',
+                "This Was Me": 'This Was Me',
+                "This Wasn't Me": 'This Wasn\'t Me',
+                "Change proxy": 'Change proxy',
+                "Move to system proxy": 'Move to system proxy',
+                "Refresh proxy": 'Refresh proxy',
+                "Move to custom proxy": 'Move to custom proxy',
+                "Edit Proxy": 'Edit Proxy',
+                "Custom Proxy": 'Custom Proxy',
+                "System Proxy": 'System Proxy',
+                'Cache successfully cleared': 'Cache successfully cleared',
+                'Search for a person': 'Search for a person',
+                'API link to change IP address of proxy': 'API link to change IP address of proxy',
+                'Your account is connected to the system using your own proxy.': 'Your account is connected to the system using your own proxy.',
+                'Your account is connected to the system using system proxy.': 'Your account is connected to the system using system proxy.',
+                "Remove from General": 'Remove from General',
+                "Move to General": 'Move to General',
+                "Labels": 'Labels',
+                "Label name": 'Label name',
+                "Open in Instagram": 'Open in Instagram',
+                "Copy link": 'Copy link',
+                "Archive": 'Archive',
+                "Delete": 'Delete',
+                "Load More": 'Load More',
+                "Link copied": 'Link copied',
+                "Unarchive": 'Unarchive',
+                "Your post will be deleted from Instagram. You will can't revert changes.": 'Your post will be deleted from Instagram. You will can\'t revert changes.',
+                "Your story will be deleted from Instagram. You will can't revert changes.": 'Your story will be deleted from Instagram. You will can\'t revert changes.',
+                "Edit Caption": 'Edit Caption',
+                "Save": 'Save',
+                "Code": 'Code',
+                'Download': 'Download',
+                'Are you sure to continue?': 'Are you sure to continue?',
+                'Oops!': 'Oops!',
+                'An error occured. Please try again later!': 'An error occured. Please try again later!',
+                'Two-Factor Authentication function will be disabled.': 'Two-Factor Authentication function will be disabled.',
+                "Yes, I'm sure": 'Yes, I\'m sure',
+                'Success': 'Success',
+                'Two-Factor Authentication disabled for your account.': 'Two-Factor Authentication disabled for your account.',
+                'Add Extra Two-Factor Authentication': 'Add Extra Two-Factor Authentication',
+                "Two-factor authentication lets you protect your account every time you log in on phone or computer we don't recognise.": 'Two-factor authentication lets you protect your account every time you log in on phone or computer we don\'t recognise.',
+                "Google Authenticator app should be installed on user <a href='https://apps.apple.com/us/app/google-authenticator/id388497605' target='_blank'>iOS</a> or <a href='https://play.google.com/store/apps/details?id=com.google.android.apps.authenticator2' target='_blank'>Android</a> devices.": 'Google Authenticator app should be installed on user <a href=\'https://apps.apple.com/us/app/google-authenticator/id388497605\' target=\'_blank\'>iOS</a> or <a href=\'https://play.google.com/store/apps/details?id=com.google.android.apps.authenticator2\' target=\'_blank\'>Android</a> devices.',
+                "Get the <b>Authenticator App</b> from <a href='https://apps.apple.com/us/app/google-authenticator/id388497605' target='_blank'>App Store (iOS)</a> or <a href='https://play.google.com/store/apps/details?id=com.google.android.apps.authenticator2' target='_blank'>Google Play Store (Android)</a>.": 'Get the <b>Authenticator App</b> from <a href=\'https://apps.apple.com/us/app/google-authenticator/id388497605\' target=\'_blank\'>App Store (iOS)</a> or <a href=\'https://play.google.com/store/apps/details?id=com.google.android.apps.authenticator2\' target=\'_blank\'>Google Play Store (Android)</a>.',
+                'Get Started': 'Get Started',
+                'Setup Two-Factor Authentication': 'Setup Two-Factor Authentication',
+                'In the App select <b>Set up account</b>.': 'In the App select <b>Set up account</b>.',
+                'Choose <b>Scan a barcode</b>.': 'Choose <b>Scan a barcode</b>.',
+                'Next': 'Next',
+                "Can't scan it?": 'Can\'t scan it?',
+                "Can't scan the barcode?": 'Can\'t scan the barcode?',
+                "In the <b>Authenticator App</b>, touch Menu and select <b>Set up account</b>.": 'In the <b>Authenticator App</b>, touch Menu and select <b>Set up account</b>.',
+                "Select <b>Enter provided key</b>.": 'Select <b>Enter provided key</b>.',
+                "In <b>Enter account name</b> type your full email address.": 'In <b>Enter account name</b> type your full email address.',
+                "In <b>Enter your key</b> type your secret key:": 'In <b>Enter your key</b> type your secret key:',
+                "Key type: make sure <b>Time based</b> is selected.": 'Key type: make sure <b>Time based</b> is selected.',
+                "Tap: <b>Add</b>.": 'Tap: <b>Add</b>.',
+                "Type the verification code created by <b>Authenticator App</b>": 'Type the verification code created by <b>Authenticator App</b>',
+                "Confirm": 'Confirm',
+                "Intered code is empty.": 'Intered code is empty.',
+                "Try Again": 'Try Again',
+                "Intered code format is incorrect.": 'Intered code format is incorrect.',
+                "Two-Factor Authentication enabled for your account.": 'Two-Factor Authentication enabled for your account.',
+                'It is not possible to get back removed data!': 'It is not possible to get back removed data!',
+                'Yes, Delete': 'Yes, Delete',
+                'Settings applied to selected tasks': 'Settings applied to selected tasks',
+                'Redis Cache cleared': 'Redis Cache cleared',
+                'Check ERpost': 'Check ERpost',
+                'View': 'View',
+                'Loading...': 'Loading...',
+                'Safety delay, %s seconds left...': 'Safety delay, %s seconds left...',
+                '(%s calls)': '(%s calls)',
+                'Refresh data': 'Refresh data',
+                'Targeting': 'Targeting',
+                'Actions': 'Actions',
+                'Results': 'Results',
+                'Date:': 'Date:',
+                'Type:': 'Type:',
+                'Value:': 'Value:',
+                'Polls': 'Story Polls',
+                'Poll sliders': 'Story Poll Sliders',
+                'Quiz': 'Story Quizes',
+                'Countdowns': 'Story Countdowns',
+                'Masslooking': 'View Stories',
+                'Like stories': 'Like Stories',
+                'Like': 'Like',
+                'Like post comments': 'Like post comments',
+                'Follow': 'Follow',
+                'Unfollow': 'Unfollow',
+                'Comment': 'Comment',
+                'Followed you': 'Followed you',
+                'Liked your post(s)': 'Liked your post(s)',
+                'times': 'times',
+                'Stop loading': 'Stop loading',
+                'Load data': 'Load data',
+                'Continue loading': 'Continue loading',
+                'Try Again': 'Try Again',
+                'Stop Tasks': 'Stop Tasks',
+                'Start Tasks': 'Start Tasks'
+            };
+            $.fn.datepicker.language['en-US'] = {
+                days: ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'],
+                daysShort: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
+                daysMin: ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'],
+                months: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
+                monthsShort: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+                today: 'Today',
+                clear: 'Clear',
+                dateFormat: 'mm/dd/yyyy',
+                timeFormat: 'hh:ii aa',
+                firstDay: 1
+            };
+            if (typeof $.fn.oneFileManager !== 'undefined') {
+                $.fn.oneFileManager.i18n["en-US"] = {
+                    selectFiles: 'Select files',
+                    loadMoreFiles: 'Load more',
+                    viewFile: 'View',
+                    deleteFile: 'Delete',
+                    urlInputPlaceholder: 'Paste your link here...',
+                    urlInputDesc: 'Instagram links fully supported (post/story/reel/tv)',
+                    emptyVolume: 'Your media volume is empty. <br /> Drag some files here.',
+                    dropFilesHere: 'Drop files here to upload',
+                    deleteFileConfirm: 'This file and all uncompleted posts which this file is assigned to will be removed. This process cannot be undone. Do you want to proceed?',
+                    bigFileSizeError: 'File size exceeds max allowed file size.',
+                    videoConversionNotAllowed: 'Please convert your video to .mp4 format before upload.',
+                    fileTypeError: 'File type is not allowed.',
+                    noEnoughVolumeError: 'There is not enough storage to upload this file',
+                    queueSizeLimit: 'There are so many files in upload queue. Please try again after current upload queue finishes.',
+                    deleteMessage: '{count} file(s) selected.',
+                    deleteMessageBtn: 'Remove',
+                    downloadMessage: '{count} file(s) selected.',
+                    downloadMessageBtn: 'Download',
+                    selectAllBtn: 'Select All',
+                    removeSelectionConfirmation: 'Do you want to remove the selected files? This process can not be undone.',
+                    usedXofY: 'Used {used} of {total}',
+                    usedX: 'Used {used}',
+                    total: 'Total',
+                    xfiles: '{count} files',
+                    remainingStorage: 'Remaining storage',
+                    maxUploadSize: 'Max. file size to upload',
+                    unlimitedStorage: 'Unlimited storage',
+                    clearStorage: 'Clear storage',
+                    clearStorageConfirm: 'Do you really want to remove all of your files? Your scheduled posts will not be published. This action not be undone.',
+                    downloadFile: 'Download',
+                    // Video Processing
+                    videoConversion: 'Video conversion in progress...',
+                    videoUploading: 'Video uploading in progress...',
+                    videoConversionSoLong: 'File Manager will be automatically reloaded at the end of video conversion...',
+                    // TUI Image Editor Localization
+                    editFile: 'Edit',
+                    saveFile: 'Save',
+                    tui_undo: 'Undo',
+                    tui_redo: 'Redo',
+                    tui_reset: 'Reset',
+                    tui_delete: 'Delete',
+                    tui_delete_all: 'Delete-all',
+                    tui_crop: 'Crop',
+                    tui_flip: 'Flip',
+                    tui_rorate: 'Rotate',
+                    tui_draw: 'Draw',
+                    tui_shape: 'Shape',
+                    tui_icon: 'Icon',
+                    tui_text: 'Text',
+                    tui_mask: 'Mask',
+                    tui_filter: 'Filter',
+                    tui_custom: 'Custom',
+                    tui_square: 'Square',
+                    tui_apply: 'Apply',
+                    tui_сancel: 'Cancel',
+                    tui_flip_x: 'Flip X',
+                    tui_flip_y: 'Flip Y',
+                    tui_range: 'Range',
+                    tui_free: 'Free',
+                    tui_straight: 'Straight',
+                    tui_color: 'Color',
+                    tui_rectangle: 'Rectangle',
+                    tui_circle: 'Circle',
+                    tui_triangle: 'Triangle',
+                    tui_fill: 'Fill',
+                    tui_stroke: 'Stroke',
+                    tui_arrow: 'Arrow',
+                    tui_arrow_2: 'Arrow-2',
+                    tui_arrow_3: 'Arrow-3',
+                    tui_polygon: 'Polygon',
+                    tui_location: 'Location',
+                    tui_heart: 'Heart',
+                    tui_bubble: 'Bubble',
+                    tui_custom_icon: 'Custom icon',
+                    tui_bold: 'Bold',
+                    tui_italic: 'Italic',
+                    tui_underline: 'Underline',
+                    tui_left: 'Left',
+                    tui_center: 'Center',
+                    tui_right: 'Right',
+                    tui_text_size: 'Text size',
+                    tui_load_mask_image: 'Load Mask Image',
+                    tui_color: 'Color',
+                    tui_resize: 'Resize',
+                    tui_width: 'Width',
+                    tui_height: 'Height',
+                    tui_lar: 'Lock Aspect Ratio',
+                    tui_story: 'Story',
+                    tui_history: 'History',
+                    tui_deleteall: 'DeleteAll',
+                    tui_hand: 'Hand',
+                    tui_zoomin: 'ZoomIn',
+                    tui_zoomout: 'ZoomOut',
+                    tui_rw: 'Remove White',
+                    tui_distance: 'Distance',
+                    tui_value: 'Value',
+                    tui_brightness: 'Brightness',
+                    tui_noise: 'Noise',
+                    tui_pixelate: 'Pixelate',
+                    tui_color_filter: 'Color Filter',
+                    tui_threshold: 'Threshold',
+                    tui_sepia: 'Sepia',
+                    tui_blur: 'Blur',
+                    tui_emboss: 'Emboss',
+                    tui_invert: 'Invert',
+                    tui_sepia2: 'Sepia2',
+                    tui_sharpen: 'Sharpen',
+                    tui_free: 'Free',
+                    tui_straight: 'Straight',
+                    tui_size: 'Size',
+                    tui_filter: 'Filter',
+                    tui_grayscale: 'Grayscale',
+                    tui_angle: 'Angle',
+                    tui_lp: 'Lock proportion',
+                    tui_load: 'Load',
+                };
+            }
+        </script>
+        <script type="text/javascript" src="{% static '' %}Targeting Settings_files/core.js"></script>
+        <script type="text/javascript" src="{% static '' %}Targeting Settings_files/core(1).js"></script>
+        <script type="text/javascript" src="{% static '' %}Targeting Settings_files/bypassing.js"></script>
+        <script type="text/javascript" src="{% static '' %}Targeting Settings_files/selectize.min.js"></script>
+        <script type="text/javascript" src="{% static '' %}Targeting Settings_files/bootstrap.min.js"></script>
+        <script type="text/javascript" src="{% static '' %}Targeting Settings_files/nouislider.min.js"></script>
+        <script type="text/javascript" src="{% static '' %}Targeting Settings_files/wNumb.min.js"></script>
+        <script type="text/javascript" src="{% static '' %}Targeting Settings_files/jquery.dataTables.js"></script>
+        <script type="text/javascript" charset="utf-8">
+            $(function () {
+                cf_worker = null;
+                Reactions.Index();
+                Reactions.Selectize();
+                Reactions.Results();
+                Reactions.ResultsSearch();
+                number_styler = function (n) {
+                    var result = 0;
+                    var m = __("m");
+                    if (n < 10000000) {
+                        result = numberWithSpaces(n);
+                    } else {
+                        n = n / 1000000;
+                        result = n.toFixed(2) + m;
+                    }
+                    return result;
+                }
+                numberWithSpaces = function (x) {
+                    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ");
+                }
+            })
+        </script>
+        <!-- GOOGLE ANALYTICS -->
+        <svg id="SvgjsSvg1001" width="2" height="0" xmlns="http://www.w3.org/2000/svg" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:svgjs="http://svgjs.dev" style="overflow: hidden; top: -100%; left: -100%; position: absolute; opacity: 0;">
+            <defs id="SvgjsDefs1002"></defs>
+            <polyline id="SvgjsPolyline1003" points="0,0"></polyline>
+            <path id="SvgjsPath1004" d="M0 0 "></path>
+        </svg>
+        <div class="datepickers-container" id="datepickers-container">
+            <div class="datepicker-wrapper -bottom-left- -from-bottom-"><i class="datepicker--pointer"></i>
+                <div class="datepicker--nav">
+                    <div class="datepicker--nav-action" data-action="prev"><svg>
+                            <path d="M 17,12 l -5,5 l 5,5"></path>
+                        </svg></div>
+                    <div class="datepicker--nav-title">July, <i>2024</i></div>
+                    <div class="datepicker--nav-action" data-action="next"><svg>
+                            <path d="M 14,12 l 5,5 l -5,5"></path>
+                        </svg></div>
+                </div>
+                <div class="datepicker--content">
+                    <div class="datepicker--days datepicker--body active">
+                        <div class="datepicker--days-names">
+                            <div class="datepicker--day-name">Mo</div>
+                            <div class="datepicker--day-name">Tu</div>
+                            <div class="datepicker--day-name">We</div>
+                            <div class="datepicker--day-name">Th</div>
+                            <div class="datepicker--day-name">Fr</div>
+                            <div class="datepicker--day-name -weekend-">Sa</div>
+                            <div class="datepicker--day-name -weekend-">Su</div>
+                        </div>
+                        <div class="datepicker--cells datepicker--cells-days">
+                            <div class="datepicker--cell datepicker--cell-day" data-date="1" data-month="6" data-year="2024">1</div>
+                            <div class="datepicker--cell datepicker--cell-day" data-date="2" data-month="6" data-year="2024">2</div>
+                            <div class="datepicker--cell datepicker--cell-day" data-date="3" data-month="6" data-year="2024">3</div>
+                            <div class="datepicker--cell datepicker--cell-day" data-date="4" data-month="6" data-year="2024">4</div>
+                            <div class="datepicker--cell datepicker--cell-day" data-date="5" data-month="6" data-year="2024">5</div>
+                            <div class="datepicker--cell datepicker--cell-day -weekend-" data-date="6" data-month="6" data-year="2024">6</div>
+                            <div class="datepicker--cell datepicker--cell-day -weekend-" data-date="7" data-month="6" data-year="2024">7</div>
+                            <div class="datepicker--cell datepicker--cell-day" data-date="8" data-month="6" data-year="2024">8</div>
+                            <div class="datepicker--cell datepicker--cell-day" data-date="9" data-month="6" data-year="2024">9</div>
+                            <div class="datepicker--cell datepicker--cell-day" data-date="10" data-month="6" data-year="2024">10</div>
+                            <div class="datepicker--cell datepicker--cell-day" data-date="11" data-month="6" data-year="2024">11</div>
+                            <div class="datepicker--cell datepicker--cell-day" data-date="12" data-month="6" data-year="2024">12</div>
+                            <div class="datepicker--cell datepicker--cell-day -weekend-" data-date="13" data-month="6" data-year="2024">13</div>
+                            <div class="datepicker--cell datepicker--cell-day -weekend-" data-date="14" data-month="6" data-year="2024">14</div>
+                            <div class="datepicker--cell datepicker--cell-day" data-date="15" data-month="6" data-year="2024">15</div>
+                            <div class="datepicker--cell datepicker--cell-day" data-date="16" data-month="6" data-year="2024">16</div>
+                            <div class="datepicker--cell datepicker--cell-day" data-date="17" data-month="6" data-year="2024">17</div>
+                            <div class="datepicker--cell datepicker--cell-day" data-date="18" data-month="6" data-year="2024">18</div>
+                            <div class="datepicker--cell datepicker--cell-day" data-date="19" data-month="6" data-year="2024">19</div>
+                            <div class="datepicker--cell datepicker--cell-day -weekend-" data-date="20" data-month="6" data-year="2024">20</div>
+                            <div class="datepicker--cell datepicker--cell-day -weekend-" data-date="21" data-month="6" data-year="2024">21</div>
+                            <div class="datepicker--cell datepicker--cell-day" data-date="22" data-month="6" data-year="2024">22</div>
+                            <div class="datepicker--cell datepicker--cell-day -current-" data-date="23" data-month="6" data-year="2024">23</div>
+                            <div class="datepicker--cell datepicker--cell-day" data-date="24" data-month="6" data-year="2024">24</div>
+                            <div class="datepicker--cell datepicker--cell-day" data-date="25" data-month="6" data-year="2024">25</div>
+                            <div class="datepicker--cell datepicker--cell-day" data-date="26" data-month="6" data-year="2024">26</div>
+                            <div class="datepicker--cell datepicker--cell-day -weekend-" data-date="27" data-month="6" data-year="2024">27</div>
+                            <div class="datepicker--cell datepicker--cell-day -weekend-" data-date="28" data-month="6" data-year="2024">28</div>
+                            <div class="datepicker--cell datepicker--cell-day" data-date="29" data-month="6" data-year="2024">29</div>
+                            <div class="datepicker--cell datepicker--cell-day" data-date="30" data-month="6" data-year="2024">30</div>
+                            <div class="datepicker--cell datepicker--cell-day" data-date="31" data-month="6" data-year="2024">31</div>
+                            <div class="datepicker--cell datepicker--cell-day -other-month-" data-date="1" data-month="7" data-year="2024">1</div>
+                            <div class="datepicker--cell datepicker--cell-day -other-month-" data-date="2" data-month="7" data-year="2024">2</div>
+                            <div class="datepicker--cell datepicker--cell-day -weekend- -other-month-" data-date="3" data-month="7" data-year="2024">3</div>
+                            <div class="datepicker--cell datepicker--cell-day -weekend- -other-month-" data-date="4" data-month="7" data-year="2024">4</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="datepicker--time -am-pm-">
+                    <div class="datepicker--time-current"> <span class="datepicker--time-current-hours">05</span> <span class="datepicker--time-current-colon">:</span> <span class="datepicker--time-current-minutes">03</span><span class="datepicker--time-current-ampm">am</span></div>
+                    <div class="datepicker--time-sliders">
+                        <div class="datepicker--time-row"> <input type="range" name="hours" value="5" min="0" max="23" step="1"> </div>
+                        <div class="datepicker--time-row"> <input type="range" name="minutes" value="03" min="0" max="59" step="1"> </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>

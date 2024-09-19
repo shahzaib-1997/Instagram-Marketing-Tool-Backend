@@ -1,0 +1,112 @@
+{% load static %}
+<nav>
+    <div class="nav-logo-wrapper">
+        <a href="/accounts">
+            <img src="{% static '' %}Targeting Settings_files/sisomade-66a2a8e5a60ed.png" alt="Instagram Growth Tool">
+        </a>
+    </div>
+    <div class="nav-menu">
+        <div>
+            <ul>
+                <li class="{% if 'accounts' in request.path %}active{% endif %}">
+                    <a href="/accounts">
+                        <span class="icon-social-instagram menu-icon"></span>
+                        <span class="tooltip tippy" data-tippy-content="Accounts"></span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#">
+                        <span class="mdi mdi-help-circle-outline menu-icon"></span>
+                        <span class="tooltip tippy" data-tippy-content="Help Center"></span>
+                    </a>
+                </li>
+            </ul>
+            <ul>
+                <li class="{% if 'target-edit' in request.path or 'activity-logs' in request.path or 'stats' in request.path %}active{% endif %}">
+                    <a href="/target-edit">
+                        <span class="special-menu-icon" style="color: #fff; background-color: #2b69e9; font-size: 18px; line-height: 18px;">
+                            <span class="mdi mdi-rocket"></span>
+                        </span>
+                        <span class="tooltip tippy" data-tippy-content="Growth Tool"></span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#">
+                        <span class="menu-icon">$</span>
+                        <span class="tooltip tippy" data-tippy-content="Affiliate Program"></span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#">
+                        <span class="mdi mdi-heart menu-icon"></span>
+                        <span class="tooltip tippy" data-tippy-content="Engagement"></span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+<div id="topbar">
+    <div class="clearfix">
+        <a href="javascript:void(0)" class="topbar-mobile-menu-icon mdi mdi-menu"></a>
+        <h1 class="topbar-title"></h1>
+        <div class="topbar-actions clearfix">
+            <script>
+                // @see https://docs.headwayapp.co/widget for more configuration options.
+                var HW_config = {
+                    selector: ".headway-bell", // CSS selector where to inject the badge
+                    account: "7g5oGy",
+                    trigger: ".toggleHeadway",
+                    translations: {
+                        title: "Notifications",
+                        readMore: "Read more",
+                        labels: {
+                            "new": "News",
+                            "improvement": "Updates",
+                            "fix": "Fixes"
+                        }
+                    }
+                }
+            </script>
+            <script async src="//cdn.headwayapp.co/widget.js"></script>
+            <div class="item" href="#">
+                <a class="link toggleHeadway">
+                    <span class="icon-bell icon headway-bell"></span>
+                </a>
+            </div>
+            <div class="item dark-side-switcher-icon">
+                <span class="mdi mdi-weather-night icon dark-side-switcher"></span>
+            </div>
+            <div class="item dark-side-switcher">
+                <link rel="stylesheet" type="text/css" href="{% static '' %}Targeting Settings_files/switcher.css">
+                <div class="form-switcher-ios form-switcher-ios-md-phone form-switcher-ios-sm-phone dark-side-switcher">
+                    <input type="checkbox" name="dark-side-switcher" id="dark-side-switcher" data-user-id="2728" data-url="/profile" value="1">
+                    <label class="switcher dark-side-switcher" for="dark-side-switcher"></label>
+                </div>
+            </div>
+            <div class="item">
+                <div class="topbar-profile clearfix">
+                    <span class="greeting">
+                        Hi, {{ request.user }}! </span>
+                    <div class="pull-left clearfix context-menu-wrapper">
+                        <a href="javascript:void(0)">
+                            <img src="{% static '' %}users/dummy.jpg" width="30" height="30" alt="" class="circle">
+                        </a>
+                        <a href="javascript:void(0)" class="mdi mdi-chevron-down arrow"></a>
+                        <div class="context-menu">
+                            <ul>
+                                <li><a href="/profile">Profile</a></li>
+                                <li><a href="/logout">Logout</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    document.querySelector(".topbar-title").innerHTML = document.querySelector("title").innerHTML;
+</script>
+<script src="https://unpkg.com/@popperjs/core@2/dist/umd/popper.min.js"></script>
+<script src="https://unpkg.com/tippy.js@6/dist/tippy-bundle.umd.js"></script>

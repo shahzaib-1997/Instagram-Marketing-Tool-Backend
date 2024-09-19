@@ -32,18 +32,18 @@ from userapi.bot.profileScrapper import get_profile_data
 import atexit
 
 # Initialize the scheduler
-scheduler = BackgroundScheduler()
-scheduler.add_job(thread_func, "interval", seconds=10)
+# scheduler = BackgroundScheduler()
+# scheduler.add_job(thread_func, "interval", seconds=10)
 
-# Schedule the second function to run every day at midnight
-scheduler.add_job(daily_update_target, "cron", hour=0, minute=0)
+# # Schedule the second function to run every day at midnight
+# scheduler.add_job(daily_update_target, "cron", hour=0, minute=0)
 
-# Schedule the second function to run once a day at a specific time
-# For example, let's say you want it to run every day at 5 AM
-scheduler.add_job(get_profile_data, "cron", hour=5)
+# # Schedule the second function to run once a day at a specific time
+# # For example, let's say you want it to run every day at 5 AM
+# scheduler.add_job(get_profile_data, "cron", hour=5)
 
-# Start the scheduler
-scheduler.start()
+# # Start the scheduler
+# scheduler.start()
 
-# Register a function to be called on program exit
-atexit.register(lambda: scheduler.shutdown())
+# # Register a function to be called on program exit
+# atexit.register(lambda: scheduler.shutdown())

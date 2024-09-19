@@ -24,7 +24,7 @@ from .models import (
     Target,
     TargetType,
     Action,
-    Comment
+    Comment,
 )
 from .serializers import (
     PasswordChangeSerializer,
@@ -41,7 +41,7 @@ from .serializers import (
     TargetTypeSerializer,
     TargetSerializer,
     ActionSerializer,
-    CommentSerializer
+    CommentSerializer,
 )
 from datetime import datetime
 
@@ -63,27 +63,46 @@ class AllCredentials(APIView):
         print(szr.errors)
         return Response(szr.errors)
 
-class NotificationsView(APIView):
-    def get(self, request):
+
+class ActivityLogsView(APIView):
+    def get(self, request, id=None):
         try:
-            notifications = ActivityLog.objects.filter(user=request.user).order_by("-time_stamp")
-            serializer = ActivityLogSerializer(notifications, many=True)
-            return Response(serializer.data)
+            insta_creds = Credential.objects.filter(user=request.user)
+            if insta_creds:
+                if id:
+                    instance = get_object_or_404(Credential, id=id)
+                else:
+                    instance = insta_creds.first()
+                notifications = ActivityLog.objects.filter(user=request.user, insta_account=instance).order_by("-time_stamp")
+                serializer = ActivityLogSerializer(notifications, many=True)
+                context = {
+                    "insta_creds": insta_creds,
+                    "data": serializer.data,
+                    "insta_username": instance.username
+                }
+                return render(request, "userapi/activity_log.html", context=context)
+            messages.error(
+                request,
+                "Please add Instagram Accounts against your account to add Target.",
+            )
+            return redirect("userapi:instagram-accounts")
         except Exception as e:
             return Response(
                 {"message": f"Error: {e}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR
             )
-
 
     def post(self, request):
         try:
             ActivityLog.objects.filter(user=request.user, read=False).update(read=True)
-            return Response({"message": "All Notifications mark as read."}, status=status.HTTP_200_OK)
+            return Response(
+                {"message": "All Notifications mark as read."},
+                status=status.HTTP_200_OK,
+            )
         except Exception as e:
             return Response(
                 {"message": f"Error: {e}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR
             )
-        
+
 
 def user_targets(request):
     if not request.user.is_authenticated:
@@ -91,14 +110,10 @@ def user_targets(request):
         return redirect(f"/signin/?next={request.path}")
     try:
         targets = Target.objects.filter(user=request.user)
-        return render(
-            request,
-            "userapi/targets.html",
-            {"targets": targets}
-        )
+        return render(request, "userapi/targets.html", {"targets": targets})
     except Exception as e:
         messages.error(request, str(e))
-        return redirect("userapi:dashboard")
+        return redirect("userapi:instagram-accounts")
 
 
 def logout_user(request):
@@ -125,15 +140,19 @@ class CreateToken(APIView):
 class SignupView(APIView):
     def get(self, request):
         if request.user.is_authenticated:
-            return redirect("userapi:dashboard")
+            return redirect("userapi:instagram-accounts")
         email = request.GET.get("email", "")
         return render(request, "userapi/signup.html", {"email": email})
 
     def post(self, request):
         try:
             user_data = request.data.copy()
-            user_data["first_name"], user_data["last_name"] = (user_data.pop("fullname")[0].split() + [""])[:2]
-            serializer = RegistrationSerializer(data=user_data, context={"request": request})
+            user_data["first_name"], user_data["last_name"] = (
+                user_data.pop("fullname")[0].split() + [""]
+            )[:2]
+            serializer = RegistrationSerializer(
+                data=user_data, context={"request": request}
+            )
             if serializer.is_valid():
                 validated_data = serializer.validated_data
                 user = User.objects.create_user(**validated_data)
@@ -142,7 +161,7 @@ class SignupView(APIView):
                 return redirect("userapi:login")
             else:
                 for value in serializer.errors.values():
-                    error = value[0].replace('/', '')
+                    error = value[0].replace("/", "")
                     messages.error(request, f"{error}")
         except Exception as e:
             messages.error(request, str(e))
@@ -152,8 +171,10 @@ class SignupView(APIView):
 class LoginView(APIView):
     def get(self, request):
         if request.user.is_authenticated:
-            return redirect("userapi:dashboard")
-        return render(request, "userapi/login.html", {'next':request.GET.get("next", "")})
+            return redirect("userapi:instagram-accounts")
+        return render(
+            request, "userapi/login.html", {"next": request.GET.get("next", "")}
+        )
 
     def post(self, request):
         try:
@@ -173,7 +194,7 @@ class LoginView(APIView):
                     next_url = request.GET.get("next")
                     if next_url:
                         return redirect(f"{next_url}")
-                    return redirect("userapi:dashboard")
+                    return redirect("userapi:instagram-accounts")
                 messages.error(request, "Password is incorrect!")
         except Exception as e:
             messages.error(request, str(e))
@@ -186,15 +207,19 @@ class DashboardView(APIView):
             messages.error(request, "You need to login first.")
             return redirect(f"/signin/?next={request.path}")
         try:
-            insta_creds = Credential.objects.filter(user=request.user).values_list('username', flat=True)
+            insta_creds = Credential.objects.filter(user=request.user).values_list(
+                "username", flat=True
+            )
             if insta_creds:
-                context = {opt: [] for opt, _ in Stat.options} | {f"{opt}_time": [] for opt, _ in Stat.options}
+                context = {opt: [] for opt, _ in Stat.options} | {
+                    f"{opt}_time": [] for opt, _ in Stat.options
+                }
                 context["insta_creds"] = insta_creds
 
                 insta_account = request.GET.get("insta_account", insta_creds[0])
                 stats_filter = {
                     "user": request.user,
-                    "insta_account__username": insta_account
+                    "insta_account__username": insta_account,
                 }
 
                 from_date, to_date = request.GET.get("from"), request.GET.get("to")
@@ -211,7 +236,11 @@ class DashboardView(APIView):
             return redirect("userapi:instagram-accounts")
         except Exception as e:
             messages.error(request, str(e))
-            return render(request, "userapi/dashboard.html", status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            return render(
+                request,
+                "userapi/dashboard.html",
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            )
 
 
 class TargetTemplateView(APIView):
@@ -239,7 +268,10 @@ class TargetTemplateView(APIView):
                     act = model.objects.get(target=target, user=request.user)
                     context["url"] = act.url
                 return render(request, "userapi/target.html", context=context)
-            messages.error(request, "Please add Instagram Accounts against your account to add Target.")
+            messages.error(
+                request,
+                "Please add Instagram Accounts against your account to add Target.",
+            )
             return redirect("userapi:instagram-accounts")
         except Exception as e:
             messages.error(request, str(e))
@@ -251,8 +283,10 @@ class TargetTemplateView(APIView):
             return redirect(f"/signin/?next={request.path}")
         try:
             activity = request.POST.get("actTime")
-            activity = datetime.strptime(activity, '%H:%M').time()
-            activity_time = datetime.combine(datetime.now().date(), activity, tzinfo=timezone.get_current_timezone())
+            activity = datetime.strptime(activity, "%H:%M").time()
+            activity_time = datetime.combine(
+                datetime.now().date(), activity, tzinfo=timezone.get_current_timezone()
+            )
             if pk:
                 target = get_object_or_404(Target, id=pk)
                 target.activity_time.time = activity_time
@@ -260,9 +294,13 @@ class TargetTemplateView(APIView):
                 target_type = target.target_type.type
             else:
                 target = Target.objects.create(user=request.user)
-                target.activity_time = ActivityTime.objects.create(time=activity_time, user=request.user)
+                target.activity_time = ActivityTime.objects.create(
+                    time=activity_time, user=request.user
+                )
                 target_type = request.POST.get("type")
-                target.target_type = TargetType.objects.create(type=target_type, user=request.user)
+                target.target_type = TargetType.objects.create(
+                    type=target_type, user=request.user
+                )
 
             insta_cred = request.POST.get("selected_insta_cred")
             credential = get_object_or_404(Credential, id=insta_cred)
@@ -283,19 +321,24 @@ class TargetTemplateView(APIView):
             act.url = request.POST.get("username")
             act.save()
 
-            messages.success(request, "Target " + ("updated" if pk else "added") + " successfully!")
+            messages.success(
+                request, "Target " + ("updated" if pk else "added") + " successfully!"
+            )
             return redirect("userapi:targets")
         except Exception as e:
             messages.error(request, str(e))
             return redirect("userapi:target-edit", pk=target.id)
 
+
 class InstaCredentialView(APIView):
     def get(self, request):
         if request.user.is_authenticated:
-            insta_creds = Credential.objects.filter(user=request.user)
-            return render(
-                request, "userapi/insta_credentials.html", {"insta_creds": insta_creds}
-            )
+            insta_creds = Credential.objects.filter(user=request.user).first()
+            if insta_creds:
+                return render(
+                    request, "Saved Accounts.html", {"insta_creds": insta_creds}
+                )
+            return render(request, "Accounts.html")
         messages.error(request, "You need to login first.")
         return redirect(f"/signin/?next={request.path}")
 
@@ -308,23 +351,29 @@ class InstaCredentialView(APIView):
             username = request.POST.get("username")
             password = request.POST.get("password")
             if pk is None:
-                credential = Credential.objects.create(user=request.user, username=username, password = password)
+                credential = Credential.objects.create(
+                    user=request.user, username=username, password=password
+                )
                 profile_id = create_profile(f"{request.user} - {credential.id}")
-                credential.profile_id = profile_id
-                credential.save()
                 check = insta_login(profile_id, username, password)
                 if not check:
                     messages.error(request, "Provided credentials are incorrect!")
                     self.delete(request, username)
                 else:
                     messages.success(request, "Instagram Account added successfully!")
+                    credential.profile_id = profile_id
+                    credential.save()
             else:
-                Credential.objects.filter(user=request.user, username=pk).update(username=username, password=password)
+                Credential.objects.filter(user=request.user, username=pk).update(
+                    username=username, password=password
+                )
                 messages.success(request, "Details updated successfully!")
             insta_creds = Credential.objects.filter(user=request.user)
-            return render(
-                request, "userapi/insta_credentials.html", {"insta_creds": insta_creds}
-            )
+            if insta_creds:
+                return render(
+                    request, "Saved Accounts.html", {"insta_creds": insta_creds}
+                )
+            return render(request, "Accounts.html")
         except Exception as e:
             if "UNIQUE" in str(e):
                 messages.error(request, "Username already exists against your account!")
@@ -337,10 +386,10 @@ class InstaCredentialView(APIView):
             messages.error(request, "You need to login first.")
             return redirect(f"/signin/?next={request.path}")
         try:
-            credential = get_object_or_404(
-                Credential, username=pk, user=request.user
+            credential = get_object_or_404(Credential, username=pk, user=request.user)
+            requests.get(
+                f"http://localhost:35000/profile/delete/{credential.profile_id}"
             )
-            requests.get(f"http://localhost:35000/profile/delete/{credential.profile_id}")
             credential.delete()
             return Response(status=status.HTTP_204_NO_CONTENT)
         except Exception as e:
@@ -367,7 +416,7 @@ class ProfileView(APIView):
                 )
         except Exception as e:
             messages.error(request, str(e))
-            return redirect("userapi:dashboard")
+            return redirect("userapi:instagram-accounts")
 
     def post(self, request):
         try:
@@ -432,7 +481,7 @@ class PasswordChangeView(APIView):
                 messages.error(request, "New Password is same as current password!")
             else:
                 for value in serializer.errors.values():
-                    error = value[0].replace('/', '')
+                    error = value[0].replace("/", "")
                     messages.error(request, f"{error}")
         except Exception as e:
             messages.error(request, str(e))
