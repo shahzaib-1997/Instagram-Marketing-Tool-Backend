@@ -30,54 +30,10 @@
     {% include "nav.html" %}
     <div class="skeleton skeleton--full" id="reactions-pro" style="display: block;">
       <div class="clearfix">
-        <aside class="skeleton-aside hide-on-medium-and-down" style="height: 578px;">
-          <div class="search-box">
-            <div class="pos-r">
-              <input type="search" class="input input--small leftpad rightpad" name="q" placeholder="Search...">
-              <span class="small field-icon--right processing">
-                <img src="{% static '' %}Targeting Settings_files/round-loading.svg" alt="Searching...">
-              </span>
-              <span class="icon-magnifier small field-icon--left search-icon"></span>
-              <a href="javascript:void(0)" class="mdi mdi-arrow-left small field-icon--left cancel-icon"></a>
-            </div>
-          </div>
-          <div>
-            <div class="aside-list">
-              {% for insta_cred in insta_creds %}
-              <div class="aside-list-item js-list-item" data-id="{{ insta_cred.username }}" style="cursor: pointer;">
-                <div class="clearfix">
-                  <a href="/activity-logs/{{ insta_cred.id }}">
-                    <span class="circle"><span>{{ insta_cred.username.0 }}</span></span>
-                    <div class="inner">
-                      <div class="title">{{ insta_cred.username }}</div>
-                      <div class="sub">
-                        <span class="status">
-                          <span class="mdi mdi-circle-outline mr-2"></span>Inactive</span>
-                        <span class="reactions-task-custom-labels clearfix">
-                        </span>
-                      </div>
-                    </div>
-                    <div class="options reactions-selector">
-                      <a href="javascript:void(0)" class="mdi mdi-checkbox-blank-circle-outline js-task-action-select" data-id="{{ insta_cred.id }}"></a>
-                    </div>
-                    <div class="options context-menu-wrapper">
-                      <a href="javascript:void(0)" class="mdi mdi-dots-vertical"></a>
-                      <div class="context-menu reactions-context-menu">
-                        <ul>
-                          <li><a href="/accounts/">Login again</a></li>
-                        </ul>
-                      </div>
-                    </div>
-                  </a>
-                </div>
-              </div>
-              {% endfor %}
-            </div>
-          </div>
-        </aside>
+        {% include 'search-results.html' %}
         <section class="skeleton-content" style="height: 578px;">
           <div class="react-tab-heads pb-15 clearfix">
-            <a href='{% url "userapi:target-edit" %}'>Settings</a>
+            <a href='{% url "userapi:targets" %}'>Targets</a>
             <a href='{% url "userapi:activity-logs" %}' class="active">Activity Log</a>
             <a href='/stats/'>Stats</a>
             <ic-anchor-point class="intercom-namespace" style="position: relative; display: inline-block; width: 62.5946px;">
@@ -87,7 +43,7 @@
           <div class="activity-data">
             {% if data %}
             <div class="table-responsive">
-              <table class="table table-hover align-middle">
+              <table class="table">
                 <thead>
                   <tr>
                     <th>Activity</th>
@@ -98,7 +54,7 @@
                   {% for element in data %}
                   <tr>
                     <td> {{element.activity}} </td>
-                    <td class="text-center text-nowrap">{{element.timestamp}}</td>
+                    <td class="text-center text-nowrap">{{ element.time_stamp|date:"M j, Y H:i" }}</td>
                   </tr>
                   {% endfor %}
                 </tbody>

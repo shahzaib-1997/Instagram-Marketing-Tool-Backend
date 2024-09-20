@@ -30,21 +30,64 @@
         {% include 'nav.html' %}
         <div class="skeleton skeleton--full" id="reactions-pro" style="display: block;">
             <div class="clearfix">
-                {% include 'search-results.html' %}
+                <aside class="skeleton-aside hide-on-medium-and-down" style="height: 578px;">
+                    <div class="search-box">
+                        <div class="pos-r">
+                            <input type="search" class="input input--small leftpad rightpad" name="q" placeholder="Search...">
+                            <span class="small field-icon--right processing">
+                                <img src="{% static '' %}Targeting Settings_files/round-loading.svg" alt="Searching...">
+                            </span>
+                            <span class="icon-magnifier small field-icon--left search-icon"></span>
+                            <a href="javascript:void(0)" class="mdi mdi-arrow-left small field-icon--left cancel-icon"></a>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="aside-list">
+                            {% for insta_cred in insta_creds %}
+                            <div class="aside-list-item js-list-item" data-id="{{ insta_cred.id }}" style="cursor: pointer;">
+                                <div class="clearfix">
+                                    <span class="circle"><span>{{ insta_cred.username.0 }}</span></span>
+                                    <div class="inner">
+                                        <div class="title">{{ insta_cred.username }}</div>
+                                        <div class="sub">
+                                            <span class="status">
+                                                <span class="mdi mdi-circle-outline mr-2"></span>Inactive</span>
+                                            <span class="reactions-task-custom-labels clearfix">
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div class="options reactions-selector">
+                                        <a href="javascript:void(0)" class="mdi mdi-checkbox-blank-circle-outline js-task-action-select" data-id="{{ insta_cred.id }}"></a>
+                                    </div>
+                                    <div class="options context-menu-wrapper">
+                                        <a href="javascript:void(0)" class="mdi mdi-dots-vertical"></a>
+                                        <div class="context-menu reactions-context-menu">
+                                            <ul>
+                                                <li><a href="/accounts/">Login again</a></li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </aside>
                 <section class="skeleton-content" style="height: 578px;">
                     <div class="section-header back-button-wh none">
                         <a href="{% url 'userapi:targets' %}"><span class="mdi mdi-reply"></span>Back</a>
                     </div>
                     <div class="react-tab-heads pb-15 clearfix">
-                        <a href="{% url 'userapi:target-edit' %}" class="active">Settings</a>
+                        <a href="{% url 'userapi:targets' %}" class="active">Targets</a>
                         <a href="{% url 'userapi:activity-logs' %}">Activity Log</a>
                         <a href="{% url 'userapi:stats' %}">Stats</a>
                         <ic-anchor-point style="position: relative; display: inline-block; width: 77.375px;" class="intercom-namespace">
                             <div id="tooltip-anchor-41563" aria-describedby="intercom-tooltip-41563" aria-label="Tooltip anchor" class="e63435j4 intercom-with-namespace-3pzvtu e63435j5" role="button" tabindex="0">5 Min Setup</div>
                         </ic-anchor-point>
                     </div>
-                    <form method="POST">
+                    <form method="POST" onsubmit="return checkForm()">
                         {% csrf_token %}
+                        <input type="hidden" name="selected_insta_cred">
                         <div class="section-content">
                             <div class="clearfix">
                                 <div class="col s12 m10 l8">
@@ -52,10 +95,10 @@
                                         <div class="mb-20">
                                             <a href="javascript:void(0)" class="rp-targeting-toggler rp-toggler-button opened"><span class="mdi icon mr-3 mdi-arrow-up"></span>Targeting</a>
                                         </div>
-                                        <div class="rp-targeting" data-account-id="">
+                                        <div class="rp-targeting">
                                             <div class="mb-5 clearfix">
                                                 <label class="inline-block mr-30 mb-15">
-                                                    <input class="radio" name="type" type="radio" value="post-comment" />
+                                                    <input class="radio" name="type" type="radio" value="post-comment" required />
                                                     <span>
                                                         <span class="icon"></span>
                                                         Post (comment)
@@ -644,7 +687,7 @@
                                             <div class="clearfix mb-20">
                                                 <div class="mb-20">
                                                     <label>
-                                                        <input type="checkbox" class="checkbox" name="activity-time" value="1" />
+                                                        <input type="checkbox" class="checkbox" name="activity-time" />
                                                         <span>
                                                             <span class="icon unchecked"><span class="mdi mdi-check"></span></span>
                                                             Activity Time (optional) ...
@@ -655,7 +698,7 @@
                                                         <li>Helps configure custom activity time for all days of the week.</li>
                                                     </ul>
                                                 </div>
-                                                <div class="clearfix mb-20 js-activity-time" style="opacity: 0.25;">
+                                                <div class="clearfix mb-20 js-activity-time">
                                                     <table class="activity-time-table">
                                                         <thead>
                                                             <tr>
@@ -674,43 +717,43 @@
                                                                 <th class="at-hours">12:00 AM</th>
                                                                 <th>
                                                                     <label>
-                                                                        <input type="checkbox" class="checkbox" name="day_1_00" value="1" disabled />
+                                                                        <input type="checkbox" class="checkbox" name="day_1_00" value="1" />
                                                                         <span><span class="icon unchecked"><span class="mdi mdi-check"></span></span></span>
                                                                     </label>
                                                                 </th>
                                                                 <th>
                                                                     <label>
-                                                                        <input type="checkbox" class="checkbox" name="day_2_00" value="1" disabled />
+                                                                        <input type="checkbox" class="checkbox" name="day_2_00" value="1" />
                                                                         <span><span class="icon unchecked"><span class="mdi mdi-check"></span></span></span>
                                                                     </label>
                                                                 </th>
                                                                 <th>
                                                                     <label>
-                                                                        <input type="checkbox" class="checkbox" name="day_3_00" value="1" disabled />
+                                                                        <input type="checkbox" class="checkbox" name="day_3_00" value="1" />
                                                                         <span><span class="icon unchecked"><span class="mdi mdi-check"></span></span></span>
                                                                     </label>
                                                                 </th>
                                                                 <th>
                                                                     <label>
-                                                                        <input type="checkbox" class="checkbox" name="day_4_00" value="1" disabled />
+                                                                        <input type="checkbox" class="checkbox" name="day_4_00" value="1" />
                                                                         <span><span class="icon unchecked"><span class="mdi mdi-check"></span></span></span>
                                                                     </label>
                                                                 </th>
                                                                 <th>
                                                                     <label>
-                                                                        <input type="checkbox" class="checkbox" name="day_5_00" value="1" disabled />
+                                                                        <input type="checkbox" class="checkbox" name="day_5_00" value="1" />
                                                                         <span><span class="icon unchecked"><span class="mdi mdi-check"></span></span></span>
                                                                     </label>
                                                                 </th>
                                                                 <th>
                                                                     <label>
-                                                                        <input type="checkbox" class="checkbox" name="day_6_00" value="1" disabled />
+                                                                        <input type="checkbox" class="checkbox" name="day_6_00" value="1" />
                                                                         <span><span class="icon unchecked"><span class="mdi mdi-check"></span></span></span>
                                                                     </label>
                                                                 </th>
                                                                 <th>
                                                                     <label>
-                                                                        <input type="checkbox" class="checkbox" name="day_7_00" value="1" disabled />
+                                                                        <input type="checkbox" class="checkbox" name="day_7_00" value="1" />
                                                                         <span><span class="icon unchecked"><span class="mdi mdi-check"></span></span></span>
                                                                     </label>
                                                                 </th>
@@ -719,43 +762,43 @@
                                                                 <th class="at-hours">01:00 AM</th>
                                                                 <th>
                                                                     <label>
-                                                                        <input type="checkbox" class="checkbox" name="day_1_01" value="1" disabled />
+                                                                        <input type="checkbox" class="checkbox" name="day_1_01" value="1" />
                                                                         <span><span class="icon unchecked"><span class="mdi mdi-check"></span></span></span>
                                                                     </label>
                                                                 </th>
                                                                 <th>
                                                                     <label>
-                                                                        <input type="checkbox" class="checkbox" name="day_2_01" value="1" disabled />
+                                                                        <input type="checkbox" class="checkbox" name="day_2_01" value="1" />
                                                                         <span><span class="icon unchecked"><span class="mdi mdi-check"></span></span></span>
                                                                     </label>
                                                                 </th>
                                                                 <th>
                                                                     <label>
-                                                                        <input type="checkbox" class="checkbox" name="day_3_01" value="1" disabled />
+                                                                        <input type="checkbox" class="checkbox" name="day_3_01" value="1" />
                                                                         <span><span class="icon unchecked"><span class="mdi mdi-check"></span></span></span>
                                                                     </label>
                                                                 </th>
                                                                 <th>
                                                                     <label>
-                                                                        <input type="checkbox" class="checkbox" name="day_4_01" value="1" disabled />
+                                                                        <input type="checkbox" class="checkbox" name="day_4_01" value="1" />
                                                                         <span><span class="icon unchecked"><span class="mdi mdi-check"></span></span></span>
                                                                     </label>
                                                                 </th>
                                                                 <th>
                                                                     <label>
-                                                                        <input type="checkbox" class="checkbox" name="day_5_01" value="1" disabled />
+                                                                        <input type="checkbox" class="checkbox" name="day_5_01" value="1" />
                                                                         <span><span class="icon unchecked"><span class="mdi mdi-check"></span></span></span>
                                                                     </label>
                                                                 </th>
                                                                 <th>
                                                                     <label>
-                                                                        <input type="checkbox" class="checkbox" name="day_6_01" value="1" disabled />
+                                                                        <input type="checkbox" class="checkbox" name="day_6_01" value="1" />
                                                                         <span><span class="icon unchecked"><span class="mdi mdi-check"></span></span></span>
                                                                     </label>
                                                                 </th>
                                                                 <th>
                                                                     <label>
-                                                                        <input type="checkbox" class="checkbox" name="day_7_01" value="1" disabled />
+                                                                        <input type="checkbox" class="checkbox" name="day_7_01" value="1" />
                                                                         <span><span class="icon unchecked"><span class="mdi mdi-check"></span></span></span>
                                                                     </label>
                                                                 </th>
@@ -764,43 +807,43 @@
                                                                 <th class="at-hours">02:00 AM</th>
                                                                 <th>
                                                                     <label>
-                                                                        <input type="checkbox" class="checkbox" name="day_1_02" value="1" disabled />
+                                                                        <input type="checkbox" class="checkbox" name="day_1_02" value="1" />
                                                                         <span><span class="icon unchecked"><span class="mdi mdi-check"></span></span></span>
                                                                     </label>
                                                                 </th>
                                                                 <th>
                                                                     <label>
-                                                                        <input type="checkbox" class="checkbox" name="day_2_02" value="1" disabled />
+                                                                        <input type="checkbox" class="checkbox" name="day_2_02" value="1" />
                                                                         <span><span class="icon unchecked"><span class="mdi mdi-check"></span></span></span>
                                                                     </label>
                                                                 </th>
                                                                 <th>
                                                                     <label>
-                                                                        <input type="checkbox" class="checkbox" name="day_3_02" value="1" disabled />
+                                                                        <input type="checkbox" class="checkbox" name="day_3_02" value="1" />
                                                                         <span><span class="icon unchecked"><span class="mdi mdi-check"></span></span></span>
                                                                     </label>
                                                                 </th>
                                                                 <th>
                                                                     <label>
-                                                                        <input type="checkbox" class="checkbox" name="day_4_02" value="1" disabled />
+                                                                        <input type="checkbox" class="checkbox" name="day_4_02" value="1" />
                                                                         <span><span class="icon unchecked"><span class="mdi mdi-check"></span></span></span>
                                                                     </label>
                                                                 </th>
                                                                 <th>
                                                                     <label>
-                                                                        <input type="checkbox" class="checkbox" name="day_5_02" value="1" disabled />
+                                                                        <input type="checkbox" class="checkbox" name="day_5_02" value="1" />
                                                                         <span><span class="icon unchecked"><span class="mdi mdi-check"></span></span></span>
                                                                     </label>
                                                                 </th>
                                                                 <th>
                                                                     <label>
-                                                                        <input type="checkbox" class="checkbox" name="day_6_02" value="1" disabled />
+                                                                        <input type="checkbox" class="checkbox" name="day_6_02" value="1" />
                                                                         <span><span class="icon unchecked"><span class="mdi mdi-check"></span></span></span>
                                                                     </label>
                                                                 </th>
                                                                 <th>
                                                                     <label>
-                                                                        <input type="checkbox" class="checkbox" name="day_7_02" value="1" disabled />
+                                                                        <input type="checkbox" class="checkbox" name="day_7_02" value="1" />
                                                                         <span><span class="icon unchecked"><span class="mdi mdi-check"></span></span></span>
                                                                     </label>
                                                                 </th>
@@ -809,43 +852,43 @@
                                                                 <th class="at-hours">03:00 AM</th>
                                                                 <th>
                                                                     <label>
-                                                                        <input type="checkbox" class="checkbox" name="day_1_03" value="1" disabled />
+                                                                        <input type="checkbox" class="checkbox" name="day_1_03" value="1" />
                                                                         <span><span class="icon unchecked"><span class="mdi mdi-check"></span></span></span>
                                                                     </label>
                                                                 </th>
                                                                 <th>
                                                                     <label>
-                                                                        <input type="checkbox" class="checkbox" name="day_2_03" value="1" disabled />
+                                                                        <input type="checkbox" class="checkbox" name="day_2_03" value="1" />
                                                                         <span><span class="icon unchecked"><span class="mdi mdi-check"></span></span></span>
                                                                     </label>
                                                                 </th>
                                                                 <th>
                                                                     <label>
-                                                                        <input type="checkbox" class="checkbox" name="day_3_03" value="1" disabled />
+                                                                        <input type="checkbox" class="checkbox" name="day_3_03" value="1" />
                                                                         <span><span class="icon unchecked"><span class="mdi mdi-check"></span></span></span>
                                                                     </label>
                                                                 </th>
                                                                 <th>
                                                                     <label>
-                                                                        <input type="checkbox" class="checkbox" name="day_4_03" value="1" disabled />
+                                                                        <input type="checkbox" class="checkbox" name="day_4_03" value="1" />
                                                                         <span><span class="icon unchecked"><span class="mdi mdi-check"></span></span></span>
                                                                     </label>
                                                                 </th>
                                                                 <th>
                                                                     <label>
-                                                                        <input type="checkbox" class="checkbox" name="day_5_03" value="1" disabled />
+                                                                        <input type="checkbox" class="checkbox" name="day_5_03" value="1" />
                                                                         <span><span class="icon unchecked"><span class="mdi mdi-check"></span></span></span>
                                                                     </label>
                                                                 </th>
                                                                 <th>
                                                                     <label>
-                                                                        <input type="checkbox" class="checkbox" name="day_6_03" value="1" disabled />
+                                                                        <input type="checkbox" class="checkbox" name="day_6_03" value="1" />
                                                                         <span><span class="icon unchecked"><span class="mdi mdi-check"></span></span></span>
                                                                     </label>
                                                                 </th>
                                                                 <th>
                                                                     <label>
-                                                                        <input type="checkbox" class="checkbox" name="day_7_03" value="1" disabled />
+                                                                        <input type="checkbox" class="checkbox" name="day_7_03" value="1" />
                                                                         <span><span class="icon unchecked"><span class="mdi mdi-check"></span></span></span>
                                                                     </label>
                                                                 </th>
@@ -854,43 +897,43 @@
                                                                 <th class="at-hours">04:00 AM</th>
                                                                 <th>
                                                                     <label>
-                                                                        <input type="checkbox" class="checkbox" name="day_1_04" value="1" disabled />
+                                                                        <input type="checkbox" class="checkbox" name="day_1_04" value="1" />
                                                                         <span><span class="icon unchecked"><span class="mdi mdi-check"></span></span></span>
                                                                     </label>
                                                                 </th>
                                                                 <th>
                                                                     <label>
-                                                                        <input type="checkbox" class="checkbox" name="day_2_04" value="1" disabled />
+                                                                        <input type="checkbox" class="checkbox" name="day_2_04" value="1" />
                                                                         <span><span class="icon unchecked"><span class="mdi mdi-check"></span></span></span>
                                                                     </label>
                                                                 </th>
                                                                 <th>
                                                                     <label>
-                                                                        <input type="checkbox" class="checkbox" name="day_3_04" value="1" disabled />
+                                                                        <input type="checkbox" class="checkbox" name="day_3_04" value="1" />
                                                                         <span><span class="icon unchecked"><span class="mdi mdi-check"></span></span></span>
                                                                     </label>
                                                                 </th>
                                                                 <th>
                                                                     <label>
-                                                                        <input type="checkbox" class="checkbox" name="day_4_04" value="1" disabled />
+                                                                        <input type="checkbox" class="checkbox" name="day_4_04" value="1" />
                                                                         <span><span class="icon unchecked"><span class="mdi mdi-check"></span></span></span>
                                                                     </label>
                                                                 </th>
                                                                 <th>
                                                                     <label>
-                                                                        <input type="checkbox" class="checkbox" name="day_5_04" value="1" disabled />
+                                                                        <input type="checkbox" class="checkbox" name="day_5_04" value="1" />
                                                                         <span><span class="icon unchecked"><span class="mdi mdi-check"></span></span></span>
                                                                     </label>
                                                                 </th>
                                                                 <th>
                                                                     <label>
-                                                                        <input type="checkbox" class="checkbox" name="day_6_04" value="1" disabled />
+                                                                        <input type="checkbox" class="checkbox" name="day_6_04" value="1" />
                                                                         <span><span class="icon unchecked"><span class="mdi mdi-check"></span></span></span>
                                                                     </label>
                                                                 </th>
                                                                 <th>
                                                                     <label>
-                                                                        <input type="checkbox" class="checkbox" name="day_7_04" value="1" disabled />
+                                                                        <input type="checkbox" class="checkbox" name="day_7_04" value="1" />
                                                                         <span><span class="icon unchecked"><span class="mdi mdi-check"></span></span></span>
                                                                     </label>
                                                                 </th>
@@ -899,43 +942,43 @@
                                                                 <th class="at-hours">05:00 AM</th>
                                                                 <th>
                                                                     <label>
-                                                                        <input type="checkbox" class="checkbox" name="day_1_05" value="1" disabled />
+                                                                        <input type="checkbox" class="checkbox" name="day_1_05" value="1" />
                                                                         <span><span class="icon unchecked"><span class="mdi mdi-check"></span></span></span>
                                                                     </label>
                                                                 </th>
                                                                 <th>
                                                                     <label>
-                                                                        <input type="checkbox" class="checkbox" name="day_2_05" value="1" disabled />
+                                                                        <input type="checkbox" class="checkbox" name="day_2_05" value="1" />
                                                                         <span><span class="icon unchecked"><span class="mdi mdi-check"></span></span></span>
                                                                     </label>
                                                                 </th>
                                                                 <th>
                                                                     <label>
-                                                                        <input type="checkbox" class="checkbox" name="day_3_05" value="1" disabled />
+                                                                        <input type="checkbox" class="checkbox" name="day_3_05" value="1" />
                                                                         <span><span class="icon unchecked"><span class="mdi mdi-check"></span></span></span>
                                                                     </label>
                                                                 </th>
                                                                 <th>
                                                                     <label>
-                                                                        <input type="checkbox" class="checkbox" name="day_4_05" value="1" disabled />
+                                                                        <input type="checkbox" class="checkbox" name="day_4_05" value="1" />
                                                                         <span><span class="icon unchecked"><span class="mdi mdi-check"></span></span></span>
                                                                     </label>
                                                                 </th>
                                                                 <th>
                                                                     <label>
-                                                                        <input type="checkbox" class="checkbox" name="day_5_05" value="1" disabled />
+                                                                        <input type="checkbox" class="checkbox" name="day_5_05" value="1" />
                                                                         <span><span class="icon unchecked"><span class="mdi mdi-check"></span></span></span>
                                                                     </label>
                                                                 </th>
                                                                 <th>
                                                                     <label>
-                                                                        <input type="checkbox" class="checkbox" name="day_6_05" value="1" disabled />
+                                                                        <input type="checkbox" class="checkbox" name="day_6_05" value="1" />
                                                                         <span><span class="icon unchecked"><span class="mdi mdi-check"></span></span></span>
                                                                     </label>
                                                                 </th>
                                                                 <th>
                                                                     <label>
-                                                                        <input type="checkbox" class="checkbox" name="day_7_05" value="1" disabled />
+                                                                        <input type="checkbox" class="checkbox" name="day_7_05" value="1" />
                                                                         <span><span class="icon unchecked"><span class="mdi mdi-check"></span></span></span>
                                                                     </label>
                                                                 </th>
@@ -944,43 +987,43 @@
                                                                 <th class="at-hours">06:00 AM</th>
                                                                 <th>
                                                                     <label>
-                                                                        <input type="checkbox" class="checkbox" name="day_1_06" value="1" disabled />
+                                                                        <input type="checkbox" class="checkbox" name="day_1_06" value="1" />
                                                                         <span><span class="icon unchecked"><span class="mdi mdi-check"></span></span></span>
                                                                     </label>
                                                                 </th>
                                                                 <th>
                                                                     <label>
-                                                                        <input type="checkbox" class="checkbox" name="day_2_06" value="1" disabled />
+                                                                        <input type="checkbox" class="checkbox" name="day_2_06" value="1" />
                                                                         <span><span class="icon unchecked"><span class="mdi mdi-check"></span></span></span>
                                                                     </label>
                                                                 </th>
                                                                 <th>
                                                                     <label>
-                                                                        <input type="checkbox" class="checkbox" name="day_3_06" value="1" disabled />
+                                                                        <input type="checkbox" class="checkbox" name="day_3_06" value="1" />
                                                                         <span><span class="icon unchecked"><span class="mdi mdi-check"></span></span></span>
                                                                     </label>
                                                                 </th>
                                                                 <th>
                                                                     <label>
-                                                                        <input type="checkbox" class="checkbox" name="day_4_06" value="1" disabled />
+                                                                        <input type="checkbox" class="checkbox" name="day_4_06" value="1" />
                                                                         <span><span class="icon unchecked"><span class="mdi mdi-check"></span></span></span>
                                                                     </label>
                                                                 </th>
                                                                 <th>
                                                                     <label>
-                                                                        <input type="checkbox" class="checkbox" name="day_5_06" value="1" disabled />
+                                                                        <input type="checkbox" class="checkbox" name="day_5_06" value="1" />
                                                                         <span><span class="icon unchecked"><span class="mdi mdi-check"></span></span></span>
                                                                     </label>
                                                                 </th>
                                                                 <th>
                                                                     <label>
-                                                                        <input type="checkbox" class="checkbox" name="day_6_06" value="1" disabled />
+                                                                        <input type="checkbox" class="checkbox" name="day_6_06" value="1" />
                                                                         <span><span class="icon unchecked"><span class="mdi mdi-check"></span></span></span>
                                                                     </label>
                                                                 </th>
                                                                 <th>
                                                                     <label>
-                                                                        <input type="checkbox" class="checkbox" name="day_7_06" value="1" disabled />
+                                                                        <input type="checkbox" class="checkbox" name="day_7_06" value="1" />
                                                                         <span><span class="icon unchecked"><span class="mdi mdi-check"></span></span></span>
                                                                     </label>
                                                                 </th>
@@ -989,43 +1032,43 @@
                                                                 <th class="at-hours">07:00 AM</th>
                                                                 <th>
                                                                     <label>
-                                                                        <input type="checkbox" class="checkbox" name="day_1_07" value="1" disabled />
+                                                                        <input type="checkbox" class="checkbox" name="day_1_07" value="1" />
                                                                         <span><span class="icon unchecked"><span class="mdi mdi-check"></span></span></span>
                                                                     </label>
                                                                 </th>
                                                                 <th>
                                                                     <label>
-                                                                        <input type="checkbox" class="checkbox" name="day_2_07" value="1" disabled />
+                                                                        <input type="checkbox" class="checkbox" name="day_2_07" value="1" />
                                                                         <span><span class="icon unchecked"><span class="mdi mdi-check"></span></span></span>
                                                                     </label>
                                                                 </th>
                                                                 <th>
                                                                     <label>
-                                                                        <input type="checkbox" class="checkbox" name="day_3_07" value="1" disabled />
+                                                                        <input type="checkbox" class="checkbox" name="day_3_07" value="1" />
                                                                         <span><span class="icon unchecked"><span class="mdi mdi-check"></span></span></span>
                                                                     </label>
                                                                 </th>
                                                                 <th>
                                                                     <label>
-                                                                        <input type="checkbox" class="checkbox" name="day_4_07" value="1" disabled />
+                                                                        <input type="checkbox" class="checkbox" name="day_4_07" value="1" />
                                                                         <span><span class="icon unchecked"><span class="mdi mdi-check"></span></span></span>
                                                                     </label>
                                                                 </th>
                                                                 <th>
                                                                     <label>
-                                                                        <input type="checkbox" class="checkbox" name="day_5_07" value="1" disabled />
+                                                                        <input type="checkbox" class="checkbox" name="day_5_07" value="1" />
                                                                         <span><span class="icon unchecked"><span class="mdi mdi-check"></span></span></span>
                                                                     </label>
                                                                 </th>
                                                                 <th>
                                                                     <label>
-                                                                        <input type="checkbox" class="checkbox" name="day_6_07" value="1" disabled />
+                                                                        <input type="checkbox" class="checkbox" name="day_6_07" value="1" />
                                                                         <span><span class="icon unchecked"><span class="mdi mdi-check"></span></span></span>
                                                                     </label>
                                                                 </th>
                                                                 <th>
                                                                     <label>
-                                                                        <input type="checkbox" class="checkbox" name="day_7_07" value="1" disabled />
+                                                                        <input type="checkbox" class="checkbox" name="day_7_07" value="1" />
                                                                         <span><span class="icon unchecked"><span class="mdi mdi-check"></span></span></span>
                                                                     </label>
                                                                 </th>
@@ -1034,43 +1077,43 @@
                                                                 <th class="at-hours">08:00 AM</th>
                                                                 <th>
                                                                     <label>
-                                                                        <input type="checkbox" class="checkbox" name="day_1_08" value="1" disabled />
+                                                                        <input type="checkbox" class="checkbox" name="day_1_08" value="1" />
                                                                         <span><span class="icon unchecked"><span class="mdi mdi-check"></span></span></span>
                                                                     </label>
                                                                 </th>
                                                                 <th>
                                                                     <label>
-                                                                        <input type="checkbox" class="checkbox" name="day_2_08" value="1" disabled />
+                                                                        <input type="checkbox" class="checkbox" name="day_2_08" value="1" />
                                                                         <span><span class="icon unchecked"><span class="mdi mdi-check"></span></span></span>
                                                                     </label>
                                                                 </th>
                                                                 <th>
                                                                     <label>
-                                                                        <input type="checkbox" class="checkbox" name="day_3_08" value="1" disabled />
+                                                                        <input type="checkbox" class="checkbox" name="day_3_08" value="1" />
                                                                         <span><span class="icon unchecked"><span class="mdi mdi-check"></span></span></span>
                                                                     </label>
                                                                 </th>
                                                                 <th>
                                                                     <label>
-                                                                        <input type="checkbox" class="checkbox" name="day_4_08" value="1" disabled />
+                                                                        <input type="checkbox" class="checkbox" name="day_4_08" value="1" />
                                                                         <span><span class="icon unchecked"><span class="mdi mdi-check"></span></span></span>
                                                                     </label>
                                                                 </th>
                                                                 <th>
                                                                     <label>
-                                                                        <input type="checkbox" class="checkbox" name="day_5_08" value="1" disabled />
+                                                                        <input type="checkbox" class="checkbox" name="day_5_08" value="1" />
                                                                         <span><span class="icon unchecked"><span class="mdi mdi-check"></span></span></span>
                                                                     </label>
                                                                 </th>
                                                                 <th>
                                                                     <label>
-                                                                        <input type="checkbox" class="checkbox" name="day_6_08" value="1" disabled />
+                                                                        <input type="checkbox" class="checkbox" name="day_6_08" value="1" />
                                                                         <span><span class="icon unchecked"><span class="mdi mdi-check"></span></span></span>
                                                                     </label>
                                                                 </th>
                                                                 <th>
                                                                     <label>
-                                                                        <input type="checkbox" class="checkbox" name="day_7_08" value="1" disabled />
+                                                                        <input type="checkbox" class="checkbox" name="day_7_08" value="1" />
                                                                         <span><span class="icon unchecked"><span class="mdi mdi-check"></span></span></span>
                                                                     </label>
                                                                 </th>
@@ -1079,43 +1122,43 @@
                                                                 <th class="at-hours">09:00 AM</th>
                                                                 <th>
                                                                     <label>
-                                                                        <input type="checkbox" class="checkbox" name="day_1_09" value="1" disabled />
+                                                                        <input type="checkbox" class="checkbox" name="day_1_09" value="1" />
                                                                         <span><span class="icon unchecked"><span class="mdi mdi-check"></span></span></span>
                                                                     </label>
                                                                 </th>
                                                                 <th>
                                                                     <label>
-                                                                        <input type="checkbox" class="checkbox" name="day_2_09" value="1" disabled />
+                                                                        <input type="checkbox" class="checkbox" name="day_2_09" value="1" />
                                                                         <span><span class="icon unchecked"><span class="mdi mdi-check"></span></span></span>
                                                                     </label>
                                                                 </th>
                                                                 <th>
                                                                     <label>
-                                                                        <input type="checkbox" class="checkbox" name="day_3_09" value="1" disabled />
+                                                                        <input type="checkbox" class="checkbox" name="day_3_09" value="1" />
                                                                         <span><span class="icon unchecked"><span class="mdi mdi-check"></span></span></span>
                                                                     </label>
                                                                 </th>
                                                                 <th>
                                                                     <label>
-                                                                        <input type="checkbox" class="checkbox" name="day_4_09" value="1" disabled />
+                                                                        <input type="checkbox" class="checkbox" name="day_4_09" value="1" />
                                                                         <span><span class="icon unchecked"><span class="mdi mdi-check"></span></span></span>
                                                                     </label>
                                                                 </th>
                                                                 <th>
                                                                     <label>
-                                                                        <input type="checkbox" class="checkbox" name="day_5_09" value="1" disabled />
+                                                                        <input type="checkbox" class="checkbox" name="day_5_09" value="1" />
                                                                         <span><span class="icon unchecked"><span class="mdi mdi-check"></span></span></span>
                                                                     </label>
                                                                 </th>
                                                                 <th>
                                                                     <label>
-                                                                        <input type="checkbox" class="checkbox" name="day_6_09" value="1" disabled />
+                                                                        <input type="checkbox" class="checkbox" name="day_6_09" value="1" />
                                                                         <span><span class="icon unchecked"><span class="mdi mdi-check"></span></span></span>
                                                                     </label>
                                                                 </th>
                                                                 <th>
                                                                     <label>
-                                                                        <input type="checkbox" class="checkbox" name="day_7_09" value="1" disabled />
+                                                                        <input type="checkbox" class="checkbox" name="day_7_09" value="1" />
                                                                         <span><span class="icon unchecked"><span class="mdi mdi-check"></span></span></span>
                                                                     </label>
                                                                 </th>
@@ -1124,43 +1167,43 @@
                                                                 <th class="at-hours">10:00 AM</th>
                                                                 <th>
                                                                     <label>
-                                                                        <input type="checkbox" class="checkbox" name="day_1_10" value="1" disabled />
+                                                                        <input type="checkbox" class="checkbox" name="day_1_10" value="1" />
                                                                         <span><span class="icon unchecked"><span class="mdi mdi-check"></span></span></span>
                                                                     </label>
                                                                 </th>
                                                                 <th>
                                                                     <label>
-                                                                        <input type="checkbox" class="checkbox" name="day_2_10" value="1" disabled />
+                                                                        <input type="checkbox" class="checkbox" name="day_2_10" value="1" />
                                                                         <span><span class="icon unchecked"><span class="mdi mdi-check"></span></span></span>
                                                                     </label>
                                                                 </th>
                                                                 <th>
                                                                     <label>
-                                                                        <input type="checkbox" class="checkbox" name="day_3_10" value="1" disabled />
+                                                                        <input type="checkbox" class="checkbox" name="day_3_10" value="1" />
                                                                         <span><span class="icon unchecked"><span class="mdi mdi-check"></span></span></span>
                                                                     </label>
                                                                 </th>
                                                                 <th>
                                                                     <label>
-                                                                        <input type="checkbox" class="checkbox" name="day_4_10" value="1" disabled />
+                                                                        <input type="checkbox" class="checkbox" name="day_4_10" value="1" />
                                                                         <span><span class="icon unchecked"><span class="mdi mdi-check"></span></span></span>
                                                                     </label>
                                                                 </th>
                                                                 <th>
                                                                     <label>
-                                                                        <input type="checkbox" class="checkbox" name="day_5_10" value="1" disabled />
+                                                                        <input type="checkbox" class="checkbox" name="day_5_10" value="1" />
                                                                         <span><span class="icon unchecked"><span class="mdi mdi-check"></span></span></span>
                                                                     </label>
                                                                 </th>
                                                                 <th>
                                                                     <label>
-                                                                        <input type="checkbox" class="checkbox" name="day_6_10" value="1" disabled />
+                                                                        <input type="checkbox" class="checkbox" name="day_6_10" value="1" />
                                                                         <span><span class="icon unchecked"><span class="mdi mdi-check"></span></span></span>
                                                                     </label>
                                                                 </th>
                                                                 <th>
                                                                     <label>
-                                                                        <input type="checkbox" class="checkbox" name="day_7_10" value="1" disabled />
+                                                                        <input type="checkbox" class="checkbox" name="day_7_10" value="1" />
                                                                         <span><span class="icon unchecked"><span class="mdi mdi-check"></span></span></span>
                                                                     </label>
                                                                 </th>
@@ -1169,43 +1212,43 @@
                                                                 <th class="at-hours">11:00 AM</th>
                                                                 <th>
                                                                     <label>
-                                                                        <input type="checkbox" class="checkbox" name="day_1_11" value="1" disabled />
+                                                                        <input type="checkbox" class="checkbox" name="day_1_11" value="1" />
                                                                         <span><span class="icon unchecked"><span class="mdi mdi-check"></span></span></span>
                                                                     </label>
                                                                 </th>
                                                                 <th>
                                                                     <label>
-                                                                        <input type="checkbox" class="checkbox" name="day_2_11" value="1" disabled />
+                                                                        <input type="checkbox" class="checkbox" name="day_2_11" value="1" />
                                                                         <span><span class="icon unchecked"><span class="mdi mdi-check"></span></span></span>
                                                                     </label>
                                                                 </th>
                                                                 <th>
                                                                     <label>
-                                                                        <input type="checkbox" class="checkbox" name="day_3_11" value="1" disabled />
+                                                                        <input type="checkbox" class="checkbox" name="day_3_11" value="1" />
                                                                         <span><span class="icon unchecked"><span class="mdi mdi-check"></span></span></span>
                                                                     </label>
                                                                 </th>
                                                                 <th>
                                                                     <label>
-                                                                        <input type="checkbox" class="checkbox" name="day_4_11" value="1" disabled />
+                                                                        <input type="checkbox" class="checkbox" name="day_4_11" value="1" />
                                                                         <span><span class="icon unchecked"><span class="mdi mdi-check"></span></span></span>
                                                                     </label>
                                                                 </th>
                                                                 <th>
                                                                     <label>
-                                                                        <input type="checkbox" class="checkbox" name="day_5_11" value="1" disabled />
+                                                                        <input type="checkbox" class="checkbox" name="day_5_11" value="1" />
                                                                         <span><span class="icon unchecked"><span class="mdi mdi-check"></span></span></span>
                                                                     </label>
                                                                 </th>
                                                                 <th>
                                                                     <label>
-                                                                        <input type="checkbox" class="checkbox" name="day_6_11" value="1" disabled />
+                                                                        <input type="checkbox" class="checkbox" name="day_6_11" value="1" />
                                                                         <span><span class="icon unchecked"><span class="mdi mdi-check"></span></span></span>
                                                                     </label>
                                                                 </th>
                                                                 <th>
                                                                     <label>
-                                                                        <input type="checkbox" class="checkbox" name="day_7_11" value="1" disabled />
+                                                                        <input type="checkbox" class="checkbox" name="day_7_11" value="1" />
                                                                         <span><span class="icon unchecked"><span class="mdi mdi-check"></span></span></span>
                                                                     </label>
                                                                 </th>
@@ -1214,43 +1257,43 @@
                                                                 <th class="at-hours">12:00 PM</th>
                                                                 <th>
                                                                     <label>
-                                                                        <input type="checkbox" class="checkbox" name="day_1_12" value="1" disabled />
+                                                                        <input type="checkbox" class="checkbox" name="day_1_12" value="1" />
                                                                         <span><span class="icon unchecked"><span class="mdi mdi-check"></span></span></span>
                                                                     </label>
                                                                 </th>
                                                                 <th>
                                                                     <label>
-                                                                        <input type="checkbox" class="checkbox" name="day_2_12" value="1" disabled />
+                                                                        <input type="checkbox" class="checkbox" name="day_2_12" value="1" />
                                                                         <span><span class="icon unchecked"><span class="mdi mdi-check"></span></span></span>
                                                                     </label>
                                                                 </th>
                                                                 <th>
                                                                     <label>
-                                                                        <input type="checkbox" class="checkbox" name="day_3_12" value="1" disabled />
+                                                                        <input type="checkbox" class="checkbox" name="day_3_12" value="1" />
                                                                         <span><span class="icon unchecked"><span class="mdi mdi-check"></span></span></span>
                                                                     </label>
                                                                 </th>
                                                                 <th>
                                                                     <label>
-                                                                        <input type="checkbox" class="checkbox" name="day_4_12" value="1" disabled />
+                                                                        <input type="checkbox" class="checkbox" name="day_4_12" value="1" />
                                                                         <span><span class="icon unchecked"><span class="mdi mdi-check"></span></span></span>
                                                                     </label>
                                                                 </th>
                                                                 <th>
                                                                     <label>
-                                                                        <input type="checkbox" class="checkbox" name="day_5_12" value="1" disabled />
+                                                                        <input type="checkbox" class="checkbox" name="day_5_12" value="1" />
                                                                         <span><span class="icon unchecked"><span class="mdi mdi-check"></span></span></span>
                                                                     </label>
                                                                 </th>
                                                                 <th>
                                                                     <label>
-                                                                        <input type="checkbox" class="checkbox" name="day_6_12" value="1" disabled />
+                                                                        <input type="checkbox" class="checkbox" name="day_6_12" value="1" />
                                                                         <span><span class="icon unchecked"><span class="mdi mdi-check"></span></span></span>
                                                                     </label>
                                                                 </th>
                                                                 <th>
                                                                     <label>
-                                                                        <input type="checkbox" class="checkbox" name="day_7_12" value="1" disabled />
+                                                                        <input type="checkbox" class="checkbox" name="day_7_12" value="1" />
                                                                         <span><span class="icon unchecked"><span class="mdi mdi-check"></span></span></span>
                                                                     </label>
                                                                 </th>
@@ -1259,43 +1302,43 @@
                                                                 <th class="at-hours">01:00 PM</th>
                                                                 <th>
                                                                     <label>
-                                                                        <input type="checkbox" class="checkbox" name="day_1_13" value="1" disabled />
+                                                                        <input type="checkbox" class="checkbox" name="day_1_13" value="1" />
                                                                         <span><span class="icon unchecked"><span class="mdi mdi-check"></span></span></span>
                                                                     </label>
                                                                 </th>
                                                                 <th>
                                                                     <label>
-                                                                        <input type="checkbox" class="checkbox" name="day_2_13" value="1" disabled />
+                                                                        <input type="checkbox" class="checkbox" name="day_2_13" value="1" />
                                                                         <span><span class="icon unchecked"><span class="mdi mdi-check"></span></span></span>
                                                                     </label>
                                                                 </th>
                                                                 <th>
                                                                     <label>
-                                                                        <input type="checkbox" class="checkbox" name="day_3_13" value="1" disabled />
+                                                                        <input type="checkbox" class="checkbox" name="day_3_13" value="1" />
                                                                         <span><span class="icon unchecked"><span class="mdi mdi-check"></span></span></span>
                                                                     </label>
                                                                 </th>
                                                                 <th>
                                                                     <label>
-                                                                        <input type="checkbox" class="checkbox" name="day_4_13" value="1" disabled />
+                                                                        <input type="checkbox" class="checkbox" name="day_4_13" value="1" />
                                                                         <span><span class="icon unchecked"><span class="mdi mdi-check"></span></span></span>
                                                                     </label>
                                                                 </th>
                                                                 <th>
                                                                     <label>
-                                                                        <input type="checkbox" class="checkbox" name="day_5_13" value="1" disabled />
+                                                                        <input type="checkbox" class="checkbox" name="day_5_13" value="1" />
                                                                         <span><span class="icon unchecked"><span class="mdi mdi-check"></span></span></span>
                                                                     </label>
                                                                 </th>
                                                                 <th>
                                                                     <label>
-                                                                        <input type="checkbox" class="checkbox" name="day_6_13" value="1" disabled />
+                                                                        <input type="checkbox" class="checkbox" name="day_6_13" value="1" />
                                                                         <span><span class="icon unchecked"><span class="mdi mdi-check"></span></span></span>
                                                                     </label>
                                                                 </th>
                                                                 <th>
                                                                     <label>
-                                                                        <input type="checkbox" class="checkbox" name="day_7_13" value="1" disabled />
+                                                                        <input type="checkbox" class="checkbox" name="day_7_13" value="1" />
                                                                         <span><span class="icon unchecked"><span class="mdi mdi-check"></span></span></span>
                                                                     </label>
                                                                 </th>
@@ -1304,43 +1347,43 @@
                                                                 <th class="at-hours">02:00 PM</th>
                                                                 <th>
                                                                     <label>
-                                                                        <input type="checkbox" class="checkbox" name="day_1_14" value="1" disabled />
+                                                                        <input type="checkbox" class="checkbox" name="day_1_14" value="1" />
                                                                         <span><span class="icon unchecked"><span class="mdi mdi-check"></span></span></span>
                                                                     </label>
                                                                 </th>
                                                                 <th>
                                                                     <label>
-                                                                        <input type="checkbox" class="checkbox" name="day_2_14" value="1" disabled />
+                                                                        <input type="checkbox" class="checkbox" name="day_2_14" value="1" />
                                                                         <span><span class="icon unchecked"><span class="mdi mdi-check"></span></span></span>
                                                                     </label>
                                                                 </th>
                                                                 <th>
                                                                     <label>
-                                                                        <input type="checkbox" class="checkbox" name="day_3_14" value="1" disabled />
+                                                                        <input type="checkbox" class="checkbox" name="day_3_14" value="1" />
                                                                         <span><span class="icon unchecked"><span class="mdi mdi-check"></span></span></span>
                                                                     </label>
                                                                 </th>
                                                                 <th>
                                                                     <label>
-                                                                        <input type="checkbox" class="checkbox" name="day_4_14" value="1" disabled />
+                                                                        <input type="checkbox" class="checkbox" name="day_4_14" value="1" />
                                                                         <span><span class="icon unchecked"><span class="mdi mdi-check"></span></span></span>
                                                                     </label>
                                                                 </th>
                                                                 <th>
                                                                     <label>
-                                                                        <input type="checkbox" class="checkbox" name="day_5_14" value="1" disabled />
+                                                                        <input type="checkbox" class="checkbox" name="day_5_14" value="1" />
                                                                         <span><span class="icon unchecked"><span class="mdi mdi-check"></span></span></span>
                                                                     </label>
                                                                 </th>
                                                                 <th>
                                                                     <label>
-                                                                        <input type="checkbox" class="checkbox" name="day_6_14" value="1" disabled />
+                                                                        <input type="checkbox" class="checkbox" name="day_6_14" value="1" />
                                                                         <span><span class="icon unchecked"><span class="mdi mdi-check"></span></span></span>
                                                                     </label>
                                                                 </th>
                                                                 <th>
                                                                     <label>
-                                                                        <input type="checkbox" class="checkbox" name="day_7_14" value="1" disabled />
+                                                                        <input type="checkbox" class="checkbox" name="day_7_14" value="1" />
                                                                         <span><span class="icon unchecked"><span class="mdi mdi-check"></span></span></span>
                                                                     </label>
                                                                 </th>
@@ -1349,43 +1392,43 @@
                                                                 <th class="at-hours">03:00 PM</th>
                                                                 <th>
                                                                     <label>
-                                                                        <input type="checkbox" class="checkbox" name="day_1_15" value="1" disabled />
+                                                                        <input type="checkbox" class="checkbox" name="day_1_15" value="1" />
                                                                         <span><span class="icon unchecked"><span class="mdi mdi-check"></span></span></span>
                                                                     </label>
                                                                 </th>
                                                                 <th>
                                                                     <label>
-                                                                        <input type="checkbox" class="checkbox" name="day_2_15" value="1" disabled />
+                                                                        <input type="checkbox" class="checkbox" name="day_2_15" value="1" />
                                                                         <span><span class="icon unchecked"><span class="mdi mdi-check"></span></span></span>
                                                                     </label>
                                                                 </th>
                                                                 <th>
                                                                     <label>
-                                                                        <input type="checkbox" class="checkbox" name="day_3_15" value="1" disabled />
+                                                                        <input type="checkbox" class="checkbox" name="day_3_15" value="1" />
                                                                         <span><span class="icon unchecked"><span class="mdi mdi-check"></span></span></span>
                                                                     </label>
                                                                 </th>
                                                                 <th>
                                                                     <label>
-                                                                        <input type="checkbox" class="checkbox" name="day_4_15" value="1" disabled />
+                                                                        <input type="checkbox" class="checkbox" name="day_4_15" value="1" />
                                                                         <span><span class="icon unchecked"><span class="mdi mdi-check"></span></span></span>
                                                                     </label>
                                                                 </th>
                                                                 <th>
                                                                     <label>
-                                                                        <input type="checkbox" class="checkbox" name="day_5_15" value="1" disabled />
+                                                                        <input type="checkbox" class="checkbox" name="day_5_15" value="1" />
                                                                         <span><span class="icon unchecked"><span class="mdi mdi-check"></span></span></span>
                                                                     </label>
                                                                 </th>
                                                                 <th>
                                                                     <label>
-                                                                        <input type="checkbox" class="checkbox" name="day_6_15" value="1" disabled />
+                                                                        <input type="checkbox" class="checkbox" name="day_6_15" value="1" />
                                                                         <span><span class="icon unchecked"><span class="mdi mdi-check"></span></span></span>
                                                                     </label>
                                                                 </th>
                                                                 <th>
                                                                     <label>
-                                                                        <input type="checkbox" class="checkbox" name="day_7_15" value="1" disabled />
+                                                                        <input type="checkbox" class="checkbox" name="day_7_15" value="1" />
                                                                         <span><span class="icon unchecked"><span class="mdi mdi-check"></span></span></span>
                                                                     </label>
                                                                 </th>
@@ -1394,43 +1437,43 @@
                                                                 <th class="at-hours">04:00 PM</th>
                                                                 <th>
                                                                     <label>
-                                                                        <input type="checkbox" class="checkbox" name="day_1_16" value="1" disabled />
+                                                                        <input type="checkbox" class="checkbox" name="day_1_16" value="1" />
                                                                         <span><span class="icon unchecked"><span class="mdi mdi-check"></span></span></span>
                                                                     </label>
                                                                 </th>
                                                                 <th>
                                                                     <label>
-                                                                        <input type="checkbox" class="checkbox" name="day_2_16" value="1" disabled />
+                                                                        <input type="checkbox" class="checkbox" name="day_2_16" value="1" />
                                                                         <span><span class="icon unchecked"><span class="mdi mdi-check"></span></span></span>
                                                                     </label>
                                                                 </th>
                                                                 <th>
                                                                     <label>
-                                                                        <input type="checkbox" class="checkbox" name="day_3_16" value="1" disabled />
+                                                                        <input type="checkbox" class="checkbox" name="day_3_16" value="1" />
                                                                         <span><span class="icon unchecked"><span class="mdi mdi-check"></span></span></span>
                                                                     </label>
                                                                 </th>
                                                                 <th>
                                                                     <label>
-                                                                        <input type="checkbox" class="checkbox" name="day_4_16" value="1" disabled />
+                                                                        <input type="checkbox" class="checkbox" name="day_4_16" value="1" />
                                                                         <span><span class="icon unchecked"><span class="mdi mdi-check"></span></span></span>
                                                                     </label>
                                                                 </th>
                                                                 <th>
                                                                     <label>
-                                                                        <input type="checkbox" class="checkbox" name="day_5_16" value="1" disabled />
+                                                                        <input type="checkbox" class="checkbox" name="day_5_16" value="1" />
                                                                         <span><span class="icon unchecked"><span class="mdi mdi-check"></span></span></span>
                                                                     </label>
                                                                 </th>
                                                                 <th>
                                                                     <label>
-                                                                        <input type="checkbox" class="checkbox" name="day_6_16" value="1" disabled />
+                                                                        <input type="checkbox" class="checkbox" name="day_6_16" value="1" />
                                                                         <span><span class="icon unchecked"><span class="mdi mdi-check"></span></span></span>
                                                                     </label>
                                                                 </th>
                                                                 <th>
                                                                     <label>
-                                                                        <input type="checkbox" class="checkbox" name="day_7_16" value="1" disabled />
+                                                                        <input type="checkbox" class="checkbox" name="day_7_16" value="1" />
                                                                         <span><span class="icon unchecked"><span class="mdi mdi-check"></span></span></span>
                                                                     </label>
                                                                 </th>
@@ -1439,43 +1482,43 @@
                                                                 <th class="at-hours">05:00 PM</th>
                                                                 <th>
                                                                     <label>
-                                                                        <input type="checkbox" class="checkbox" name="day_1_17" value="1" disabled />
+                                                                        <input type="checkbox" class="checkbox" name="day_1_17" value="1" />
                                                                         <span><span class="icon unchecked"><span class="mdi mdi-check"></span></span></span>
                                                                     </label>
                                                                 </th>
                                                                 <th>
                                                                     <label>
-                                                                        <input type="checkbox" class="checkbox" name="day_2_17" value="1" disabled />
+                                                                        <input type="checkbox" class="checkbox" name="day_2_17" value="1" />
                                                                         <span><span class="icon unchecked"><span class="mdi mdi-check"></span></span></span>
                                                                     </label>
                                                                 </th>
                                                                 <th>
                                                                     <label>
-                                                                        <input type="checkbox" class="checkbox" name="day_3_17" value="1" disabled />
+                                                                        <input type="checkbox" class="checkbox" name="day_3_17" value="1" />
                                                                         <span><span class="icon unchecked"><span class="mdi mdi-check"></span></span></span>
                                                                     </label>
                                                                 </th>
                                                                 <th>
                                                                     <label>
-                                                                        <input type="checkbox" class="checkbox" name="day_4_17" value="1" disabled />
+                                                                        <input type="checkbox" class="checkbox" name="day_4_17" value="1" />
                                                                         <span><span class="icon unchecked"><span class="mdi mdi-check"></span></span></span>
                                                                     </label>
                                                                 </th>
                                                                 <th>
                                                                     <label>
-                                                                        <input type="checkbox" class="checkbox" name="day_5_17" value="1" disabled />
+                                                                        <input type="checkbox" class="checkbox" name="day_5_17" value="1" />
                                                                         <span><span class="icon unchecked"><span class="mdi mdi-check"></span></span></span>
                                                                     </label>
                                                                 </th>
                                                                 <th>
                                                                     <label>
-                                                                        <input type="checkbox" class="checkbox" name="day_6_17" value="1" disabled />
+                                                                        <input type="checkbox" class="checkbox" name="day_6_17" value="1" />
                                                                         <span><span class="icon unchecked"><span class="mdi mdi-check"></span></span></span>
                                                                     </label>
                                                                 </th>
                                                                 <th>
                                                                     <label>
-                                                                        <input type="checkbox" class="checkbox" name="day_7_17" value="1" disabled />
+                                                                        <input type="checkbox" class="checkbox" name="day_7_17" value="1" />
                                                                         <span><span class="icon unchecked"><span class="mdi mdi-check"></span></span></span>
                                                                     </label>
                                                                 </th>
@@ -1484,43 +1527,43 @@
                                                                 <th class="at-hours">06:00 PM</th>
                                                                 <th>
                                                                     <label>
-                                                                        <input type="checkbox" class="checkbox" name="day_1_18" value="1" disabled />
+                                                                        <input type="checkbox" class="checkbox" name="day_1_18" value="1" />
                                                                         <span><span class="icon unchecked"><span class="mdi mdi-check"></span></span></span>
                                                                     </label>
                                                                 </th>
                                                                 <th>
                                                                     <label>
-                                                                        <input type="checkbox" class="checkbox" name="day_2_18" value="1" disabled />
+                                                                        <input type="checkbox" class="checkbox" name="day_2_18" value="1" />
                                                                         <span><span class="icon unchecked"><span class="mdi mdi-check"></span></span></span>
                                                                     </label>
                                                                 </th>
                                                                 <th>
                                                                     <label>
-                                                                        <input type="checkbox" class="checkbox" name="day_3_18" value="1" disabled />
+                                                                        <input type="checkbox" class="checkbox" name="day_3_18" value="1" />
                                                                         <span><span class="icon unchecked"><span class="mdi mdi-check"></span></span></span>
                                                                     </label>
                                                                 </th>
                                                                 <th>
                                                                     <label>
-                                                                        <input type="checkbox" class="checkbox" name="day_4_18" value="1" disabled />
+                                                                        <input type="checkbox" class="checkbox" name="day_4_18" value="1" />
                                                                         <span><span class="icon unchecked"><span class="mdi mdi-check"></span></span></span>
                                                                     </label>
                                                                 </th>
                                                                 <th>
                                                                     <label>
-                                                                        <input type="checkbox" class="checkbox" name="day_5_18" value="1" disabled />
+                                                                        <input type="checkbox" class="checkbox" name="day_5_18" value="1" />
                                                                         <span><span class="icon unchecked"><span class="mdi mdi-check"></span></span></span>
                                                                     </label>
                                                                 </th>
                                                                 <th>
                                                                     <label>
-                                                                        <input type="checkbox" class="checkbox" name="day_6_18" value="1" disabled />
+                                                                        <input type="checkbox" class="checkbox" name="day_6_18" value="1" />
                                                                         <span><span class="icon unchecked"><span class="mdi mdi-check"></span></span></span>
                                                                     </label>
                                                                 </th>
                                                                 <th>
                                                                     <label>
-                                                                        <input type="checkbox" class="checkbox" name="day_7_18" value="1" disabled />
+                                                                        <input type="checkbox" class="checkbox" name="day_7_18" value="1" />
                                                                         <span><span class="icon unchecked"><span class="mdi mdi-check"></span></span></span>
                                                                     </label>
                                                                 </th>
@@ -1529,43 +1572,43 @@
                                                                 <th class="at-hours">07:00 PM</th>
                                                                 <th>
                                                                     <label>
-                                                                        <input type="checkbox" class="checkbox" name="day_1_19" value="1" disabled />
+                                                                        <input type="checkbox" class="checkbox" name="day_1_19" value="1" />
                                                                         <span><span class="icon unchecked"><span class="mdi mdi-check"></span></span></span>
                                                                     </label>
                                                                 </th>
                                                                 <th>
                                                                     <label>
-                                                                        <input type="checkbox" class="checkbox" name="day_2_19" value="1" disabled />
+                                                                        <input type="checkbox" class="checkbox" name="day_2_19" value="1" />
                                                                         <span><span class="icon unchecked"><span class="mdi mdi-check"></span></span></span>
                                                                     </label>
                                                                 </th>
                                                                 <th>
                                                                     <label>
-                                                                        <input type="checkbox" class="checkbox" name="day_3_19" value="1" disabled />
+                                                                        <input type="checkbox" class="checkbox" name="day_3_19" value="1" />
                                                                         <span><span class="icon unchecked"><span class="mdi mdi-check"></span></span></span>
                                                                     </label>
                                                                 </th>
                                                                 <th>
                                                                     <label>
-                                                                        <input type="checkbox" class="checkbox" name="day_4_19" value="1" disabled />
+                                                                        <input type="checkbox" class="checkbox" name="day_4_19" value="1" />
                                                                         <span><span class="icon unchecked"><span class="mdi mdi-check"></span></span></span>
                                                                     </label>
                                                                 </th>
                                                                 <th>
                                                                     <label>
-                                                                        <input type="checkbox" class="checkbox" name="day_5_19" value="1" disabled />
+                                                                        <input type="checkbox" class="checkbox" name="day_5_19" value="1" />
                                                                         <span><span class="icon unchecked"><span class="mdi mdi-check"></span></span></span>
                                                                     </label>
                                                                 </th>
                                                                 <th>
                                                                     <label>
-                                                                        <input type="checkbox" class="checkbox" name="day_6_19" value="1" disabled />
+                                                                        <input type="checkbox" class="checkbox" name="day_6_19" value="1" />
                                                                         <span><span class="icon unchecked"><span class="mdi mdi-check"></span></span></span>
                                                                     </label>
                                                                 </th>
                                                                 <th>
                                                                     <label>
-                                                                        <input type="checkbox" class="checkbox" name="day_7_19" value="1" disabled />
+                                                                        <input type="checkbox" class="checkbox" name="day_7_19" value="1" />
                                                                         <span><span class="icon unchecked"><span class="mdi mdi-check"></span></span></span>
                                                                     </label>
                                                                 </th>
@@ -1574,43 +1617,43 @@
                                                                 <th class="at-hours">08:00 PM</th>
                                                                 <th>
                                                                     <label>
-                                                                        <input type="checkbox" class="checkbox" name="day_1_20" value="1" disabled />
+                                                                        <input type="checkbox" class="checkbox" name="day_1_20" value="1" />
                                                                         <span><span class="icon unchecked"><span class="mdi mdi-check"></span></span></span>
                                                                     </label>
                                                                 </th>
                                                                 <th>
                                                                     <label>
-                                                                        <input type="checkbox" class="checkbox" name="day_2_20" value="1" disabled />
+                                                                        <input type="checkbox" class="checkbox" name="day_2_20" value="1" />
                                                                         <span><span class="icon unchecked"><span class="mdi mdi-check"></span></span></span>
                                                                     </label>
                                                                 </th>
                                                                 <th>
                                                                     <label>
-                                                                        <input type="checkbox" class="checkbox" name="day_3_20" value="1" disabled />
+                                                                        <input type="checkbox" class="checkbox" name="day_3_20" value="1" />
                                                                         <span><span class="icon unchecked"><span class="mdi mdi-check"></span></span></span>
                                                                     </label>
                                                                 </th>
                                                                 <th>
                                                                     <label>
-                                                                        <input type="checkbox" class="checkbox" name="day_4_20" value="1" disabled />
+                                                                        <input type="checkbox" class="checkbox" name="day_4_20" value="1" />
                                                                         <span><span class="icon unchecked"><span class="mdi mdi-check"></span></span></span>
                                                                     </label>
                                                                 </th>
                                                                 <th>
                                                                     <label>
-                                                                        <input type="checkbox" class="checkbox" name="day_5_20" value="1" disabled />
+                                                                        <input type="checkbox" class="checkbox" name="day_5_20" value="1" />
                                                                         <span><span class="icon unchecked"><span class="mdi mdi-check"></span></span></span>
                                                                     </label>
                                                                 </th>
                                                                 <th>
                                                                     <label>
-                                                                        <input type="checkbox" class="checkbox" name="day_6_20" value="1" disabled />
+                                                                        <input type="checkbox" class="checkbox" name="day_6_20" value="1" />
                                                                         <span><span class="icon unchecked"><span class="mdi mdi-check"></span></span></span>
                                                                     </label>
                                                                 </th>
                                                                 <th>
                                                                     <label>
-                                                                        <input type="checkbox" class="checkbox" name="day_7_20" value="1" disabled />
+                                                                        <input type="checkbox" class="checkbox" name="day_7_20" value="1" />
                                                                         <span><span class="icon unchecked"><span class="mdi mdi-check"></span></span></span>
                                                                     </label>
                                                                 </th>
@@ -1619,43 +1662,43 @@
                                                                 <th class="at-hours">09:00 PM</th>
                                                                 <th>
                                                                     <label>
-                                                                        <input type="checkbox" class="checkbox" name="day_1_21" value="1" disabled />
+                                                                        <input type="checkbox" class="checkbox" name="day_1_21" value="1" />
                                                                         <span><span class="icon unchecked"><span class="mdi mdi-check"></span></span></span>
                                                                     </label>
                                                                 </th>
                                                                 <th>
                                                                     <label>
-                                                                        <input type="checkbox" class="checkbox" name="day_2_21" value="1" disabled />
+                                                                        <input type="checkbox" class="checkbox" name="day_2_21" value="1" />
                                                                         <span><span class="icon unchecked"><span class="mdi mdi-check"></span></span></span>
                                                                     </label>
                                                                 </th>
                                                                 <th>
                                                                     <label>
-                                                                        <input type="checkbox" class="checkbox" name="day_3_21" value="1" disabled />
+                                                                        <input type="checkbox" class="checkbox" name="day_3_21" value="1" />
                                                                         <span><span class="icon unchecked"><span class="mdi mdi-check"></span></span></span>
                                                                     </label>
                                                                 </th>
                                                                 <th>
                                                                     <label>
-                                                                        <input type="checkbox" class="checkbox" name="day_4_21" value="1" disabled />
+                                                                        <input type="checkbox" class="checkbox" name="day_4_21" value="1" />
                                                                         <span><span class="icon unchecked"><span class="mdi mdi-check"></span></span></span>
                                                                     </label>
                                                                 </th>
                                                                 <th>
                                                                     <label>
-                                                                        <input type="checkbox" class="checkbox" name="day_5_21" value="1" disabled />
+                                                                        <input type="checkbox" class="checkbox" name="day_5_21" value="1" />
                                                                         <span><span class="icon unchecked"><span class="mdi mdi-check"></span></span></span>
                                                                     </label>
                                                                 </th>
                                                                 <th>
                                                                     <label>
-                                                                        <input type="checkbox" class="checkbox" name="day_6_21" value="1" disabled />
+                                                                        <input type="checkbox" class="checkbox" name="day_6_21" value="1" />
                                                                         <span><span class="icon unchecked"><span class="mdi mdi-check"></span></span></span>
                                                                     </label>
                                                                 </th>
                                                                 <th>
                                                                     <label>
-                                                                        <input type="checkbox" class="checkbox" name="day_7_21" value="1" disabled />
+                                                                        <input type="checkbox" class="checkbox" name="day_7_21" value="1" />
                                                                         <span><span class="icon unchecked"><span class="mdi mdi-check"></span></span></span>
                                                                     </label>
                                                                 </th>
@@ -1664,43 +1707,43 @@
                                                                 <th class="at-hours">10:00 PM</th>
                                                                 <th>
                                                                     <label>
-                                                                        <input type="checkbox" class="checkbox" name="day_1_22" value="1" disabled />
+                                                                        <input type="checkbox" class="checkbox" name="day_1_22" value="1" />
                                                                         <span><span class="icon unchecked"><span class="mdi mdi-check"></span></span></span>
                                                                     </label>
                                                                 </th>
                                                                 <th>
                                                                     <label>
-                                                                        <input type="checkbox" class="checkbox" name="day_2_22" value="1" disabled />
+                                                                        <input type="checkbox" class="checkbox" name="day_2_22" value="1" />
                                                                         <span><span class="icon unchecked"><span class="mdi mdi-check"></span></span></span>
                                                                     </label>
                                                                 </th>
                                                                 <th>
                                                                     <label>
-                                                                        <input type="checkbox" class="checkbox" name="day_3_22" value="1" disabled />
+                                                                        <input type="checkbox" class="checkbox" name="day_3_22" value="1" />
                                                                         <span><span class="icon unchecked"><span class="mdi mdi-check"></span></span></span>
                                                                     </label>
                                                                 </th>
                                                                 <th>
                                                                     <label>
-                                                                        <input type="checkbox" class="checkbox" name="day_4_22" value="1" disabled />
+                                                                        <input type="checkbox" class="checkbox" name="day_4_22" value="1" />
                                                                         <span><span class="icon unchecked"><span class="mdi mdi-check"></span></span></span>
                                                                     </label>
                                                                 </th>
                                                                 <th>
                                                                     <label>
-                                                                        <input type="checkbox" class="checkbox" name="day_5_22" value="1" disabled />
+                                                                        <input type="checkbox" class="checkbox" name="day_5_22" value="1" />
                                                                         <span><span class="icon unchecked"><span class="mdi mdi-check"></span></span></span>
                                                                     </label>
                                                                 </th>
                                                                 <th>
                                                                     <label>
-                                                                        <input type="checkbox" class="checkbox" name="day_6_22" value="1" disabled />
+                                                                        <input type="checkbox" class="checkbox" name="day_6_22" value="1" />
                                                                         <span><span class="icon unchecked"><span class="mdi mdi-check"></span></span></span>
                                                                     </label>
                                                                 </th>
                                                                 <th>
                                                                     <label>
-                                                                        <input type="checkbox" class="checkbox" name="day_7_22" value="1" disabled />
+                                                                        <input type="checkbox" class="checkbox" name="day_7_22" value="1" />
                                                                         <span><span class="icon unchecked"><span class="mdi mdi-check"></span></span></span>
                                                                     </label>
                                                                 </th>
@@ -1709,43 +1752,43 @@
                                                                 <th class="at-hours">11:00 PM</th>
                                                                 <th>
                                                                     <label>
-                                                                        <input type="checkbox" class="checkbox" name="day_1_23" value="1" disabled />
+                                                                        <input type="checkbox" class="checkbox" name="day_1_23" value="1" />
                                                                         <span><span class="icon unchecked"><span class="mdi mdi-check"></span></span></span>
                                                                     </label>
                                                                 </th>
                                                                 <th>
                                                                     <label>
-                                                                        <input type="checkbox" class="checkbox" name="day_2_23" value="1" disabled />
+                                                                        <input type="checkbox" class="checkbox" name="day_2_23" value="1" />
                                                                         <span><span class="icon unchecked"><span class="mdi mdi-check"></span></span></span>
                                                                     </label>
                                                                 </th>
                                                                 <th>
                                                                     <label>
-                                                                        <input type="checkbox" class="checkbox" name="day_3_23" value="1" disabled />
+                                                                        <input type="checkbox" class="checkbox" name="day_3_23" value="1" />
                                                                         <span><span class="icon unchecked"><span class="mdi mdi-check"></span></span></span>
                                                                     </label>
                                                                 </th>
                                                                 <th>
                                                                     <label>
-                                                                        <input type="checkbox" class="checkbox" name="day_4_23" value="1" disabled />
+                                                                        <input type="checkbox" class="checkbox" name="day_4_23" value="1" />
                                                                         <span><span class="icon unchecked"><span class="mdi mdi-check"></span></span></span>
                                                                     </label>
                                                                 </th>
                                                                 <th>
                                                                     <label>
-                                                                        <input type="checkbox" class="checkbox" name="day_5_23" value="1" disabled />
+                                                                        <input type="checkbox" class="checkbox" name="day_5_23" value="1" />
                                                                         <span><span class="icon unchecked"><span class="mdi mdi-check"></span></span></span>
                                                                     </label>
                                                                 </th>
                                                                 <th>
                                                                     <label>
-                                                                        <input type="checkbox" class="checkbox" name="day_6_23" value="1" disabled />
+                                                                        <input type="checkbox" class="checkbox" name="day_6_23" value="1" />
                                                                         <span><span class="icon unchecked"><span class="mdi mdi-check"></span></span></span>
                                                                     </label>
                                                                 </th>
                                                                 <th>
                                                                     <label>
-                                                                        <input type="checkbox" class="checkbox" name="day_7_23" value="1" disabled />
+                                                                        <input type="checkbox" class="checkbox" name="day_7_23" value="1" />
                                                                         <span><span class="icon unchecked"><span class="mdi mdi-check"></span></span></span>
                                                                     </label>
                                                                 </th>
@@ -1757,83 +1800,19 @@
                                                             <a href="javascript:void(0)" class="fluid button button--light-outline js-activity-time-all att-action-in">Select all</a>
                                                         </div>
                                                         <div class="col s12 m6 l6 mt-5 mr-5 att-action">
-                                                            <a href="javascript:void(0)" class="fluid button button--light-outline js-activity-time-insert att-action-in">Insert</a>
-                                                        </div>
-                                                        <div class="col s12 m6 l6 mt-5 mr-5 att-action">
                                                             <a href="javascript:void(0)" class="fluid button button--light-outline js-activity-time-clear att-action-in">Clear</a>
                                                         </div>
                                                         <div class="col s12 m6 l6 mt-5 mr-5 att-action">
-                                                            <a href="javascript:void(0)" class="fluid button button--light-outline js-activity-time-copy att-action-in">Copy</a>
+                                                            <input type="number" class="input att-action-in" name="activity-time-min-hd" min="1" max="24" placeholder="Min. hours/day" />
+                                                        </div>
+                                                        <div class="col s12 s-last m6 m-last l6 l-last mt-5 mr-5 att-action">
+                                                            <input type="number" class="input att-action-in" name="activity-time-max-hd" min="1" max="24" placeholder="Max. hours/day" />
                                                         </div>
                                                         <div class="col s12 s-last m12 m-last l12 l-last mt-5 mr-5 att-action">
                                                             <a href="javascript:void(0)" class="fluid button button--light-outline js-activity-time-random att-action-in btn-green">
                                                                 <!-- Wesley Start Mod -->
                                                                 Randomize
                                                             </a>
-                                                        </div>
-                                                        <div class="col s12 m6 l6 mt-5 mr-5 att-action">
-                                                            <input type="number" class="input att-action-in" name="activity-time-min-hd" placeholder="Min. hours/day" disabled />
-                                                        </div>
-                                                        <div class="col s12 s-last m6 m-last l6 l-last mt-5 mr-5 att-action">
-                                                            <input type="number" class="input att-action-in" name="activity-time-max-hd" placeholder="Max. hours/day" disabled />
-                                                        </div>
-                                                        <div class="col s12 m6 l6 mt-5 mr-5 att-action">
-                                                            <select class="input att-action-in" name="activity-time-min-h" disabled>
-                                                                <option value="0">Min. hour</option>
-                                                                <option value="0">12:00AM</option>
-                                                                <option value="1">01:00AM</option>
-                                                                <option value="2">02:00AM</option>
-                                                                <option value="3">03:00AM</option>
-                                                                <option value="4">04:00AM</option>
-                                                                <option value="5">05:00AM</option>
-                                                                <option value="6">06:00AM</option>
-                                                                <option value="7">07:00AM</option>
-                                                                <option value="8">08:00AM</option>
-                                                                <option value="9">09:00AM</option>
-                                                                <option value="10">10:00AM</option>
-                                                                <option value="11">11:00AM</option>
-                                                                <option value="12">12:00PM</option>
-                                                                <option value="13">01:00PM</option>
-                                                                <option value="14">02:00PM</option>
-                                                                <option value="15">03:00PM</option>
-                                                                <option value="16">04:00PM</option>
-                                                                <option value="17">05:00PM</option>
-                                                                <option value="18">06:00PM</option>
-                                                                <option value="19">07:00PM</option>
-                                                                <option value="20">08:00PM</option>
-                                                                <option value="21">09:00PM</option>
-                                                                <option value="22">10:00PM</option>
-                                                                <option value="23">11:00PM</option>
-                                                            </select>
-                                                        </div>
-                                                        <div class="col s12 s-last m6 m-last l6 l-last mt-5 mr-5 att-action">
-                                                            <select class="input att-action-in" name="activity-time-max-h" disabled>
-                                                                <option value="0">Max. hour</option>
-                                                                <option value="0">12:00AM</option>
-                                                                <option value="1">01:00AM</option>
-                                                                <option value="2">02:00AM</option>
-                                                                <option value="3">03:00AM</option>
-                                                                <option value="4">04:00AM</option>
-                                                                <option value="5">05:00AM</option>
-                                                                <option value="6">06:00AM</option>
-                                                                <option value="7">07:00AM</option>
-                                                                <option value="8">08:00AM</option>
-                                                                <option value="9">09:00AM</option>
-                                                                <option value="10">10:00AM</option>
-                                                                <option value="11">11:00AM</option>
-                                                                <option value="12">12:00PM</option>
-                                                                <option value="13">01:00PM</option>
-                                                                <option value="14">02:00PM</option>
-                                                                <option value="15">03:00PM</option>
-                                                                <option value="16">04:00PM</option>
-                                                                <option value="17">05:00PM</option>
-                                                                <option value="18">06:00PM</option>
-                                                                <option value="19">07:00PM</option>
-                                                                <option value="20">08:00PM</option>
-                                                                <option value="21">09:00PM</option>
-                                                                <option value="22">10:00PM</option>
-                                                                <option value="23">11:00PM</option>
-                                                            </select>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -2387,89 +2366,21 @@
                 Reactions.CreateSlider('LastPostedSlider', 0, 3000, 0, 3000)
             })
         </script>
-        <!-- GOOGLE ANALYTICS -->
-        <div class="datepickers-container" id="datepickers-container">
-            <div class="datepicker-wrapper -bottom-left- -from-bottom-">
-                <i class="datepicker--pointer"></i>
-                <div class="datepicker--nav">
-                    <div class="datepicker--nav-action" data-action="prev">
-                        <svg>
-                            <path d="M 17,12 l -5,5 l 5,5"></path>
-                        </svg>
-                    </div>
-                    <div class="datepicker--nav-title">
-                        August, <i>2024</i>
-                    </div>
-                    <div class="datepicker--nav-action" data-action="next">
-                        <svg>
-                            <path d="M 14,12 l 5,5 l -5,5"></path>
-                        </svg>
-                    </div>
-                </div>
-                <div class="datepicker--content">
-                    <div class="datepicker--days datepicker--body active">
-                        <div class="datepicker--days-names">
-                            <div class="datepicker--day-name">Mo</div>
-                            <div class="datepicker--day-name">Tu</div>
-                            <div class="datepicker--day-name">We</div>
-                            <div class="datepicker--day-name">Th</div>
-                            <div class="datepicker--day-name">Fr</div>
-                            <div class="datepicker--day-name -weekend-">Sa</div>
-                            <div class="datepicker--day-name -weekend-">Su</div>
-                        </div>
-                        <div class="datepicker--cells datepicker--cells-days">
-                            <div class="datepicker--cell datepicker--cell-day -other-month-" data-date="29" data-month="6" data-year="2024">29</div>
-                            <div class="datepicker--cell datepicker--cell-day -other-month-" data-date="30" data-month="6" data-year="2024">30</div>
-                            <div class="datepicker--cell datepicker--cell-day -other-month-" data-date="31" data-month="6" data-year="2024">31</div>
-                            <div class="datepicker--cell datepicker--cell-day -current-" data-date="1" data-month="7" data-year="2024">1</div>
-                            <div class="datepicker--cell datepicker--cell-day" data-date="2" data-month="7" data-year="2024">2</div>
-                            <div class="datepicker--cell datepicker--cell-day -weekend-" data-date="3" data-month="7" data-year="2024">3</div>
-                            <div class="datepicker--cell datepicker--cell-day -weekend-" data-date="4" data-month="7" data-year="2024">4</div>
-                            <div class="datepicker--cell datepicker--cell-day" data-date="5" data-month="7" data-year="2024">5</div>
-                            <div class="datepicker--cell datepicker--cell-day" data-date="6" data-month="7" data-year="2024">6</div>
-                            <div class="datepicker--cell datepicker--cell-day" data-date="7" data-month="7" data-year="2024">7</div>
-                            <div class="datepicker--cell datepicker--cell-day" data-date="8" data-month="7" data-year="2024">8</div>
-                            <div class="datepicker--cell datepicker--cell-day" data-date="9" data-month="7" data-year="2024">9</div>
-                            <div class="datepicker--cell datepicker--cell-day -weekend-" data-date="10" data-month="7" data-year="2024">10</div>
-                            <div class="datepicker--cell datepicker--cell-day -weekend-" data-date="11" data-month="7" data-year="2024">11</div>
-                            <div class="datepicker--cell datepicker--cell-day" data-date="12" data-month="7" data-year="2024">12</div>
-                            <div class="datepicker--cell datepicker--cell-day" data-date="13" data-month="7" data-year="2024">13</div>
-                            <div class="datepicker--cell datepicker--cell-day" data-date="14" data-month="7" data-year="2024">14</div>
-                            <div class="datepicker--cell datepicker--cell-day" data-date="15" data-month="7" data-year="2024">15</div>
-                            <div class="datepicker--cell datepicker--cell-day" data-date="16" data-month="7" data-year="2024">16</div>
-                            <div class="datepicker--cell datepicker--cell-day -weekend-" data-date="17" data-month="7" data-year="2024">17</div>
-                            <div class="datepicker--cell datepicker--cell-day -weekend-" data-date="18" data-month="7" data-year="2024">18</div>
-                            <div class="datepicker--cell datepicker--cell-day" data-date="19" data-month="7" data-year="2024">19</div>
-                            <div class="datepicker--cell datepicker--cell-day" data-date="20" data-month="7" data-year="2024">20</div>
-                            <div class="datepicker--cell datepicker--cell-day" data-date="21" data-month="7" data-year="2024">21</div>
-                            <div class="datepicker--cell datepicker--cell-day" data-date="22" data-month="7" data-year="2024">22</div>
-                            <div class="datepicker--cell datepicker--cell-day" data-date="23" data-month="7" data-year="2024">23</div>
-                            <div class="datepicker--cell datepicker--cell-day -weekend-" data-date="24" data-month="7" data-year="2024">24</div>
-                            <div class="datepicker--cell datepicker--cell-day -weekend-" data-date="25" data-month="7" data-year="2024">25</div>
-                            <div class="datepicker--cell datepicker--cell-day" data-date="26" data-month="7" data-year="2024">26</div>
-                            <div class="datepicker--cell datepicker--cell-day" data-date="27" data-month="7" data-year="2024">27</div>
-                            <div class="datepicker--cell datepicker--cell-day" data-date="28" data-month="7" data-year="2024">28</div>
-                            <div class="datepicker--cell datepicker--cell-day" data-date="29" data-month="7" data-year="2024">29</div>
-                            <div class="datepicker--cell datepicker--cell-day" data-date="30" data-month="7" data-year="2024">30</div>
-                            <div class="datepicker--cell datepicker--cell-day -weekend-" data-date="31" data-month="7" data-year="2024">31</div>
-                            <div class="datepicker--cell datepicker--cell-day -weekend- -other-month-" data-date="1" data-month="8" data-year="2024">1</div>
-                        </div>
-                    </div>
-                </div>
-                <div class="datepicker--time -am-pm-">
-                    <div class="datepicker--time-current">
-                        <span class="datepicker--time-current-hours">10</span> <span class="datepicker--time-current-colon">:</span> <span class="datepicker--time-current-minutes">17</span><span class="datepicker--time-current-ampm">pm</span>
-                    </div>
-                    <div class="datepicker--time-sliders">
-                        <div class="datepicker--time-row">
-                            <input type="range" name="hours" value="22" min="0" max="23" step="1" />
-                        </div>
-                        <div class="datepicker--time-row">
-                            <input type="range" name="minutes" value="17" min="0" max="59" step="1" />
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+        <script>
+            $(".js-list-item").on("click", function () {
+                var _this = $(this);
+                var account_id = _this.attr("data-id");
+                $('[name="selected_insta_cred"]').val(account_id);
+            });
+            function checkForm() {
+                var insta_cred = $('[name="selected_insta_cred"]').val();
+                console.log(insta_cred);
+                if (!insta_cred) {
+                    alert("Please select Instagram account from left.");
+                    return false;
+                }
+                return true;
+            }
+        </script>
     </body>
 </html>

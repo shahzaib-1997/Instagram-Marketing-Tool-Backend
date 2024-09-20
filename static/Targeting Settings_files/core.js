@@ -3262,12 +3262,21 @@ NextPost.DarkSideModeSwitcher = function () {
         setTimeout(function () {
             if ($("body").hasClass("darkside")) {
                 $("body").removeClass("darkside");
+                localStorage.setItem("isDark", "false");
             } else {
                 $("body").addClass("darkside");
+                localStorage.setItem("isDark", "true");
             }
         }, 1000);
     });
 }
+
+var isDark = localStorage.getItem("isDark");
+if (isDark === "true") {
+    $("body").addClass("darkside");
+    $("#topbar").find(":input[name='dark-side-switcher']").attr("checked", "true");
+}
+
 
 
 /**

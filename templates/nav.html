@@ -22,8 +22,8 @@
                 </li>
             </ul>
             <ul>
-                <li class="{% if 'target-edit' in request.path or 'activity-logs' in request.path or 'stats' in request.path %}active{% endif %}">
-                    <a href="/target-edit">
+                <li class="{% if 'accounts' not in request.path %}active{% endif %}">
+                    <a href="/targets">
                         <span class="special-menu-icon" style="color: #fff; background-color: #2b69e9; font-size: 18px; line-height: 18px;">
                             <span class="mdi mdi-rocket"></span>
                         </span>

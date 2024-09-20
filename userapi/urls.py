@@ -59,6 +59,9 @@ urlpatterns = [
         "targets/", views.user_targets, name="targets",
     ),
     path(
+        "targets/<int:id>/", views.user_targets, name="targets",
+    ),
+    path(
         "about/",
         TemplateView.as_view(template_name="userapi/about.html"),
         name="about",

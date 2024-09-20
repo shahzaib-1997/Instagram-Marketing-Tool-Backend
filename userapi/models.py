@@ -57,14 +57,17 @@ class ActivityTime(models.Model):
         "username - timestamp"
     """
 
-    time = models.DateTimeField(null=True, blank=True)
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    target = models.ForeignKey(
+        "Target", on_delete=models.CASCADE, null=True, blank=True, related_name="activity_time"
+    )
+    time = models.CharField(max_length=255, null=True, blank=True)
+    day = models.CharField(max_length=255, blank=True, null=True)
 
     def __str__(self):
         """
         method __str__(): Returns a string representation of the object.
         """
-        return f"{self.user.username} - {self.time}"
+        return f"{self.target} - {self.day} - {self.time}"
 
 
 class Credential(models.Model):
@@ -190,9 +193,6 @@ class Target(models.Model):
     target_type = models.ForeignKey(
         TargetType, on_delete=models.CASCADE, null=True, blank=True
     )
-    activity_time = models.ForeignKey(
-        ActivityTime, on_delete=models.CASCADE, null=True, blank=True
-    )
     actions = models.ForeignKey(Action, on_delete=models.CASCADE, null=True, blank=True)
     user_comment = models.TextField(default="", null=True, blank=True)
     time_stamp = models.DateTimeField(auto_now_add=True, blank=True, null=True)
@@ -202,7 +202,7 @@ class Target(models.Model):
         """
         method __str__(): Returns a string representation of the object.
         """
-        return f"{self.user.username} - {self.target_type.type} - {dict(self.options).get(self.status)}"
+        return f"{self.user.username} - {self.insta_user.username} - {self.target_type.type} - {dict(self.options).get(self.status)}"
 
 
 class Hashtag(models.Model):

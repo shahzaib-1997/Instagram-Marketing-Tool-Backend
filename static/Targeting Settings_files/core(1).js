@@ -1334,15 +1334,15 @@ Reactions.ScheduleForm = function() {
     }).trigger("change");
 
     // Activity time section
-    $form.find(":input[name='activity-time']").on("change", function() {
-        if ($(this).is(":checked")) {
-            $form.find(".js-activity-time").css("opacity", "1");
-            $form.find(".js-activity-time").find(":input").prop("disabled", false);
-        } else {
-            $form.find(".js-activity-time").css("opacity", "0.25");
-            $form.find(".js-activity-time").find(":input").prop("disabled", true);
-        }
-    }).trigger("change");
+    // $("input[name='activity-time']").on("change", function() {
+    //     if ($(this).is(":checked")) {
+    //         $(".js-activity-time").css("opacity", "1");
+    //         $(".js-activity-time").find(":input").prop("disabled", false);
+    //     } else {
+    //         $(".js-activity-time").css("opacity", "0.25");
+    //         $(".js-activity-time").find(":input").prop("disabled", true);
+    //     }
+    // });
 
     // Asynchronous Settings
     $form.find(":input[name='async-masslooking']").on("change", function() {
@@ -1517,19 +1517,17 @@ Reactions.ScheduleForm = function() {
         for(var j, x, i = o.length; i; j = parseInt(Math.random() * i), x = o[--i], o[i] = o[j], o[j] = x);
         return o;
     };
-    $form.find(".js-activity-time-all").off("click").on("click", function() {
+    $(".js-activity-time-all").off("click").on("click", function() {
         var _this = $(this);
         var button = _this.html();
-        var at_time = Date.parse("2022-06-01T00:00:00");
         for (let h = 0; h <= 23; h++) {
             for (let d = 1; d <= 7; d++) {
-                var dh = new Date((at_time + h * 3600) * 1000);
-                var gh = '' + dh.getHours();
+                var gh = h.toString();
                 if (gh.length < 2) {
                     gh = '0' + gh;
                 }
                 var hn = 'day_' + d + '_' + gh;
-                var slot = $form.find(":input[name='" + hn + "']");
+                var slot = $("input[name='" + hn + "']");
                 if (typeof slot !== 'undefined') {
                     slot.prop("checked", true);
                 }
@@ -1544,19 +1542,17 @@ Reactions.ScheduleForm = function() {
             _this.removeClass("reactions-copyhelper-done");
         }, 1000);
     });
-    $form.find(".js-activity-time-clear").off("click").on("click", function() {
+    $(".js-activity-time-clear").off("click").on("click", function() {
         var _this = $(this);
         var button = _this.html();
-        var at_time = Date.parse("2022-06-01T00:00:00");
         for (let h = 0; h <= 23; h++) {
             for (let d = 1; d <= 7; d++) {
-                var dh = new Date((at_time + h * 3600) * 1000);
-                var gh = '' + dh.getHours();
+                var gh = h.toString();
                 if (gh.length < 2) {
                     gh = '0' + gh;
                 }
                 var hn = 'day_' + d + '_' + gh;
-                var slot = $form.find(":input[name='" + hn + "']");
+                var slot = $("input[name='" + hn + "']");
                 if (typeof slot !== 'undefined' && slot.is(":checked")) {
                     slot.prop("checked", false);
                 }
@@ -1632,47 +1628,16 @@ Reactions.ScheduleForm = function() {
             _this.removeClass("reactions-copyhelper-done");
         }, 1000);
     });
-    $form.find(".js-activity-time-random").off("click").on("click", function() {
+    $(".js-activity-time-random").off("click").on("click", function() {
         var _this = $(this);
         var button = _this.html();
-        var min_h = parseInt($form.find(":input[name='activity-time-min-h']").val()) || 0;
-        var max_h = parseInt($form.find(":input[name='activity-time-max-h']").val()) || 0;
-        var min_hd = parseInt($form.find(":input[name='activity-time-min-hd']").val()) || 0;
-        var max_hd = parseInt($form.find(":input[name='activity-time-max-hd']").val()) || 0;
-        var reversed = false;
+        var min_hd = parseInt($("input[name='activity-time-min-hd']").val()) || 0;
+        var max_hd = parseInt($("input[name='activity-time-max-hd']").val()) || 0;
 
-        if (min_h == 0 && max_h == 0) {
-            min_h = 0;
-            max_h = 23;
-        } else if (max_h == 0) {
-            max_h = 23;
-        }
+        var min_i = 0;
+        var max_i = 23;
 
-        if (min_h < 0) {
-            min_h = 0;
-        } else if (min_h > 23) {
-            min_h = 23;
-        }
-
-        if (max_h < 0) {
-            max_h = 0;
-        } else if (max_h > 23) {
-            max_h = 23;
-        }
-
-        if (min_h > max_h) {
-            reversed = true;
-            min_i = 0;
-            max_i = max_h + 24 - min_h;
-        } else {
-            min_i = min_h;
-            max_i = max_h;
-        }
-
-        if (min_hd == 0 && max_hd == 0 && min_h == 0 && max_h == 0) {
-            min_hd = 12;
-            max_hd = 15;
-        } else if (min_hd == 0 && max_hd == 0) {
+        if (min_hd == 0 && max_hd == 0) {
             min_hd = 0;
             max_hd = 23;
         } else if (max_hd == 0) {
@@ -1710,36 +1675,6 @@ Reactions.ScheduleForm = function() {
 
             at_shuffle(th_day);
 
-            if (min_h !== 0 || max_h !== 0) {
-                var th_day_updated = [];
-                var thi = 0;
-                for (let h = 0; h <= 23; h++) {
-                    if (reversed) {
-                        if (min_h <= h && h <= 23 || 0 <= h && h <= max_h) {
-                            if (typeof th_day[thi] === 'undefined') {
-                                th_day_updated.push(0);
-                            } else {
-                                th_day_updated.push(th_day[thi]);
-                                thi++;
-                            }
-                        } else {
-                            th_day_updated.push(0);
-                        }
-                    } else {
-                        if (min_h <= h && h <= max_h) {
-                            if (typeof th_day[thi] === 'undefined') {
-                                th_day_updated.push(0);
-                            } else {
-                                th_day_updated.push(th_day[thi]);
-                                thi++;
-                            }
-                        } else {
-                            th_day_updated.push(0);
-                        }
-                    }
-                }
-                th_day = th_day_updated;
-            }
 
             for (let h = 0; h <= 23; h++) {
                 var gh = h.toString();
@@ -1747,7 +1682,7 @@ Reactions.ScheduleForm = function() {
                     gh = '0' + gh;
                 }
                 var hn = 'day_' + d + '_' + gh;
-                var slot = $form.find(":input[name='" + hn + "']");
+                var slot = $("input[name='" + hn + "']");
                 if (typeof slot !== 'undefined') {
                     if (th_day[h] == 1) {
                         slot.prop("checked", true);
@@ -1815,7 +1750,7 @@ Reactions.ScheduleForm = function() {
                         gh = '0' + gh;
                     }
                     var hn = 'day_' + d + '_' + gh;
-                    result[hn] = $form.find(":input[name='" + hn + "']").is(":checked") ? 1 : 0;
+                    result[hn] = $("input[name='" + hn + "']").is(":checked") ? 1 : 0;
                 }
             }
             return result;
@@ -1985,7 +1920,7 @@ Reactions.ScheduleForm = function() {
                 sc_delay_get_recent_activity_inbox: $form.find(":input[name='sc-delay-recent-activity-inbox']").val(),
 
                 // Activity Time Settings
-                activity_time: $form.find(":input[name='activity-time']").is(":checked") ? 1 : 0,
+                activity_time: $("input[name='activity-time']").is(":checked") ? 1 : 0,
                 activity_time_settings: JSON.stringify(activityTimeReader()),
 
                 // Expiration
@@ -3853,7 +3788,7 @@ Reactions.RestartByUser = function() {
                 auto_follow_unfollow: $form.find(":input[name='auto-follow-unfollow']").is(":checked") ? 1 : 0,
 
                 // Activity Time Settings
-                activity_time: $form.find(":input[name='activity-time']").is(":checked") ? 1 : 0,
+                activity_time: $("input[name='activity-time']").is(":checked") ? 1 : 0,
                 activity_time_settings: JSON.stringify(activityTimeReader()),
 
                 // Manual Comments Filter

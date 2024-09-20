@@ -66,6 +66,9 @@ class AllCredentials(APIView):
 
 class ActivityLogsView(APIView):
     def get(self, request, id=None):
+        if not request.user.is_authenticated:
+            messages.error(request, "You need to login first.")
+            return redirect(f"/signin/?next={request.path}")
         try:
             insta_creds = Credential.objects.filter(user=request.user)
             if insta_creds:
@@ -73,12 +76,12 @@ class ActivityLogsView(APIView):
                     instance = get_object_or_404(Credential, id=id)
                 else:
                     instance = insta_creds.first()
-                notifications = ActivityLog.objects.filter(user=request.user, insta_account=instance).order_by("-time_stamp")
-                serializer = ActivityLogSerializer(notifications, many=True)
+                activity_logs = ActivityLog.objects.filter(user=request.user, insta_account=instance).order_by("-time_stamp")
                 context = {
                     "insta_creds": insta_creds,
-                    "data": serializer.data,
-                    "insta_username": instance.username
+                    "data": activity_logs,
+                    "insta_username": instance.username,
+                    "url": "activity-logs"
                 }
                 return render(request, "userapi/activity_log.html", context=context)
             messages.error(
@@ -104,13 +107,23 @@ class ActivityLogsView(APIView):
             )
 
 
-def user_targets(request):
+def user_targets(request, id=None):
     if not request.user.is_authenticated:
         messages.error(request, "You need to login first.")
         return redirect(f"/signin/?next={request.path}")
     try:
-        targets = Target.objects.filter(user=request.user)
-        return render(request, "userapi/targets.html", {"targets": targets})
+        insta_creds = Credential.objects.filter(user=request.user)
+        context = {"url": "targets"}
+        if insta_creds:
+            context["insta_creds"] = insta_creds
+            if id:
+                instance = get_object_or_404(Credential, id=id)
+            else:
+                instance = insta_creds.first()
+            context["insta_username"] = instance.username
+            targets = Target.objects.filter(user=request.user, insta_user=instance)
+            context["data"] = targets
+        return render(request, "userapi/targets.html", context=context)
     except Exception as e:
         messages.error(request, str(e))
         return redirect("userapi:instagram-accounts")
@@ -249,85 +262,90 @@ class TargetTemplateView(APIView):
             messages.error(request, "You need to login first.")
             return redirect(f"/signin/?next={request.path}")
 
-        try:
-            insta_creds = Credential.objects.filter(user=request.user)
-            if insta_creds:
-                context = {"insta_creds": insta_creds}
-                if pk:
-                    target = get_object_or_404(Target, id=pk, user=request.user)
-                    context["target"] = target
-                    target_type = target.target_type.type
-                    mod = target_type.split("-")[0]
-                    model_map = {
-                        "post": Post,
-                        "reels": Reel,
-                        "hashtag": Hashtag,
-                        "comment": Comment,
-                    }
-                    model = model_map.get(mod)
-                    act = model.objects.get(target=target, user=request.user)
-                    context["url"] = act.url
-                return render(request, "userapi/target.html", context=context)
-            messages.error(
-                request,
-                "Please add Instagram Accounts against your account to add Target.",
-            )
-            return redirect("userapi:instagram-accounts")
-        except Exception as e:
-            messages.error(request, str(e))
-        return redirect("userapi:targets")
+        # try:
+        insta_creds = Credential.objects.filter(user=request.user)
+        if insta_creds:
+            context = {"insta_creds": insta_creds}
+            if pk:
+                target = get_object_or_404(Target, id=pk, user=request.user)
+                context["target"] = target
+                target_type = target.target_type.type
+                # mod = target_type.split("-")[0]
+                # model_map = {
+                #     "post": Post,
+                #     "reels": Reel,
+                #     "hashtag": Hashtag,
+                #     "comment": Comment,
+                # }
+                # model = model_map.get(mod)
+                # act = model.objects.get(target=target, user=request.user)
+                # context["url"] = act.url
+            return render(request, "userapi/target.html", context=context)
+        messages.error(
+            request,
+            "Please first add Instagram Accounts to add Target.",
+        )
+        return redirect("userapi:instagram-accounts")
+        # except Exception as e:
+        #     messages.error(request, str(e))
+        # return redirect("userapi:targets")
 
     def post(self, request, pk=None):
         if not request.user.is_authenticated:
             messages.error(request, "You need to login first.")
             return redirect(f"/signin/?next={request.path}")
-        try:
-            activity = request.POST.get("actTime")
-            activity = datetime.strptime(activity, "%H:%M").time()
-            activity_time = datetime.combine(
-                datetime.now().date(), activity, tzinfo=timezone.get_current_timezone()
+        # try:
+        if pk:
+            target = get_object_or_404(Target, id=pk)
+            target_type = target.target_type.type
+        else:
+            target = Target.objects.create(user=request.user)
+            target_type = request.POST.get("type")
+            target.target_type = TargetType.objects.create(
+                type=target_type, user=request.user
             )
-            if pk:
-                target = get_object_or_404(Target, id=pk)
-                target.activity_time.time = activity_time
-                target.activity_time.save()
-                target_type = target.target_type.type
-            else:
-                target = Target.objects.create(user=request.user)
-                target.activity_time = ActivityTime.objects.create(
-                    time=activity_time, user=request.user
-                )
-                target_type = request.POST.get("type")
-                target.target_type = TargetType.objects.create(
-                    type=target_type, user=request.user
-                )
 
-            insta_cred = request.POST.get("selected_insta_cred")
-            credential = get_object_or_404(Credential, id=insta_cred)
-            target.insta_user = credential
-            target.user_comment = request.POST.get("comment")
-            target.save()
+        insta_cred = request.POST.get("selected_insta_cred")
+        credential = get_object_or_404(Credential, id=insta_cred)
+        target.insta_user = credential
+        # target.user_comment = request.POST.get("comment")
+        target.save()
 
-            model_map = {
-                "post": Post,
-                "reels": Reel,
-                "hashtag": Hashtag,
-                "comment": Comment,
-            }
-            mod = target_type.split("-")[0]
-            model = model_map.get(mod)
+        # Loop through your checkbox names and check if they are in the POST data
+        for key, value in request.POST.items():
+            if key.startswith('day_'):
+                spl = key.split("_")
+                day = spl[1]
+                time = spl[2]
+                print(day, time)
+                activity_time, _ = ActivityTime.objects.get_or_create(target=target, day=day)
+                if not activity_time.time:
+                    activity_time.time = []  # Initialize time as a list if it's not already
+                elif isinstance(activity_time.time, str):
+                    activity_time.time = [activity_time.time]  # Convert single value to list if needed
 
-            act, _ = model.objects.get_or_create(target=target, user=request.user)
-            act.url = request.POST.get("username")
-            act.save()
+                activity_time.time.append(time)  # Add the new time value to the list
+                activity_time.save()
+        model_map = {
+            "post": Post,
+            "reels": Reel,
+            "hashtag": Hashtag,
+            "comment": Comment,
+        }
+        mod = target_type.split("-")[0]
+        model = model_map.get(mod)
 
-            messages.success(
-                request, "Target " + ("updated" if pk else "added") + " successfully!"
-            )
-            return redirect("userapi:targets")
-        except Exception as e:
-            messages.error(request, str(e))
-            return redirect("userapi:target-edit", pk=target.id)
+        act, _ = model.objects.get_or_create(target=target, user=request.user)
+        act.url = request.POST.get("username")
+        act.save()
+
+        messages.success(
+            request, "Target " + ("updated" if pk else "added") + " successfully!"
+        )
+        return redirect("userapi:targets")
+        # except Exception as e:
+        #     messages.error(request, str(e))
+        #     return redirect("userapi:target-edit", pk=target.id)
 
 
 class InstaCredentialView(APIView):

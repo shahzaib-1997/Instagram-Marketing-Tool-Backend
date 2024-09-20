@@ -2,7 +2,7 @@
 Serializers for Django Models:
 
 This module provides serializers for various Django models, including User registration, profile,
-and other application-specific models. Each serializer defines the fields to be serialized and 
+and other application-specific models. Each serializer defines the fields to be serialized and
 includes validation logic for email addresses and passwords.
 
 Serializers:
@@ -19,8 +19,8 @@ Serializers:
 
 Usage:
     These serializers are designed to be used with Django REST Framework to convert complex data
-    types, such as Django models, into Python data types that can be easily rendered into JSON 
-    responses.They include validation logic to ensure that the data received or sent through API 
+    types, such as Django models, into Python data types that can be easily rendered into JSON
+    responses.They include validation logic to ensure that the data received or sent through API
     requests meets specific criteria.
 """
 
@@ -342,7 +342,6 @@ class ActionSerializer(serializers.ModelSerializer):
 
 class TargetSerializer(serializers.ModelSerializer):
     insta_user = CredentialSerializer(required=False)
-    activity_time = ActivityTimeSerializer(required=False)
     target_type = TargetTypeSerializer(required=False)
 
     class Meta:

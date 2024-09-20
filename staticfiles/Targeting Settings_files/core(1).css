@@ -948,9 +948,8 @@ transition: all ease 0.2s;
 .activity-time-table {
   box-shadow: none !important;
   border: none;
-  padding: 0;
+  padding: 0.5rem;
   margin-bottom: 0;
-  width: auto;
 }
 
 .activity-time-table th {
@@ -1458,10 +1457,10 @@ transition: all ease 0.2s;
   padding: 6px 12px;
   position: relative;
   color: inherit;
-  border: 1px solid #333333;
-  border-radius: 5px;
-  -moz-border-radius: 5px;
-  -webkit-border-radius: 5px;
+  border: 1px solid #777;
+  border-radius: 25px;
+  -moz-border-radius: 25px;
+  -webkit-border-radius: 25px;
 }
 
 .darkside .react-tab-heads a.active {
