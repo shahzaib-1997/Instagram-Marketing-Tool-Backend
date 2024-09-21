@@ -121,7 +121,7 @@ def user_targets(request, id=None):
             else:
                 instance = insta_creds.first()
             context["insta_username"] = instance.username
-            targets = Target.objects.filter(user=request.user, insta_user=instance)
+            targets = Target.objects.filter(user=request.user, insta_user=instance).order_by("-id")
             context["data"] = targets
         return render(request, "userapi/targets.html", context=context)
     except Exception as e:
@@ -270,16 +270,16 @@ class TargetTemplateView(APIView):
                 target = get_object_or_404(Target, id=pk, user=request.user)
                 context["target"] = target
                 target_type = target.target_type.type
-                # mod = target_type.split("-")[0]
-                # model_map = {
-                #     "post": Post,
-                #     "reels": Reel,
-                #     "hashtag": Hashtag,
-                #     "comment": Comment,
-                # }
-                # model = model_map.get(mod)
-                # act = model.objects.get(target=target, user=request.user)
-                # context["url"] = act.url
+                mod = target_type.split("-")[0]
+                model_map = {
+                    "post": Post,
+                    "reels": Reel,
+                    "hashtag": Hashtag,
+                    "comment": Comment,
+                }
+                model = model_map.get(mod)
+                act = model.objects.get(target=target, user=request.user)
+                context["targets"] = act.url
             return render(request, "userapi/target.html", context=context)
         messages.error(
             request,
@@ -294,58 +294,59 @@ class TargetTemplateView(APIView):
         if not request.user.is_authenticated:
             messages.error(request, "You need to login first.")
             return redirect(f"/signin/?next={request.path}")
-        # try:
-        if pk:
-            target = get_object_or_404(Target, id=pk)
-            target_type = target.target_type.type
-        else:
-            target = Target.objects.create(user=request.user)
-            target_type = request.POST.get("type")
-            target.target_type = TargetType.objects.create(
-                type=target_type, user=request.user
+        try:
+            if pk:
+                target = get_object_or_404(Target, id=pk)
+                target_type = target.target_type.type
+            else:
+                target = Target.objects.create(user=request.user)
+                target_type = request.POST.get("type")
+                target.target_type = TargetType.objects.create(
+                    type=target_type, user=request.user
+                )
+
+            insta_cred = request.POST.get("selected_insta_cred")
+            credential = get_object_or_404(Credential, id=insta_cred)
+            target.insta_user = credential
+            target.user_comment = request.POST.get("comment")
+            target.save()
+
+            # Loop through your checkbox names and check if they are in the POST data
+            for key in request.POST.keys():
+                if key.startswith('day_'):
+                    spl = key.split("_")
+                    day = spl[1]
+                    time = spl[2]
+                    activity_time, _ = ActivityTime.objects.get_or_create(target=target, day=day)
+                    if not activity_time.time:
+                        activity_time.time = time  # Initialize time as a list if it's not already
+                    else:
+                        activity_time.time += f",{time}"  # Add the new time value to the list
+
+                    activity_time.save()
+
+            model_map = {
+                "post": Post,
+                "reels": Reel,
+                "hashtag": Hashtag,
+                "comment": Comment,
+            }
+            mod, mod_type = target_type.split("-")
+            model = model_map.get(mod)
+
+            act, _ = model.objects.get_or_create(target=target, user=request.user)
+            if mod != "comment":
+                act.type = mod_type
+            act.url = request.POST.get("target-list")
+            act.save()
+
+            messages.success(
+                request, "Target " + ("updated" if pk else "added") + " successfully!"
             )
-
-        insta_cred = request.POST.get("selected_insta_cred")
-        credential = get_object_or_404(Credential, id=insta_cred)
-        target.insta_user = credential
-        # target.user_comment = request.POST.get("comment")
-        target.save()
-
-        # Loop through your checkbox names and check if they are in the POST data
-        for key, value in request.POST.items():
-            if key.startswith('day_'):
-                spl = key.split("_")
-                day = spl[1]
-                time = spl[2]
-                print(day, time)
-                activity_time, _ = ActivityTime.objects.get_or_create(target=target, day=day)
-                if not activity_time.time:
-                    activity_time.time = []  # Initialize time as a list if it's not already
-                elif isinstance(activity_time.time, str):
-                    activity_time.time = [activity_time.time]  # Convert single value to list if needed
-
-                activity_time.time.append(time)  # Add the new time value to the list
-                activity_time.save()
-        model_map = {
-            "post": Post,
-            "reels": Reel,
-            "hashtag": Hashtag,
-            "comment": Comment,
-        }
-        mod = target_type.split("-")[0]
-        model = model_map.get(mod)
-
-        act, _ = model.objects.get_or_create(target=target, user=request.user)
-        act.url = request.POST.get("username")
-        act.save()
-
-        messages.success(
-            request, "Target " + ("updated" if pk else "added") + " successfully!"
-        )
-        return redirect("userapi:targets")
-        # except Exception as e:
-        #     messages.error(request, str(e))
-        #     return redirect("userapi:target-edit", pk=target.id)
+            return redirect(f"/targets/{credential.id}")
+        except Exception as e:
+            print(str(e))
+            return redirect("userapi:target-edit", pk=target.id)
 
 
 class InstaCredentialView(APIView):

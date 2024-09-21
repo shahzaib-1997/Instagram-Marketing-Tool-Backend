@@ -34,7 +34,7 @@
         <section class="skeleton-content" style="height: 578px;">
           <div class="react-tab-heads pb-15 clearfix">
             <a href='{% url "userapi:targets" %}' class="active">Targets</a>
-            <a href='{% url "userapi:activity-logs" %}'>Activity Log</a>
+            <a href='{% url "userapi:activity-logs" %}'>Activity Logs</a>
             <a href='/stats/'>Stats</a>
             <ic-anchor-point class="intercom-namespace" style="position: relative; display: inline-block; width: 62.5946px;">
               <div id="tooltip-anchor-41563" aria-describedby="intercom-tooltip-41563" aria-label="Tooltip anchor" class="e63435j4 intercom-with-namespace-3pzvtu e63435j5" role="button" tabindex="0">5 Min Setup</div>
@@ -57,20 +57,22 @@
                   </tr>
                 </thead>
                 <tbody class="text-center">
-                  {% for element in data %}
+                  {% for target in data %}
                   <tr>
-                    <td> {{element.target_type.type}} </td>
-                    <td> {{element.get_status_display}} </td>
-                    <td>{{element.time_stamp|date:"M j, Y H:i"}}</td>
-                    <td><div class="options context-menu-wrapper">
-                      <a href="javascript:void(0)" class="mdi mdi-dots-vertical"></a>
-                      <div class="context-menu reactions-context-menu" style="z-index: 2;">
+                    <td> {{target.target_type.type}} </td>
+                    <td> {{target.get_status_display}} </td>
+                    <td>{{target.time_stamp|date:"M j, Y H:i"}}</td>
+                    <td>
+                      <div class="options context-menu-wrapper">
+                        <a href="javascript:void(0)" class="mdi mdi-dots-vertical"></a>
+                        <div class="context-menu reactions-context-menu" style="z-index: 2;">
                           <ul>
-                              <li><a href="/target-edit/{{element.id}}">Edit</a></li>
-                              <li><a href="/target-edit/{{element.id}}">Delete</a></li>
+                            <li><a href="/target-edit/{{target.id}}">Edit</a></li>
+                            <li><a href="javascript:void(0)" data-id="{{target.id}}">Delete</a></li>
                           </ul>
+                        </div>
                       </div>
-                  </div></td>
+                    </td>
                   </tr>
                   {% endfor %}
                 </tbody>
@@ -81,6 +83,35 @@
               <p>Targets for <a href="https://www.instagram.com/{{ insta_username }}" target="_blank">@{{ insta_username }}</a> is empty.</p>
             </div>
             {% endif %}
+          </div>
+          <div id="deleteModal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true" aria-labelledby="deleteModal">
+            <div class="modal-dialog modal-dialog-centered modal-lg">
+              <div class="modal-content">
+                <div class="modal-header modal-header-hr">
+                  <h5 class="modal-title section-title">Delete Target</h5>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span class="mdi mdi-close-circle"></span></button>
+                </div>
+                <form id="deleteTarget">
+                  {% csrf_token %}
+                  <input type="hidden" id="targetID">
+                  <div class="modal-body">
+                    <div class="modal-content-body">
+                      <div class="clearfix mb-10">
+                        <div class="pos-r">
+                          Are you sure to delete this target from your account?
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="modal-footer">
+                    <div class="clearfix" style="float: right;">
+                      <button type="button" class="btn btn-danger" onclick="deleteTarget()">Delete</button>
+                      <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                    </div>
+                  </div>
+                </form>
+              </div>
+            </div>
           </div>
         </section>
       </div>
@@ -383,11 +414,8 @@
       }
     </script>
     <script type="text/javascript" src="{% static '' %}Targeting Settings_files/core.js"></script>
-    <div id="toasts"></div>
     <script type="text/javascript" src="{% static '' %}Targeting Settings_files/core(1).js"></script>
-    <div id="toasts"></div>
     <script type="text/javascript" src="{% static '' %}Targeting Settings_files/bypassing.js"></script>
-    <div id="toasts"></div>
     <script type="text/javascript" src="{% static '' %}Targeting Settings_files/selectize.min.js"></script>
     <script type="text/javascript" src="{% static '' %}Targeting Settings_files/bootstrap.min.js"></script>
     <script type="text/javascript" src="{% static '' %}Targeting Settings_files/nouislider.min.js"></script>
@@ -404,8 +432,41 @@
         Reactions.erInfo();
       })
     </script>
-    <!-- GOOGLE ANALYTICS -->
-    <div id="ui-datepicker-div" class="ui-datepicker ui-widget ui-widget-content ui-helper-clearfix ui-corner-all"></div>
+    <script>
+      $(".reactions-context-menu a[data-id]").on("click", function () {
+        var targetID = $(this).data("id");
+        $("#targetID").val(targetID);
+        $("#deleteModal").css("display", "block");
+        $("#deleteModal").modal('show');
+        $("body").toggleClass("modal-open");
+      });
+
+      function deleteTarget() {
+        var form = $('#deleteTarget');
+        let csrfToken = form.find('input[name="csrfmiddlewaretoken"]').val();
+        let targetID = form.find("#targetID").val();
+        var url = `/target/${targetID}/`;
+
+        fetch(url, {
+          method: 'DELETE',
+          headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': csrfToken,
+            'Authorization': "Token {{ request.session.token }}"
+          },
+        })
+          .then(response => {
+            if (response.ok) {
+              // Handle success (e.g., show a success message, refresh the page)
+              window.location.pathname = '/targets/';
+            }
+          })
+          .catch(error => {
+            // Handle network or other errors
+            alert('Error during delete request:', error);
+          });
+      }
+    </script>
   </body>
 </html>
 

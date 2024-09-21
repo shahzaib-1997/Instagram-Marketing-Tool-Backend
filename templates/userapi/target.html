@@ -49,15 +49,9 @@
                                     <span class="circle"><span>{{ insta_cred.username.0 }}</span></span>
                                     <div class="inner">
                                         <div class="title">{{ insta_cred.username }}</div>
-                                        <div class="sub">
-                                            <span class="status">
-                                                <span class="mdi mdi-circle-outline mr-2"></span>Inactive</span>
-                                            <span class="reactions-task-custom-labels clearfix">
-                                            </span>
-                                        </div>
                                     </div>
                                     <div class="options reactions-selector">
-                                        <a href="javascript:void(0)" class="mdi mdi-checkbox-blank-circle-outline js-task-action-select" data-id="{{ insta_cred.id }}"></a>
+                                        <a href="javascript:void(0)" class="mdi mdi-checkbox-blank-circle-outline js-task-action-select"></a>
                                     </div>
                                     <div class="options context-menu-wrapper">
                                         <a href="javascript:void(0)" class="mdi mdi-dots-vertical"></a>
@@ -79,7 +73,7 @@
                     </div>
                     <div class="react-tab-heads pb-15 clearfix">
                         <a href="{% url 'userapi:targets' %}" class="active">Targets</a>
-                        <a href="{% url 'userapi:activity-logs' %}">Activity Log</a>
+                        <a href="{% url 'userapi:activity-logs' %}">Activity Logs</a>
                         <a href="{% url 'userapi:stats' %}">Stats</a>
                         <ic-anchor-point style="position: relative; display: inline-block; width: 77.375px;" class="intercom-namespace">
                             <div id="tooltip-anchor-41563" aria-describedby="intercom-tooltip-41563" aria-label="Tooltip anchor" class="e63435j4 intercom-with-namespace-3pzvtu e63435j5" role="button" tabindex="0">5 Min Setup</div>
@@ -98,7 +92,7 @@
                                         <div class="rp-targeting">
                                             <div class="mb-5 clearfix">
                                                 <label class="inline-block mr-30 mb-15">
-                                                    <input class="radio" name="type" type="radio" value="post-comment" required />
+                                                    <input class="radio" name="type" type="radio" value="post-comment" />
                                                     <span>
                                                         <span class="icon"></span>
                                                         Post (comment)
@@ -156,33 +150,37 @@
                                             </div>
                                             <div class="clearfix mb-20 pos-r">
                                                 <div class="col s12 m4 l4 mt-10 mr-10">
-                                                    <a href="javascript:void(0)" data-toggle="modal" data-target="#target-list-popup" class="fluid button button--light-outline target-list-button tlb-insert">Targets list</a>
+                                                    <a href="javascript:void(0)" data-toggle="modal" data-target="#target-list-popup" class="fluid button button--light-outline target-list-button">Targets list</a>
                                                 </div>
                                                 <div class="col s12 m4 l4 mt-10 mr-10">
-                                                    <a href="javascript:void(0)" class="fluid button button--light-outline target-list-button js-remove-all-targets">Clear targets</a>
-                                                </div>
-                                                <div class="col s12 m4 l4 mt-10 mr-10">
-                                                    <a href="javascript:void(0)" data-toggle="modal" data-target="#copy-targets-popup" class="fluid button button--light-outline target-list-button copy-targets-popup">View targets</a>
+                                                    <a href="javascript:void(0)" data-toggle="modal" data-target="#view-targets-popup" class="fluid button button--light-outline target-list-button">View targets</a>
                                                 </div>
                                                 <div class="col s12 m4 l4 mt-10 mr-10">
                                                     <a href="javascript:void(0)" class="fluid button button--light-outline target-list-button js-copy-all-targets">Copy targets</a>
                                                 </div>
                                                 <div class="col s12 m4 l4 mt-10 mr-10">
-                                                    <a href="javascript:void(0)" class="fluid button button--light-outline target-list-button js-insert-all-targets">Insert targets</a>
+                                                    <a href="javascript:void(0)" data-toggle="modal" data-target="#clear-targets-popup" class="fluid button button--light-outline target-list-button">Clear targets</a>
                                                 </div>
                                             </div>
                                             <div class="clearfix pos-r suggestions-target-search">
-                                                <label class="form-label">Search</label>
+                                                <!-- <label class="form-label">Search</label> -->
                                                 <input class="input rightpad js-input-search" name="search" type="text" autocomplete="off" />
-                                                <span class="field-icon--right pe-none none js-search-loading-icon"><img src="{% static '' %}Targeting Settings_files/round-loading.svg" alt="Loading icon" /></span>
-                                                <div class="autocomplete-suggestions" style="position: absolute; display: none; max-height: 300px; z-index: 9999;"></div>
+                                                <div class="col s12 m4 l4 mt-10 mr-10">
+                                                    <a href="javascript:void(0)" class="fluid button button--light-outline target-list-button" id="insert-target">Insert target</a>
+                                                </div>
+                                                <!-- <span class="field-icon--right pe-none none js-search-loading-icon"><img src="{% static '' %}Targeting Settings_files/round-loading.svg" alt="Loading icon" /></span>
+                                                <div class="autocomplete-suggestions" style="position: absolute; display: none; max-height: 300px; z-index: 9999;"></div> -->
                                             </div>
-                                            <ul class="field-tips mb-20">
+                                            <!-- <ul class="field-tips mb-20">
                                                 <li>Add s: prefix before username to get accounts suggestion by Instagram AI</li>
                                                 <li>Example: s:apple</li>
-                                            </ul>
-                                            <div class="tags clearfix mt-20 mb-20"></div>
-                                            <div class="clearfix mb-20"></div>
+                                            </ul> -->
+                                            <div class="clearfix mt-20 mb-20">
+                                                <div id="user-comment" class="none">
+                                                    <label for="comment" class="form-label">Enter Comment:</label>
+                                                    <input type="text" id="comment" name="comment" class="input rightpad" value="{{ target.user_comment }}">
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                     <div class="clearfix rp-story-actions-autopilot">
@@ -686,15 +684,7 @@
                                         <div class="rp-activity-time none" data-account-id="">
                                             <div class="clearfix mb-20">
                                                 <div class="mb-20">
-                                                    <label>
-                                                        <input type="checkbox" class="checkbox" name="activity-time" />
-                                                        <span>
-                                                            <span class="icon unchecked"><span class="mdi mdi-check"></span></span>
-                                                            Activity Time (optional) ...
-                                                        </span>
-                                                    </label>
                                                     <ul class="field-tips">
-                                                        <li>This feature has a higher priority level than pause settings.</li>
                                                         <li>Helps configure custom activity time for all days of the week.</li>
                                                     </ul>
                                                 </div>
@@ -1803,10 +1793,10 @@
                                                             <a href="javascript:void(0)" class="fluid button button--light-outline js-activity-time-clear att-action-in">Clear</a>
                                                         </div>
                                                         <div class="col s12 m6 l6 mt-5 mr-5 att-action">
-                                                            <input type="number" class="input att-action-in" name="activity-time-min-hd" min="1" max="24" placeholder="Min. hours/day" />
+                                                            <input type="number" class="input att-action-in" name="activity-time-min-hd" placeholder="Min. hours/day" />
                                                         </div>
                                                         <div class="col s12 s-last m6 m-last l6 l-last mt-5 mr-5 att-action">
-                                                            <input type="number" class="input att-action-in" name="activity-time-max-hd" min="1" max="24" placeholder="Max. hours/day" />
+                                                            <input type="number" class="input att-action-in" name="activity-time-max-hd" placeholder="Max. hours/day" />
                                                         </div>
                                                         <div class="col s12 s-last m12 m-last l12 l-last mt-5 mr-5 att-action">
                                                             <a href="javascript:void(0)" class="fluid button button--light-outline js-activity-time-random att-action-in btn-green">
@@ -1868,15 +1858,8 @@
                                     <!-- Wesley End Mod -->
                                     <!-- Wesley Start Mod -->
                                     <!-- Wesley End Mod -->
-                                    <div class="clearfix mb-20">
-                                        <label class="form-label">Labels</label>
-                                        <input id="custom-labels" name="custom-labels" type="text" placeholder="Select the label..." data-custom-labels="" tabindex="-1" style="display: none;" class="selectized" />
-                                    </div>
                                     <div class="clearfix">
                                         <!-- Wesley Start Mod -->
-                                        <select class="input none rp-status-option" name="is_active">
-                                            <option value="1" selected></option>
-                                        </select>
                                         <div class="col s12 m12 l12 mb-20">
                                             <input class="fluid button btn-green rp-status" type="submit" value="Start Tasks" />
                                         </div>
@@ -1885,151 +1868,86 @@
                                 </div>
                             </div>
                         </div>
-                    </form>
-                    <div id="insert-data-popup" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="insert-data-popup" aria-hidden="true" style="display: none;">
-                        <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
-                            <div class="modal-content">
-                                <div class="modal-header modal-header-hr">
-                                    <h2 class="modal-title section-title">Insert Task Settings</h2>
-                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span class="mdi mdi-close-circle"></span></button>
-                                </div>
-                                <div class="modal-body">
-                                    <div class="modal-content-body">
-                                        <div class="clearfix mb-10">
-                                            <div class="pos-r">
-                                                <textarea class="insert-data caption-input input" name="insert-data" id="insert-data" maxlength="1000000" spellcheck="true" placeholder="Paste data from clipboard..."></textarea>
-                                            </div>
-                                        </div>
+                        <div id="target-list-popup" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="target-list-popup" aria-hidden="true" style="display: none;">
+                            <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header modal-header-hr">
+                                        <h2 class="modal-title section-title targets-cp">Insert targets list</h2>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span class="mdi mdi-close-circle"></span></button>
                                     </div>
-                                </div>
-                                <div class="modal-footer">
-                                    <div class="col s12 m6 l6 target-list-mb mr-0">
-                                        <a class="tg-l-button fluid button" data-id="" href="javascript:void(0)">Insert</a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div id="target-list-popup" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="target-list-popup" aria-hidden="true" style="display: none;">
-                        <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
-                            <div class="modal-content">
-                                <div class="modal-header modal-header-hr">
-                                    <h2 class="modal-title section-title targets-cp">Insert targets list</h2>
-                                    <h2 class="modal-title section-title none user-id-cp">Insert ID list</h2>
-                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span class="mdi mdi-close-circle"></span></button>
-                                </div>
-                                <div class="modal-body">
-                                    <div class="modal-content-body">
-                                        <div class="clearfix mb-10">
-                                            <div class="pos-r">
-                                                <textarea class="target-list caption-input input" name="target-list" id="target-list" spellcheck="true" placeholder="Every target from new string..."></textarea>
-                                            </div>
-                                        </div>
-                                        <div class="clearfix mb-15 pb-10 modal-header-hr">
-                                            <ul class="field-tips targets-cp">
-                                                <li>Enter only valid Instagram usernames or Instagram profile links</li>
-                                                <li>Every parameter from a new string</li>
-                                                <li>
-                                                    Advanced pattern for faster import: <b>username:id</b>
-                                                </li>
-                                                <li>The targeting type you selected in section Targeting on Task Settings page is important and will be used as preferred target type at mass recognition.</li>
-                                            </ul>
-                                            <ul class="field-tips none user-id-cp">
-                                                <li>Enter only valid Instagram profile ID's</li>
-                                                <li>Every parameter from a new string</li>
-                                            </ul>
-                                        </div>
-                                        <div class="targets-cp">
-                                            <div class="clearfix">
-                                                <h2 class="section-title">Processing settings</h2>
-                                            </div>
-                                            <ul class="field-tips mb-10">
-                                                <li>You can speed up targets upload if you select slaves (accelerators) accounts we may use for search requests in Instagram API.</li>
-                                                <li>This also protect your main account from being banned for data scraping.</li>
-                                                <li>We highly recommend using secondary accounts for target recognition.</li>
-                                                <li>
-                                                    When <b>Recognize targets without web data usage</b> checkbox is selected module will not try to get user info details from the public web first. The main account will not be used for search this way. This is safe method for targets recognition.
-                                                </li>
-                                            </ul>
+                                    <div class="modal-body">
+                                        <div class="modal-content-body">
                                             <div class="clearfix mb-10">
-                                                <label>
-                                                    <input type="checkbox" class="checkbox" name="process-scrapers-without-web-method" />
-                                                    <span>
-                                                        <span class="icon unchecked"><span class="mdi mdi-check"></span></span>
-                                                        Recognize targets without web data usage (can be risky for account)
-                                                    </span>
-                                                </label>
+                                                <div class="pos-r">
+                                                    <textarea class="target-list caption-input input" name="target-list" id="target-list" spellcheck="true" placeholder="Enter each target on new line...">{{targets}}</textarea>
+                                                    <p id="inform">Remember to click Save to update the list.</p>
+                                                </div>
                                             </div>
-                                            <div class="clearfix pos-r suggestions-scrapers">
-                                                <label class="form-label">Select Accounts</label>
-                                                <input class="input rightpad js-input-search-scrapers" name="search-scrapers" type="text" />
-                                                <span class="field-icon--right pe-none none js-search-loading-icon-scrapers"><img src="{% static '' %}Targeting Settings_files/round-loading.svg" alt="Loading icon" /></span>
-                                            </div>
-                                            <div class="scrapers mt-20 mb-20 clearfix"></div>
-                                            <div class="clearfix">
-                                                <label>Selected scrapers count: <span class="scrapers-count">0</span></label>
+                                            <div class="clearfix mb-15 pb-10 modal-header-hr">
+                                                <ul class="field-tips targets-cp">
+                                                    <li>Enter only valid Instagram usernames or url links</li>
+                                                    <li>Every target should be on a new line</li>
+                                                    <li>The targeting type you selected in section Targeting on Task Settings page is important and will be used as preferred target type at mass recognition.</li>
+                                                </ul>
                                             </div>
                                         </div>
                                     </div>
-                                </div>
-                                <div class="modal-footer">
-                                    <div class="col s12 m6 l6 target-list-mb mr-0">
-                                        <a class="tg-l-button fluid button" data-id="" href="javascript:void(0)">Insert</a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div id="process-targets-popup" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="process-targets-popup" aria-hidden="true" style="display: none;">
-                        <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
-                            <div class="modal-content">
-                                <div class="modal-header modal-header-hr">
-                                    <h2 class="modal-title section-title targets-cp">Targets Processing</h2>
-                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span class="mdi mdi-close-circle"></span></button>
-                                </div>
-                                <div class="modal-body">
-                                    <div class="modal-content-body">
-                                        <div class="mb-10 rp-progress-msg">We are processing uploaded targets. This may take some time.</div>
-                                        <div class="progress-bar-box">
-                                            <div class="progress-bar progress"></div>
-                                            <div class="progress-bar mb-10"></div>
+                                    <div class="modal-footer">
+                                        <div class="col s12 m6 l6 target-list-mb mr-0">
+                                            <button type="button" class="tg-l-button fluid btn" id="saveContent">SAVE</button>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                    <div id="copy-targets-popup" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="copy-targets-popup" aria-hidden="true" style="display: none;">
-                        <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
-                            <div class="modal-content">
-                                <div class="modal-header modal-header-hr">
-                                    <h2 class="modal-title section-title targets-cp">Targets</h2>
-                                    <h2 class="modal-title section-title none user-id-cp">Custom User ID's list</h2>
-                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span class="mdi mdi-close-circle"></span></button>
-                                </div>
-                                <div class="modal-body">
-                                    <div class="modal-content-body">
-                                        <div class="clearfix targets-cp">
-                                            <div class="pos-r mb-10">
-                                                <textarea class="target-list caption-input input" name="target-list" id="target-list" spellcheck="false"></textarea>
+                        <div id="view-targets-popup" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="view-targets-popup" aria-hidden="true" style="display: none;">
+                            <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header modal-header-hr">
+                                        <h2 class="modal-title section-title targets-cp">Targets</h2>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span class="mdi mdi-close-circle"></span></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <div class="modal-content-body">
+                                            <div class="clearfix targets-cp">
+                                                <div class="pos-r mb-10">
+                                                    <textarea class="target-list caption-input input" id="target-view" spellcheck="false">{{targets}}</textarea>
+                                                </div>
                                             </div>
+                                            <ul class="field-tips targets-cp">
+                                                <li>Here you can see usernames of targets added to this task.</li>
+                                            </ul>
                                         </div>
-                                        <ul class="field-tips targets-cp">
-                                            <li>Here you can see usernames of targets added to this task.</li>
-                                        </ul>
-                                        <div class="clearfix none user-id-cp">
-                                            <div class="pos-r mb-10">
-                                                <textarea class="target-list caption-input input" name="target-list" id="target-list" spellcheck="false"></textarea>
-                                            </div>
-                                        </div>
-                                        <ul class="field-tips none user-id-cp">
-                                            <li>Here you can see custom user ID's list added to this task.</li>
-                                        </ul>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
+                        <div id="clear-targets-popup" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="clear-targets-popup" aria-hidden="true" style="display: none;">
+                            <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header modal-header-hr">
+                                        <h2 class="modal-title section-title">Clear Targets</h2>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span class="mdi mdi-close-circle"></span></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <div class="modal-content-body">
+                                            <div class="clearfix mb-10">
+                                                <div class="pos-r">
+                                                    This will clear all the targets from the Target List
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <div class="clearfix" style="float: right;">
+                                            <button type="button" class="btn btn-danger" id="clear-list">Clear</button>
+                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
                 </section>
             </div>
         </div>
@@ -2349,6 +2267,7 @@
         <script type="text/javascript" src="{% static '' %}Targeting Settings_files/bootstrap.min.js"></script>
         <script type="text/javascript" src="{% static '' %}Targeting Settings_files/nouislider.min.js"></script>
         <script type="text/javascript" src="{% static '' %}Targeting Settings_files/wNumb.min.js"></script>
+        <script type="text/javascript" src="{% static '' %}Targeting Settings_files/jquery-ui.min.js"></script>
         <script type="text/javascript" charset="utf-8">
             $(function () {
                 cf_worker = null
@@ -2367,18 +2286,128 @@
             })
         </script>
         <script>
+            $(document).ready(function () {
+                $("input[name='type']").prop("checked", false); // Uncheck all radio buttons
+                {% if target %}
+                $("input[value='{{target.target_type.type}}']").prop("checked", true);
+                var $list_item = $('.js-list-item[data-id="{{target.insta_user.id}}"]');
+                var $taskActionSelect = $list_item.find('.js-task-action-select');
+                $taskActionSelect.removeClass("mdi-checkbox-blank-circle-outline").addClass("mdi-checkbox-marked-circle-outline");
+                $list_item.addClass("task-selected active");
+                {% endif %}
+            });
+
+            if ("{{ target.target_type.type }}".includes('-comment')) {
+                $('#user-comment').removeClass('none');
+                $('#comment').prop('required', true);
+            }
+
+            $('input[name="type"]').change(function () {
+                // Get the value of the selected radio button
+                var selectedValue = $('input[name="type"]:checked').val();
+
+                // Check if the selected value contains the word "comment"
+                if (selectedValue.includes('-comment')) {
+                    // Show input text box
+                    $('#user-comment').removeClass('none');
+                    $('#comment').prop('required', true);
+                } else {
+                    // Hide input text box if the value doesn't contain "comment"
+                    $('#user-comment').addClass('none');
+                    $('#comment').prop('required', false);
+                }
+            });
+
             $(".js-list-item").on("click", function () {
-                var _this = $(this);
-                var account_id = _this.attr("data-id");
+                var account_id = $(this).attr("data-id");
                 $('[name="selected_insta_cred"]').val(account_id);
             });
+
+            // Function to prevent spaces
+            $("input[name='search'], #target-list").on('input', function (event) {
+                const inputValue = event.target.value.replace(/[^\S\n]/g, ''); // Remove spaces
+                $(event.target).val(inputValue);
+            });
+
+            $('#target-list').on('keydown', function (e) {
+                if (e.key === 'Enter') {
+                    let text = $(this).val();
+                    let cursorPosition = this.selectionStart;
+                    let currentLine = text.slice(text.lastIndexOf('\n', cursorPosition - 1) + 1, cursorPosition);
+                    if (currentLine === '') {
+                        e.preventDefault();  // Prevent new line if the current line is empty
+                    }
+                }
+            });
+
+            $('#saveContent').on("click", function () {
+                let listContent = $('#target-list').val();
+                $('#target-view').val(listContent);
+                // Close the modal
+                $('#target-list-popup').modal('hide');
+            });
+
+            $('#target-list-popup').on('hidden.bs.modal', function (event) {
+                $('#target-list').val($('#target-view').val());
+            });
+
+            $('#clear-list').on("click", function () {
+                $('#target-list').val("");
+                $('#target-view').val("");
+
+                // Close the modal
+                $('#clear-targets-popup').modal('hide');
+            });
+
+            // Function to Insert Target
+            $("#insert-target").on("click", function () {
+                let inputElement = $("input[name='search']");
+                let targetListElement = $('#target-list');
+                let targetViewElement = $('#target-view');
+                let inputValue = inputElement.val();
+                let targetListValue = targetListElement.val();
+
+                if (inputValue) {
+                    targetListValue = targetListValue ? (targetListValue + '\n' + inputValue) : inputValue;
+                    targetListElement.val(targetListValue);
+                    targetViewElement.val(targetListValue);
+
+                    // Clear the input field
+                    inputElement.val("");
+
+                } else {
+                    // Focus on the input field for convenience
+                    inputElement.focus();
+                }
+            });
+
             function checkForm() {
                 var insta_cred = $('[name="selected_insta_cred"]').val();
-                console.log(insta_cred);
                 if (!insta_cred) {
-                    alert("Please select Instagram account from left.");
+                    alert("Please select an Instagram account from the left.");
                     return false;
                 }
+
+                var type = $("input[name='type']:checked").val(); // Get the value of the selected radio button
+                if (!type) {
+                    alert("Please select a type for the target.");
+                    return false;
+                }
+
+                var isSelected = false;
+                $("input[name^='day_']").each(function () {
+                    var checked = $(this).prop("checked");
+                    if (checked) {
+                        isSelected = true;
+                        return false; // Break the loop if at least one checkbox is checked
+                    }
+                });
+
+                if (!isSelected) {
+                    alert("Please select at least one activity time.");
+                    return false;
+                }
+
                 return true;
             }
         </script>

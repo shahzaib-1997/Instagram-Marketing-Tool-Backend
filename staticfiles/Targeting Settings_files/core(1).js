@@ -2325,15 +2325,6 @@ Reactions.ScheduleForm = function() {
         }
     });
 
-    $("body").find(".js-remove-all-targets").off("click").on("click", function() {
-        var $tags = $form.find(".tags");
-        if ($tags) {
-            $tags.html('')
-        }
-        target = [];
-        Reactions.UpdateTargetsCount();
-    });
-
     $("body").find(".js-copy-all-targets").off("click").on("click", function() {
         var _this = $(this);
         var button = _this.html();
@@ -5783,25 +5774,6 @@ Reactions.Togglers = function(){
             rp_button.addClass("opened");
             rp_button.find(".mdi").removeClass("mdi-arrow-down");
             rp_button.find(".mdi").addClass("mdi-arrow-up");
-        }
-    });
-
-    $("body").find(":input[name='type']").on("change", function() {
-        var type = $("body").find(":input[type='radio'][name='type']:checked").val();
-        if (type == "user_id_list") {
-            $("body").find(".targets-cp").addClass("none");
-            $("body").find(".user-id-cp").removeClass("none");
-            $("body").find(".tlb-insert").html(__("Insert ID"));
-            $("body").find(".copy-targets-popup").html(__("Copy ID"));
-            $("body").find(".js-copy-all-targets").addClass("none");
-            $("body").find(".js-insert-all-targets").addClass("none");
-        } else {
-            $("body").find(".targets-cp").removeClass("none");
-            $("body").find(".user-id-cp").addClass("none");
-            $("body").find(".tlb-insert").html(__("Targets list"));
-            $("body").find(".copy-targets-popup").html(__("Copy targets"));
-            $("body").find(".js-copy-all-targets").removeClass("none");
-            $("body").find(".js-insert-all-targets").removeClass("none");
         }
     });
 

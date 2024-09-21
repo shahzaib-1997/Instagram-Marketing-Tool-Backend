@@ -948,8 +948,6 @@ transition: all ease 0.2s;
 .activity-time-table {
   box-shadow: none !important;
   border: none;
-  padding: 0.5rem;
-  margin-bottom: 0;
 }
 
 .activity-time-table th {
