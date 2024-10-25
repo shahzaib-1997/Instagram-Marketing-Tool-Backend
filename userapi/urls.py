@@ -208,7 +208,12 @@ urlpatterns = [
     ),
     path(
         "stats/",
-        TemplateView.as_view(template_name="Stats.html"),
+        views.DashboardView.as_view(),
+        name="stats",
+    ),
+    path(
+        "stats/<int:id>/",
+        views.DashboardView.as_view(),
         name="stats",
     ),
     path("target-update/", views.TargetUpdateView.as_view(), name="target-update"),

@@ -31,7 +31,7 @@
         <div class="skeleton skeleton--full" id="reactions-pro" style="display: block;">
             <div class="clearfix">
                 {% include "search-results.html" %}
-                <section class="skeleton-content" style="height: 578px;">
+                <section class="skeleton-content">
                     <div class="section-header back-button-wh none">
                         <a href="/target-edit/">
                             <span class="mdi mdi-reply"></span>Back </a>
@@ -45,28 +45,45 @@
                         </ic-anchor-point>
                     </div>
                     <div class="section-content">
-                        <div class="col s12 m6 l8 mb-10">
-                            <div class="clearfix mb-20 pos-r">
-                                <label class="react-stats-title mb-10">Today<span class="fz-12 color-mid ml-10" style="line-height: 20px;">(reactions)</span></label>
-                                <div class="source-tracking-filters mb-10">
-                                    <div class="col s12 m6 l4 mt-5 mr-5 att-action">
-                                        <div class="fluid button button--light-outline att-action-in js-source-tracking-filter" data-sort-type="best">Best results</div>
+                        <div class="col s12">
+                            <div class="clearfix pos-r">
+                                <div class="d-flex align-items-center justify-content-between gap-2">
+                                    <div class="col s12 l6 mb-20">
+                                        <div class="card">
+                                            <div class="card-header">
+                                                <div class="d-flex align-items-center">
+                                                    <h3>Followers History</h3>
+                                                </div>
+                                            </div>
+                                            <div class="card-body">
+                                                <div id="followersChart"></div>
+                                            </div>
+                                        </div>
                                     </div>
-                                    <div class="col s12 m6 l4 mt-5 mr-5 att-action">
-                                        <div class="fluid button button--light-outline att-action-in js-source-tracking-filter" data-sort-type="like">Sort by likes</div>
-                                    </div>
-                                    <div class="col s12 m6 m-last l4 l-last mt-5 mr-5 att-action">
-                                        <div class="fluid button button--light-outline att-action-in js-source-tracking-filter" data-sort-type="follow">Sort by follows</div>
+                                    <div class="col s12 l6 mb-20">
+                                        <div class="card">
+                                            <div class="card-header py-3">
+                                                <div class="d-flex align-items-center">
+                                                    <h3>Engagement Rate</h3>
+                                                </div>
+                                            </div>
+                                            <div class="card-body">
+                                                <div id="engagementRateChart"></div>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
-                                There is no stats at the moment.
-                            </div>
-                        </div>
-                        <div class="clearfix col s12 m6 l8 mb-10">
-                            <div class="clearfix mb-20 pos-r">
-                                <label class="react-stats-title mb-10">This Month<span class="fz-12 color-mid ml-10" style="line-height: 20px;">(reactions/day)</span></label>
-                                <div class="chart-container pos-r stories-weekly-stats" data-url="/target-edit/stats?account=">
-                                    <div id="total-line-chart"></div>
+                                <div class="col s12">
+                                    <div class="card">
+                                        <div class="card-header py-3">
+                                            <div class="d-flex align-items-center">
+                                                <h3>Likes and Comments</h3>
+                                            </div>
+                                        </div>
+                                        <div class="card-body">
+                                            <div id="likeCommentChart"></div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -414,6 +431,190 @@
                     return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ");
                 }
             })
+            $(document).ready(function () {
+                var list_items = $(`.js-list-item`);
+                list_items.each(function () {
+                    var $list_item = $(this);
+                    var $taskActionSelect = $list_item.find('.js-task-action-select');
+                    if ($list_item.hasClass("task-selected")) {
+                        $taskActionSelect.addClass("mdi-checkbox-blank-circle-outline").removeClass("mdi-checkbox-marked-circle-outline");
+                        $list_item.removeClass("task-selected active");
+                    } else {
+                        if ($list_item.attr('data-id') == "{{ insta_username }}") {
+                            $taskActionSelect.removeClass("mdi-checkbox-blank-circle-outline").addClass("mdi-checkbox-marked-circle-outline");
+                            $list_item.addClass("task-selected active");
+                        }
+                    }
+                });
+            });
+        </script>
+        <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+        <script>
+            $(document).ready(function () {
+              var followersData = {{ followers }};
+              var followersTime = {{ followers_time | safe }};
+              if (followersData.length > 0) {
+                var options = {
+                  chart: {
+                    height: 350,
+                    type: "line",
+                    zoom: {
+                      enabled: false
+                    },
+                  },
+                  dataLabels: {
+                    enabled: false
+                  },
+                  series: [{
+                    name: 'Followers',
+                    data: [0].concat(followersData)
+                  }],
+                  colors: ["#0000FF"],
+                  xaxis: {
+                    categories: ["Start"].concat(followersTime)
+                  },
+                  stroke: {
+                    width: 8,
+                    curve: 'smooth'
+                  },
+                  fill: {
+                    type: "gradient",
+                    gradient: {
+                      shade: "dark",
+                      gradientToColors: ["#86efac"],
+                      shadeIntensity: 1,
+                      type: "horizontal",
+                      opacityFrom: 1,
+                      opacityTo: .95,
+                      stops: [0, 100, 0, 100]
+                    }
+                  }
+                }
+
+                var followersChart = new ApexCharts($("#followersChart")[0], options);
+                followersChart.render();
+              } else {
+                $("#followersChart").text("Followers Count of selected account not added yet!")
+              }
+
+                var engagementRateData = {{ engagement_rate }};
+                var engagementRateValue = engagementRateData.length > 0 ? engagementRateData[0] : 0;
+
+                if (engagementRateValue) {
+                  var options = {
+                    chart: {
+                      type: "radialBar",
+                      height: 395,
+                    },
+                    series: [engagementRateValue],
+                    colors: ["#00DD00"],
+                    plotOptions: {
+                        radialBar: {
+                        dataLabels: {
+                            name: {
+                            show: true,
+                            color: "#888",
+                            offsetY: -10,
+                            },
+                            value: {
+                            fontSize: "30px",
+                            show: true
+                            }
+                        }
+                        }
+                    },
+                    fill: {
+                        type: "gradient",
+                        gradient: {
+                        shade: "light",
+                        type: "horizontal",
+                        stops: [0, 100]
+                        }
+                    },
+                    stroke: {
+                        lineCap: "butt"
+                    },
+                    labels: ["Average"]
+                  };
+
+                  var engagementRateChart = new ApexCharts($("#engagementRateChart")[0], options);
+                  engagementRateChart.render();
+                }  else {
+                  $("#engagementRateChart").text("Engagement Rate of selected account not added yet!")
+                }
+
+                var likes = {{ like }};
+                var comments = {{ comment }};
+                var likeTime = {{ like_time | safe }}
+                var options = {
+                  series: [{
+                    name: 'Likes',
+                    data: likes
+                  },
+                  {
+                    name: 'Comments',
+                    data: comments
+                  }],
+                  chart: {
+                    width: "100%",
+                    height: 380,
+                    type: 'bar',
+                  },
+                  plotOptions: {
+                    bar: {
+                    horizontal: false,
+                    columnWidth: '70%',
+                    endingShape: 'rounded'
+                    },
+                  },
+                  stroke: {
+                    show: true,
+                    width: 4,
+                    colors: ['transparent']
+                  },
+                  dataLabels: {
+                    enabled: true,
+                    offsetY: -10,
+                    style: {
+                    colors: ["#888"],
+                    }
+                  },
+                  colors: ["#00D4F9", "#00E647"],
+                  xaxis: {
+                    categories: likeTime,
+                  },
+                  yaxis: {
+                    title: {
+                    text: 'Count'
+                    }
+                  },
+                };
+
+                var likeCommentChart = new ApexCharts($("#likeCommentChart")[0], options);
+                likeCommentChart.render();
+
+                $("#from, #to").datepicker({
+                  dateFormat: "yy-mm-dd",
+                  onSelect: function (selectedDate, inst) {
+                    if (inst.id === "from") {
+                      // Get the selected "from" date
+                      var fromDate = $(this).datepicker('getDate');
+
+                      // If "to" date is selected
+                      if ($('#to').datepicker('getDate') !== null) {
+                        // Compare the dates and update if needed
+                        if (fromDate > $('#to').datepicker('getDate')) {
+                        $('#to').datepicker('setDate', '');
+                        }
+                      }
+                      $('#to').datepicker('option', 'minDate', selectedDate);
+                    }
+                    $('button[type="submit"]').focus();
+                  },
+                  maxDate: "0d"
+                });
+            });
         </script>
     </body>
 </html>

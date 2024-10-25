@@ -188,13 +188,12 @@
                                             <a href="javascript:void(0)" class="rp-story-actions-toggler rp-toggler-button"><span class="mdi mdi-arrow-down icon mr-3"></span>Story Actions</a>
                                         </div>
                                         <!-- Wesley Start Mod -->
-                                        <div class="rp-story-actions none" data-account-id="">
+                                        <div class="rp-story-actions none">
                                             <div class="clearfix mb-20">
                                                 <div class="col s12 m12 l12">
-                                                    <!-- <label class="form-label mb-20">Choose type actions</label> -->
                                                     <div class="mb-5">
                                                         <label>
-                                                            <input type="checkbox" class="checkbox" name="masslooking" value="1" />
+                                                            <input type="checkbox" class="checkbox" name="view-stories" value="1" />
                                                             <span>
                                                                 <span class="icon unchecked"><span class="mdi mdi-check"></span></span>
                                                                 View Stories
@@ -226,10 +225,10 @@
                                                             </select>
                                                             <ul class="field-tips mt-0">
                                                                 <li>
-                                                                    <b>1:1</b> - only works together with masslooking action, using this algorithm type you will like and view story only together, separate like or view will be not allowed
+                                                                    <b>1:1</b> - only works together with view stories action, using this algorithm type you will like and view story only together, separate like or view will be not allowed
                                                                 </li>
                                                                 <li>
-                                                                    <b>1:1 + M</b> - it's the same as algorithm <b>1:1</b>, but you will be able to continue doing masslooking after story like limit reached
+                                                                    <b>1:1 + M</b> - it's the same as algorithm <b>1:1</b>, but you will be able to continue viewing stories after story like limit reached
                                                                 </li>
                                                                 <li>
                                                                     <b>1:1 + M (last story only)</b> - it's the same as algorithm <b>1:1 + M</b>, but you will be able to mark as seen only last story of user
@@ -260,423 +259,10 @@
                                                             </select>
                                                         </div>
                                                     </div>
-                                                    <div class="clearfix js-story-likes-settings" style="opacity: 0.25;">
-                                                        <div class="col s12 m6 l6 mb-20">
-                                                            <ul class="field-tips mt-0">
-                                                                <li>How often to interact with the same user in a like stories?</li>
-                                                            </ul>
-                                                            <select name="like-stories-interval" class="input" disabled>
-                                                                <option value="0.042">Once per hour</option>
-                                                                <option value="0.083">Once per 2 hours</option>
-                                                                <option value="0.125">Once per 3 hours</option>
-                                                                <option value="0.167">Once per 4 hours</option>
-                                                                <option value="0.208">Once per 5 hours</option>
-                                                                <option value="0.25">Once per 6 hours</option>
-                                                                <option value="0.292">Once per 7 hours</option>
-                                                                <option value="0.333">Once per 8 hours</option>
-                                                                <option value="0.375">Once per 9 hours</option>
-                                                                <option value="0.417">Once per 10 hours</option>
-                                                                <option value="0.458">Once per 11 hours</option>
-                                                                <option value="0.5">Once per 12 hours</option>
-                                                                <option value="0.542">Once per 13 hours</option>
-                                                                <option value="0.583">Once per 14 hours</option>
-                                                                <option value="0.625">Once per 15 hours</option>
-                                                                <option value="0.667">Once per 16 hours</option>
-                                                                <option value="0.708">Once per 17 hours</option>
-                                                                <option value="0.75">Once per 18 hours</option>
-                                                                <option value="0.792">Once per 19 hours</option>
-                                                                <option value="0.833">Once per 20 hours</option>
-                                                                <option value="0.875">Once per 21 hours</option>
-                                                                <option value="0.917">Once per 22 hours</option>
-                                                                <option value="0.958">Once per 23 hours</option>
-                                                                <option value="1">Once per day</option>
-                                                                <option value="2">Once per 2 days</option>
-                                                                <option value="3">Once per 3 days</option>
-                                                                <option value="4">Once per 4 days</option>
-                                                                <option value="5">Once per 5 days</option>
-                                                                <option value="6">Once per 6 days</option>
-                                                                <option value="7" selected>Once per 7 days</option>
-                                                                <option value="8">Once per 8 days</option>
-                                                                <option value="9">Once per 9 days</option>
-                                                                <option value="10">Once per 10 days</option>
-                                                                <option value="11">Once per 11 days</option>
-                                                                <option value="12">Once per 12 days</option>
-                                                                <option value="13">Once per 13 days</option>
-                                                                <option value="14">Once per 14 days</option>
-                                                                <option value="15">Once per 15 days</option>
-                                                                <option value="16">Once per 16 days</option>
-                                                                <option value="17">Once per 17 days</option>
-                                                                <option value="18">Once per 18 days</option>
-                                                                <option value="19">Once per 19 days</option>
-                                                                <option value="20">Once per 20 days</option>
-                                                                <option value="21">Once per 21 days</option>
-                                                                <option value="22">Once per 22 days</option>
-                                                                <option value="23">Once per 23 days</option>
-                                                                <option value="24">Once per 24 days</option>
-                                                                <option value="25">Once per 25 days</option>
-                                                                <option value="26">Once per 26 days</option>
-                                                                <option value="27">Once per 27 days</option>
-                                                                <option value="28">Once per 28 days</option>
-                                                                <option value="29">Once per 29 days</option>
-                                                                <option value="30">Once per 30 days</option>
-                                                                <option value="31">Once per 31 days</option>
-                                                                <option value="32">Once per 32 days</option>
-                                                                <option value="33">Once per 33 days</option>
-                                                                <option value="34">Once per 34 days</option>
-                                                                <option value="35">Once per 35 days</option>
-                                                                <option value="36">Once per 36 days</option>
-                                                                <option value="37">Once per 37 days</option>
-                                                                <option value="38">Once per 38 days</option>
-                                                                <option value="39">Once per 39 days</option>
-                                                                <option value="40">Once per 40 days</option>
-                                                                <option value="41">Once per 41 days</option>
-                                                                <option value="42">Once per 42 days</option>
-                                                                <option value="43">Once per 43 days</option>
-                                                                <option value="44">Once per 44 days</option>
-                                                                <option value="45">Once per 45 days</option>
-                                                                <option value="46">Once per 46 days</option>
-                                                                <option value="47">Once per 47 days</option>
-                                                                <option value="48">Once per 48 days</option>
-                                                                <option value="49">Once per 49 days</option>
-                                                                <option value="50">Once per 50 days</option>
-                                                                <option value="51">Once per 51 days</option>
-                                                                <option value="52">Once per 52 days</option>
-                                                                <option value="53">Once per 53 days</option>
-                                                                <option value="54">Once per 54 days</option>
-                                                                <option value="55">Once per 55 days</option>
-                                                                <option value="56">Once per 56 days</option>
-                                                                <option value="57">Once per 57 days</option>
-                                                                <option value="58">Once per 58 days</option>
-                                                                <option value="59">Once per 59 days</option>
-                                                                <option value="60">Once per 60 days</option>
-                                                                <option value="61">Once per 61 days</option>
-                                                                <option value="62">Once per 62 days</option>
-                                                                <option value="63">Once per 63 days</option>
-                                                                <option value="64">Once per 64 days</option>
-                                                                <option value="65">Once per 65 days</option>
-                                                                <option value="66">Once per 66 days</option>
-                                                                <option value="67">Once per 67 days</option>
-                                                                <option value="68">Once per 68 days</option>
-                                                                <option value="69">Once per 69 days</option>
-                                                                <option value="70">Once per 70 days</option>
-                                                                <option value="71">Once per 71 days</option>
-                                                                <option value="72">Once per 72 days</option>
-                                                                <option value="73">Once per 73 days</option>
-                                                                <option value="74">Once per 74 days</option>
-                                                                <option value="75">Once per 75 days</option>
-                                                                <option value="76">Once per 76 days</option>
-                                                                <option value="77">Once per 77 days</option>
-                                                                <option value="78">Once per 78 days</option>
-                                                                <option value="79">Once per 79 days</option>
-                                                                <option value="80">Once per 80 days</option>
-                                                                <option value="81">Once per 81 days</option>
-                                                                <option value="82">Once per 82 days</option>
-                                                                <option value="83">Once per 83 days</option>
-                                                                <option value="84">Once per 84 days</option>
-                                                                <option value="85">Once per 85 days</option>
-                                                                <option value="86">Once per 86 days</option>
-                                                                <option value="87">Once per 87 days</option>
-                                                                <option value="88">Once per 88 days</option>
-                                                                <option value="89">Once per 89 days</option>
-                                                                <option value="90">Once per 90 days</option>
-                                                                <option value="91">Once per 91 days</option>
-                                                                <option value="92">Once per 92 days</option>
-                                                                <option value="93">Once per 93 days</option>
-                                                                <option value="94">Once per 94 days</option>
-                                                                <option value="95">Once per 95 days</option>
-                                                                <option value="96">Once per 96 days</option>
-                                                                <option value="97">Once per 97 days</option>
-                                                                <option value="98">Once per 98 days</option>
-                                                                <option value="99">Once per 99 days</option>
-                                                                <option value="100">Once per 100 days</option>
-                                                                <option value="101">Once per 101 days</option>
-                                                                <option value="102">Once per 102 days</option>
-                                                                <option value="103">Once per 103 days</option>
-                                                                <option value="104">Once per 104 days</option>
-                                                                <option value="105">Once per 105 days</option>
-                                                                <option value="106">Once per 106 days</option>
-                                                                <option value="107">Once per 107 days</option>
-                                                                <option value="108">Once per 108 days</option>
-                                                                <option value="109">Once per 109 days</option>
-                                                                <option value="110">Once per 110 days</option>
-                                                                <option value="111">Once per 111 days</option>
-                                                                <option value="112">Once per 112 days</option>
-                                                                <option value="113">Once per 113 days</option>
-                                                                <option value="114">Once per 114 days</option>
-                                                                <option value="115">Once per 115 days</option>
-                                                                <option value="116">Once per 116 days</option>
-                                                                <option value="117">Once per 117 days</option>
-                                                                <option value="118">Once per 118 days</option>
-                                                                <option value="119">Once per 119 days</option>
-                                                                <option value="120">Once per 120 days</option>
-                                                                <option value="121">Once per 121 days</option>
-                                                                <option value="122">Once per 122 days</option>
-                                                                <option value="123">Once per 123 days</option>
-                                                                <option value="124">Once per 124 days</option>
-                                                                <option value="125">Once per 125 days</option>
-                                                                <option value="126">Once per 126 days</option>
-                                                                <option value="127">Once per 127 days</option>
-                                                                <option value="128">Once per 128 days</option>
-                                                                <option value="129">Once per 129 days</option>
-                                                                <option value="130">Once per 130 days</option>
-                                                                <option value="131">Once per 131 days</option>
-                                                                <option value="132">Once per 132 days</option>
-                                                                <option value="133">Once per 133 days</option>
-                                                                <option value="134">Once per 134 days</option>
-                                                                <option value="135">Once per 135 days</option>
-                                                                <option value="136">Once per 136 days</option>
-                                                                <option value="137">Once per 137 days</option>
-                                                                <option value="138">Once per 138 days</option>
-                                                                <option value="139">Once per 139 days</option>
-                                                                <option value="140">Once per 140 days</option>
-                                                                <option value="141">Once per 141 days</option>
-                                                                <option value="142">Once per 142 days</option>
-                                                                <option value="143">Once per 143 days</option>
-                                                                <option value="144">Once per 144 days</option>
-                                                                <option value="145">Once per 145 days</option>
-                                                                <option value="146">Once per 146 days</option>
-                                                                <option value="147">Once per 147 days</option>
-                                                                <option value="148">Once per 148 days</option>
-                                                                <option value="149">Once per 149 days</option>
-                                                                <option value="150">Once per 150 days</option>
-                                                                <option value="151">Once per 151 days</option>
-                                                                <option value="152">Once per 152 days</option>
-                                                                <option value="153">Once per 153 days</option>
-                                                                <option value="154">Once per 154 days</option>
-                                                                <option value="155">Once per 155 days</option>
-                                                                <option value="156">Once per 156 days</option>
-                                                                <option value="157">Once per 157 days</option>
-                                                                <option value="158">Once per 158 days</option>
-                                                                <option value="159">Once per 159 days</option>
-                                                                <option value="160">Once per 160 days</option>
-                                                                <option value="161">Once per 161 days</option>
-                                                                <option value="162">Once per 162 days</option>
-                                                                <option value="163">Once per 163 days</option>
-                                                                <option value="164">Once per 164 days</option>
-                                                                <option value="165">Once per 165 days</option>
-                                                                <option value="166">Once per 166 days</option>
-                                                                <option value="167">Once per 167 days</option>
-                                                                <option value="168">Once per 168 days</option>
-                                                                <option value="169">Once per 169 days</option>
-                                                                <option value="170">Once per 170 days</option>
-                                                                <option value="171">Once per 171 days</option>
-                                                                <option value="172">Once per 172 days</option>
-                                                                <option value="173">Once per 173 days</option>
-                                                                <option value="174">Once per 174 days</option>
-                                                                <option value="175">Once per 175 days</option>
-                                                                <option value="176">Once per 176 days</option>
-                                                                <option value="177">Once per 177 days</option>
-                                                                <option value="178">Once per 178 days</option>
-                                                                <option value="179">Once per 179 days</option>
-                                                                <option value="180">Once per 180 days</option>
-                                                                <option value="181">Once per 181 days</option>
-                                                                <option value="182">Once per 182 days</option>
-                                                                <option value="183">Once per 183 days</option>
-                                                                <option value="184">Once per 184 days</option>
-                                                                <option value="185">Once per 185 days</option>
-                                                                <option value="186">Once per 186 days</option>
-                                                                <option value="187">Once per 187 days</option>
-                                                                <option value="188">Once per 188 days</option>
-                                                                <option value="189">Once per 189 days</option>
-                                                                <option value="190">Once per 190 days</option>
-                                                                <option value="191">Once per 191 days</option>
-                                                                <option value="192">Once per 192 days</option>
-                                                                <option value="193">Once per 193 days</option>
-                                                                <option value="194">Once per 194 days</option>
-                                                                <option value="195">Once per 195 days</option>
-                                                                <option value="196">Once per 196 days</option>
-                                                                <option value="197">Once per 197 days</option>
-                                                                <option value="198">Once per 198 days</option>
-                                                                <option value="199">Once per 199 days</option>
-                                                                <option value="200">Once per 200 days</option>
-                                                                <option value="201">Once per 201 days</option>
-                                                                <option value="202">Once per 202 days</option>
-                                                                <option value="203">Once per 203 days</option>
-                                                                <option value="204">Once per 204 days</option>
-                                                                <option value="205">Once per 205 days</option>
-                                                                <option value="206">Once per 206 days</option>
-                                                                <option value="207">Once per 207 days</option>
-                                                                <option value="208">Once per 208 days</option>
-                                                                <option value="209">Once per 209 days</option>
-                                                                <option value="210">Once per 210 days</option>
-                                                                <option value="211">Once per 211 days</option>
-                                                                <option value="212">Once per 212 days</option>
-                                                                <option value="213">Once per 213 days</option>
-                                                                <option value="214">Once per 214 days</option>
-                                                                <option value="215">Once per 215 days</option>
-                                                                <option value="216">Once per 216 days</option>
-                                                                <option value="217">Once per 217 days</option>
-                                                                <option value="218">Once per 218 days</option>
-                                                                <option value="219">Once per 219 days</option>
-                                                                <option value="220">Once per 220 days</option>
-                                                                <option value="221">Once per 221 days</option>
-                                                                <option value="222">Once per 222 days</option>
-                                                                <option value="223">Once per 223 days</option>
-                                                                <option value="224">Once per 224 days</option>
-                                                                <option value="225">Once per 225 days</option>
-                                                                <option value="226">Once per 226 days</option>
-                                                                <option value="227">Once per 227 days</option>
-                                                                <option value="228">Once per 228 days</option>
-                                                                <option value="229">Once per 229 days</option>
-                                                                <option value="230">Once per 230 days</option>
-                                                                <option value="231">Once per 231 days</option>
-                                                                <option value="232">Once per 232 days</option>
-                                                                <option value="233">Once per 233 days</option>
-                                                                <option value="234">Once per 234 days</option>
-                                                                <option value="235">Once per 235 days</option>
-                                                                <option value="236">Once per 236 days</option>
-                                                                <option value="237">Once per 237 days</option>
-                                                                <option value="238">Once per 238 days</option>
-                                                                <option value="239">Once per 239 days</option>
-                                                                <option value="240">Once per 240 days</option>
-                                                                <option value="241">Once per 241 days</option>
-                                                                <option value="242">Once per 242 days</option>
-                                                                <option value="243">Once per 243 days</option>
-                                                                <option value="244">Once per 244 days</option>
-                                                                <option value="245">Once per 245 days</option>
-                                                                <option value="246">Once per 246 days</option>
-                                                                <option value="247">Once per 247 days</option>
-                                                                <option value="248">Once per 248 days</option>
-                                                                <option value="249">Once per 249 days</option>
-                                                                <option value="250">Once per 250 days</option>
-                                                                <option value="251">Once per 251 days</option>
-                                                                <option value="252">Once per 252 days</option>
-                                                                <option value="253">Once per 253 days</option>
-                                                                <option value="254">Once per 254 days</option>
-                                                                <option value="255">Once per 255 days</option>
-                                                                <option value="256">Once per 256 days</option>
-                                                                <option value="257">Once per 257 days</option>
-                                                                <option value="258">Once per 258 days</option>
-                                                                <option value="259">Once per 259 days</option>
-                                                                <option value="260">Once per 260 days</option>
-                                                                <option value="261">Once per 261 days</option>
-                                                                <option value="262">Once per 262 days</option>
-                                                                <option value="263">Once per 263 days</option>
-                                                                <option value="264">Once per 264 days</option>
-                                                                <option value="265">Once per 265 days</option>
-                                                                <option value="266">Once per 266 days</option>
-                                                                <option value="267">Once per 267 days</option>
-                                                                <option value="268">Once per 268 days</option>
-                                                                <option value="269">Once per 269 days</option>
-                                                                <option value="270">Once per 270 days</option>
-                                                                <option value="271">Once per 271 days</option>
-                                                                <option value="272">Once per 272 days</option>
-                                                                <option value="273">Once per 273 days</option>
-                                                                <option value="274">Once per 274 days</option>
-                                                                <option value="275">Once per 275 days</option>
-                                                                <option value="276">Once per 276 days</option>
-                                                                <option value="277">Once per 277 days</option>
-                                                                <option value="278">Once per 278 days</option>
-                                                                <option value="279">Once per 279 days</option>
-                                                                <option value="280">Once per 280 days</option>
-                                                                <option value="281">Once per 281 days</option>
-                                                                <option value="282">Once per 282 days</option>
-                                                                <option value="283">Once per 283 days</option>
-                                                                <option value="284">Once per 284 days</option>
-                                                                <option value="285">Once per 285 days</option>
-                                                                <option value="286">Once per 286 days</option>
-                                                                <option value="287">Once per 287 days</option>
-                                                                <option value="288">Once per 288 days</option>
-                                                                <option value="289">Once per 289 days</option>
-                                                                <option value="290">Once per 290 days</option>
-                                                                <option value="291">Once per 291 days</option>
-                                                                <option value="292">Once per 292 days</option>
-                                                                <option value="293">Once per 293 days</option>
-                                                                <option value="294">Once per 294 days</option>
-                                                                <option value="295">Once per 295 days</option>
-                                                                <option value="296">Once per 296 days</option>
-                                                                <option value="297">Once per 297 days</option>
-                                                                <option value="298">Once per 298 days</option>
-                                                                <option value="299">Once per 299 days</option>
-                                                                <option value="300">Once per 300 days</option>
-                                                                <option value="301">Once per 301 days</option>
-                                                                <option value="302">Once per 302 days</option>
-                                                                <option value="303">Once per 303 days</option>
-                                                                <option value="304">Once per 304 days</option>
-                                                                <option value="305">Once per 305 days</option>
-                                                                <option value="306">Once per 306 days</option>
-                                                                <option value="307">Once per 307 days</option>
-                                                                <option value="308">Once per 308 days</option>
-                                                                <option value="309">Once per 309 days</option>
-                                                                <option value="310">Once per 310 days</option>
-                                                                <option value="311">Once per 311 days</option>
-                                                                <option value="312">Once per 312 days</option>
-                                                                <option value="313">Once per 313 days</option>
-                                                                <option value="314">Once per 314 days</option>
-                                                                <option value="315">Once per 315 days</option>
-                                                                <option value="316">Once per 316 days</option>
-                                                                <option value="317">Once per 317 days</option>
-                                                                <option value="318">Once per 318 days</option>
-                                                                <option value="319">Once per 319 days</option>
-                                                                <option value="320">Once per 320 days</option>
-                                                                <option value="321">Once per 321 days</option>
-                                                                <option value="322">Once per 322 days</option>
-                                                                <option value="323">Once per 323 days</option>
-                                                                <option value="324">Once per 324 days</option>
-                                                                <option value="325">Once per 325 days</option>
-                                                                <option value="326">Once per 326 days</option>
-                                                                <option value="327">Once per 327 days</option>
-                                                                <option value="328">Once per 328 days</option>
-                                                                <option value="329">Once per 329 days</option>
-                                                                <option value="330">Once per 330 days</option>
-                                                                <option value="331">Once per 331 days</option>
-                                                                <option value="332">Once per 332 days</option>
-                                                                <option value="333">Once per 333 days</option>
-                                                                <option value="334">Once per 334 days</option>
-                                                                <option value="335">Once per 335 days</option>
-                                                                <option value="336">Once per 336 days</option>
-                                                                <option value="337">Once per 337 days</option>
-                                                                <option value="338">Once per 338 days</option>
-                                                                <option value="339">Once per 339 days</option>
-                                                                <option value="340">Once per 340 days</option>
-                                                                <option value="341">Once per 341 days</option>
-                                                                <option value="342">Once per 342 days</option>
-                                                                <option value="343">Once per 343 days</option>
-                                                                <option value="344">Once per 344 days</option>
-                                                                <option value="345">Once per 345 days</option>
-                                                                <option value="346">Once per 346 days</option>
-                                                                <option value="347">Once per 347 days</option>
-                                                                <option value="348">Once per 348 days</option>
-                                                                <option value="349">Once per 349 days</option>
-                                                                <option value="350">Once per 350 days</option>
-                                                                <option value="351">Once per 351 days</option>
-                                                                <option value="352">Once per 352 days</option>
-                                                                <option value="353">Once per 353 days</option>
-                                                                <option value="354">Once per 354 days</option>
-                                                                <option value="355">Once per 355 days</option>
-                                                                <option value="356">Once per 356 days</option>
-                                                                <option value="357">Once per 357 days</option>
-                                                                <option value="358">Once per 358 days</option>
-                                                                <option value="359">Once per 359 days</option>
-                                                                <option value="360">Once per 360 days</option>
-                                                                <option value="361">Once per 361 days</option>
-                                                                <option value="362">Once per 362 days</option>
-                                                                <option value="363">Once per 363 days</option>
-                                                                <option value="364">Once per 364 days</option>
-                                                                <option value="365">Once per 365 days</option>
-                                                            </select>
-                                                        </div>
-                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="clearfix rp-mass-actions-autopilot">
-                                        <div class="rp-mass-actions none" data-account-id="">
-                                            <div class="clearfix">
-                                                <div class="col s12 m12 l12"></div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="clearfix rp-send-dm-autopilot"></div>
-                                    <!-- Wesley Start Mod -->
-                                    <!-- Wesley End Mod -->
-                                    <!-- Wesley Start Mod -->
-                                    <!-- Wesley End Mod -->
-                                    <div class="clearfix rp-reply-pending-dm-autopilot"></div>
-                                    <div class="clearfix rp-welcome-dm-autopilot"></div>
-                                    <div class="clearfix rp-lang-filtration-autopilot"></div>
-                                    <div class="clearfix rp-telegram-autopilot"></div>
                                     <div class="clearfix rp-activity-time-autopilot">
                                         <div class="mb-20">
                                             <a href="javascript:void(0)" class="rp-activity-time-toggler rp-toggler-button"><span class="mdi mdi-arrow-down icon mr-3"></span>Activity Time Settings</a>
@@ -2294,13 +1880,17 @@
                 var $taskActionSelect = $list_item.find('.js-task-action-select');
                 $taskActionSelect.removeClass("mdi-checkbox-blank-circle-outline").addClass("mdi-checkbox-marked-circle-outline");
                 $list_item.addClass("task-selected active");
+                var activityTimes = {{activity_times|safe}};
+                activityTimes.forEach(activityTime => {
+                    $(`[name="day_${activityTime.day}_${activityTime.time}"]`).prop("checked", true);
+                })
+                if ("{{ target.target_type.type }}".includes('-comment')) {
+                    $('#user-comment').removeClass('none');
+                    $('#comment').prop('required', true);
+                }
                 {% endif %}
             });
 
-            if ("{{ target.target_type.type }}".includes('-comment')) {
-                $('#user-comment').removeClass('none');
-                $('#comment').prop('required', true);
-            }
 
             $('input[name="type"]').change(function () {
                 // Get the value of the selected radio button

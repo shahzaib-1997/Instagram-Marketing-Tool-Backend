@@ -58,7 +58,11 @@ class ActivityTime(models.Model):
     """
 
     target = models.ForeignKey(
-        "Target", on_delete=models.CASCADE, null=True, blank=True, related_name="activity_time"
+        "Target",
+        on_delete=models.CASCADE,
+        null=True,
+        blank=True,
+        related_name="activity_time",
     )
     time = models.CharField(max_length=255, null=True, blank=True)
     day = models.CharField(max_length=255, blank=True, null=True)
@@ -317,6 +321,21 @@ class Comment(models.Model):
         return f"{self.user.username} - {self.url[:25]}"
 
 
+class Story(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    target = models.ForeignKey(Target, on_delete=models.CASCADE, null=True, blank=True)
+    url = models.TextField(default="")
+    like = models.BooleanField(default=False)
+    view = models.BooleanField(default=False)
+    time_stamp = models.DateTimeField(auto_now_add=True, blank=True, null=True)
+
+    def __str__(self):
+        """
+        method __str__(): Returns a string representation of the object.
+        """
+        return f"{self.user.username} - {self.url[:25]}"
+
+
 class Reel(models.Model):
     """
     Model to store user reels.
@@ -372,7 +391,9 @@ class ActivityLog(models.Model):
     """
 
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    insta_account = models.ForeignKey(Credential, on_delete=models.CASCADE, blank=True, null=True)
+    insta_account = models.ForeignKey(
+        Credential, on_delete=models.CASCADE, blank=True, null=True
+    )
     activity = models.CharField(max_length=255)
     time_stamp = models.DateTimeField(auto_now_add=True, blank=True, null=True)
     read = models.BooleanField(default=False)
@@ -406,7 +427,7 @@ class Stat(models.Model):
         ("posts", "posts"),
         ("followers", "followers"),
         ("following", "following"),
-        ("engagement_rate", "engagement_rate")
+        ("engagement_rate", "engagement_rate"),
     )
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     insta_account = models.ForeignKey(
