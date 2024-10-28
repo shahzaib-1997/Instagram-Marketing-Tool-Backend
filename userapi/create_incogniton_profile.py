@@ -29,8 +29,7 @@ def create_profile(profile_name):
 def insta_login(profile_id, username, password):
     user_bot = InstaBot(profile_id)
     user_bot.start_browser()
-    time.sleep(5)
+    print(user_bot.driver)
     check = user_bot.login(username, password)
-    time.sleep(5)
     user_bot.driver.close()
     return check

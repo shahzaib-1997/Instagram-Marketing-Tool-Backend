@@ -76,19 +76,21 @@ class ActivityLogsView(APIView):
                     instance = get_object_or_404(Credential, id=id)
                 else:
                     instance = insta_creds.first()
-                activity_logs = ActivityLog.objects.filter(user=request.user, insta_account=instance).order_by("-time_stamp")
+                activity_logs = ActivityLog.objects.filter(
+                    user=request.user, insta_account=instance
+                ).order_by("-time_stamp")
                 context = {
                     "insta_creds": insta_creds,
                     "data": activity_logs,
                     "insta_username": instance.username,
-                    "url": "activity-logs"
+                    "url": "activity-logs",
                 }
                 return render(request, "userapi/activity_log.html", context=context)
             messages.error(
                 request,
                 "Please add Instagram Accounts against your account to add Target.",
             )
-            return redirect("userapi:instagram-accounts")
+            return redirect("userapi:accounts")
         except Exception as e:
             return Response(
                 {"message": f"Error: {e}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR
@@ -121,12 +123,14 @@ def user_targets(request, id=None):
             else:
                 instance = insta_creds.first()
             context["insta_username"] = instance.username
-            targets = Target.objects.filter(user=request.user, insta_user=instance).order_by("-id")
+            targets = Target.objects.filter(
+                user=request.user, insta_user=instance
+            ).order_by("-id")
             context["data"] = targets
         return render(request, "userapi/targets.html", context=context)
     except Exception as e:
         messages.error(request, str(e))
-        return redirect("userapi:instagram-accounts")
+        return redirect("userapi:accounts")
 
 
 def logout_user(request):
@@ -153,7 +157,7 @@ class CreateToken(APIView):
 class SignupView(APIView):
     def get(self, request):
         if request.user.is_authenticated:
-            return redirect("userapi:instagram-accounts")
+            return redirect("userapi:accounts")
         email = request.GET.get("email", "")
         return render(request, "userapi/signup.html", {"email": email})
 
@@ -184,7 +188,7 @@ class SignupView(APIView):
 class LoginView(APIView):
     def get(self, request):
         if request.user.is_authenticated:
-            return redirect("userapi:instagram-accounts")
+            return redirect("userapi:accounts")
         return render(
             request, "userapi/login.html", {"next": request.GET.get("next", "")}
         )
@@ -207,7 +211,7 @@ class LoginView(APIView):
                     next_url = request.GET.get("next")
                     if next_url:
                         return redirect(f"{next_url}")
-                    return redirect("userapi:instagram-accounts")
+                    return redirect("userapi:accounts")
                 messages.error(request, "Password is incorrect!")
         except Exception as e:
             messages.error(request, str(e))
@@ -247,7 +251,7 @@ class DashboardView(APIView):
                 print(context)
                 return render(request, "Stats.html", context=context)
             messages.error(request, "Please add Instagram Accounts first.")
-            return redirect("userapi:instagram-accounts")
+            return redirect("userapi:accounts")
         except Exception as e:
             print(e)
             messages.error(request, str(e))
@@ -272,7 +276,9 @@ class TargetTemplateView(APIView):
                     target = get_object_or_404(Target, id=pk, user=request.user)
                     context["target"] = target
 
-                    activity_times = list(ActivityTime.objects.filter(target=target).values())
+                    activity_times = list(
+                        ActivityTime.objects.filter(target=target).values()
+                    )
                     context["activity_times"] = activity_times
 
                     target_type = target.target_type.type
@@ -291,7 +297,7 @@ class TargetTemplateView(APIView):
                 request,
                 "Please first add Instagram Accounts to add Target.",
             )
-            return redirect("userapi:instagram-accounts")
+            return redirect("userapi:accounts")
         except Exception as e:
             messages.error(request, str(e))
         return redirect("userapi:targets")
@@ -319,15 +325,21 @@ class TargetTemplateView(APIView):
 
             # Loop through your checkbox names and check if they are in the POST data
             for key in request.POST.keys():
-                if key.startswith('day_'):
+                if key.startswith("day_"):
                     spl = key.split("_")
                     day = spl[1]
                     time = spl[2]
-                    activity_time, _ = ActivityTime.objects.get_or_create(target=target, day=day)
+                    activity_time, _ = ActivityTime.objects.get_or_create(
+                        target=target, day=day
+                    )
                     if not activity_time.time:
-                        activity_time.time = time  # Initialize time as a list if it's not already
+                        activity_time.time = (
+                            time  # Initialize time as a list if it's not already
+                        )
                     else:
-                        activity_time.time += f",{time}"  # Add the new time value to the list
+                        activity_time.time += (
+                            f",{time}"  # Add the new time value to the list
+                        )
 
                     activity_time.save()
 
@@ -355,6 +367,13 @@ class TargetTemplateView(APIView):
             return redirect("userapi:target-edit", pk=target.id)
 
 
+def delete_incogniton_profile(profile_id):
+    try:
+        requests.get(f"http://localhost:35000/profile/delete/{profile_id}")
+    except Exception as e:
+        print(e)
+
+
 class InstaCredentialView(APIView):
     def get(self, request):
         if request.user.is_authenticated:
@@ -376,17 +395,19 @@ class InstaCredentialView(APIView):
             username = request.POST.get("username")
             password = request.POST.get("password")
             if pk is None:
-                credential = Credential.objects.create(
-                    user=request.user, username=username, password=password
-                )
-                profile_id = create_profile(f"{request.user} - {credential.id}")
+                profile_id = create_profile(f"{request.user} - {username}")
                 check = insta_login(profile_id, username, password)
                 if not check:
                     messages.error(request, "Provided credentials are incorrect!")
-                    self.delete(request, username)
+                    delete_incogniton_profile(profile_id)
                 else:
+                    credential = Credential(
+                        user=request.user,
+                        username=username,
+                        password=password,
+                        profile_id=profile_id,
+                    )
                     messages.success(request, "Instagram Account added successfully!")
-                    credential.profile_id = profile_id
                     credential.save()
             else:
                 Credential.objects.filter(user=request.user, username=pk).update(
@@ -404,7 +425,7 @@ class InstaCredentialView(APIView):
                 messages.error(request, "Username already exists against your account!")
             else:
                 messages.error(request, str(e))
-            return redirect("userapi:instagram-accounts")
+            return redirect("userapi:accounts")
 
     def delete(self, request, pk):
         if not request.user.is_authenticated:
@@ -412,9 +433,7 @@ class InstaCredentialView(APIView):
             return redirect(f"/signin/?next={request.path}")
         try:
             credential = get_object_or_404(Credential, username=pk, user=request.user)
-            requests.get(
-                f"http://localhost:35000/profile/delete/{credential.profile_id}"
-            )
+            delete_incogniton_profile(credential.profile_id)
             credential.delete()
             return Response(status=status.HTTP_204_NO_CONTENT)
         except Exception as e:
@@ -441,7 +460,7 @@ class ProfileView(APIView):
                 )
         except Exception as e:
             messages.error(request, str(e))
-            return redirect("userapi:instagram-accounts")
+            return redirect("userapi:accounts")
 
     def post(self, request):
         try:

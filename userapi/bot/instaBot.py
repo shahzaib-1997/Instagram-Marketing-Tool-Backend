@@ -24,21 +24,20 @@ class InstaBot:
             return True
         return False
 
-
     def login(self, username, password):
         try:
-            username = self.driver.find_element(
-                By.XPATH, '//input[@aria-label="Phone number, username, or email"]'
+            try:
+                self.driver.get("https://www.instagram.com/accounts/login/")
+            except Exception as e:
+                print(e)
+            username = self.wait.until(
+                EC.presence_of_element_located((By.XPATH, '//input[@name="username"]'))
             ).send_keys(username)
-            password = self.driver.find_element(
-                By.XPATH, '//input[@aria-label="Password"]'
-            ).send_keys(password)
-            login = self.wait.until(
-                EC.element_to_be_clickable(
-                    (By.XPATH, '//button[@class=" _acan _acap _acas _aj1- _ap30"]')
-                )
+            password_element = self.driver.find_element(
+                By.XPATH, '//input[@name="password"]'
             )
-            login.click()
+            password_element.send_keys(password)
+            password_element.send_keys(Keys.ENTER)
             not_now1 = self.wait.until(
                 EC.presence_of_element_located((By.XPATH, '//div[@class="_ac8f"]'))
             )

@@ -24,6 +24,7 @@
         <link rel="stylesheet" type="text/css" href="{% static '' %}Targeting Settings_files/selectize.bootstrap3.css">
         <link rel="stylesheet" type="text/css" href="{% static '' %}Targeting Settings_files/jquery.dataTables.css">
         <link rel="stylesheet" type="text/css" href="{% static '' %}Targeting Settings_files/bypassing.css">
+        <link rel="stylesheet" type="text/css" href="{% static '' %}Targeting Settings_files/apexcharts.css">
         <title>Stats</title>
     </head>
     <body>
@@ -73,8 +74,8 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col s12">
-                                    <div class="card">
+                                <div class="col s12 mb-20">
+                                    <div class="card" style="height: 500px;">
                                         <div class="card-header py-3">
                                             <div class="d-flex align-items-center">
                                                 <h3>Likes and Comments</h3>
@@ -454,6 +455,13 @@
             $(document).ready(function () {
               var followersData = {{ followers }};
               var followersTime = {{ followers_time | safe }};
+              var engagementRateData = {{ engagement_rate }};
+              var engagementRateValue = engagementRateData.length > 0 ? engagementRateData[0] : 0;
+              var likes = {{ like }};
+              var comments = {{ comment }};
+              var likesTime = {{ like_time | safe }};
+              var commentsTime = {{ comment_time | safe }};
+
               if (followersData.length > 0) {
                 var options = {
                   chart: {
@@ -475,7 +483,7 @@
                     categories: ["Start"].concat(followersTime)
                   },
                   stroke: {
-                    width: 8,
+                    width: 4,
                     curve: 'smooth'
                   },
                   fill: {
@@ -495,58 +503,53 @@
                 var followersChart = new ApexCharts($("#followersChart")[0], options);
                 followersChart.render();
               } else {
-                $("#followersChart").text("Followers Count of selected account not added yet!")
+                $("#followersChart").text("Followers History of selected account not added yet!")
               }
 
-                var engagementRateData = {{ engagement_rate }};
-                var engagementRateValue = engagementRateData.length > 0 ? engagementRateData[0] : 0;
+              if (engagementRateValue) {
+                var options = {
+                  chart: {
+                    type: "radialBar",
+                    height: 395,
+                  },
+                  series: [engagementRateValue],
+                  colors: ["#00DD00"],
+                  plotOptions: {
+                      radialBar: {
+                      dataLabels: {
+                          name: {
+                          show: true,
+                          color: "#888",
+                          offsetY: -10,
+                          },
+                          value: {
+                          fontSize: "30px",
+                          show: true
+                          }
+                      }
+                      }
+                  },
+                  fill: {
+                      type: "gradient",
+                      gradient: {
+                      shade: "light",
+                      type: "horizontal",
+                      stops: [0, 100]
+                      }
+                  },
+                  stroke: {
+                      lineCap: "butt"
+                  },
+                  labels: ["Average"]
+                };
 
-                if (engagementRateValue) {
-                  var options = {
-                    chart: {
-                      type: "radialBar",
-                      height: 395,
-                    },
-                    series: [engagementRateValue],
-                    colors: ["#00DD00"],
-                    plotOptions: {
-                        radialBar: {
-                        dataLabels: {
-                            name: {
-                            show: true,
-                            color: "#888",
-                            offsetY: -10,
-                            },
-                            value: {
-                            fontSize: "30px",
-                            show: true
-                            }
-                        }
-                        }
-                    },
-                    fill: {
-                        type: "gradient",
-                        gradient: {
-                        shade: "light",
-                        type: "horizontal",
-                        stops: [0, 100]
-                        }
-                    },
-                    stroke: {
-                        lineCap: "butt"
-                    },
-                    labels: ["Average"]
-                  };
+                var engagementRateChart = new ApexCharts($("#engagementRateChart")[0], options);
+                engagementRateChart.render();
+              } else {
+                $("#engagementRateChart").text("Engagement Rate of selected account not added yet!");
+              }
 
-                  var engagementRateChart = new ApexCharts($("#engagementRateChart")[0], options);
-                  engagementRateChart.render();
-                }  else {
-                  $("#engagementRateChart").text("Engagement Rate of selected account not added yet!")
-                }
-
-                var likes = {{ like }};
-                var comments = {{ comment }};
-                var likeTime = {{ like_time | safe }}
+              if (likes.length > 0 || comments.length > 0) {
                 var options = {
                   series: [{
                     name: 'Likes',
@@ -582,38 +585,41 @@
                   },
                   colors: ["#00D4F9", "#00E647"],
                   xaxis: {
-                    categories: likeTime,
+                    categories: likesTime ? likesTime : commentsTime,
                   },
                   yaxis: {
                     title: {
-                    text: 'Count'
+                      text: 'Count'
                     }
                   },
                 };
 
                 var likeCommentChart = new ApexCharts($("#likeCommentChart")[0], options);
                 likeCommentChart.render();
+              } else {
+                $("#likeCommentChart").text("Likes and Comments count of selected account not added yet!");
+              }
 
-                $("#from, #to").datepicker({
-                  dateFormat: "yy-mm-dd",
-                  onSelect: function (selectedDate, inst) {
-                    if (inst.id === "from") {
-                      // Get the selected "from" date
-                      var fromDate = $(this).datepicker('getDate');
+              $("#from, #to").datepicker({
+                dateFormat: "yy-mm-dd",
+                onSelect: function (selectedDate, inst) {
+                  if (inst.id === "from") {
+                    // Get the selected "from" date
+                    var fromDate = $(this).datepicker('getDate');
 
-                      // If "to" date is selected
-                      if ($('#to').datepicker('getDate') !== null) {
-                        // Compare the dates and update if needed
-                        if (fromDate > $('#to').datepicker('getDate')) {
-                        $('#to').datepicker('setDate', '');
-                        }
+                    // If "to" date is selected
+                    if ($('#to').datepicker('getDate') !== null) {
+                      // Compare the dates and update if needed
+                      if (fromDate > $('#to').datepicker('getDate')) {
+                      $('#to').datepicker('setDate', '');
                       }
-                      $('#to').datepicker('option', 'minDate', selectedDate);
                     }
-                    $('button[type="submit"]').focus();
-                  },
-                  maxDate: "0d"
-                });
+                    $('#to').datepicker('option', 'minDate', selectedDate);
+                  }
+                  $('button[type="submit"]').focus();
+                },
+                maxDate: "0d"
+              });
             });
         </script>
     </body>

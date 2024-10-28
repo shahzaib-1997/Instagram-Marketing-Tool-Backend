@@ -1,0 +1,204 @@
+.apexcharts-text {
+    fill: currentColor;
+    color: #64748b;
+}
+
+.apexcharts-text:is(.darkside *) {
+    color: #fff
+}
+
+.apexcharts-text.apexcharts-xaxis-label,
+.apexcharts-text.apexcharts-yaxis-label {
+    fill: currentColor !important;
+    color: #94a3b8
+}
+
+.apexcharts-text.apexcharts-xaxis-label:is(.darkside *),
+.apexcharts-text.apexcharts-yaxis-label:is(.darkside *) {
+    color: #697a9b
+}
+
+.apexcharts-legend-text {
+    color: #64748b !important
+}
+
+.apexcharts-legend-text:is(.darkside *) {
+    color: #a3adc2 !important
+}
+
+.apexcharts-legend-series .apexcharts-legend-text {
+    margin-left: .5rem !important
+}
+
+.apexcharts-tooltip {
+    --tw-shadow: 0 0 #0000 !important;
+    --tw-shadow-colored: 0 0 #0000 !important;
+    background-color: hsla(0, 0%, 100%, .85) !important;
+    border-color: #e9eef5 !important;
+    box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow) !important;
+    color: #334155 !important
+}
+
+.apexcharts-tooltip:is(.darkside *) {
+    background-color: rgba(38, 51, 77, .85) !important;
+    border-color: #313e59 !important;
+    color: #e7e9ef !important
+}
+
+.apexcharts-tooltip-title {
+    background-color: #e9eef5 !important;
+    border-color: #e9eef5 !important
+}
+
+.apexcharts-tooltip-title:is(.darkside *) {
+    background-color: #192132 !important;
+    border-color: transparent !important
+}
+
+.apexcharts-xaxistooltip,
+.apexcharts-yaxistooltip {
+    background-color: #e9eef5 !important;
+    border-color: #cbd5e1 !important;
+    border-radius: .25rem;
+    color: #475569 !important
+}
+
+.apexcharts-xaxistooltip:is(.darkside *),
+.apexcharts-yaxistooltip:is(.darkside *) {
+    background-color: #192132 !important;
+    border-color: #313e59 !important;
+    color: #c2c9d6 !important
+}
+
+.apexcharts-xaxistooltip:before {
+    border-bottom-color: currentColor !important;
+    color: #cbd5e1
+}
+
+.apexcharts-xaxistooltip:is(.darkside *):before {
+    color: #313e59 !important
+}
+
+.apexcharts-xaxistooltip:after {
+    border-bottom-color: currentColor !important;
+    color: #e9eef5
+}
+
+.apexcharts-xaxistooltip:is(.darkside *):after {
+    color: #192132
+}
+
+.apexcharts-yaxistooltip:before {
+    border-left-color: currentColor !important;
+    color: #cbd5e1
+}
+
+.apexcharts-yaxistooltip:is(.darkside *):before {
+    color: #313e59
+}
+
+.apexcharts-yaxistooltip:after {
+    border-left-color: currentColor !important;
+    color: #e9eef5
+}
+
+.apexcharts-yaxistooltip:is(.darkside *):after {
+    color: #192132
+}
+
+.apexcharts-canvas .apexcharts-heatmap-rect,
+.apexcharts-canvas .apexcharts-xaxis-tick,
+.apexcharts-canvas line {
+    stroke: currentColor !important;
+    color: #e2e8f0
+}
+
+.apexcharts-canvas .apexcharts-heatmap-rect:is(.darkside *),
+.apexcharts-canvas .apexcharts-xaxis-tick:is(.darkside *),
+.apexcharts-canvas line:is(.darkside *) {
+    color: #384766
+}
+
+.apexcharts-canvas .apexcharts-marker {
+    stroke: currentColor !important;
+    color: #e9eef5
+}
+
+.apexcharts-canvas .apexcharts-marker:is(.darkside *) {
+    color: #202b40
+}
+
+.apexcharts-canvas .apexcharts-radialbar-track .apexcharts-radialbar-area {
+    stroke: currentColor !important;
+    color: #e9eef5
+}
+
+.apexcharts-canvas .apexcharts-radialbar-track .apexcharts-radialbar-area:is(.darkside *) {
+    color: #192132
+}
+
+.apexcharts-canvas .apexcharts-datalabels-group .apexcharts-datalabel-label,
+.apexcharts-canvas .apexcharts-datalabels-group .apexcharts-datalabel-value {
+    fill: #475569;
+    font-family: Inter, ui-sans-serif, system-ui, sans-serif, Apple Color Emoji, Segoe UI Emoji, Segoe UI Symbol, Noto Color Emoji
+}
+
+.apexcharts-canvas .apexcharts-datalabels-group .apexcharts-datalabel-label:is(.darkside *),
+.apexcharts-canvas .apexcharts-datalabels-group .apexcharts-datalabel-value:is(.darkside *) {
+    fill: #c2c9d6
+}
+
+.apexcharts-canvas .apexcharts-datalabels .apexcharts-datalabel {
+    fill: #64748b;
+    font-family: Inter, ui-sans-serif, system-ui, sans-serif, Apple Color Emoji, Segoe UI Emoji, Segoe UI Symbol, Noto Color Emoji
+}
+
+.apexcharts-canvas .apexcharts-datalabels .apexcharts-datalabel:is(.darkside *) {
+    fill: #1e1e1e !important;
+}
+
+.apexcharts-canvas .apexcharts-radar-series polygon {
+    fill: #f1f5f9;
+    stroke: #e2e8f0
+}
+
+.apexcharts-canvas .apexcharts-radar-series polygon:is(.darkside *) {
+    fill: #202b40;
+    stroke: #313e59
+}
+
+.apexcharts-canvas .apexcharts-pie .apexcharts-pie-series .apexcharts-pie-area {
+    stroke: none
+}
+
+.apexcharts-canvas line[stroke=transparent] {
+    display: none
+}
+
+.apexcharts-menu {
+    background-color: #fff !important;
+    border-color: #e9eef5 !important;
+    border-radius: .25rem !important
+}
+
+.apexcharts-menu:is(.darkside *) {
+    background-color: #1e1e1e !important;
+    border-color: #384766 !important
+}
+
+.apexcharts-menu .apexcharts-menu-item:hover {
+    background-color: #f1f5f9 !important
+}
+
+.apexcharts-menu .apexcharts-menu-item:hover:is(.darkside *) {
+    background-color: #313e59 !important
+}
+
+.ax-transparent-gridline .apexcharts-gridline {
+    stroke: transparent !important
+}
+
+.ax-rounded-b-lg .apexcharts-svg {
+    border-bottom-left-radius: .5rem;
+    border-bottom-right-radius: .5rem
+}

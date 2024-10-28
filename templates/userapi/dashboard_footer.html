@@ -12,13 +12,13 @@
         <nav class="sidebar-nav">
             <ul class="metismenu" id="sidenav">
                 <li>
-                    <a href={% url "userapi:instagram-accounts" %} title="Dashboard">
+                    <a href={% url "userapi:accounts" %} title="Dashboard">
                         <div class="parent-icon"><i class="bx bx-home-alt bx-sm"></i></div>
                         <div class="menu-title">Dashboard</div>
                     </a>
                 </li>
                 <li>
-                    <a href={% url "userapi:instagram-accounts" %}>
+                    <a href={% url "userapi:accounts" %}>
                         <div class="parent-icon"><i class='bx bxl-instagram bx-sm'></i></div>
                         <div class="menu-title">Instagram Accounts</div>
                     </a>
@@ -59,7 +59,7 @@
             <div class="list-group list-group-flush mt-3 profil-menu fw-bold">
                 <a href={% url "userapi:profile" %} class="list-group-item list-group-item-action d-flex align-items-center gap-2 border-top"><i class="material-icons-outlined">person_outline</i>Profile</a>
                 <a href="javascript:;" class="list-group-item list-group-item-action d-flex align-items-center gap-2"><i class="material-icons-outlined">local_bar</i>Settings</a>
-                <a href={% url "userapi:instagram-accounts" %} class="list-group-item list-group-item-action d-flex align-items-center gap-2">
+                <a href={% url "userapi:accounts" %} class="list-group-item list-group-item-action d-flex align-items-center gap-2">
                     <i class="bx bx-home-alt bx-sm"></i>
                     Dashboard</a>
                 <a href={% url "userapi:logout" %} class="list-group-item list-group-item-action d-flex align-items-center gap-2 border-bottom"><i class="material-icons-outlined">power_settings_new</i>Logout</a>

@@ -870,10 +870,10 @@ input[type="button"].btn-block {
 }
 
 .card {
-  --bs-card-spacer-y: 1rem;
-	--bs-card-spacer-x: 1rem;
+  --bs-card-spacer-y: 0.5rem;
+	--bs-card-spacer-x: 0.5rem;
   --bs-card-cap-padding-y: 0.5rem;
-	--bs-card-cap-padding-x: 1rem;
+	--bs-card-cap-padding-x: 0.5rem;
   --bs-card-title-spacer-y: 0.5rem;
 	--bs-card-title-color: #474747;
   --bs-card-border-width: 1px;
@@ -882,7 +882,7 @@ input[type="button"].btn-block {
 	display: flex;
 	flex-direction: column;
 	min-width: 0;
-  height: 430px;
+  height: 450px;
 	word-wrap: break-word;
 	background-clip: border-box;
 	border: var(--bs-card-border-width) solid var(--bs-card-border-color);
@@ -904,6 +904,9 @@ input[type="button"].btn-block {
 
 .card-body>div {
   height: 100% !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 body.darkside {

@@ -44,7 +44,7 @@ urlpatterns = [
     path(
         "accounts/",
         views.InstaCredentialView.as_view(),
-        name="instagram-accounts",
+        name="accounts",
     ),
     path(
         "account/<str:pk>/",
