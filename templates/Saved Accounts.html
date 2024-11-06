@@ -64,85 +64,80 @@
           </div>
         </div>
         <div class="row clearfix">
-          <div class="box-list clearfix">
-            <div class="box-list-item text-c js-list-item">
-              <div class="inner">
-                <div class="circle accounts-pic">
-                  <span>1</span>
-                </div>
-                <div class="title">{{ insta_creds.username }}</div>
-                <div class="sub" title="{{ insta_creds.time_stamp }}">Added on {{ insta_creds.time_stamp|date:"M d, Y" }}</div>
-                <!-- <div class="device-type-section mt-10 mb-10">
-                  <span class="tooltip tippy device-type-description" data-tippy-content="{{ insta_creds.platform }}">
-                    <span class="device-type ios">
-                      <span class="mdi mdi-apple"></span>
-                      <span>{{ insta_creds.platform }}</span>
+          <div class="grid grid-cols-4 gap-3">
+            {% for insta_cred in insta_creds %}
+            <div class="box-list clearfix">
+              <div class="box-list-item text-c">
+                <div class="inner">
+                  <div class="circle accounts-pic">
+                    <span>{{ insta_cred.username.0.upper }}</span>
+                  </div>
+                  <div class="title">{{ insta_cred.username }}</div>
+                  <div class="sub" title="{{ insta_cred.time_stamp }}">Added on {{ insta_cred.time_stamp|date:"M d, Y" }}</div>
+                  <!-- <div class="device-type-section mt-10 mb-10">
+                    <span class="tooltip tippy device-type-description" data-tippy-content="{{ insta_cred.platform }}">
+                      <span class="device-type ios">
+                        <span class="mdi mdi-apple"></span>
+                        <span>{{ insta_cred.platform }}</span>
+                      </span>
                     </span>
-                  </span>
-                </div> -->
-              </div>
-              <div class="options context-menu-wrapper bep-added">
-                <a href="javascript:void(0)" class="mdi mdi-dots-vertical"></a>
-                <div class="context-menu">
-                  <ul>
-                    <li>
-                      <a href="/accounts/">Edit</a>
-                    </li>
-                    <li>
-                      <a href="/accounts">Switch platform</a>
-                    </li>
-                    <li>
-                      <a href="/accounts">Change Password</a>
-                    </li>
-                    <li>
-                      <a href="/accounts">Update Password</a>
-                    </li>
-                    <li>
-                      <a href="/accounts">Delete</a>
-                    </li>
-                  </ul>
+                  </div> -->
                 </div>
-              </div>
-              <div class="clearfix account-basic-numbers pt-10">
-                <div class="col s4 m4 l4 accounts-page-posts">
-                  <div class="sub">Posts</div>
-                  <span>-</span>
+                <div class="options context-menu-wrapper bep-added">
+                  <a href="javascript:void(0)" class="mdi mdi-dots-vertical"></a>
+                  <div class="context-menu">
+                    <ul>
+                      <li>
+                        <a href="/accounts/">Edit</a>
+                      </li>
+                      <li>
+                        <a href="/accounts/">Delete</a>
+                      </li>
+                    </ul>
+                  </div>
                 </div>
-                <div class="col s4 m4 l4 accounts-page-followers">
-                  <div class="sub">Followers</div>
-                  <span>-</span>
+                <div class="clearfix account-basic-numbers pt-10">
+                  <div class="col s4 m4 l4 accounts-page-posts">
+                    <div class="sub">Posts</div>
+                    <span>-</span>
+                  </div>
+                  <div class="col s4 m4 l4 accounts-page-followers">
+                    <div class="sub">Followers</div>
+                    <span>-</span>
+                  </div>
+                  <div class="col s4 s-last m4 m-last l4 l-last accounts-page-follow">
+                    <div class="sub">Followings</div>
+                    <span>-</span>
+                  </div>
                 </div>
-                <div class="col s4 s-last m4 m-last l4 l-last accounts-page-follow">
-                  <div class="sub">Followings</div>
-                  <span>-</span>
+                <div class="clearfix insights-basic-buttons mt-20">
+                  <a class="insights-basic-week insights-basic-button insights-basic--first active" href="javascript:void(0)" data-type="week" data-url="/accounts">Week</a>
+                  <a class="insights-basic-month insights-basic-button" href="javascript:void(0)" data-type="month" data-url="/accounts">Month</a>
+                  <a class="insights-basic-year insights-basic-button insights-basic--last" href="javascript:void(0)" data-type="year" data-url="/accounts">Year</a>
                 </div>
-              </div>
-              <div class="clearfix insights-basic-buttons mt-20">
-                <a class="insights-basic-week insights-basic-button insights-basic--first active" href="javascript:void(0)" data-type="week" data-url="/accounts">Week</a>
-                <a class="insights-basic-month insights-basic-button" href="javascript:void(0)" data-type="month" data-url="/accounts">Month</a>
-                <a class="insights-basic-year insights-basic-button insights-basic--last" href="javascript:void(0)" data-type="year" data-url="/accounts">Year</a>
-              </div>
-              <div class="clearfix insights-basic-table-section mt-5">
-                <div class="insights-basic-table-button-class">
-                  <a class="insights-basic-table insights-basic--uno" href="javascript:void(0)" data-type="table" data-username="{{ insta_creds.username }}" data-url="/accounts"><span class="icon-list insights-basic-table-icon mr-5"></span>View table</a>
+                <div class="clearfix insights-basic-table-section mt-5">
+                  <div class="insights-basic-table-button-class">
+                    <a class="insights-basic-table insights-basic--uno" href="javascript:void(0)" data-type="table" data-username="{{ insta_cred.username }}" data-url="/accounts"><span class="icon-list insights-basic-table-icon mr-5"></span>View table</a>
+                  </div>
                 </div>
-              </div>
-              <div class="insights-basic-quick-info mt-5">
-                <a class="insights-basic-quick-info-label">Followers count</a>
-                <div class="insights-basic-diff"></div>
-              </div>
-              <div class="clearfix insights-basic js-get-insights-loaded" data-url="/accounts">
-                <div class="insights-basic-chart">
-                  <canvas id="insights-basic-canvas" class="none"></canvas>
+                <div class="insights-basic-quick-info mt-5">
+                  <a class="insights-basic-quick-info-label">Followers count</a>
+                  <div class="insights-basic-diff"></div>
                 </div>
-                <div class="insights-basic-data-in-progress">
-                  <label class="insights-basic-data-in-progress-label"><span class="icon-chart mr-5"></span>Data collection started</label>
+                <div class="clearfix insights-basic js-get-insights-loaded" data-url="/accounts">
+                  <div class="insights-basic-chart">
+                    <canvas id="insights-basic-canvas" class="none"></canvas>
+                  </div>
+                  <div class="insights-basic-data-in-progress">
+                    <label class="insights-basic-data-in-progress-label"><span class="icon-chart mr-5"></span>Data collection started</label>
+                  </div>
                 </div>
-              </div>
-              <div>
-                <a class="fluid button button--footer" href="https://instagram.com/{{ insta_creds.username }}" target="_blank">View timeline</a>
+                <div>
+                  <a class="fluid button button--footer" href="https://instagram.com/{{ insta_cred.username }}" target="_blank">View timeline</a>
+                </div>
               </div>
             </div>
+            {% endfor %}
           </div>
         </div>
       </div>

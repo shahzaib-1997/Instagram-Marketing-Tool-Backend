@@ -1,6 +1,16 @@
 import time, json, requests
 from ast import literal_eval
 from selenium import webdriver
+from selenium.webdriver.chrome.service import Service
+from gologin import GoLogin
+from sys import platform
+
+if platform == "linux" or platform == "linux2":
+    chrome_driver_path = "./chromedriver"
+elif platform == "darwin":
+    chrome_driver_path = "./mac/chromedriver"
+elif platform == "win32":
+    chrome_driver_path = "chromedriver.exe"
 
 
 class initiatebrowser:
@@ -18,7 +28,7 @@ class initiatebrowser:
             resp = requests.get(stop_url)
 
         except Exception as e:
-            pass
+            print(e)
 
         time.sleep(6)
 
@@ -26,32 +36,19 @@ class initiatebrowser:
         # localhost:35000/profile/launch/{profile_id}/force/cloud
 
         try:
-            stop_url = "http://127.0.0.1:35000/profile/stop/" + profile_id
-            resp = requests.get(stop_url)
-            print(resp.json())
-
-            incogniton_url = "http://127.0.0.1:35000/automation/launch/python/"
-
-            data = {
-                "profileID": profile_id,
-                "customArgs": "--disable-notifications",
-            }
-            for i in range(12):
-                try:
-                    incomingJson = requests.post(incogniton_url, data).json()
-
-                    if incomingJson["status"] == "ok":
-
-                        python_dict = literal_eval(incomingJson["dataDict"])
-                        incomingUrl = incomingJson["url"]
-                        driver = webdriver.Remote(
-                            command_executor=incomingUrl, options=webdriver.ChromeOptions()
-                        )
-                        driver.set_page_load_timeout(45)
-
-                        return driver
-                except Exception as e:
-                    print(e)
+            gl = GoLogin(
+                {
+                    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2NzJhYTk1MDUzOTY4MzFkMjYxOWQ2MzQiLCJ0eXBlIjoiZGV2Iiwiand0aWQiOiI2NzJhYWJiMjRjMjQ2MmNhMDBiZTc4NTEifQ.hsp-WTRcol0UDv8so1S8-OzTPBLNMu15JgLHInT-JGg",
+                    "profile_id": profile_id,
+                }
+            )
+            debugger_address = gl.start()
+            service = Service(executable_path=chrome_driver_path)
+            chrome_options = webdriver.ChromeOptions()
+            chrome_options.add_experimental_option("debuggerAddress", debugger_address)
+            driver = webdriver.Chrome(service=service, options=chrome_options)
+            driver.maximize_window()
+            return driver
         except Exception as e:
             print(f"Error in initiate_driver: {e}")
             return False

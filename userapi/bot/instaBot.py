@@ -7,50 +7,105 @@ import time
 import json
 from .initiatebrowser import initiatebrowser
 from selenium.webdriver.common.action_chains import ActionChains
+from gologin import GoLogin
+
+
+gl = GoLogin(
+    {
+        "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2NzJhYTk1MDUzOTY4MzFkMjYxOWQ2MzQiLCJ0eXBlIjoiZGV2Iiwiand0aWQiOiI2NzJhYWJiMjRjMjQ2MmNhMDBiZTc4NTEifQ.hsp-WTRcol0UDv8so1S8-OzTPBLNMu15JgLHInT-JGg",
+    }
+)
+
+
+def delete_gologin_profile(profile_id):
+    try:
+        gl.delete(profile_id)
+    except Exception as e:
+        print(e)
+
+
+def create_profile(profile_name):
+    profile_id = gl.create(
+        {
+            "name": profile_name,
+            "os": "win",
+            "navigator": {
+                "language": "en-US",
+                "userAgent": "random",  # Your userAgent (if you don't want to change, leave it at 'random')
+                "resolution": "1024x768",  # Your resolution (if you want a random resolution - set it to 'random')
+                "platform": "win",
+            },
+            "proxyEnabled": False,  # Specify 'false' if not using proxy
+            "proxy": {
+                "mode": "http",
+                "autoProxyRegion": "us",
+                # 'host': '',
+                # 'port': '',
+                # 'username': '',
+                # 'password': '',
+            },
+            "webRTC": {
+                "mode": "alerted",
+                "enabled": True,
+            },
+            "storage": {
+                "local": True,
+            },
+        }
+    )
+    print("profile id=", profile_id)
+    return profile_id
 
 
 class InstaBot:
 
     def __init__(self, profile_id):
-        # profile_id = initiatebrowser.get_profiles()[0]
         self.profile_id = profile_id
+        self.driver = None
+        self.wait = None
+        self.action = None
 
     def start_browser(self):
         self.driver = initiatebrowser.initiate_driver(self.profile_id)
         # self.driver.maximize_window()
         if self.driver:
-            self.wait = WebDriverWait(self.driver, 10)
+            self.wait = WebDriverWait(self.driver, 15)
             self.action = ActionChains(self.driver)
             return True
         return False
 
     def login(self, username, password):
         try:
-            try:
-                self.driver.get("https://www.instagram.com/accounts/login/")
-            except Exception as e:
-                print(e)
-            username = self.wait.until(
-                EC.presence_of_element_located((By.XPATH, '//input[@name="username"]'))
-            ).send_keys(username)
+            print(username, password)
+            self.driver.get("https://www.instagram.com/?hl=en")
+            print("Opened login page.")
+            username_element = self.wait.until(
+                EC.visibility_of_element_located(("xpath", '//input[@name="username"]'))
+            )
+            print("found username.")
+            username_element.send_keys(username)
+            print("Entered username.")
             password_element = self.driver.find_element(
-                By.XPATH, '//input[@name="password"]'
+                "xpath", '//input[@name="password"]'
             )
             password_element.send_keys(password)
             password_element.send_keys(Keys.ENTER)
-            not_now1 = self.wait.until(
-                EC.presence_of_element_located((By.XPATH, '//div[@class="_ac8f"]'))
-            )
-            not_now1.click()
-            not_now2 = self.wait.until(
-                EC.presence_of_element_located(
-                    (
-                        By.XPATH,
-                        '//div[@class="_a9-z"]//button[@class="_a9-- _ap36 _a9_1"]',
+            try:
+                not_now1 = self.wait.until(
+                    EC.presence_of_element_located(("xpath", '//div[@class="_ac8f"]'))
+                )
+                not_now1.click()
+                not_now2 = self.wait.until(
+                    EC.presence_of_element_located(
+                        (
+                            "xpath",
+                            '//div[@class="_a9-z"]//button[@class="_a9-- _ap36 _a9_1"]',
+                        )
                     )
                 )
-            )
-            not_now2.click()
+                not_now2.click()
+            except:
+                pass
             return True
         except:
             return False
@@ -61,7 +116,7 @@ class InstaBot:
             story = self.wait.until(
                 EC.presence_of_element_located(
                     (
-                        By.XPATH,
+                        "xpath",
                         '//div[@class="_aarf _aarg"]//img[@class="xpdipgo x972fbf xcfux6l x1qhh985 xm0m39n xk390pu x5yr21d xdj266r x11i5rnm xat24cr x1mh8g0r xl1xv1r xexx8yu x4uap5 x18d9i69 xkhd6sd x11njtxf xh8yej3"]',
                     )
                 )
@@ -76,11 +131,11 @@ class InstaBot:
             self.driver.get("https://www.instagram.com/")
             self.wait.until(
                 EC.presence_of_element_located(
-                    (By.XPATH, "//button[contains(@aria-label,'Story')]")
+                    ("xpath", "//button[contains(@aria-label,'Story')]")
                 )
             )
             stories = self.driver.find_element(
-                By.XPATH, "//button[contains(@aria-label,'Story')]"
+                "xpath", "//button[contains(@aria-label,'Story')]"
             )
             stories.click()
             time.sleep(6)
@@ -96,7 +151,7 @@ class InstaBot:
                     time.sleep(1)
 
             self.driver.find_element(
-                By.XPATH,
+                "xpath",
                 '//div[@class="xjbqb8w x1ypdohk xw7yly9 xktsk01 x1yztbdb x1d52u69 x10l6tqk x13vifvy xds687c"]//div[@class="x6s0dn4 x78zum5 xdt5ytf xl56j7k"]',
             ).click()
 
@@ -109,19 +164,19 @@ class InstaBot:
             random_number = random.randint(0, 5)
             self.driver.get("https://www.instagram.com/" + username)
             self.wait.until(
-                EC.presence_of_all_elements_located((By.XPATH, '//div[@class="_aagu"]'))
+                EC.presence_of_all_elements_located(("xpath", '//div[@class="_aagu"]'))
             )
-            link_list = self.driver.find_elements(By.XPATH, '//div[@class="_aagu"]')
+            link_list = self.driver.find_elements("xpath", '//div[@class="_aagu"]')
             link_list[random_number].click()
             current_url = self.driver.current_url.split("?")[0] + "liked_by"
             self.driver.get(current_url)
             self.wait.until(
                 EC.presence_of_all_elements_located(
-                    (By.XPATH, "//section//div//a[@role='link'][not(descendant::img)]")
+                    ("xpath", "//section//div//a[@role='link'][not(descendant::img)]")
                 )
             )
             names = self.driver.find_elements(
-                By.XPATH, "//section//div//a[@role='link'][not(descendant::img)]"
+                "xpath", "//section//div//a[@role='link'][not(descendant::img)]"
             )
             for i in names:
                 likers_names.append(i.text)
@@ -141,7 +196,7 @@ class InstaBot:
             follow_button = self.wait.until(
                 EC.presence_of_element_located(
                     (
-                        By.XPATH,
+                        "xpath",
                         '//a[@class="x1i10hfl xjbqb8w x6umtig x1b1mbwd xaqea5y xav7gou x9f619 x1ypdohk xt0psk2 xe8uvvx xdj266r x11i5rnm xat24cr x1mh8g0r xexx8yu x4uap5 x18d9i69 xkhd6sd x16tdsg8 x1hl2dhg xggy1nq x1a2a7pz _alvs _a6hd"]',
                     )
                 )
@@ -149,11 +204,11 @@ class InstaBot:
             follow_button.click()
             self.wait.until(
                 EC.presence_of_all_elements_located(
-                    (By.XPATH, '//span[@class="_ap3a _aaco _aacw _aacx _aad7 _aade"]')
+                    ("xpath", '//span[@class="_ap3a _aaco _aacw _aacx _aad7 _aade"]')
                 )
             )
             followers = self.driver.find_elements(
-                By.XPATH, '//span[@class="_ap3a _aaco _aacw _aacx _aad7 _aade"]'
+                "xpath", '//span[@class="_ap3a _aaco _aacw _aacx _aad7 _aade"]'
             )
             for i in followers:
                 followers_names.append(i.text)
@@ -181,7 +236,7 @@ class InstaBot:
             highlight = self.wait.until(
                 EC.presence_of_element_located(
                     (
-                        By.XPATH,
+                        "xpath",
                         '//div[@class="xnz67gz x14yjl9h xudhj91 x18nykt9 xww2gxu x1lliihq x6ikm8r x10wlt62 x1n2onr6"]',
                     )
                 )
@@ -204,11 +259,11 @@ class InstaBot:
                         )
                         self.wait.until(
                             EC.presence_of_all_elements_located(
-                                (By.XPATH, '//div[@class="_aagu"]')
+                                ("xpath", '//div[@class="_aagu"]')
                             )
                         )
                         link_list = self.driver.find_elements(
-                            By.XPATH, '//div[@class="_aagu"]'
+                            "xpath", '//div[@class="_aagu"]'
                         )
                         link_list[random_number].click()
                         current_url = self.driver.current_url.split("?")[0] + "liked_by"
@@ -216,13 +271,13 @@ class InstaBot:
                         self.wait.until(
                             EC.presence_of_all_elements_located(
                                 (
-                                    By.XPATH,
+                                    "xpath",
                                     "//section//div//a[@role='link'][not(descendant::img)]",
                                 )
                             )
                         )
                         names = self.driver.find_elements(
-                            By.XPATH,
+                            "xpath",
                             "//section//div//a[@role='link'][not(descendant::img)]",
                         )
                         for i in names:
@@ -251,16 +306,14 @@ class InstaBot:
             random_number = random.randint(0, 5)
             self.driver.get("https://www.instagram.com/" + username)
             self.wait.until(
-                EC.presence_of_all_elements_located((By.XPATH, '//div[@class="_aagu"]'))
+                EC.presence_of_all_elements_located(("xpath", '//div[@class="_aagu"]'))
             )
-            posts_list = self.driver.find_elements(By.XPATH, '//div[@class="_aagu"]')
+            posts_list = self.driver.find_elements("xpath", '//div[@class="_aagu"]')
             posts_list[random_number].click()
             self.wait.until(
-                EC.presence_of_all_elements_located(
-                    (By.XPATH, '//span[@class="_a9zu"]')
-                )
+                EC.presence_of_all_elements_located(("xpath", '//span[@class="_a9zu"]'))
             )
-            comment_list = self.driver.find_elements(By.XPATH, '//span[@class="_a9zu"]')
+            comment_list = self.driver.find_elements("xpath", '//span[@class="_a9zu"]')
             comment_list[random_number].click()
             time.sleep(3)
             return True
@@ -301,7 +354,7 @@ class InstaBot:
             link_list[random_number].click()
             self.wait.until(
                 EC.presence_of_element_located(
-                    (By.XPATH, "//textarea[contains(@aria-label,'Add a comment')]")
+                    ("xpath", "//textarea[contains(@aria-label,'Add a comment')]")
                 )
             )
             commenter = self.driver.find_element(
@@ -318,13 +371,13 @@ class InstaBot:
             random_number = random.randint(0, 5)
             self.driver.get("https://www.instagram.com/" + username)
             self.wait.until(
-                EC.presence_of_all_elements_located((By.XPATH, '//div[@class="_aagw"]'))
+                EC.presence_of_all_elements_located(("xpath", '//div[@class="_aagw"]'))
             )
-            link_list = self.driver.find_elements(By.XPATH, '//div[@class="_aagw"]')
+            link_list = self.driver.find_elements("xpath", '//div[@class="_aagw"]')
             link_list[random_number].click()
             like_button = self.wait.until(
                 EC.presence_of_element_located(
-                    (By.XPATH, '//div[@class="x6s0dn4 x78zum5 xdt5ytf xl56j7k"]//span')
+                    ("xpath", '//div[@class="x6s0dn4 x78zum5 xdt5ytf xl56j7k"]//span')
                 )
             )
             like_button.click()
@@ -339,7 +392,7 @@ class InstaBot:
             self.driver.get(url)
             time.sleep(5)
             like_button = self.wait.until(
-                EC.presence_of_element_located((By.XPATH, '//span[@class="xp7jhwk"]'))
+                EC.presence_of_element_located(("xpath", '//span[@class="xp7jhwk"]'))
             )
             like_button.click()
             return True
@@ -353,7 +406,7 @@ class InstaBot:
             time.sleep(5)
             self.wait.until(
                 EC.presence_of_element_located(
-                    (By.XPATH, "//textarea[contains(@aria-label,'Add a comment')]")
+                    ("xpath", "//textarea[contains(@aria-label,'Add a comment')]")
                 )
             )
             commenter = self.driver.find_element(
@@ -370,14 +423,14 @@ class InstaBot:
             random_number = random.randint(0, 5)
             self.driver.get("https://www.instagram.com/" + username)
             self.wait.until(
-                EC.presence_of_all_elements_located((By.XPATH, '//div[@class="_aagw"]'))
+                EC.presence_of_all_elements_located(("xpath", '//div[@class="_aagw"]'))
             )
-            link_list = self.driver.find_elements(By.XPATH, '//div[@class="_aagw"]')
+            link_list = self.driver.find_elements("xpath", '//div[@class="_aagw"]')
             link_list[random_number].click()
             time.sleep(5)
             self.wait.until(
                 EC.presence_of_element_located(
-                    (By.XPATH, "//textarea[contains(@aria-label,'Add a comment')]")
+                    ("xpath", "//textarea[contains(@aria-label,'Add a comment')]")
                 )
             )
             commenter = self.driver.find_element(
@@ -395,9 +448,9 @@ class InstaBot:
             random_number = random.randint(0, 5)
             self.driver.get("https://www.instagram.com/" + username + "/reels")
             self.wait.until(
-                EC.presence_of_all_elements_located((By.XPATH, '//div[@class="_aajy"]'))
+                EC.presence_of_all_elements_located(("xpath", '//div[@class="_aajy"]'))
             )
-            link_list = self.driver.find_elements(By.XPATH, '//div[@class="_aajy"]')
+            link_list = self.driver.find_elements("xpath", '//div[@class="_aajy"]')
             link_list[random_number].click()
             time.sleep(5)
             return True
@@ -420,9 +473,9 @@ class InstaBot:
             random_number = random.randint(0, 5)
             self.driver.get("https://www.instagram.com/" + username + "/reels")
             self.wait.until(
-                EC.presence_of_all_elements_located((By.XPATH, '//div[@class="_aajy"]'))
+                EC.presence_of_all_elements_located(("xpath", '//div[@class="_aajy"]'))
             )
-            link_list = self.driver.find_elements(By.XPATH, '//div[@class="_aajy"]')
+            link_list = self.driver.find_elements("xpath", '//div[@class="_aajy"]')
             link_list[random_number].click()
             current_url = self.driver.current_url
             modified_url = current_url.replace("reel", "reels")
@@ -430,13 +483,13 @@ class InstaBot:
             self.wait.until(
                 EC.presence_of_element_located(
                     (
-                        By.XPATH,
+                        "xpath",
                         '//div[@class="html-div xe8uvvx xdj266r x11i5rnm x1mh8g0r xexx8yu x4uap5 x18d9i69 xkhd6sd x6s0dn4 x1ypdohk x78zum5 xdt5ytf xieb3on"]//span',
                     )
                 )
             )
             span_element = self.driver.find_element(
-                By.XPATH,
+                "xpath",
                 '//div[@class="html-div xe8uvvx xdj266r x11i5rnm x1mh8g0r xexx8yu x4uap5 x18d9i69 xkhd6sd x6s0dn4 x1ypdohk x78zum5 xdt5ytf xieb3on"]//span',
             )
             span_element.click()
@@ -451,13 +504,13 @@ class InstaBot:
             random_number = random.randint(0, 5)
             self.driver.get("https://www.instagram.com/" + username + "/reels")
             self.wait.until(
-                EC.presence_of_all_elements_located((By.XPATH, '//div[@class="_aajy"]'))
+                EC.presence_of_all_elements_located(("xpath", '//div[@class="_aajy"]'))
             )
-            link_list = self.driver.find_elements(By.XPATH, '//div[@class="_aajy"]')
+            link_list = self.driver.find_elements("xpath", '//div[@class="_aajy"]')
             link_list[random_number].click()
             self.wait.until(
                 EC.presence_of_element_located(
-                    (By.XPATH, "//textarea[contains(@aria-label,'Add a comment')]")
+                    ("xpath", "//textarea[contains(@aria-label,'Add a comment')]")
                 )
             )
             commenter = self.driver.find_element(
@@ -476,7 +529,7 @@ class InstaBot:
             time.sleep(5)
             self.wait.until(
                 EC.presence_of_element_located(
-                    (By.XPATH, "//textarea[contains(@aria-label,'Add a comment')]")
+                    ("xpath", "//textarea[contains(@aria-label,'Add a comment')]")
                 )
             )
             commenter = self.driver.find_element(
@@ -494,13 +547,13 @@ class InstaBot:
             self.wait.until(
                 EC.presence_of_element_located(
                     (
-                        By.XPATH,
+                        "xpath",
                         '//div[@class="html-div xe8uvvx xdj266r x11i5rnm x1mh8g0r xexx8yu x4uap5 x18d9i69 xkhd6sd x6s0dn4 x1ypdohk x78zum5 xdt5ytf xieb3on"]//span',
                     )
                 )
             )
             like_button = self.driver.find_element(
-                By.XPATH,
+                "xpath",
                 '//div[@class="html-div xe8uvvx xdj266r x11i5rnm x1mh8g0r xexx8yu x4uap5 x18d9i69 xkhd6sd x6s0dn4 x1ypdohk x78zum5 xdt5ytf xieb3on"]//span',
             )
             like_button.click()
@@ -509,3 +562,12 @@ class InstaBot:
         except Exception as error:
             print(f"Error: {error}")
             return False
+
+
+def insta_login(profile_id, username, password):
+    user_bot = InstaBot(profile_id)
+    user_bot.start_browser()
+    print(user_bot.driver)
+    check = user_bot.login(username, password)
+    user_bot.driver.close()
+    return check

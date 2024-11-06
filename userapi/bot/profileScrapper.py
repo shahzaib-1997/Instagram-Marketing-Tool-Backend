@@ -23,13 +23,13 @@ def get_profile_data():
             wait.until(
                 EC.presence_of_element_located(
                     (
-                        By.XPATH,
+                        "xpath",
                         '//span[@class="html-span xdj266r x11i5rnm xat24cr x1mh8g0r xexx8yu x4uap5 x18d9i69 xkhd6sd x1hl2dhg x16tdsg8 x1vvkbs"]',
                     )
                 )
             )
             no_of_posts = driver.find_element(
-                By.XPATH,
+                "xpath",
                 '//span[@class="html-span xdj266r x11i5rnm xat24cr x1mh8g0r xexx8yu x4uap5 x18d9i69 xkhd6sd x1hl2dhg x16tdsg8 x1vvkbs"]',
             ).text
             if "K" in no_of_posts:
@@ -44,7 +44,7 @@ def get_profile_data():
 
             # followers scrapper
             followers = driver.find_element(
-                By.XPATH,
+                "xpath",
                 '(//span[@class="html-span xdj266r x11i5rnm xat24cr x1mh8g0r xexx8yu x4uap5 x18d9i69 xkhd6sd x1hl2dhg x16tdsg8 x1vvkbs"])[2]',
             ).text
             if "K" in followers:
@@ -59,7 +59,7 @@ def get_profile_data():
 
             # Following scrapper
             following = driver.find_element(
-                By.XPATH,
+                "xpath",
                 '(//span[@class="html-span xdj266r x11i5rnm xat24cr x1mh8g0r xexx8yu x4uap5 x18d9i69 xkhd6sd x1hl2dhg x16tdsg8 x1vvkbs"])[3]',
             ).text
             if "K" in following:
@@ -77,10 +77,10 @@ def get_profile_data():
             if no_of_posts != '0':
                 wait.until(
                     EC.presence_of_all_elements_located(
-                        (By.XPATH, '//div[@class="_aagu"]')
+                        ("xpath", '//div[@class="_aagu"]')
                     )
                 )
-                posts = driver.find_elements(By.XPATH, '//div[@class="_aagu"]')
+                posts = driver.find_elements("xpath", '//div[@class="_aagu"]')
 
                 try:
                     pinned = len(
@@ -99,7 +99,7 @@ def get_profile_data():
                     actions.move_to_element(i).perform()
 
                     try:
-                        likes = driver.find_element(By.XPATH, '//li[@class="_abpm"]').text
+                        likes = driver.find_element("xpath", '//li[@class="_abpm"]').text
                         print("likes:", likes)
                         if "K" in likes:
                             count = int(float(likes.split("K")[0]) * 1000)
@@ -112,7 +112,7 @@ def get_profile_data():
                         pass
 
                     try:
-                        comments = driver.find_element(By.XPATH, '(//li[@class="_abpm"])[2]').text
+                        comments = driver.find_element("xpath", '(//li[@class="_abpm"])[2]').text
                         print("comments:", comments)
                         if "K" in comments:
                             count = int(float(comments.split("K")[0]) * 1000)

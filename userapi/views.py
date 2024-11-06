@@ -10,7 +10,7 @@ from django.contrib.auth import authenticate, login, logout, update_session_auth
 from django.contrib import messages
 from django.utils import timezone
 from .dry import BaseAPIView, RenderAPIView, szr_val_save, add_user
-from .create_incogniton_profile import create_profile, insta_login
+from .bot.instaBot import create_profile, insta_login, delete_gologin_profile
 from .models import (
     UserData,
     ActivityTime,
@@ -367,17 +367,10 @@ class TargetTemplateView(APIView):
             return redirect("userapi:target-edit", pk=target.id)
 
 
-def delete_incogniton_profile(profile_id):
-    try:
-        requests.get(f"http://localhost:35000/profile/delete/{profile_id}")
-    except Exception as e:
-        print(e)
-
-
 class InstaCredentialView(APIView):
     def get(self, request):
         if request.user.is_authenticated:
-            insta_creds = Credential.objects.filter(user=request.user).first()
+            insta_creds = Credential.objects.filter(user=request.user)
             if insta_creds:
                 return render(
                     request, "Saved Accounts.html", {"insta_creds": insta_creds}
@@ -399,7 +392,7 @@ class InstaCredentialView(APIView):
                 check = insta_login(profile_id, username, password)
                 if not check:
                     messages.error(request, "Provided credentials are incorrect!")
-                    delete_incogniton_profile(profile_id)
+                    delete_gologin_profile(profile_id)
                 else:
                     credential = Credential(
                         user=request.user,
@@ -433,7 +426,7 @@ class InstaCredentialView(APIView):
             return redirect(f"/signin/?next={request.path}")
         try:
             credential = get_object_or_404(Credential, username=pk, user=request.user)
-            delete_incogniton_profile(credential.profile_id)
+            delete_gologin_profile(credential.profile_id)
             credential.delete()
             return Response(status=status.HTTP_204_NO_CONTENT)
         except Exception as e:

@@ -1050,7 +1050,7 @@ textarea.input {
 .box-list-item {
   position: relative;
   float: left;
-  width: 22.75%;
+  width: 100%;
   margin-right: 3%;
   margin-bottom: 3%;
   background-color: #fff;
