@@ -30,7 +30,7 @@
         {% include 'nav.html' %}
         <div class="skeleton skeleton--full" id="reactions-pro" style="display: block;">
             <div class="clearfix">
-                <aside class="skeleton-aside hide-on-medium-and-down" style="height: 578px;">
+                <aside class="skeleton-aside hide-on-medium-and-down">
                     <div class="search-box">
                         <div class="pos-r">
                             <input type="search" class="input input--small leftpad rightpad" name="q" placeholder="Search...">
@@ -90,6 +90,10 @@
                                             <a href="javascript:void(0)" class="rp-targeting-toggler rp-toggler-button opened"><span class="mdi icon mr-3 mdi-arrow-up"></span>Targeting</a>
                                         </div>
                                         <div class="rp-targeting">
+                                            {% if target %}
+                                            <h2>Target Type: {{target.target_type.title}}</h2>
+                                            <input type="hidden" name="type" value="{{target.target_type}}">
+                                            {% else %}
                                             <div class="mb-5 clearfix">
                                                 <label class="inline-block mr-30 mb-15">
                                                     <input class="radio" name="type" type="radio" value="post-comment" />
@@ -148,6 +152,7 @@
                                                     </span>
                                                 </label>
                                             </div>
+                                            {% endif %}
                                             <div class="clearfix mb-20 pos-r">
                                                 <div class="col s12 m4 l4 mt-10 mr-10">
                                                     <a href="javascript:void(0)" data-toggle="modal" data-target="#target-list-popup" class="fluid button button--light-outline target-list-button">Targets list</a>
@@ -171,10 +176,6 @@
                                                 <!-- <span class="field-icon--right pe-none none js-search-loading-icon"><img src="{% static '' %}Targeting Settings_files/round-loading.svg" alt="Loading icon" /></span>
                                                 <div class="autocomplete-suggestions" style="position: absolute; display: none; max-height: 300px; z-index: 9999;"></div> -->
                                             </div>
-                                            <!-- <ul class="field-tips mb-20">
-                                                <li>Add s: prefix before username to get accounts suggestion by Instagram AI</li>
-                                                <li>Example: s:apple</li>
-                                            </ul> -->
                                             <div class="clearfix mt-20 mb-20">
                                                 <div id="user-comment" class="none">
                                                     <label for="comment" class="form-label">Enter Comment:</label>
@@ -193,69 +194,35 @@
                                                 <div class="col s12 m12 l12">
                                                     <div class="mb-5">
                                                         <label>
-                                                            <input type="checkbox" class="checkbox" name="view-stories" value="1" />
+                                                            <input type="checkbox" class="checkbox" name="view-stories" value="1"{% if target.view_story %} checked{% endif %} />
                                                             <span>
                                                                 <span class="icon unchecked"><span class="mdi mdi-check"></span></span>
                                                                 View Stories
                                                             </span>
                                                         </label>
                                                     </div>
-                                                    <div class="mb-5">
+                                                    <div class="mb-5 like-stories-div"{% if not target.view_story %} style="opacity: 0.25;"{% endif %}>
                                                         <label>
-                                                            <input type="checkbox" class="checkbox" name="like-stories" value="1" />
+                                                            <input type="checkbox" class="checkbox" name="like-stories" value="1"{% if target.like_story %} checked{% elif not target.view_story %} disabled{% endif %} />
                                                             <span>
                                                                 <span class="icon unchecked"><span class="mdi mdi-check"></span></span>
                                                                 Like Stories
                                                             </span>
                                                         </label>
                                                     </div>
-                                                    <div class="clearfix js-like-stories-algorithm" style="opacity: 0.25;">
-                                                        <div class="col s12 m6 l6 mb-20">
-                                                            <ul class="field-tips mt-0">
-                                                                <li>What algorithm type do you want to use for story likes?</li>
-                                                            </ul>
-                                                            <select name="like-stories-algorithm" class="input" disabled>
-                                                                <option value="1">Basic</option>
-                                                                <option value="7">Basic (view last story only)</option>
-                                                                <option value="2" selected>Advanced</option>
-                                                                <option value="6">Advanced (view last story only)</option>
-                                                                <option value="3">1:1</option>
-                                                                <option value="4">1:1 + M</option>
-                                                                <option value="5">1:1 + M (last story only)</option>
-                                                            </select>
-                                                            <ul class="field-tips mt-0">
-                                                                <li>
-                                                                    <b>1:1</b> - only works together with view stories action, using this algorithm type you will like and view story only together, separate like or view will be not allowed
-                                                                </li>
-                                                                <li>
-                                                                    <b>1:1 + M</b> - it's the same as algorithm <b>1:1</b>, but you will be able to continue viewing stories after story like limit reached
-                                                                </li>
-                                                                <li>
-                                                                    <b>1:1 + M (last story only)</b> - it's the same as algorithm <b>1:1 + M</b>, but you will be able to mark as seen only last story of user
-                                                                </li>
-                                                                <li>
-                                                                    <b>Basic</b> - like story and skip, while story like delay is not expired
-                                                                </li>
-                                                                <li>
-                                                                    <b>Advanced</b> - like story and pause automation, while story like delay is not expired
-                                                                </li>
-                                                                <li>
-                                                                    <b>Advanced (view last story only)</b> - it's the same as algorithm <b>Advanced</b>, but you will be able to mark as seen only last story of user
-                                                                </li>
-                                                            </ul>
-                                                        </div>
+                                                    <div class="clearfix js-like-stories-algorithm"{% if not target.like_story %} style="opacity: 0.25;"{% endif %}>
                                                         <div class="col s12 m6 l6 mb-20">
                                                             <ul class="field-tips mt-0">
                                                                 <li>Select how you would like to like stories:</li>
                                                             </ul>
                                                             <select name="like-stories-type" class="input" disabled>
-                                                                <option value="0" selected>Like last story of user</option>
-                                                                <option value="-1">Like first story of user</option>
-                                                                <option value="1">Like first &amp; last story of user</option>
-                                                                <option value="2">Like last 2 stories of user</option>
-                                                                <option value="3">Like last 3 stories of user</option>
-                                                                <option value="4">Like last 4 stories of user</option>
-                                                                <option value="5">Like last 5 stories of user</option>
+                                                                <option value="first">Like first story of user</option>
+                                                                <option value="last">Like last story of user</option>
+                                                                <option value="first & last">Like first &amp; last story of user</option>
+                                                                <option value="last 2">Like last 2 stories of user</option>
+                                                                <option value="last 3">Like last 3 stories of user</option>
+                                                                <option value="last 4">Like last 4 stories of user</option>
+                                                                <option value="last 5">Like last 5 stories of user</option>
                                                             </select>
                                                         </div>
                                                     </div>
@@ -267,7 +234,7 @@
                                         <div class="mb-20">
                                             <a href="javascript:void(0)" class="rp-activity-time-toggler rp-toggler-button"><span class="mdi mdi-arrow-down icon mr-3"></span>Activity Time Settings</a>
                                         </div>
-                                        <div class="rp-activity-time none" data-account-id="">
+                                        <div class="rp-activity-time none">
                                             <div class="clearfix mb-20">
                                                 <div class="mb-20">
                                                     <ul class="field-tips">
@@ -291,6 +258,12 @@
                                                         <tbody>
                                                             <tr>
                                                                 <th class="at-hours">12:00 AM</th>
+                                                                <th>
+                                                                    <label>
+                                                                        <input type="checkbox" class="checkbox" name="day_0_00" value="1" />
+                                                                        <span><span class="icon unchecked"><span class="mdi mdi-check"></span></span></span>
+                                                                    </label>
+                                                                </th>
                                                                 <th>
                                                                     <label>
                                                                         <input type="checkbox" class="checkbox" name="day_1_00" value="1" />
@@ -327,15 +300,15 @@
                                                                         <span><span class="icon unchecked"><span class="mdi mdi-check"></span></span></span>
                                                                     </label>
                                                                 </th>
-                                                                <th>
-                                                                    <label>
-                                                                        <input type="checkbox" class="checkbox" name="day_7_00" value="1" />
-                                                                        <span><span class="icon unchecked"><span class="mdi mdi-check"></span></span></span>
-                                                                    </label>
-                                                                </th>
                                                             </tr>
                                                             <tr>
                                                                 <th class="at-hours">01:00 AM</th>
+                                                                <th>
+                                                                    <label>
+                                                                        <input type="checkbox" class="checkbox" name="day_0_01" value="1" />
+                                                                        <span><span class="icon unchecked"><span class="mdi mdi-check"></span></span></span>
+                                                                    </label>
+                                                                </th>
                                                                 <th>
                                                                     <label>
                                                                         <input type="checkbox" class="checkbox" name="day_1_01" value="1" />
@@ -372,15 +345,15 @@
                                                                         <span><span class="icon unchecked"><span class="mdi mdi-check"></span></span></span>
                                                                     </label>
                                                                 </th>
-                                                                <th>
-                                                                    <label>
-                                                                        <input type="checkbox" class="checkbox" name="day_7_01" value="1" />
-                                                                        <span><span class="icon unchecked"><span class="mdi mdi-check"></span></span></span>
-                                                                    </label>
-                                                                </th>
                                                             </tr>
                                                             <tr>
                                                                 <th class="at-hours">02:00 AM</th>
+                                                                <th>
+                                                                    <label>
+                                                                        <input type="checkbox" class="checkbox" name="day_0_02" value="1" />
+                                                                        <span><span class="icon unchecked"><span class="mdi mdi-check"></span></span></span>
+                                                                    </label>
+                                                                </th>
                                                                 <th>
                                                                     <label>
                                                                         <input type="checkbox" class="checkbox" name="day_1_02" value="1" />
@@ -417,15 +390,15 @@
                                                                         <span><span class="icon unchecked"><span class="mdi mdi-check"></span></span></span>
                                                                     </label>
                                                                 </th>
-                                                                <th>
-                                                                    <label>
-                                                                        <input type="checkbox" class="checkbox" name="day_7_02" value="1" />
-                                                                        <span><span class="icon unchecked"><span class="mdi mdi-check"></span></span></span>
-                                                                    </label>
-                                                                </th>
                                                             </tr>
                                                             <tr>
                                                                 <th class="at-hours">03:00 AM</th>
+                                                                <th>
+                                                                    <label>
+                                                                        <input type="checkbox" class="checkbox" name="day_0_03" value="1" />
+                                                                        <span><span class="icon unchecked"><span class="mdi mdi-check"></span></span></span>
+                                                                    </label>
+                                                                </th>
                                                                 <th>
                                                                     <label>
                                                                         <input type="checkbox" class="checkbox" name="day_1_03" value="1" />
@@ -462,15 +435,15 @@
                                                                         <span><span class="icon unchecked"><span class="mdi mdi-check"></span></span></span>
                                                                     </label>
                                                                 </th>
-                                                                <th>
-                                                                    <label>
-                                                                        <input type="checkbox" class="checkbox" name="day_7_03" value="1" />
-                                                                        <span><span class="icon unchecked"><span class="mdi mdi-check"></span></span></span>
-                                                                    </label>
-                                                                </th>
                                                             </tr>
                                                             <tr>
                                                                 <th class="at-hours">04:00 AM</th>
+                                                                <th>
+                                                                    <label>
+                                                                        <input type="checkbox" class="checkbox" name="day_0_04" value="1" />
+                                                                        <span><span class="icon unchecked"><span class="mdi mdi-check"></span></span></span>
+                                                                    </label>
+                                                                </th>
                                                                 <th>
                                                                     <label>
                                                                         <input type="checkbox" class="checkbox" name="day_1_04" value="1" />
@@ -507,15 +480,15 @@
                                                                         <span><span class="icon unchecked"><span class="mdi mdi-check"></span></span></span>
                                                                     </label>
                                                                 </th>
-                                                                <th>
-                                                                    <label>
-                                                                        <input type="checkbox" class="checkbox" name="day_7_04" value="1" />
-                                                                        <span><span class="icon unchecked"><span class="mdi mdi-check"></span></span></span>
-                                                                    </label>
-                                                                </th>
                                                             </tr>
                                                             <tr>
                                                                 <th class="at-hours">05:00 AM</th>
+                                                                <th>
+                                                                    <label>
+                                                                        <input type="checkbox" class="checkbox" name="day_0_05" value="1" />
+                                                                        <span><span class="icon unchecked"><span class="mdi mdi-check"></span></span></span>
+                                                                    </label>
+                                                                </th>
                                                                 <th>
                                                                     <label>
                                                                         <input type="checkbox" class="checkbox" name="day_1_05" value="1" />
@@ -552,15 +525,15 @@
                                                                         <span><span class="icon unchecked"><span class="mdi mdi-check"></span></span></span>
                                                                     </label>
                                                                 </th>
-                                                                <th>
-                                                                    <label>
-                                                                        <input type="checkbox" class="checkbox" name="day_7_05" value="1" />
-                                                                        <span><span class="icon unchecked"><span class="mdi mdi-check"></span></span></span>
-                                                                    </label>
-                                                                </th>
                                                             </tr>
                                                             <tr>
                                                                 <th class="at-hours">06:00 AM</th>
+                                                                <th>
+                                                                    <label>
+                                                                        <input type="checkbox" class="checkbox" name="day_0_06" value="1" />
+                                                                        <span><span class="icon unchecked"><span class="mdi mdi-check"></span></span></span>
+                                                                    </label>
+                                                                </th>
                                                                 <th>
                                                                     <label>
                                                                         <input type="checkbox" class="checkbox" name="day_1_06" value="1" />
@@ -597,15 +570,15 @@
                                                                         <span><span class="icon unchecked"><span class="mdi mdi-check"></span></span></span>
                                                                     </label>
                                                                 </th>
-                                                                <th>
-                                                                    <label>
-                                                                        <input type="checkbox" class="checkbox" name="day_7_06" value="1" />
-                                                                        <span><span class="icon unchecked"><span class="mdi mdi-check"></span></span></span>
-                                                                    </label>
-                                                                </th>
                                                             </tr>
                                                             <tr>
                                                                 <th class="at-hours">07:00 AM</th>
+                                                                <th>
+                                                                    <label>
+                                                                        <input type="checkbox" class="checkbox" name="day_0_07" value="1" />
+                                                                        <span><span class="icon unchecked"><span class="mdi mdi-check"></span></span></span>
+                                                                    </label>
+                                                                </th>
                                                                 <th>
                                                                     <label>
                                                                         <input type="checkbox" class="checkbox" name="day_1_07" value="1" />
@@ -642,15 +615,15 @@
                                                                         <span><span class="icon unchecked"><span class="mdi mdi-check"></span></span></span>
                                                                     </label>
                                                                 </th>
-                                                                <th>
-                                                                    <label>
-                                                                        <input type="checkbox" class="checkbox" name="day_7_07" value="1" />
-                                                                        <span><span class="icon unchecked"><span class="mdi mdi-check"></span></span></span>
-                                                                    </label>
-                                                                </th>
                                                             </tr>
                                                             <tr>
                                                                 <th class="at-hours">08:00 AM</th>
+                                                                <th>
+                                                                    <label>
+                                                                        <input type="checkbox" class="checkbox" name="day_0_08" value="1" />
+                                                                        <span><span class="icon unchecked"><span class="mdi mdi-check"></span></span></span>
+                                                                    </label>
+                                                                </th>
                                                                 <th>
                                                                     <label>
                                                                         <input type="checkbox" class="checkbox" name="day_1_08" value="1" />
@@ -687,15 +660,15 @@
                                                                         <span><span class="icon unchecked"><span class="mdi mdi-check"></span></span></span>
                                                                     </label>
                                                                 </th>
-                                                                <th>
-                                                                    <label>
-                                                                        <input type="checkbox" class="checkbox" name="day_7_08" value="1" />
-                                                                        <span><span class="icon unchecked"><span class="mdi mdi-check"></span></span></span>
-                                                                    </label>
-                                                                </th>
                                                             </tr>
                                                             <tr>
                                                                 <th class="at-hours">09:00 AM</th>
+                                                                <th>
+                                                                    <label>
+                                                                        <input type="checkbox" class="checkbox" name="day_0_09" value="1" />
+                                                                        <span><span class="icon unchecked"><span class="mdi mdi-check"></span></span></span>
+                                                                    </label>
+                                                                </th>
                                                                 <th>
                                                                     <label>
                                                                         <input type="checkbox" class="checkbox" name="day_1_09" value="1" />
@@ -732,15 +705,15 @@
                                                                         <span><span class="icon unchecked"><span class="mdi mdi-check"></span></span></span>
                                                                     </label>
                                                                 </th>
-                                                                <th>
-                                                                    <label>
-                                                                        <input type="checkbox" class="checkbox" name="day_7_09" value="1" />
-                                                                        <span><span class="icon unchecked"><span class="mdi mdi-check"></span></span></span>
-                                                                    </label>
-                                                                </th>
                                                             </tr>
                                                             <tr>
                                                                 <th class="at-hours">10:00 AM</th>
+                                                                <th>
+                                                                    <label>
+                                                                        <input type="checkbox" class="checkbox" name="day_0_10" value="1" />
+                                                                        <span><span class="icon unchecked"><span class="mdi mdi-check"></span></span></span>
+                                                                    </label>
+                                                                </th>
                                                                 <th>
                                                                     <label>
                                                                         <input type="checkbox" class="checkbox" name="day_1_10" value="1" />
@@ -777,15 +750,15 @@
                                                                         <span><span class="icon unchecked"><span class="mdi mdi-check"></span></span></span>
                                                                     </label>
                                                                 </th>
-                                                                <th>
-                                                                    <label>
-                                                                        <input type="checkbox" class="checkbox" name="day_7_10" value="1" />
-                                                                        <span><span class="icon unchecked"><span class="mdi mdi-check"></span></span></span>
-                                                                    </label>
-                                                                </th>
                                                             </tr>
                                                             <tr>
                                                                 <th class="at-hours">11:00 AM</th>
+                                                                <th>
+                                                                    <label>
+                                                                        <input type="checkbox" class="checkbox" name="day_0_11" value="1" />
+                                                                        <span><span class="icon unchecked"><span class="mdi mdi-check"></span></span></span>
+                                                                    </label>
+                                                                </th>
                                                                 <th>
                                                                     <label>
                                                                         <input type="checkbox" class="checkbox" name="day_1_11" value="1" />
@@ -822,15 +795,15 @@
                                                                         <span><span class="icon unchecked"><span class="mdi mdi-check"></span></span></span>
                                                                     </label>
                                                                 </th>
-                                                                <th>
-                                                                    <label>
-                                                                        <input type="checkbox" class="checkbox" name="day_7_11" value="1" />
-                                                                        <span><span class="icon unchecked"><span class="mdi mdi-check"></span></span></span>
-                                                                    </label>
-                                                                </th>
                                                             </tr>
                                                             <tr>
                                                                 <th class="at-hours">12:00 PM</th>
+                                                                <th>
+                                                                    <label>
+                                                                        <input type="checkbox" class="checkbox" name="day_0_12" value="1" />
+                                                                        <span><span class="icon unchecked"><span class="mdi mdi-check"></span></span></span>
+                                                                    </label>
+                                                                </th>
                                                                 <th>
                                                                     <label>
                                                                         <input type="checkbox" class="checkbox" name="day_1_12" value="1" />
@@ -867,15 +840,15 @@
                                                                         <span><span class="icon unchecked"><span class="mdi mdi-check"></span></span></span>
                                                                     </label>
                                                                 </th>
-                                                                <th>
-                                                                    <label>
-                                                                        <input type="checkbox" class="checkbox" name="day_7_12" value="1" />
-                                                                        <span><span class="icon unchecked"><span class="mdi mdi-check"></span></span></span>
-                                                                    </label>
-                                                                </th>
                                                             </tr>
                                                             <tr>
                                                                 <th class="at-hours">01:00 PM</th>
+                                                                <th>
+                                                                    <label>
+                                                                        <input type="checkbox" class="checkbox" name="day_0_13" value="1" />
+                                                                        <span><span class="icon unchecked"><span class="mdi mdi-check"></span></span></span>
+                                                                    </label>
+                                                                </th>
                                                                 <th>
                                                                     <label>
                                                                         <input type="checkbox" class="checkbox" name="day_1_13" value="1" />
@@ -912,15 +885,15 @@
                                                                         <span><span class="icon unchecked"><span class="mdi mdi-check"></span></span></span>
                                                                     </label>
                                                                 </th>
-                                                                <th>
-                                                                    <label>
-                                                                        <input type="checkbox" class="checkbox" name="day_7_13" value="1" />
-                                                                        <span><span class="icon unchecked"><span class="mdi mdi-check"></span></span></span>
-                                                                    </label>
-                                                                </th>
                                                             </tr>
                                                             <tr>
                                                                 <th class="at-hours">02:00 PM</th>
+                                                                <th>
+                                                                    <label>
+                                                                        <input type="checkbox" class="checkbox" name="day_0_14" value="1" />
+                                                                        <span><span class="icon unchecked"><span class="mdi mdi-check"></span></span></span>
+                                                                    </label>
+                                                                </th>
                                                                 <th>
                                                                     <label>
                                                                         <input type="checkbox" class="checkbox" name="day_1_14" value="1" />
@@ -957,15 +930,15 @@
                                                                         <span><span class="icon unchecked"><span class="mdi mdi-check"></span></span></span>
                                                                     </label>
                                                                 </th>
-                                                                <th>
-                                                                    <label>
-                                                                        <input type="checkbox" class="checkbox" name="day_7_14" value="1" />
-                                                                        <span><span class="icon unchecked"><span class="mdi mdi-check"></span></span></span>
-                                                                    </label>
-                                                                </th>
                                                             </tr>
                                                             <tr>
                                                                 <th class="at-hours">03:00 PM</th>
+                                                                <th>
+                                                                    <label>
+                                                                        <input type="checkbox" class="checkbox" name="day_0_15" value="1" />
+                                                                        <span><span class="icon unchecked"><span class="mdi mdi-check"></span></span></span>
+                                                                    </label>
+                                                                </th>
                                                                 <th>
                                                                     <label>
                                                                         <input type="checkbox" class="checkbox" name="day_1_15" value="1" />
@@ -1002,15 +975,15 @@
                                                                         <span><span class="icon unchecked"><span class="mdi mdi-check"></span></span></span>
                                                                     </label>
                                                                 </th>
-                                                                <th>
-                                                                    <label>
-                                                                        <input type="checkbox" class="checkbox" name="day_7_15" value="1" />
-                                                                        <span><span class="icon unchecked"><span class="mdi mdi-check"></span></span></span>
-                                                                    </label>
-                                                                </th>
                                                             </tr>
                                                             <tr>
                                                                 <th class="at-hours">04:00 PM</th>
+                                                                <th>
+                                                                    <label>
+                                                                        <input type="checkbox" class="checkbox" name="day_0_16" value="1" />
+                                                                        <span><span class="icon unchecked"><span class="mdi mdi-check"></span></span></span>
+                                                                    </label>
+                                                                </th>
                                                                 <th>
                                                                     <label>
                                                                         <input type="checkbox" class="checkbox" name="day_1_16" value="1" />
@@ -1047,15 +1020,15 @@
                                                                         <span><span class="icon unchecked"><span class="mdi mdi-check"></span></span></span>
                                                                     </label>
                                                                 </th>
-                                                                <th>
-                                                                    <label>
-                                                                        <input type="checkbox" class="checkbox" name="day_7_16" value="1" />
-                                                                        <span><span class="icon unchecked"><span class="mdi mdi-check"></span></span></span>
-                                                                    </label>
-                                                                </th>
                                                             </tr>
                                                             <tr>
                                                                 <th class="at-hours">05:00 PM</th>
+                                                                <th>
+                                                                    <label>
+                                                                        <input type="checkbox" class="checkbox" name="day_0_17" value="1" />
+                                                                        <span><span class="icon unchecked"><span class="mdi mdi-check"></span></span></span>
+                                                                    </label>
+                                                                </th>
                                                                 <th>
                                                                     <label>
                                                                         <input type="checkbox" class="checkbox" name="day_1_17" value="1" />
@@ -1092,15 +1065,15 @@
                                                                         <span><span class="icon unchecked"><span class="mdi mdi-check"></span></span></span>
                                                                     </label>
                                                                 </th>
-                                                                <th>
-                                                                    <label>
-                                                                        <input type="checkbox" class="checkbox" name="day_7_17" value="1" />
-                                                                        <span><span class="icon unchecked"><span class="mdi mdi-check"></span></span></span>
-                                                                    </label>
-                                                                </th>
                                                             </tr>
                                                             <tr>
                                                                 <th class="at-hours">06:00 PM</th>
+                                                                <th>
+                                                                    <label>
+                                                                        <input type="checkbox" class="checkbox" name="day_0_18" value="1" />
+                                                                        <span><span class="icon unchecked"><span class="mdi mdi-check"></span></span></span>
+                                                                    </label>
+                                                                </th>
                                                                 <th>
                                                                     <label>
                                                                         <input type="checkbox" class="checkbox" name="day_1_18" value="1" />
@@ -1137,15 +1110,15 @@
                                                                         <span><span class="icon unchecked"><span class="mdi mdi-check"></span></span></span>
                                                                     </label>
                                                                 </th>
-                                                                <th>
-                                                                    <label>
-                                                                        <input type="checkbox" class="checkbox" name="day_7_18" value="1" />
-                                                                        <span><span class="icon unchecked"><span class="mdi mdi-check"></span></span></span>
-                                                                    </label>
-                                                                </th>
                                                             </tr>
                                                             <tr>
                                                                 <th class="at-hours">07:00 PM</th>
+                                                                <th>
+                                                                    <label>
+                                                                        <input type="checkbox" class="checkbox" name="day_0_19" value="1" />
+                                                                        <span><span class="icon unchecked"><span class="mdi mdi-check"></span></span></span>
+                                                                    </label>
+                                                                </th>
                                                                 <th>
                                                                     <label>
                                                                         <input type="checkbox" class="checkbox" name="day_1_19" value="1" />
@@ -1182,15 +1155,15 @@
                                                                         <span><span class="icon unchecked"><span class="mdi mdi-check"></span></span></span>
                                                                     </label>
                                                                 </th>
-                                                                <th>
-                                                                    <label>
-                                                                        <input type="checkbox" class="checkbox" name="day_7_19" value="1" />
-                                                                        <span><span class="icon unchecked"><span class="mdi mdi-check"></span></span></span>
-                                                                    </label>
-                                                                </th>
                                                             </tr>
                                                             <tr>
                                                                 <th class="at-hours">08:00 PM</th>
+                                                                <th>
+                                                                    <label>
+                                                                        <input type="checkbox" class="checkbox" name="day_0_20" value="1" />
+                                                                        <span><span class="icon unchecked"><span class="mdi mdi-check"></span></span></span>
+                                                                    </label>
+                                                                </th>
                                                                 <th>
                                                                     <label>
                                                                         <input type="checkbox" class="checkbox" name="day_1_20" value="1" />
@@ -1227,15 +1200,15 @@
                                                                         <span><span class="icon unchecked"><span class="mdi mdi-check"></span></span></span>
                                                                     </label>
                                                                 </th>
-                                                                <th>
-                                                                    <label>
-                                                                        <input type="checkbox" class="checkbox" name="day_7_20" value="1" />
-                                                                        <span><span class="icon unchecked"><span class="mdi mdi-check"></span></span></span>
-                                                                    </label>
-                                                                </th>
                                                             </tr>
                                                             <tr>
                                                                 <th class="at-hours">09:00 PM</th>
+                                                                <th>
+                                                                    <label>
+                                                                        <input type="checkbox" class="checkbox" name="day_0_21" value="1" />
+                                                                        <span><span class="icon unchecked"><span class="mdi mdi-check"></span></span></span>
+                                                                    </label>
+                                                                </th>
                                                                 <th>
                                                                     <label>
                                                                         <input type="checkbox" class="checkbox" name="day_1_21" value="1" />
@@ -1272,15 +1245,15 @@
                                                                         <span><span class="icon unchecked"><span class="mdi mdi-check"></span></span></span>
                                                                     </label>
                                                                 </th>
-                                                                <th>
-                                                                    <label>
-                                                                        <input type="checkbox" class="checkbox" name="day_7_21" value="1" />
-                                                                        <span><span class="icon unchecked"><span class="mdi mdi-check"></span></span></span>
-                                                                    </label>
-                                                                </th>
                                                             </tr>
                                                             <tr>
                                                                 <th class="at-hours">10:00 PM</th>
+                                                                <th>
+                                                                    <label>
+                                                                        <input type="checkbox" class="checkbox" name="day_0_22" value="1" />
+                                                                        <span><span class="icon unchecked"><span class="mdi mdi-check"></span></span></span>
+                                                                    </label>
+                                                                </th>
                                                                 <th>
                                                                     <label>
                                                                         <input type="checkbox" class="checkbox" name="day_1_22" value="1" />
@@ -1317,15 +1290,15 @@
                                                                         <span><span class="icon unchecked"><span class="mdi mdi-check"></span></span></span>
                                                                     </label>
                                                                 </th>
-                                                                <th>
-                                                                    <label>
-                                                                        <input type="checkbox" class="checkbox" name="day_7_22" value="1" />
-                                                                        <span><span class="icon unchecked"><span class="mdi mdi-check"></span></span></span>
-                                                                    </label>
-                                                                </th>
                                                             </tr>
                                                             <tr>
                                                                 <th class="at-hours">11:00 PM</th>
+                                                                <th>
+                                                                    <label>
+                                                                        <input type="checkbox" class="checkbox" name="day_0_23" value="1" />
+                                                                        <span><span class="icon unchecked"><span class="mdi mdi-check"></span></span></span>
+                                                                    </label>
+                                                                </th>
                                                                 <th>
                                                                     <label>
                                                                         <input type="checkbox" class="checkbox" name="day_1_23" value="1" />
@@ -1359,12 +1332,6 @@
                                                                 <th>
                                                                     <label>
                                                                         <input type="checkbox" class="checkbox" name="day_6_23" value="1" />
-                                                                        <span><span class="icon unchecked"><span class="mdi mdi-check"></span></span></span>
-                                                                    </label>
-                                                                </th>
-                                                                <th>
-                                                                    <label>
-                                                                        <input type="checkbox" class="checkbox" name="day_7_23" value="1" />
                                                                         <span><span class="icon unchecked"><span class="mdi mdi-check"></span></span></span>
                                                                     </label>
                                                                 </th>
@@ -1465,13 +1432,13 @@
                                         <div class="modal-content-body">
                                             <div class="clearfix mb-10">
                                                 <div class="pos-r">
-                                                    <textarea class="target-list caption-input input" name="target-list" id="target-list" spellcheck="true" placeholder="Enter each target on new line...">{{targets}}</textarea>
+                                                    <textarea class="target-list caption-input input" name="target-list" id="target-list" spellcheck="true" placeholder="Enter each target on new line...">{{target.url}}</textarea>
                                                     <p id="inform">Remember to click Save to update the list.</p>
                                                 </div>
                                             </div>
                                             <div class="clearfix mb-15 pb-10 modal-header-hr">
                                                 <ul class="field-tips targets-cp">
-                                                    <li>Enter only valid Instagram usernames or url links</li>
+                                                    <li>Enter only valid Instagram username or url links</li>
                                                     <li>Every target should be on a new line</li>
                                                     <li>The targeting type you selected in section Targeting on Task Settings page is important and will be used as preferred target type at mass recognition.</li>
                                                 </ul>
@@ -1497,7 +1464,7 @@
                                         <div class="modal-content-body">
                                             <div class="clearfix targets-cp">
                                                 <div class="pos-r mb-10">
-                                                    <textarea class="target-list caption-input input" id="target-view" spellcheck="false">{{targets}}</textarea>
+                                                    <textarea class="target-list caption-input input" id="target-view" spellcheck="false">{{target.url}}</textarea>
                                                 </div>
                                             </div>
                                             <ul class="field-tips targets-cp">
@@ -1875,22 +1842,33 @@
             $(document).ready(function () {
                 $("input[name='type']").prop("checked", false); // Uncheck all radio buttons
                 {% if target %}
-                $("input[value='{{target.target_type.type}}']").prop("checked", true);
-                var $list_item = $('.js-list-item[data-id="{{target.insta_user.id}}"]');
+                $("input[value='{{target.target_type}}']").prop("checked", true);
+                let insta_cred_id = "{{target.insta_user.id}}";
+                $('[name="selected_insta_cred"]').val(insta_cred_id);
+                var $list_item = $(`.js-list-item[data-id="${insta_cred_id}"]`);
+                $list_item.addClass("task-selected active");
                 var $taskActionSelect = $list_item.find('.js-task-action-select');
                 $taskActionSelect.removeClass("mdi-checkbox-blank-circle-outline").addClass("mdi-checkbox-marked-circle-outline");
-                $list_item.addClass("task-selected active");
                 var activityTimes = {{activity_times|safe}};
                 activityTimes.forEach(activityTime => {
-                    $(`[name="day_${activityTime.day}_${activityTime.time}"]`).prop("checked", true);
-                })
-                if ("{{ target.target_type.type }}".includes('-comment')) {
+                    console.log(activityTime);
+                    let times = activityTime.time.split(",");
+                    times.forEach(time => {
+                        console.log(time);
+                        $(`[name="day_${activityTime.day}_${time}"]`).prop("checked", true);
+                    });
+                });
+                if ("{{ target.target_type }}".includes('-comment')) {
                     $('#user-comment').removeClass('none');
                     $('#comment').prop('required', true);
                 }
                 {% endif %}
+                {% if target.like_option %}
+                $('select[name="like-stories-type"]').prop("disabled", false);
+                let like_option = "{{target.like_option|safe}}";
+                $(`option[value="${like_option}"]`).attr("selected", true);
+                {% endif %}
             });
-
 
             $('input[name="type"]').change(function () {
                 // Get the value of the selected radio button
@@ -1978,9 +1956,18 @@
                     return false;
                 }
 
+                {% if not target %}
                 var type = $("input[name='type']:checked").val(); // Get the value of the selected radio button
                 if (!type) {
                     alert("Please select a type for the target.");
+                    return false;
+                }
+                {% endif %}
+
+                let targetList = $('textarea[name="target-list"]').val();
+                if (!targetList) {
+                    alert("Please add at least one Username or URL in Targets List for the target.");
+                    $('input[name="search"]').focus();
                     return false;
                 }
 

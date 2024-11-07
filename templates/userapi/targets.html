@@ -24,7 +24,7 @@
     <link rel="stylesheet" type="text/css" href="{% static '' %}Targeting Settings_files/switcher.css">
     <link rel="stylesheet" type="text/css" href="{% static '' %}Targeting Settings_files/selectize.bootstrap3.css">
     <link rel="stylesheet" type="text/css" href="{% static '' %}Targeting Settings_files/bypassing.css">
-    <title>Activity Log</title>
+    <title>Targets</title>
   </head>
   <body>
     {% include "nav.html" %}
@@ -59,7 +59,7 @@
                 <tbody class="text-center">
                   {% for target in data %}
                   <tr>
-                    <td> {{target.target_type.type}} </td>
+                    <td> {{target.target_type}} </td>
                     <td> {{target.get_status_display}} </td>
                     <td>{{target.time_stamp|date:"M j, Y H:i"}}</td>
                     <td>

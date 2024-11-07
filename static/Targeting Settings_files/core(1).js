@@ -1469,6 +1469,15 @@ Reactions.ScheduleForm = function() {
             $form.find(".js-massvoting-settings").find(":input").prop("disabled", true);
         }
     }).trigger("change");
+    $(":input[name='view-stories']").on("change", function() {
+        if ($(this).is(":checked")) {
+            $(".like-stories-div").css("opacity", "1");
+            $(".like-stories-div").find(":input").prop("disabled", false);
+        } else {
+            $(".like-stories-div").css("opacity", "0.25");
+            $(".like-stories-div").find(":input").prop("disabled", true);
+        }
+    });
     $("input[name='like-stories']").on("change", function() {
         if ($(this).is(":checked")) {
             $(".js-like-stories-algorithm").css("opacity", "1");
@@ -1661,7 +1670,7 @@ Reactions.ScheduleForm = function() {
 
         var th = randomIntFromInterval(min_hd, max_hd);
 
-        for (let d = 1; d <= 7; d++) {
+        for (let d = 0; d < 7; d++) {
             var th_day = [];
             for (let h = min_i; h <= max_i; h++) {
                 if (th > 0) {

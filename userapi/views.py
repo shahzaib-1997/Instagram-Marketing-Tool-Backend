@@ -15,16 +15,9 @@ from .models import (
     UserData,
     ActivityTime,
     Credential,
-    Hashtag,
-    TargetUser,
-    Post,
-    Reel,
     ActivityLog,
     Stat,
     Target,
-    TargetType,
-    Action,
-    Comment,
 )
 from .serializers import (
     PasswordChangeSerializer,
@@ -32,16 +25,9 @@ from .serializers import (
     ProfileSerializer,
     ActivityTimeSerializer,
     CredentialSerializer,
-    HashtagSerializer,
-    TargetUserSerializer,
-    PostSerializer,
-    ReelSerializer,
     ActivityLogSerializer,
     StatSerializer,
-    TargetTypeSerializer,
     TargetSerializer,
-    ActionSerializer,
-    CommentSerializer,
 )
 from datetime import datetime
 
@@ -127,10 +113,10 @@ def user_targets(request, id=None):
                 user=request.user, insta_user=instance
             ).order_by("-id")
             context["data"] = targets
-        return render(request, "userapi/targets.html", context=context)
+            return render(request, "userapi/targets.html", context=context)
     except Exception as e:
         messages.error(request, str(e))
-        return redirect("userapi:accounts")
+    return redirect("userapi:accounts")
 
 
 def logout_user(request):
@@ -281,17 +267,7 @@ class TargetTemplateView(APIView):
                     )
                     context["activity_times"] = activity_times
 
-                    target_type = target.target_type.type
-                    mod = target_type.split("-")[0]
-                    model_map = {
-                        "post": Post,
-                        "reels": Reel,
-                        "hashtag": Hashtag,
-                        "comment": Comment,
-                    }
-                    model = model_map.get(mod)
-                    act = model.objects.get(target=target, user=request.user)
-                    context["targets"] = act.url
+                    print(context)
                 return render(request, "userapi/target.html", context=context)
             messages.error(
                 request,
@@ -299,72 +275,61 @@ class TargetTemplateView(APIView):
             )
             return redirect("userapi:accounts")
         except Exception as e:
-            messages.error(request, str(e))
+            print(e)
         return redirect("userapi:targets")
 
     def post(self, request, pk=None):
         if not request.user.is_authenticated:
             messages.error(request, "You need to login first.")
             return redirect(f"/signin/?next={request.path}")
-        try:
-            if pk:
-                target = get_object_or_404(Target, id=pk)
-                target_type = target.target_type.type
-            else:
-                target = Target.objects.create(user=request.user)
-                target_type = request.POST.get("type")
-                target.target_type = TargetType.objects.create(
-                    type=target_type, user=request.user
+        # try:
+        target_type = request.POST.get("type")
+        if pk:
+            target = get_object_or_404(Target, id=pk)
+        else:
+            target = Target.objects.create(user=request.user, target_type=target_type, user_comment=request.POST.get("comment"))
+
+        insta_cred = request.POST.get("selected_insta_cred")
+        credential = get_object_or_404(Credential, id=insta_cred)
+        target.insta_user = credential
+
+        urls = request.POST.get("target-list")
+        target.url = urls
+
+        view_story = request.POST.get("view-stories")
+        target.view_story = True if view_story else False
+
+        like_story = request.POST.get("like-stories")
+
+        if view_story and like_story:
+            target.like_story = True
+            target.like_option = request.POST.get("like-stories-type")
+        else:
+            target.like_story = False
+            target.like_option = None
+        target.save()
+
+        # Loop through your checkbox names and check if they are in the POST data
+        ActivityTime.objects.filter(target=target).delete()
+        for key in request.POST.keys():
+            if key.startswith("day_"):
+                spl = key.split("_")
+                day = spl[1]
+                time = spl[2]
+                activity_time, _ = ActivityTime.objects.get_or_create(
+                    target=target, day=day
                 )
+                if not activity_time.time:
+                    activity_time.time = time  # Initialize time as a list if it's not already
+                else:
+                    activity_time.time += f",{time}"  # Add the new time value to the list
 
-            insta_cred = request.POST.get("selected_insta_cred")
-            credential = get_object_or_404(Credential, id=insta_cred)
-            target.insta_user = credential
-            target.user_comment = request.POST.get("comment")
-            target.save()
+                activity_time.save()
 
-            # Loop through your checkbox names and check if they are in the POST data
-            for key in request.POST.keys():
-                if key.startswith("day_"):
-                    spl = key.split("_")
-                    day = spl[1]
-                    time = spl[2]
-                    activity_time, _ = ActivityTime.objects.get_or_create(
-                        target=target, day=day
-                    )
-                    if not activity_time.time:
-                        activity_time.time = (
-                            time  # Initialize time as a list if it's not already
-                        )
-                    else:
-                        activity_time.time += (
-                            f",{time}"  # Add the new time value to the list
-                        )
-
-                    activity_time.save()
-
-            model_map = {
-                "post": Post,
-                "reels": Reel,
-                "hashtag": Hashtag,
-                "comment": Comment,
-            }
-            mod, mod_type = target_type.split("-")
-            model = model_map.get(mod)
-
-            act, _ = model.objects.get_or_create(target=target, user=request.user)
-            if mod != "comment":
-                act.type = mod_type
-            act.url = request.POST.get("target-list")
-            act.save()
-
-            messages.success(
-                request, "Target " + ("updated" if pk else "added") + " successfully!"
-            )
-            return redirect(f"/targets/{credential.id}")
-        except Exception as e:
-            print(str(e))
-            return redirect("userapi:target-edit", pk=target.id)
+        return redirect(f"/targets/{credential.id}")
+        # except Exception as e:
+        #     print(str(e))
+        #     return redirect("userapi:target-edit", pk=target.id)
 
 
 class InstaCredentialView(APIView):
@@ -400,7 +365,6 @@ class InstaCredentialView(APIView):
                         password=password,
                         profile_id=profile_id,
                     )
-                    messages.success(request, "Instagram Account added successfully!")
                     credential.save()
             else:
                 Credential.objects.filter(user=request.user, username=pk).update(
@@ -528,7 +492,8 @@ class PasswordChangeView(APIView):
 class ActivityTimeView(BaseAPIView, RenderAPIView):
     def get(self, request):
         try:
-            activity_times = ActivityTime.objects.filter(user=request.user)
+            target_id = request.GET.get("target_id")
+            activity_times = ActivityTime.objects.filter(target_id=target_id)
             serializer = ActivityTimeSerializer(activity_times, many=True)
             return Response(serializer.data)
         except Exception as e:
@@ -617,238 +582,6 @@ class CredentialView(BaseAPIView, RenderAPIView):
             credential.delete()
             return Response(
                 {"message": "Instagram Account deleted successfully."},
-                status=status.HTTP_204_NO_CONTENT,
-            )
-        except Exception as e:
-            return Response(
-                {"message": f"Error: {e}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR
-            )
-
-
-class HashtagView(BaseAPIView, RenderAPIView):
-    def get(self, request):
-        try:
-            target_id = request.GET.get("target_id")
-
-            if target_id:
-                hashtags = Hashtag.objects.filter(target_id=target_id)
-            else:
-                hashtags = Hashtag.objects.filter(user=request.user)
-            serializer = HashtagSerializer(hashtags, many=True)
-            return Response(serializer.data)
-        except Exception as e:
-            return Response(
-                {"message": f"Error: {e}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR
-            )
-
-    def post(self, request):
-        try:
-            mutable_data = add_user(request.data.copy(), request.user.id)
-            serializer = HashtagSerializer(data=mutable_data)
-            if szr_val_save(serializer):
-                return Response(serializer.data)
-            return Response(serializer.errors)
-        except Exception as e:
-            return Response(
-                {"message": f"Error: {e}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR
-            )
-
-    def put(self, request, pk):
-        try:
-            hashtag = get_object_or_404(Hashtag, pk=pk, user=request.user)
-            mutable_data = add_user(request.data.copy(), request.user.id)
-            serializer = HashtagSerializer(hashtag, data=mutable_data)
-            if szr_val_save(serializer):
-                return Response(serializer.data)
-            return Response(serializer.errors)
-        except Exception as e:
-            return Response(
-                {"message": f"Error: {e}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR
-            )
-
-    def delete(self, request, pk):
-        try:
-            hashtag = get_object_or_404(Hashtag, pk=pk, user=request.user)
-            hashtag.delete()
-            return Response(
-                {"message": "Hashtag deleted successfully."},
-                status=status.HTTP_204_NO_CONTENT,
-            )
-        except Exception as e:
-            return Response(
-                {"message": f"Error: {e}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR
-            )
-
-
-class TargetUserView(BaseAPIView, RenderAPIView):
-    def get(self, request):
-        try:
-            target_users = TargetUser.objects.filter(user=request.user)
-            serializer = TargetUserSerializer(target_users, many=True)
-            return Response(serializer.data)
-        except Exception as e:
-            return Response(
-                {"message": f"Error: {e}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR
-            )
-
-    def post(self, request):
-        try:
-            mutable_data = add_user(request.data.copy(), request.user.id)
-            serializer = TargetUserSerializer(data=mutable_data)
-            if szr_val_save(serializer):
-                return Response(serializer.data)
-            return Response(serializer.errors)
-        except Exception as e:
-            return Response(
-                {"message": f"Error: {e}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR
-            )
-
-    def put(self, request, pk):
-        try:
-            target_user = get_object_or_404(TargetUser, pk=pk, user=request.user)
-            mutable_data = add_user(request.data.copy(), request.user.id)
-            serializer = TargetUserSerializer(target_user, data=mutable_data)
-            if szr_val_save(serializer):
-                return Response(serializer.data)
-            return Response(serializer.errors)
-        except Exception as e:
-            return Response(
-                {"message": f"Error: {e}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR
-            )
-
-    def delete(self, request, pk):
-        try:
-            target_user = get_object_or_404(TargetUser, pk=pk, user=request.user)
-            target_user.delete()
-            return Response(
-                {"message": "Target User deleted successfully."},
-                status=status.HTTP_204_NO_CONTENT,
-            )
-        except Exception as e:
-            return Response(
-                {"message": f"Error: {e}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR
-            )
-
-
-class CommentView(BaseAPIView, RenderAPIView):
-    def get(self, request):
-        try:
-            target_id = request.GET.get("target_id")
-
-            if target_id:
-                comments = Comment.objects.filter(target=target_id)
-            else:
-                comments = Comment.objects.filter(user=request.user)
-            serializer = CommentSerializer(comments, many=True)
-            return Response(serializer.data)
-        except Exception as e:
-            return Response(
-                {"message": f"Error: {e}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR
-            )
-
-
-class PostView(BaseAPIView, RenderAPIView):
-    def get(self, request):
-        try:
-            target_id = request.GET.get("target_id")
-
-            if target_id:
-                posts = Post.objects.filter(target=target_id)
-            else:
-                posts = Post.objects.filter(user=request.user)
-            serializer = PostSerializer(posts, many=True)
-            return Response(serializer.data)
-        except Exception as e:
-            return Response(
-                {"message": f"Error: {e}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR
-            )
-
-    def post(self, request):
-        try:
-            mutable_data = add_user(request.data.copy(), request.user.id)
-            serializer = PostSerializer(data=mutable_data)
-            if szr_val_save(serializer):
-                return Response(serializer.data)
-            return Response(serializer.errors)
-        except Exception as e:
-            return Response(
-                {"message": f"Error: {e}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR
-            )
-
-    def put(self, request, pk):
-        try:
-            post = get_object_or_404(Post, pk=pk, user=request.user)
-            mutable_data = add_user(request.data.copy(), request.user.id)
-            serializer = PostSerializer(post, data=mutable_data)
-            if szr_val_save(serializer):
-                return Response(serializer.data)
-            return Response(serializer.errors)
-        except Exception as e:
-            return Response(
-                {"message": f"Error: {e}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR
-            )
-
-    def delete(self, request, pk):
-        try:
-            post = get_object_or_404(Post, pk=pk, user=request.user)
-            post.delete()
-            return Response(
-                {"message": "Post deleted successfully."},
-                status=status.HTTP_204_NO_CONTENT,
-            )
-        except Exception as e:
-            return Response(
-                {"message": f"Error: {e}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR
-            )
-
-
-class ReelView(BaseAPIView, RenderAPIView):
-    def get(self, request):
-        try:
-            target_id = request.GET.get("target_id")
-
-            if target_id:
-                reels = Reel.objects.filter(target=target_id)
-            else:
-                reels = Reel.objects.filter(user=request.user)
-            serializer = ReelSerializer(reels, many=True)
-            return Response(serializer.data)
-        except Exception as e:
-            return Response(
-                {"message": f"Error: {e}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR
-            )
-
-    def post(self, request):
-        try:
-            mutable_data = add_user(request.data.copy(), request.user.id)
-            serializer = ReelSerializer(data=mutable_data)
-            if szr_val_save(serializer):
-                return Response(serializer.data)
-            return Response(serializer.errors)
-        except Exception as e:
-            return Response(
-                {"message": f"Error: {e}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR
-            )
-
-    def put(self, request, pk):
-        try:
-            reel = get_object_or_404(Reel, pk=pk, user=request.user)
-            mutable_data = add_user(request.data.copy(), request.user.id)
-            serializer = ReelSerializer(reel, data=mutable_data)
-            if szr_val_save(serializer):
-                return Response(serializer.data)
-            return Response(serializer.errors)
-        except Exception as e:
-            return Response(
-                {"message": f"Error: {e}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR
-            )
-
-    def delete(self, request, pk):
-        try:
-            reel = get_object_or_404(Reel, pk=pk, user=request.user)
-            reel.delete()
-            return Response(
-                {"message": "Reel deleted successfully."},
                 status=status.HTTP_204_NO_CONTENT,
             )
         except Exception as e:
@@ -957,56 +690,6 @@ class StatView(BaseAPIView, RenderAPIView):
             )
 
 
-class TargetTypeView(BaseAPIView, RenderAPIView):
-    def get(self, request):
-        try:
-            target_types = TargetType.objects.filter(user=request.user)
-            serializer = TargetTypeSerializer(target_types, many=True)
-            return Response(serializer.data)
-        except Exception as e:
-            return Response(
-                {"message": f"Error: {e}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR
-            )
-
-    def post(self, request):
-        try:
-            mutable_data = add_user(request.data.copy(), request.user.id)
-            serializer = TargetTypeSerializer(data=mutable_data)
-            if szr_val_save(serializer):
-                return Response(serializer.data)
-            return Response(serializer.errors)
-        except Exception as e:
-            return Response(
-                {"message": f"Error: {e}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR
-            )
-
-    def put(self, request, pk):
-        try:
-            target_type = get_object_or_404(TargetType, pk=pk, user=request.user)
-            mutable_data = add_user(request.data.copy(), request.user.id)
-            serializer = TargetTypeSerializer(target_type, data=mutable_data)
-            if szr_val_save(serializer):
-                return Response(serializer.data)
-            return Response(serializer.errors)
-        except Exception as e:
-            return Response(
-                {"message": f"Error: {e}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR
-            )
-
-    def delete(self, request, pk):
-        try:
-            target_type = get_object_or_404(TargetType, pk=pk, user=request.user)
-            target_type.delete()
-            return Response(
-                {"message": "TargetType deleted successfully."},
-                status=status.HTTP_204_NO_CONTENT,
-            )
-        except Exception as e:
-            return Response(
-                {"message": f"Error: {e}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR
-            )
-
-
 class TargetView(BaseAPIView, RenderAPIView):
     def get(self, request):
         try:
@@ -1049,57 +732,6 @@ class TargetView(BaseAPIView, RenderAPIView):
             target.delete()
             messages.success(request, "Target deleted successfully.")
             return Response(
-                status=status.HTTP_204_NO_CONTENT,
-            )
-        except Exception as e:
-            return Response(
-                {"message": f"Error: {e}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR
-            )
-
-
-class ActionView(BaseAPIView, RenderAPIView):
-    def get(self, request):
-        try:
-            actions = Action.objects.filter(user=request.user)
-            serializer = ActionSerializer(actions, many=True)
-            return Response(serializer.data)
-        except Exception as e:
-            return Response(
-                {"message": f"Error: {e}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR
-            )
-
-    def post(self, request):
-        try:
-            mutable_data = add_user(request.data.copy(), request.user.id)
-            serializer = ActionSerializer(data=mutable_data)
-            if szr_val_save(serializer):
-                return Response(serializer.data)
-            return Response(serializer.errors)
-            return Response(serializer.errors)
-        except Exception as e:
-            return Response(
-                {"message": f"Error: {e}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR
-            )
-
-    def put(self, request, pk):
-        try:
-            action = get_object_or_404(Action, pk=pk, user=request.user)
-            mutable_data = add_user(request.data.copy(), request.user.id)
-            serializer = ActionSerializer(action, data=mutable_data)
-            if szr_val_save(serializer):
-                return Response(serializer.data)
-            return Response(serializer.errors)
-        except Exception as e:
-            return Response(
-                {"message": f"Error: {e}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR
-            )
-
-    def delete(self, request, pk):
-        try:
-            action = get_object_or_404(Action, pk=pk, user=request.user)
-            action.delete()
-            return Response(
-                {"message": "Action deleted successfully."},
                 status=status.HTTP_204_NO_CONTENT,
             )
         except Exception as e:

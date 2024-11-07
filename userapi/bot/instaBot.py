@@ -1,4 +1,5 @@
 import random
+import requests, os
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
@@ -8,11 +9,15 @@ import json
 from .initiatebrowser import initiatebrowser
 from selenium.webdriver.common.action_chains import ActionChains
 from gologin import GoLogin
+from dotenv import load_dotenv
 
+
+load_dotenv()
+TOKEN = os.getenv("TOKEN")
 
 gl = GoLogin(
     {
-        "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2NzJhYTk1MDUzOTY4MzFkMjYxOWQ2MzQiLCJ0eXBlIjoiZGV2Iiwiand0aWQiOiI2NzJhYWJiMjRjMjQ2MmNhMDBiZTc4NTEifQ.hsp-WTRcol0UDv8so1S8-OzTPBLNMu15JgLHInT-JGg",
+        "token": TOKEN,
     }
 )
 
@@ -24,33 +29,80 @@ def delete_gologin_profile(profile_id):
         print(e)
 
 
+def get_fingerprint(os="win", resolution="1680x1050"):
+    # Define the API endpoint and parameters
+    url = "https://api.gologin.com/browser/fingerprint"
+    params = {
+        "os": os,
+        "resolution": resolution,
+    }
+    print(TOKEN)
+    # Set up the headers with your API token
+    headers = {
+        "Authorization": f"Bearer {TOKEN}",  # Replace with your actual token
+        "Content-Type": "application/json",
+    }
+
+    # Make the GET request
+    response = requests.get(url, headers=headers, params=params)
+
+    # Check the response
+    if response.status_code == 200:
+        # If the request was successful, you can process the response data
+        data = response.json()  # Parse the JSON response
+        return data
+    else:
+        # Handle errors
+        print(f"Error: {response.status_code} - {response.text}")
+        return response.json()
+
+
 def create_profile(profile_name):
+    fingerprints = get_fingerprint()
+    if "message" in fingerprints:
+        return fingerprints
     profile_id = gl.create(
         {
             "name": profile_name,
-            "os": "win",
-            "navigator": {
-                "language": "en-US",
-                "userAgent": "random",  # Your userAgent (if you don't want to change, leave it at 'random')
-                "resolution": "1024x768",  # Your resolution (if you want a random resolution - set it to 'random')
-                "platform": "win",
-            },
+            "notes": "",
+            "browserType": "chrome",
+            "os": fingerprints["os"],
+            "googleServicesEnabled": False,
+            "lockEnabled": False,
+            "debugMode": False,
+            "navigator": fingerprints["navigator"],
+            "geoProxyInfo": {},
             "proxyEnabled": False,  # Specify 'false' if not using proxy
             "proxy": {
-                "mode": "http",
-                "autoProxyRegion": "us",
-                # 'host': '',
-                # 'port': '',
-                # 'username': '',
-                # 'password': '',
+                "mode": "none",
             },
             "webRTC": {
                 "mode": "alerted",
                 "enabled": True,
+                "customize": True,
+                "localIpMasking": False,
+                "fillBasedOnIp": True,
             },
             "storage": {
                 "local": True,
+                "extensions": True,
+                "bookmarks": True,
+                "history": True,
+                "passwords": True,
+                "session": True,
             },
+            "plugins": {"enableVulnerable": True, "enableFlash": True},
+            "canvas": fingerprints["canvas"],
+            "fonts": {"families": fingerprints["fonts"]},
+            "mediaDevices": fingerprints["mediaDevices"],
+            "timezone": {
+                "enabled": True,
+                "fillBasedOnIp": True,
+            },
+            "webGL": fingerprints["webGL"],
+            "clientRects": {"mode": "noise", "noise": 0},
+            "webglParams": fingerprints["webglParams"],
+            "updateExtensions": True,
         }
     )
     print("profile id=", profile_id)
@@ -67,7 +119,6 @@ class InstaBot:
 
     def start_browser(self):
         self.driver = initiatebrowser.initiate_driver(self.profile_id)
-        # self.driver.maximize_window()
         if self.driver:
             self.wait = WebDriverWait(self.driver, 15)
             self.action = ActionChains(self.driver)
@@ -76,34 +127,27 @@ class InstaBot:
 
     def login(self, username, password):
         try:
-            print(username, password)
             self.driver.get("https://www.instagram.com/?hl=en")
-            print("Opened login page.")
             username_element = self.wait.until(
                 EC.visibility_of_element_located(("xpath", '//input[@name="username"]'))
             )
-            print("found username.")
             username_element.send_keys(username)
-            print("Entered username.")
             password_element = self.driver.find_element(
                 "xpath", '//input[@name="password"]'
             )
             password_element.send_keys(password)
+            time.sleep(1)
             password_element.send_keys(Keys.ENTER)
+            input(".")
             try:
-                not_now1 = self.wait.until(
-                    EC.presence_of_element_located(("xpath", '//div[@class="_ac8f"]'))
-                )
-                not_now1.click()
-                not_now2 = self.wait.until(
+                self.wait.until(
                     EC.presence_of_element_located(
-                        (
-                            "xpath",
-                            '//div[@class="_a9-z"]//button[@class="_a9-- _ap36 _a9_1"]',
-                        )
+                        ("xpath", '//div[@role="button" and text()="Not now"]')
                     )
+                ).click()
+                self.wait.until(
+                    EC.presence_of_element_located(("xpath", '//span[text()="Home"]'))
                 )
-                not_now2.click()
             except:
                 pass
             return True
@@ -117,7 +161,7 @@ class InstaBot:
                 EC.presence_of_element_located(
                     (
                         "xpath",
-                        '//div[@class="_aarf _aarg"]//img[@class="xpdipgo x972fbf xcfux6l x1qhh985 xm0m39n xk390pu x5yr21d xdj266r x11i5rnm xat24cr x1mh8g0r xl1xv1r xexx8yu x4uap5 x18d9i69 xkhd6sd x11njtxf xh8yej3"]',
+                        '//canvas[@class="x1upo8f9 xpdipgo x87ps6o"]',
                     )
                 )
             )
@@ -445,12 +489,11 @@ class InstaBot:
 
     def reel_viewer(self, username):
         try:
-            random_number = random.randint(0, 5)
             self.driver.get("https://www.instagram.com/" + username + "/reels")
-            self.wait.until(
+            link_list = self.wait.until(
                 EC.presence_of_all_elements_located(("xpath", '//div[@class="_aajy"]'))
             )
-            link_list = self.driver.find_elements("xpath", '//div[@class="_aajy"]')
+            random_number = random.randint(0, (len(link_list) - 1))
             link_list[random_number].click()
             time.sleep(5)
             return True
@@ -469,35 +512,34 @@ class InstaBot:
 
     def reel_liker(self, username):
         try:
-            link_list = []
-            random_number = random.randint(0, 5)
             self.driver.get("https://www.instagram.com/" + username + "/reels")
-            self.wait.until(
-                EC.presence_of_all_elements_located(("xpath", '//div[@class="_aajy"]'))
-            )
-            link_list = self.driver.find_elements("xpath", '//div[@class="_aajy"]')
-            link_list[random_number].click()
-            current_url = self.driver.current_url
-            modified_url = current_url.replace("reel", "reels")
-            self.driver.get(modified_url)
-            self.wait.until(
-                EC.presence_of_element_located(
+            link_list = self.wait.until(
+                EC.presence_of_all_elements_located(
                     (
                         "xpath",
-                        '//div[@class="html-div xe8uvvx xdj266r x11i5rnm x1mh8g0r xexx8yu x4uap5 x18d9i69 xkhd6sd x6s0dn4 x1ypdohk x78zum5 xdt5ytf xieb3on"]//span',
+                        f'//a[@role="link" and contains(@href, "/{username}/reel")]',
                     )
                 )
             )
-            span_element = self.driver.find_element(
-                "xpath",
-                '//div[@class="html-div xe8uvvx xdj266r x11i5rnm x1mh8g0r xexx8yu x4uap5 x18d9i69 xkhd6sd x6s0dn4 x1ypdohk x78zum5 xdt5ytf xieb3on"]//span',
-            )
-            span_element.click()
-            time.sleep(3)
-            return True
+            if link_list:
+                random_number = random.randint(0, (len(link_list) - 1))
+                link_list[random_number].click()
+                current_url = self.driver.current_url
+                modified_url = current_url.replace("reel", "reels")
+                self.driver.get(modified_url)
+                self.wait.until(
+                    EC.presence_of_element_located((By.CSS_SELECTOR, 'svg[aria-label="Like"]'))
+                ).click()
+                span_element = self.driver.find_element(
+                    "xpath",
+                    '//div[@class="html-div xe8uvvx xdj266r x11i5rnm x1mh8g0r xexx8yu x4uap5 x18d9i69 xkhd6sd x6s0dn4 x1ypdohk x78zum5 xdt5ytf xieb3on"]//span',
+                )
+                span_element.click()
+                time.sleep(3)
+                return True
         except Exception as error:
             print(f"Error: {error}")
-            return False
+        return False
 
     def reel_commenter(self, username, comment):
         try:

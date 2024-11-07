@@ -11,7 +11,6 @@ Serializers:
     - ActivityTimeSerializer(serializers.ModelSerializer): Serializer for ActivityTime model.
     - CredentialSerializer(serializers.ModelSerializer): Serializer for Credential model.
     - HashtagSerializer(serializers.ModelSerializer): Serializer for Hashtag model.
-    - TargetUserSerializer(serializers.ModelSerializer): Serializer for TargetUser model.
     - PostSerializer(serializers.ModelSerializer): Serializer for Post model.
     - ReelSerializer(serializers.ModelSerializer): Serializer for Reel model.
     - ActivityLogSerializer(serializers.ModelSerializer): Serializer for ActivityLog model.
@@ -30,16 +29,9 @@ from .dry import check_password
 from .models import (
     ActivityLog,
     ActivityTime,
-    Post,
-    Reel,
-    Hashtag,
     Stat,
-    TargetUser,
     Credential,
-    TargetType,
     Target,
-    Action,
-    Comment,
 )
 
 
@@ -208,88 +200,6 @@ class CredentialSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
 
-class HashtagSerializer(serializers.ModelSerializer):
-    """
-    Serializer for Hashtag model.
-
-    Fields:
-        - All fields from the Hashtag model.
-
-    Example:
-        >>> hashtag = Hashtag.objects.get(pk=1)
-        >>> serializer = HashtagSerializer(hashtag)
-        >>> serializer.data
-        {'id': 1, 'field1': 'value1', 'field2': 'value2', ...}
-    """
-
-    class Meta:
-        model = Hashtag
-        fields = "__all__"
-
-
-class CommentSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Comment
-        fields = "__all__"
-
-
-class TargetUserSerializer(serializers.ModelSerializer):
-    """
-    Serializer for TargetUser model.
-
-    Fields:
-        - All fields from the TargetUser model.
-
-    Example:
-        >>> target_user = TargetUser.objects.get(pk=1)
-        >>> serializer = TargetUserSerializer(target_user)
-        >>> serializer.data
-        {'id': 1, 'field1': 'value1', 'field2': 'value2', ...}
-    """
-
-    class Meta:
-        model = TargetUser
-        fields = "__all__"
-
-
-class PostSerializer(serializers.ModelSerializer):
-    """
-    Serializer for Post model.
-
-    Fields:
-        - All fields from the Post model.
-
-    Example:
-        >>> post = Post.objects.get(pk=1)
-        >>> serializer = PostSerializer(post)
-        >>> serializer.data
-        {'id': 1, 'field1': 'value1', 'field2': 'value2', ...}
-    """
-
-    class Meta:
-        model = Post
-        fields = "__all__"
-
-
-class ReelSerializer(serializers.ModelSerializer):
-    """
-    Serializer for Reel model.
-
-    Fields:
-        - All fields from the Reel model.
-
-    Example:
-        >>> reel = Reel.objects.get(pk=1)
-        >>> serializer = ReelSerializer(reel)
-        >>> serializer.data
-        {'id': 1, 'field1': 'value1', 'field2': 'value2', ...}
-    """
-
-    class Meta:
-        model = Reel
-        fields = "__all__"
-
-
 class ActivityLogSerializer(serializers.ModelSerializer):
     """
     Serializer for ActivityLog model.
@@ -328,21 +238,8 @@ class StatSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
 
-class TargetTypeSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = TargetType
-        fields = "__all__"
-
-
-class ActionSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Action
-        fields = "__all__"
-
-
 class TargetSerializer(serializers.ModelSerializer):
     insta_user = CredentialSerializer(required=False)
-    target_type = TargetTypeSerializer(required=False)
 
     class Meta:
         model = Target

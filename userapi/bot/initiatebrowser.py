@@ -1,16 +1,14 @@
-import time, json, requests
-from ast import literal_eval
+import time, json, requests, os
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
 from gologin import GoLogin
-from sys import platform
+from dotenv import load_dotenv
 
-if platform == "linux" or platform == "linux2":
-    chrome_driver_path = "./chromedriver"
-elif platform == "darwin":
-    chrome_driver_path = "./mac/chromedriver"
-elif platform == "win32":
-    chrome_driver_path = "chromedriver.exe"
+
+load_dotenv()
+TOKEN = os.getenv("TOKEN")
+
+chrome_driver_path = "chromedriver.exe"
 
 
 class initiatebrowser:
@@ -38,7 +36,7 @@ class initiatebrowser:
         try:
             gl = GoLogin(
                 {
-                    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2NzJhYTk1MDUzOTY4MzFkMjYxOWQ2MzQiLCJ0eXBlIjoiZGV2Iiwiand0aWQiOiI2NzJhYWJiMjRjMjQ2MmNhMDBiZTc4NTEifQ.hsp-WTRcol0UDv8so1S8-OzTPBLNMu15JgLHInT-JGg",
+                    "token": TOKEN,
                     "profile_id": profile_id,
                 }
             )

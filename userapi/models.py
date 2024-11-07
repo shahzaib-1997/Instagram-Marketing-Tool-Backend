@@ -7,7 +7,6 @@ Classes:
     - ActivityTime: Model to store user activity time.
     - Credential: Model to store Instagram credentials for a user.
     - Hashtag: Model to store user-defined hashtags.
-    - TargetUser: Model to store target usernames for user activity tracking.
     - Post: Model to store user posts.
     - Reel: Model to store user reels.
     - ActivityLog: Model to store user activity logs.
@@ -108,69 +107,6 @@ class Credential(models.Model):
         return f"{self.user.username} - {self.username}"
 
 
-class TargetType(models.Model):
-    """
-    Model representing the target type.
-
-    Attributes:
-        user (ForeignKey): The user associated with the target type.
-        type (CharField): The type of the target, chosen from predefined options.
-
-    Methods:
-        __str__: Returns a string representation of the object.
-    """
-
-    options = (
-        ("post-like", "post-like"),
-        ("post-comment", "post-comment"),
-        ("comment-like", "comment-like"),
-        ("reels-view", "reels-view"),
-        ("reels-like", "reels-like"),
-        ("reels-comment", "reels-comment"),
-        ("hashtag-like", "hashtag-like"),
-        ("hashtag-comment", "hashtag-comment"),
-    )
-
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    type = models.CharField(max_length=255, choices=options)
-    time_stamp = models.DateTimeField(auto_now_add=True, blank=True, null=True)
-
-    def __str__(self):
-        """
-        method __str__(): Returns a string representation of the object.
-        """
-        return f"{self.user.username} - {self.type}"
-
-
-class Action(models.Model):
-    """
-    Model representing an action.
-
-    Attributes:
-        user (ForeignKey): The user associated with the action.
-        type (CharField): The type of the action, chosen from predefined options.
-        action_target_type (ForeignKey): The target type associated with the action.
-
-    Methods:
-        __str__: Returns a string representation of the object.
-    """
-
-    options = (("like", "like"), ("view", "view"))
-
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    type = models.CharField(max_length=255, choices=options)
-    action_target_type = models.ForeignKey(
-        TargetType, on_delete=models.CASCADE, null=True, blank=True
-    )
-    time_stamp = models.DateTimeField(auto_now_add=True, blank=True, null=True)
-
-    def __str__(self):
-        """
-        method __str__(): Returns a string representation of the object.
-        """
-        return f"{self.user.username} - {self.type} - {self.action_target_type}"
-
-
 class Target(models.Model):
     """
     Model representing a target.
@@ -185,191 +121,48 @@ class Target(models.Model):
         __str__: Returns a string representation of the object.
     """
 
+    TARGET_TYPE_CHOICES = (
+        ("post-like", "post-like"),
+        ("post-comment", "post-comment"),
+        ("comment-like", "comment-like"),
+        ("reels-view", "reels-view"),
+        ("reels-like", "reels-like"),
+        ("reels-comment", "reels-comment"),
+        ("hashtag-like", "hashtag-like"),
+        ("hashtag-comment", "hashtag-comment"),
+    )
     options = [
         (0, "Not Started"),
         (1, "Running"),
         (2, "Completed"),
     ]
+    LIKE_CHOICES = [
+        ("first","First"),
+        ("last","Last"),
+        ("last & first","Last & first"),
+        ("last 2","Last 2"),
+        ("last 3","Last 3"),
+        ("last 4","Last 4"),
+        ("last 5","Last 5"),
+    ]
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     insta_user = models.ForeignKey(
         Credential, on_delete=models.CASCADE, null=True, blank=True
     )
-    target_type = models.ForeignKey(
-        TargetType, on_delete=models.CASCADE, null=True, blank=True
-    )
-    actions = models.ForeignKey(Action, on_delete=models.CASCADE, null=True, blank=True)
+    target_type = models.CharField(max_length=50, choices=TARGET_TYPE_CHOICES, null=True, blank=True)
     user_comment = models.TextField(default="", null=True, blank=True)
-    time_stamp = models.DateTimeField(auto_now_add=True, blank=True, null=True)
+    url = models.TextField(default="")
+    view_story = models.BooleanField(default=False)
+    like_story = models.BooleanField(default=False)
+    like_option = models.CharField(max_length=20, choices=LIKE_CHOICES, null=True, blank=True)
+    time_stamp = models.DateTimeField(auto_now_add=True)
     status = models.IntegerField(choices=options, default=0)
 
     def __str__(self):
         """
         method __str__(): Returns a string representation of the object.
         """
-        return f"{self.user.username} - {self.insta_user.username} - {self.target_type.type} - {dict(self.options).get(self.status)}"
-
-
-class Hashtag(models.Model):
-    """
-    Model to store user-defined hashtags.
-
-    Attributes:
-        hashtag (CharField): The user-defined hashtag.
-        user (ForeignKey): A foreign key to the User model representing the user associated with the hashtag.
-
-    Methods:
-        __str__(): Returns a string representation of the object.
-
-    Example:
-        >>> hashtag = Hashtag.objects.get(id=1)
-        >>> print(hashtag)
-        "username - user_defined_hashtag"
-    """
-
-    options = (
-        ("like", "like"),
-        ("comment", "comment"),
-    )
-
-    type = models.CharField(max_length=255, choices=options, null=True, blank=True)
-    url = models.TextField(default="")
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    target = models.ForeignKey(Target, on_delete=models.CASCADE, null=True, blank=True)
-    time_stamp = models.DateTimeField(auto_now_add=True, blank=True, null=True)
-
-    def __str__(self):
-        """
-        method __str__(): Returns a string representation of the object.
-        """
-        return f"{self.user.username} - {self.url}"
-
-
-class TargetUser(models.Model):
-    """
-    Model to store target usernames for user activity tracking.
-
-    Attributes:
-        username (CharField): The target username.
-        user (ForeignKey): A foreign key to the User model representing the user associated with the target username.
-
-    Methods:
-        __str__(): Returns a string representation of the object.
-
-    Example:
-        >>> target_user = TargetUser.objects.get(id=1)
-        >>> print(target_user)
-        "username - target_username"
-    """
-
-    username = models.CharField(max_length=255)
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    target = models.ForeignKey(Target, on_delete=models.CASCADE, null=True, blank=True)
-    time_stamp = models.DateTimeField(auto_now_add=True, blank=True, null=True)
-
-    def __str__(self):
-        """
-        method __str__(): Returns a string representation of the object.
-        """
-        return f"{self.user.username} - {self.username}"
-
-
-class Post(models.Model):
-    """
-    Model to store user posts.
-
-    Attributes:
-        url (URLField): The URL of the user's post.
-        user (ForeignKey): A foreign key to the User model representing the user associated with the post.
-
-    Methods:
-        __str__(): Returns a string representation of the object.
-
-    Example:
-        >>> post = Post.objects.get(id=1)
-        >>> print(post)
-        "username - post_url"
-    """
-
-    options = (
-        ("like", "like"),
-        ("comment", "comment"),
-    )
-
-    type = models.CharField(max_length=255, choices=options, null=True, blank=True)
-    url = models.TextField()
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    target = models.ForeignKey(Target, on_delete=models.CASCADE, null=True, blank=True)
-    time_stamp = models.DateTimeField(auto_now_add=True, blank=True, null=True)
-
-    def __str__(self):
-        """
-        method __str__(): Returns a string representation of the object.
-        """
-        return f"{self.user.username} - {self.url}"
-
-
-class Comment(models.Model):
-    url = models.TextField(default="")
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    target = models.ForeignKey(Target, on_delete=models.CASCADE, null=True, blank=True)
-    time_stamp = models.DateTimeField(auto_now_add=True, blank=True, null=True)
-
-    def __str__(self):
-        """
-        method __str__(): Returns a string representation of the object.
-        """
-        return f"{self.user.username} - {self.url[:25]}"
-
-
-class Story(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    target = models.ForeignKey(Target, on_delete=models.CASCADE, null=True, blank=True)
-    url = models.TextField(default="")
-    like = models.BooleanField(default=False)
-    view = models.BooleanField(default=False)
-    time_stamp = models.DateTimeField(auto_now_add=True, blank=True, null=True)
-
-    def __str__(self):
-        """
-        method __str__(): Returns a string representation of the object.
-        """
-        return f"{self.user.username} - {self.url[:25]}"
-
-
-class Reel(models.Model):
-    """
-    Model to store user reels.
-
-    Attributes:
-        url (URLField): The URL of the user's reel.
-        user (ForeignKey): A foreign key to the User model representing the user associated with the reel.
-
-    Methods:
-        __str__(): Returns a string representation of the object.
-
-    Example:
-        >>> reel = Reel.objects.get(id=1)
-        >>> print(reel)
-        "username - reel_url"
-    """
-
-    options = (
-        ("like", "like"),
-        ("comment", "comment"),
-        ("view", "view"),
-    )
-
-    type = models.CharField(max_length=255, choices=options, null=True, blank=True)
-    url = models.TextField()
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    target = models.ForeignKey(Target, on_delete=models.CASCADE, null=True, blank=True)
-    time_stamp = models.DateTimeField(auto_now_add=True, blank=True, null=True)
-
-    def __str__(self):
-        """
-        method __str__(): Returns a string representation of the object.
-        """
-        return f"{self.user.username} - {self.url}"
+        return f"{self.user.username} - {self.insta_user.username} - {self.target_type} - {dict(self.options).get(self.status)}"
 
 
 class ActivityLog(models.Model):

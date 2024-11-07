@@ -1470,6 +1470,15 @@ Reactions.ScheduleForm = function() {
             $form.find(".js-massvoting-settings").find(":input").prop("disabled", true);
         }
     }).trigger("change");
+    $form.find(":input[name='view-stories']").on("change", function() {
+        if ($(this).is(":checked")) {
+            $form.find(".like-stories-div").css("opacity", "1");
+            $form.find(".like-stories-div").find(":input").prop("disabled", false);
+        } else {
+            $form.find(".like-stories-div").css("opacity", "0.25");
+            $form.find(".like-stories-div").find(":input").prop("disabled", true);
+        }
+    });
     $form.find(":input[name='like-stories']").on("change", function() {
         if ($(this).is(":checked") || isMassvoting()) {
             $form.find(".js-like-stories-algorithm").css("opacity", "1");

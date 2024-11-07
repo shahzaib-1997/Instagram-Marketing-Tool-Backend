@@ -3,15 +3,9 @@ from django.contrib.auth.models import User
 from userapi.models import (
     ActivityTime,
     Credential,
-    Hashtag,
-    TargetUser,
-    Post,
-    Reel,
     ActivityLog,
     Stat,
     Target,
-    TargetType,
-    Action,
 )
 
 
@@ -34,28 +28,6 @@ class ModelsTestCase(TestCase):
         self.assertEqual(insta_credential.username, "test_username")
         self.assertEqual(insta_credential.password, "test_password")
 
-    def test_hashtag_model(self):
-        hashtag = Hashtag.objects.create(user=self.user, hashtag="test_hashtag")
-        self.assertEqual(hashtag.user, self.user)
-        self.assertEqual(hashtag.hashtag, "test_hashtag")
-
-    def test_target_user_model(self):
-        target_user = TargetUser.objects.create(
-            user=self.user, username="test_target_user"
-        )
-        self.assertEqual(target_user.user, self.user)
-        self.assertEqual(target_user.username, "test_target_user")
-
-    def test_post_model(self):
-        post = Post.objects.create(user=self.user, url="https://example.com")
-        self.assertEqual(post.user, self.user)
-        self.assertEqual(post.url, "https://example.com")
-
-    def test_reel_model(self):
-        reel = Reel.objects.create(user=self.user, url="https://example.com")
-        self.assertEqual(reel.user, self.user)
-        self.assertEqual(reel.url, "https://example.com")
-
     def test_activity_log_model(self):
         activity_log = ActivityLog.objects.create(
             user=self.user, activity="test_activity"
@@ -71,36 +43,11 @@ class ModelsTestCase(TestCase):
         self.assertEqual(stat.engagement_rate, 5.0)
         self.assertIsNotNone(stat.time_stamp)
 
-    def test_target_type_model(self):
-        target_type = TargetType.objects.create(user=self.user, type="option_1")
-        self.assertEqual(target_type.user, self.user)
-        self.assertEqual(target_type.type, "option_1")
-
-    def test_action_model(self):
-        target_type = TargetType.objects.create(user=self.user, type="option_1")
-        action = Action.objects.create(
-            user=self.user, type="option_2", action_target_type=target_type
-        )
-        self.assertEqual(action.user, self.user)
-        self.assertEqual(action.type, "option_2")
-        self.assertEqual(action.action_target_type, target_type)
-
     def test_target_model(self):
-        target_type = TargetType.objects.create(user=self.user, type="option_1")
-        activity_time = ActivityTime.objects.create(user=self.user)
-        action = Action.objects.create(
-            user=self.user, type="option_2", action_target_type=target_type
-        )
         target = Target.objects.create(
             user=self.user,
-            target_type=target_type,
-            activity_time=activity_time,
-            actions=action,
         )
         self.assertEqual(target.user, self.user)
-        self.assertEqual(target.target_type, target_type)
-        self.assertEqual(target.activity_time, activity_time)
-        self.assertEqual(target.actions, action)
 
 
 """
