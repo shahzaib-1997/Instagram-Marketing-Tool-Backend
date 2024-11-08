@@ -143,7 +143,7 @@ def main(url_string, user):
                                             username = username[-2]
                                         else:
                                             username = username[-1]
-                                        user_bot.story_viewer(username)
+                                        user_bot.story_viewer(username, target["like_story"], target["like_option"])
 
                             if status:
                                 target["status"] = 2

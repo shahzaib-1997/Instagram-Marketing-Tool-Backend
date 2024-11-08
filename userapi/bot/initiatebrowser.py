@@ -30,7 +30,7 @@ class initiatebrowser:
 
         time.sleep(6)
 
-    def initiate_driver(profile_id):
+    def initiate_driver(profile_id, first_time):
         # localhost:35000/profile/launch/{profile_id}/force/cloud
 
         try:
@@ -38,6 +38,10 @@ class initiatebrowser:
                 {
                     "token": TOKEN,
                     "profile_id": profile_id,
+                    "local": first_time,
+                    "uploadCookiesToServer": True,
+                    "writeCookiesFromServer": True,
+                    "restore_last_session": True,
                 }
             )
             debugger_address = gl.start()

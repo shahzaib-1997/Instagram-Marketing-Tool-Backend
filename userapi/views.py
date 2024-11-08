@@ -356,7 +356,7 @@ class InstaCredentialView(APIView):
                 profile_id = create_profile(f"{request.user} - {username}")
                 check = insta_login(profile_id, username, password)
                 if not check:
-                    messages.error(request, "Provided credentials are incorrect!")
+                    print("Provided credentials are incorrect!")
                     delete_gologin_profile(profile_id)
                 else:
                     credential = Credential(
@@ -370,7 +370,7 @@ class InstaCredentialView(APIView):
                 Credential.objects.filter(user=request.user, username=pk).update(
                     username=username, password=password
                 )
-                messages.success(request, "Details updated successfully!")
+                print("Details updated successfully!")
             insta_creds = Credential.objects.filter(user=request.user)
             if insta_creds:
                 return render(
@@ -379,22 +379,21 @@ class InstaCredentialView(APIView):
             return render(request, "Accounts.html")
         except Exception as e:
             if "UNIQUE" in str(e):
-                messages.error(request, "Username already exists against your account!")
+                print("Username already exists against your account!")
             else:
-                messages.error(request, str(e))
+                print(str(e))
             return redirect("userapi:accounts")
 
     def delete(self, request, pk):
         if not request.user.is_authenticated:
-            messages.error(request, "You need to login first.")
-            return redirect(f"/signin/?next={request.path}")
+            return Response("You need to login first.", status=status.HTTP_401_UNAUTHORIZED)
         try:
             credential = get_object_or_404(Credential, username=pk, user=request.user)
             delete_gologin_profile(credential.profile_id)
             credential.delete()
             return Response(status=status.HTTP_204_NO_CONTENT)
         except Exception as e:
-            messages.error(request, str(e))
+            print(str(e))
             return Response(status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 

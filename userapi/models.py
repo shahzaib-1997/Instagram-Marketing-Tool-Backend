@@ -140,10 +140,7 @@ class Target(models.Model):
         ("first","First"),
         ("last","Last"),
         ("last & first","Last & first"),
-        ("last 2","Last 2"),
-        ("last 3","Last 3"),
-        ("last 4","Last 4"),
-        ("last 5","Last 5"),
+        ("all","All"),
     ]
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     insta_user = models.ForeignKey(
