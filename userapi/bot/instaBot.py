@@ -2,6 +2,7 @@ import random
 import requests, os
 import time
 import json
+import re
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
@@ -143,9 +144,12 @@ class InstaBot:
                 if self.driver.current_url != url:
                     self.driver.get(url)
                 self.wait.until(
-                    EC.presence_of_element_located(("xpath", '//span[text()="Home"]'))
-                )
-                return True
+                    EC.presence_of_element_located(("xpath", '//span[text()="Profile"]'))
+                ).click()
+                username = self.wait.until(
+                    EC.presence_of_element_located(("xpath", '//a[@href="#"]/h2'))
+                ).text
+                return username
             except:
                 pass
         except Exception as e:
@@ -172,7 +176,7 @@ class InstaBot:
                 for i, story in enumerate(stories):
                     try:
                         # Check if the inner div is present within the current story
-                        inner_div = story.find_element(By.XPATH, "./div")
+                        inner_div = story.find_element("xpath", "./div")
                         if inner_div:
                             # Process the inner div as needed
                             filtered_stories = stories[i:]
@@ -181,20 +185,20 @@ class InstaBot:
                         pass
 
                 for i, story in enumerate(filtered_stories):
+                    if like_story:
+                        if (
+                            like_option == "all"
+                            or (like_option in ["first", "last & first"] and i == 0)
+                            or (
+                                like_option in ["last", "last & first"]
+                                and i == len(stories) - 1
+                            )
+                        ):
+                            self.like_function()
+
+                    time.sleep(random.uniform(2, 4))
+
                     try:
-                        if like_story:
-                            if (
-                                like_option == "all"
-                                or (like_option in ["first", "last & first"] and i == 0)
-                                or (
-                                    like_option in ["last", "last & first"]
-                                    and i == len(stories) - 1
-                                )
-                            ):
-                                self.like_function()
-
-                        time.sleep(random.uniform(2, 4))
-
                         next_button = self.wait.until(
                             EC.presence_of_element_located(
                                 (By.CSS_SELECTOR, 'svg[aria-label="Next"]')
@@ -204,7 +208,7 @@ class InstaBot:
                             "arguments[0].parentNode.click();", next_button
                         )
                     except Exception as e:
-                        print(f"Error processing story: {e}")
+                        print(f"No next story")
                         break
         except Exception as e:
             print(f"There is an {e}. Please Retry!")
@@ -618,6 +622,103 @@ class InstaBot:
         except Exception as e:
             print(f"Error: {e}")
             return False
+
+    def get_username(self, url):
+        try:
+            self.driver.get(url)
+            username = self.wait.until(
+                EC.presence_of_element_located(
+                    ("xpath", "//a[contains(@class,'notranslate')]")
+                )
+            ).text
+            return username
+        except Exception as e:
+            print(f"Error: {e}")
+            return False
+
+    def load_profile_page(self, username):
+        """Load the profile page for the given username, only if not already loaded."""
+        url = f"https://www.instagram.com/{username}"
+        if self.driver.current_url != url:
+            self.driver.get(url)
+
+    def get_count_by_index(self, index):
+        """Helper to get post, followers, or following count by index."""
+        try:
+            count_text = self.wait.until(
+                EC.presence_of_element_located(
+                    (
+                        By.XPATH,
+                        f'(//span[@class="html-span xdj266r x11i5rnm xat24cr x1mh8g0r xexx8yu x4uap5 x18d9i69 xkhd6sd x1hl2dhg x16tdsg8 x1vvkbs"])[{index}]',
+                    )
+                )
+            ).text
+            return self.parse_count(count_text)
+        except:
+            print(f"Unable to locate count element at index {index}")
+            return 0
+
+    def get_posts(self, username):
+        self.load_profile_page(username)
+        return self.get_count_by_index(1)
+
+    def get_followers(self, username):
+        self.load_profile_page(username)
+        return self.get_count_by_index(2)
+
+    def get_following(self, username):
+        self.load_profile_page(username)
+        return self.get_count_by_index(3)
+
+    def get_likes_comments(self, username):
+        self.load_profile_page(username)
+
+        total_likes = 0
+        total_comments = 0
+
+        try:
+            posts = self.wait.until(
+                EC.presence_of_all_elements_located((By.XPATH, '//div[@class="_aagu"]'))
+            )
+        except:
+            print("No posts found or page load took too long.")
+            return total_likes, total_comments
+
+        try:
+            pinned_count = len(
+                self.driver.find_elements(By.CSS_SELECTOR, "svg[aria-label='Pinned post icon']")
+            )
+        except:
+            pinned_count = 0
+
+        for post in posts[pinned_count:pinned_count + 5]:
+            try:
+                self.action.move_to_element(post).perform()
+                likes = post.find_element(By.XPATH, 'following-sibling::div[2]/ul/li').text
+                total_likes += self.parse_count(likes)
+            except:
+                print("Likes element not found for this post.")
+
+            try:
+                comments = post.find_element(By.XPATH, 'following-sibling::div[2]/ul/li[2]').text
+                total_comments += self.parse_count(comments)
+            except:
+                print("Comments element not found for this post.")
+
+        return total_likes, total_comments
+
+    def parse_count(self, text):
+        """Parse the like/comment text into an integer count with support for 'K' and 'M' suffixes."""
+        try:
+            if "K" in text:
+                return int(float(text.replace("K", "")) * 1000)
+            elif "M" in text:
+                return int(float(text.replace("M", "")) * 1000000)
+            else:
+                return int(re.sub(r'[^\d]', '', text))
+        except ValueError:
+            print(f"Error parsing count from text: {text}")
+            return 0
 
 
 def insta_login(profile_id, username, password):

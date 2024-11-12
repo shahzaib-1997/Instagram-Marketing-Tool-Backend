@@ -49,7 +49,6 @@ class initiatebrowser:
             chrome_options = webdriver.ChromeOptions()
             chrome_options.add_experimental_option("debuggerAddress", debugger_address)
             driver = webdriver.Chrome(service=service, options=chrome_options)
-            driver.maximize_window()
             return driver
         except Exception as e:
             print(f"Error in initiate_driver: {e}")

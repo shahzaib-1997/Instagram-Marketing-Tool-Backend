@@ -354,14 +354,15 @@ class InstaCredentialView(APIView):
             password = request.POST.get("password")
             if pk is None:
                 profile_id = create_profile(f"{request.user} - {username}")
-                check = insta_login(profile_id, username, password)
-                if not check:
+                insta_user = insta_login(profile_id, username, password)
+                if not insta_user:
                     print("Provided credentials are incorrect!")
                     delete_gologin_profile(profile_id)
                 else:
+
                     credential = Credential(
                         user=request.user,
-                        username=username,
+                        username=insta_user,
                         password=password,
                         profile_id=profile_id,
                     )
@@ -742,7 +743,7 @@ class TargetView(BaseAPIView, RenderAPIView):
 class TargetUpdateView(APIView):
     def get(self, request):
         try:
-            count = Target.objects.all().update(status=0)
+            count = Target.objects.filter(status=2).update(status=0)
             return Response(count)
         except Exception as e:
             print(e)

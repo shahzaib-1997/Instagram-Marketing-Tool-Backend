@@ -4,8 +4,10 @@ from .instaBot import InstaBot
 from datetime import datetime
 from userapi.host_url import BASE_URL
 
+url_string = BASE_URL
 
-def main(url_string, user):
+
+def main(user):
     header = requests.post(f"{url_string}token/", data={"user_id": user}).json()
     targets = requests.get(f"{url_string}target/", headers=header).json()
 
@@ -138,12 +140,20 @@ def main(url_string, user):
                                             )
 
                                     if target["view_story"]:
-                                        username = url.split("/")
-                                        if username[-1] == "":
-                                            username = username[-2]
+                                        if any(sub in url for sub in ["/reel/", "/p/", "/reels/"]):
+                                            username = user_bot.get_username(url)
                                         else:
-                                            username = username[-1]
-                                        user_bot.story_viewer(username, target["like_story"], target["like_option"])
+                                            username = url.split("/")
+                                            if username[-1] == "":
+                                                username = username[-2]
+                                            else:
+                                                username = username[-1]
+                                        if username:
+                                            user_bot.story_viewer(
+                                                username,
+                                                target["like_story"],
+                                                target["like_option"],
+                                            )
 
                             if status:
                                 target["status"] = 2
@@ -164,26 +174,17 @@ def main(url_string, user):
                                 headers=header,
                                 data=activity_log,
                             )
-                            print(activity_log["activity"])
 
                             try:
                                 user_bot.driver.close()
-                                print("driver closed")
                             except:
                                 pass
 
-        # elif current_status == 1:
-        #     print("The program is currently running")
-
-        # elif current_status == 2:
-        #     print("The target is already fullfilled")
-
 
 def fetch_users():
-    url_string = BASE_URL
     users = requests.get(f"{url_string}all-users/").json()
     for user in users:
-        t = threading.Thread(target=main, args=(url_string, user))
+        t = threading.Thread(target=main, args=(user,))
         t.start()
 
 
@@ -193,4 +194,4 @@ def thread_func():
 
 
 def daily_update_target():
-    resp = requests.get(f"{BASE_URL}target-update/")
+    requests.get(f"{url_string}target-update/")
