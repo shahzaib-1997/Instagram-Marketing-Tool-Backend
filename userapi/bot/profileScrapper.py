@@ -14,7 +14,7 @@ def scrape_profile_data(credential):
         username = credential["username"]
         password = credential["password"]
         username = user_bot.login(username, password)
-        data = {"user": credential["user"], "insta_account": credential["id"]}
+        data = {"insta_account": credential["id"]}
         try:
             no_of_posts = user_bot.get_posts(username)
             data["type"] = "posts"

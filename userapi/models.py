@@ -219,9 +219,8 @@ class Stat(models.Model):
         ("following", "following"),
         ("engagement_rate", "engagement_rate"),
     )
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
     insta_account = models.ForeignKey(
-        Credential, on_delete=models.CASCADE, null=True, blank=True
+        Credential, on_delete=models.CASCADE, null=True, blank=True, related_name="stats"
     )
     type = models.CharField(max_length=255, choices=options, null=True, blank=True)
     count = models.PositiveIntegerField()

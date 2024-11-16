@@ -9,6 +9,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout, update_session_auth_hash
 from django.contrib import messages
 from django.utils import timezone
+from django.db.models import Max
 from .dry import BaseAPIView, RenderAPIView, szr_val_save, add_user
 from .bot.instaBot import create_profile, insta_login, delete_gologin_profile
 from .models import (
@@ -337,6 +338,20 @@ class InstaCredentialView(APIView):
         if request.user.is_authenticated:
             insta_creds = Credential.objects.filter(user=request.user)
             if insta_creds:
+                for insta_cred in insta_creds:
+                    # Get the last saved record for each type against the insta_cred
+                    last_records = (
+                        Stat.objects.filter(insta_account=insta_cred)
+                        .values('type')
+                        .annotate(last_time_stamp=Max('time_stamp'))
+                        .values('type', 'last_time_stamp')
+                    )
+
+                    # Retrieve the actual records using the annotated timestamps
+                    result = Stat.objects.filter(
+                        insta_account=insta_cred,
+                        time_stamp__in=[item['last_time_stamp'] for item in last_records]
+                    )
                 return render(
                     request, "Saved Accounts.html", {"insta_creds": insta_creds}
                 )

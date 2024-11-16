@@ -8,6 +8,7 @@ url_string = BASE_URL
 
 
 def main(user):
+    print(f"checking target of user: {user}")
     header = requests.post(f"{url_string}token/", data={"user_id": user}).json()
     targets = requests.get(f"{url_string}target/", headers=header).json()
 
@@ -25,10 +26,12 @@ def main(user):
                 current_datetime = datetime.now()
 
                 if target_day == current_datetime.weekday():
+                    print("target day matched!")
                     target_times = activity_time["time"].split(",")
                     for target_time in target_times:
 
                         if int(target_time.strip()) == current_datetime.hour:
+                            print("target time matched!")
                             target["status"] = 1
                             update_status = requests.put(
                                 f"{url_string}target/{current_id}/",
@@ -189,6 +192,7 @@ def fetch_users():
 
 
 def thread_func():
+    print("thread function started!")
     s = threading.Thread(target=fetch_users)
     s.start()
 

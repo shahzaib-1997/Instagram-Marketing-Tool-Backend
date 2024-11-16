@@ -33,10 +33,8 @@ import atexit
 
 # Initialize the scheduler
 scheduler = BackgroundScheduler()
-scheduler.add_job(thread_func, "interval", hours=1)
-
-# Schedule the second function to run every day at midnight
 scheduler.add_job(daily_update_target, "interval", hours=1)
+scheduler.add_job(thread_func, "interval", hours=1)
 
 # Schedule the second function to run once a day at a specific time
 # For example, let's say you want it to run every day at 5 AM
