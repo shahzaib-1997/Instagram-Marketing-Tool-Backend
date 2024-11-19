@@ -21,6 +21,8 @@
     <link rel="stylesheet" type="text/css" href="{% static '' %}Targeting Settings_files/core.css" />
     <link rel="stylesheet" type="text/css" href="{% static '' %}Targeting Settings_files/bypassing.css" />
     <link rel="stylesheet" type="text/css" href="{% static '' %}Targeting Settings_files/accounts-filters.css" />
+    <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
       ; (function (w) {
         w.fpr =
@@ -91,7 +93,7 @@
                         <a href="/accounts/">Edit</a>
                       </li>
                       <li>
-                        <a href="/accounts/">Delete</a>
+                        <a href="javascript:void(0)" onclick="confirmDelete('{{ insta_cred.username }}')">Delete</a>
                       </li>
                     </ul>
                   </div>
@@ -99,18 +101,18 @@
                 <div class="clearfix account-basic-numbers pt-10">
                   <div class="col s4 m4 l4 accounts-page-posts">
                     <div class="sub">Posts</div>
-                    <span>-</span>
+                    <span>{{insta_cred.posts}}</span>
                   </div>
                   <div class="col s4 m4 l4 accounts-page-followers">
                     <div class="sub">Followers</div>
-                    <span>-</span>
+                    <span>{{insta_cred.followers}}</span>
                   </div>
                   <div class="col s4 s-last m4 m-last l4 l-last accounts-page-follow">
                     <div class="sub">Followings</div>
-                    <span>-</span>
+                    <span>{{insta_cred.following}}</span>
                   </div>
                 </div>
-                <div class="clearfix insights-basic-buttons mt-20">
+                <!-- <div class="clearfix insights-basic-buttons mt-20">
                   <a class="insights-basic-week insights-basic-button insights-basic--first active" href="javascript:void(0)" data-type="week" data-url="/accounts">Week</a>
                   <a class="insights-basic-month insights-basic-button" href="javascript:void(0)" data-type="month" data-url="/accounts">Month</a>
                   <a class="insights-basic-year insights-basic-button insights-basic--last" href="javascript:void(0)" data-type="year" data-url="/accounts">Year</a>
@@ -119,18 +121,9 @@
                   <div class="insights-basic-table-button-class">
                     <a class="insights-basic-table insights-basic--uno" href="javascript:void(0)" data-type="table" data-username="{{ insta_cred.username }}" data-url="/accounts"><span class="icon-list insights-basic-table-icon mr-5"></span>View table</a>
                   </div>
-                </div>
-                <div class="insights-basic-quick-info mt-5">
-                  <a class="insights-basic-quick-info-label">Followers count</a>
-                  <div class="insights-basic-diff"></div>
-                </div>
-                <div class="clearfix insights-basic js-get-insights-loaded" data-url="/accounts">
-                  <div class="insights-basic-chart">
-                    <canvas id="insights-basic-canvas" class="none"></canvas>
-                  </div>
-                  <div class="insights-basic-data-in-progress">
-                    <label class="insights-basic-data-in-progress-label"><span class="icon-chart mr-5"></span>Data collection started</label>
-                  </div>
+                </div> -->
+                <div class="clearfix">
+                  <a class="fluid button button--footer" href="/stats/{{insta_cred.id}}">View Complete Stats</a>
                 </div>
                 <div>
                   <a class="fluid button button--footer" href="https://instagram.com/{{ insta_cred.username }}" target="_blank">View timeline</a>
@@ -269,6 +262,67 @@
         NextPost.FlushAccelerators()
         NextPost.RemoveLoginRequired()
       })
+    </script>
+    <script>
+      function confirmDelete(username) {
+        // Check if user prefers dark mode
+        const isDarkMode = $('body').hasClass('darkside');
+
+        Swal.fire({
+          title: "Confirm Delete",
+          icon: "warning",
+          html: `Are you sure to delete instagram account "<strong>${username}</strong>"? You won't be able to revert this!`,
+          showCloseButton: true,
+          showCancelButton: true,
+          focusConfirm: false,
+          confirmButtonColor: isDarkMode ? "#ef4444" : "#dc2626",
+          cancelButtonColor: isDarkMode ? "#3b82f6" : "#2563eb",
+          confirmButtonText: "Yes, Delete",
+          confirmButtonAriaLabel: "Confirm",
+          cancelButtonText: "No, take me back",
+          cancelButtonAriaLabel: "Cancel",
+          ...(isDarkMode && {
+            background: '#1e1e1e',
+            color: '#fff',
+            // Optional: customize popup shadow in dark mode
+            showClass: {
+              popup: 'swal2-show shadow-[0_0_20px_rgba(0,0,0,0.4)]'
+            }
+          })
+        }).then((result) => {
+          /* Read more about isConfirmed, isDenied below */
+          if (result.isConfirmed) {
+            deleteInstaCred(username);
+          }
+        });;
+      }
+
+      function deleteInstaCred(username) {
+        var url = `/account/${username}/`;
+
+        fetch(url, {
+          method: 'DELETE',
+          headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': "{{csrf_token}}",
+          },
+        })
+          .then(response => {
+            if (response.ok) {
+              // Handle success (e.g., show a success message, refresh the page)
+              window.location.pathname = '/accounts/';
+            } else {
+              // If the server returns an error, throw it to be caught by Swal
+              throw new Error('Failed to delete account');
+            }
+          })
+          .catch(error => {
+            // Handle network or other errors
+            Swal.showValidationMessage(
+              `Delete request failed: ${error}`
+            );
+          });
+      }
     </script>
   </body>
 

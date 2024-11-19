@@ -179,7 +179,7 @@ def main(user):
                             )
 
                             try:
-                                user_bot.driver.close()
+                                user_bot.stop_browser()
                             except:
                                 pass
 

@@ -94,7 +94,6 @@
         </div>
         <script type="text/javascript" src="{% static '' %}Targeting Settings_files/plugins.js"></script>
         <script type="text/javascript" src="{% static '' %}Targeting Settings_files/filemanager.js"></script>
-        <script type="text/javascript" src="{% static '' %}Targeting Settings_files/apexcharts.min.js"></script>
         <script type="text/javascript" charset="utf-8">
             var __ = function (msgid) {
                 return window.i18n[msgid] || msgid;
@@ -462,7 +461,12 @@
               var likesTime = {{ like_time | safe }};
               var commentsTime = {{ comment_time | safe }};
 
+
               if (followersData.length > 0) {
+                if (followersData.length < 2) {
+                  followersData = [0].concat(followersData);
+                  followersTime = ["Start"].concat(followersTime);
+                }
                 var options = {
                   chart: {
                     height: 350,
@@ -476,11 +480,11 @@
                   },
                   series: [{
                     name: 'Followers',
-                    data: [0].concat(followersData)
+                    data: followersData
                   }],
                   colors: ["#0000FF"],
                   xaxis: {
-                    categories: ["Start"].concat(followersTime)
+                    categories: followersTime
                   },
                   stroke: {
                     width: 4,

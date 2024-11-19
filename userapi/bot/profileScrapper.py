@@ -11,9 +11,10 @@ def scrape_profile_data(credential):
     user_bot = InstaBot(profile_id)
     check = user_bot.start_browser()
     if check:
-        username = credential["username"]
-        password = credential["password"]
-        username = user_bot.login(username, password)
+        if user_bot.check_login() is None:
+            username = credential["username"]
+            password = credential["password"]
+            username = user_bot.login(username, password)
         data = {"insta_account": credential["id"]}
         try:
             no_of_posts = user_bot.get_posts(username)
@@ -45,12 +46,18 @@ def scrape_profile_data(credential):
             print(e)
 
         finally:
-            user_bot.driver.close()
+            user_bot.stop_browser()
 
 
 def get_profile_data():
+    print("Started scrapping profiles data!")
     credentials = requests.get(f"{url}all-credentials/").json()
     for credential in credentials:
         t = threading.Thread(target=scrape_profile_data, args=(credential,))
         t.start()
     print("Got all profiles stats.")
+
+
+def profile_thread(credential):
+    t = threading.Thread(target=scrape_profile_data, args=(credential,))
+    t.start()
