@@ -11,7 +11,7 @@ from django.contrib import messages
 from django.utils import timezone
 from .dry import BaseAPIView, RenderAPIView, szr_val_save, add_user
 from .bot.profileScrapper import profile_thread
-from .bot.instaBot import create_profile, insta_login, delete_gologin_profile
+from .bot.instaBot import create_profile, InstaBot, delete_gologin_profile
 from .models import (
     UserData,
     ActivityTime,
@@ -44,14 +44,14 @@ class AllCredentials(APIView):
 
     def post(self, request):
         try:
-            insta_account_id = request.data.get('insta_account')
-            stat_type = request.data.get('type')
-            count = request.data.get('count')
+            insta_account_id = request.data.get("insta_account")
+            stat_type = request.data.get("type")
+            count = request.data.get("count")
 
             if not all([insta_account_id, stat_type, count]):
-                return Response({
-                    "error": "insta_account, type and count are required"
-                }, status=400)
+                return Response(
+                    {"error": "insta_account, type and count are required"}, status=400
+                )
 
             # Get today's date
             today = timezone.now().date()
@@ -61,23 +61,19 @@ class AllCredentials(APIView):
                 insta_account_id=insta_account_id,
                 type=stat_type,
                 time_stamp__date=today,
-                defaults={'count': count}
+                defaults={"count": count},
+            )
+            print(insta_account_id, stat_type, count)
+            print(f"created: {created}")
+
+            return Response(
+                {
+                    "message": "Stat created" if created else "Stat updated",
+                }
             )
 
-            return Response({
-                "message": "Stat created" if created else "Stat updated",
-                "data": {
-                    "id": stat.id,
-                    "count": stat.count,
-                    "type": stat.type,
-                    "time_stamp": stat.time_stamp
-                }
-            })
-
         except Exception as e:
-            return Response({
-                "error": str(e)
-            }, status=500)
+            return Response({"error": str(e)}, status=500)
 
 
 class ActivityLogsView(APIView):
@@ -317,7 +313,11 @@ class TargetTemplateView(APIView):
         if pk:
             target = get_object_or_404(Target, id=pk)
         else:
-            target = Target.objects.create(user=request.user, target_type=target_type, user_comment=request.POST.get("comment"))
+            target = Target.objects.create(
+                user=request.user,
+                target_type=target_type,
+                user_comment=request.POST.get("comment"),
+            )
 
         insta_cred = request.POST.get("selected_insta_cred")
         credential = get_object_or_404(Credential, id=insta_cred)
@@ -350,9 +350,13 @@ class TargetTemplateView(APIView):
                     target=target, day=day
                 )
                 if not activity_time.time:
-                    activity_time.time = time  # Initialize time as a list if it's not already
+                    activity_time.time = (
+                        time  # Initialize time as a list if it's not already
+                    )
                 else:
-                    activity_time.time += f",{time}"  # Add the new time value to the list
+                    activity_time.time += (
+                        f",{time}"  # Add the new time value to the list
+                    )
 
                 activity_time.save()
 
@@ -369,24 +373,34 @@ class InstaCredentialView(APIView):
             if insta_creds:
                 for insta_cred in insta_creds:
                     # Get latest posts count
-                    latest_posts = insta_cred.stats.filter(
-                        type='posts'
-                    ).order_by('-time_stamp').first()
+                    latest_posts = (
+                        insta_cred.stats.filter(type="posts")
+                        .order_by("-time_stamp")
+                        .first()
+                    )
 
                     # Get latest followers count
-                    latest_followers = insta_cred.stats.filter(
-                        type='followers'
-                    ).order_by('-time_stamp').first()
+                    latest_followers = (
+                        insta_cred.stats.filter(type="followers")
+                        .order_by("-time_stamp")
+                        .first()
+                    )
 
                     # Get latest following count
-                    latest_following = insta_cred.stats.filter(
-                        type='following'
-                    ).order_by('-time_stamp').first()
+                    latest_following = (
+                        insta_cred.stats.filter(type="following")
+                        .order_by("-time_stamp")
+                        .first()
+                    )
 
                     # Add these values to the insta_cred object
                     insta_cred.posts = latest_posts.count if latest_posts else 0
-                    insta_cred.followers = latest_followers.count if latest_followers else 0
-                    insta_cred.following = latest_following.count if latest_following else 0
+                    insta_cred.followers = (
+                        latest_followers.count if latest_followers else 0
+                    )
+                    insta_cred.following = (
+                        latest_following.count if latest_following else 0
+                    )
                     print(insta_cred.__dict__)
                 return render(
                     request, "Saved Accounts.html", {"insta_creds": insta_creds}
@@ -405,9 +419,14 @@ class InstaCredentialView(APIView):
             password = request.POST.get("password")
             if pk is None:
                 profile_id = create_profile(f"{username} - {request.user}")
-                insta_user = insta_login(profile_id, username, password)
-                if not insta_user:
+                user_bot = InstaBot(profile_id)
+                user_bot.start_browser()
+                insta_user = None
+                if user_bot.driver:
+                    insta_user = user_bot.login(username, password)
+                if insta_user is None:
                     print("Provided credentials are incorrect!")
+                    user_bot.stop_browser()
                     delete_gologin_profile(profile_id)
                 else:
                     credential = Credential(
@@ -418,7 +437,7 @@ class InstaCredentialView(APIView):
                     )
                     credential.save()
                     szr = CredentialSerializer(credential).data
-                    profile_thread(szr)
+                    profile_thread(szr, user_bot)
             else:
                 Credential.objects.filter(user=request.user, username=pk).update(
                     username=username, password=password
@@ -439,7 +458,9 @@ class InstaCredentialView(APIView):
 
     def delete(self, request, pk):
         if not request.user.is_authenticated:
-            return Response("You need to login first.", status=status.HTTP_401_UNAUTHORIZED)
+            return Response(
+                "You need to login first.", status=status.HTTP_401_UNAUTHORIZED
+            )
         try:
             credential = get_object_or_404(Credential, username=pk, user=request.user)
             delete_gologin_profile(credential.profile_id)

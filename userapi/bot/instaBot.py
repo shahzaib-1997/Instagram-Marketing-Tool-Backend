@@ -84,15 +84,15 @@ def create_profile(profile_name):
             "enabled": True,
             "fillBasedOnIp": True,
         },
-        "audioContext": {"mode": "off", "noise": 0},
-        "canvas": {"mode": "off"},
+        "audioContext": {"mode": "noise", "noise": 1},
+        "canvas": {"mode": "noise"},
         "fonts": {"families": fingerprints["fonts"]},
         "mediaDevices": fingerprints["mediaDevices"],
         "webRTC": {
             "mode": "alerted",
             "enabled": True,
             "customize": True,
-            "localIpMasking": False,
+            "localIpMasking": True,
             "fillBasedOnIp": True,
         },
         "clientRects": {"mode": "noise", "noise": 0},
@@ -130,7 +130,7 @@ class InstaBot:
     def stop_browser(self):
         if self.driver:
             self.driver.close()
-            initiatebrowser.stop_driver(self.profile_id)
+        initiatebrowser.stop_driver(self.profile_id)
 
     def check_login(self):
         try:
@@ -139,7 +139,7 @@ class InstaBot:
                 self.driver.get(self.url)
 
             # Get username from profile link
-            anchor_element = self.wait.until(
+            anchor_element = WebDriverWait(self.driver, 7).until(
                 EC.presence_of_element_located(
                     ("xpath", '//span[text()="Profile"]/ancestor::a[1]')
                 )
@@ -148,7 +148,7 @@ class InstaBot:
 
             return username
         except Exception as e:
-            print(f"Not Login: {e}")
+            print(f"Not Logged in: {e}")
         return None
 
     def login(self, username, password):
@@ -754,7 +754,7 @@ class InstaBot:
             try:
                 self.action.move_to_element(post).perform()
                 likes = post.find_element(
-                    By.XPATH, "following-sibling::div[2]/ul/li"
+                    By.XPATH, "./following-sibling::div[2]/ul/li"
                 ).text
                 total_likes += self.parse_count(likes)
             except:
@@ -762,7 +762,7 @@ class InstaBot:
 
             try:
                 comments = post.find_element(
-                    By.XPATH, "following-sibling::div[2]/ul/li[2]"
+                    By.XPATH, "./following-sibling::div[2]/ul/li[2]"
                 ).text
                 total_comments += self.parse_count(comments)
             except:
@@ -782,13 +782,3 @@ class InstaBot:
         except ValueError:
             print(f"Error parsing count from text: {text}")
             return 0
-
-
-def insta_login(profile_id, username, password):
-    user_bot = InstaBot(profile_id)
-    user_bot.start_browser()
-    if user_bot.driver:
-        check = user_bot.login(username, password)
-        user_bot.stop_browser()
-        return check
-    return False

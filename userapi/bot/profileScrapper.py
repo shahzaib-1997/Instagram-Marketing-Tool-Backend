@@ -6,14 +6,17 @@ from userapi.host_url import BASE_URL
 url = BASE_URL
 
 
-def scrape_profile_data(credential):
-    profile_id = credential["profile_id"]
-    user_bot = InstaBot(profile_id)
-    check = user_bot.start_browser()
+def scrape_profile_data(credential, user_bot=None):
+    if user_bot is None:
+        profile_id = credential["profile_id"]
+        user_bot = InstaBot(profile_id)
+        check = user_bot.start_browser()
+    else:
+        check = True
     if check:
+        username = credential["username"]
+        password = credential["password"]
         if user_bot.check_login() is None:
-            username = credential["username"]
-            password = credential["password"]
             username = user_bot.login(username, password)
         data = {"insta_account": credential["id"]}
         try:
@@ -58,6 +61,6 @@ def get_profile_data():
     print("Got all profiles stats.")
 
 
-def profile_thread(credential):
-    t = threading.Thread(target=scrape_profile_data, args=(credential,))
+def profile_thread(credential, user_bot):
+    t = threading.Thread(target=scrape_profile_data, args=(credential, user_bot))
     t.start()
