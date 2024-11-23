@@ -118,13 +118,6 @@ body.onprogress:after {
   background: rgba(255, 255, 255, 0.95) url("../Targeting Settings_files/round-loading.svg") center no-repeat;
 }
 
-@media screen and (max-width: 992px) {
-  body.mobile-menu-open {
-    overflow: hidden;
-    margin-left: 220px;
-  }
-}
-
 a {
   text-decoration: none;
   outline: none;
@@ -1050,7 +1043,7 @@ textarea.input {
 .box-list-item {
   position: relative;
   float: left;
-  width: 22.75%;
+  width: 100%;
   margin-right: 3%;
   margin-bottom: 3%;
   background-color: #fff;
@@ -2120,15 +2113,27 @@ span.special-menu-icon {
   font-size: 30px;
 }
 
-@media screen and (max-width: 992px) {
+@media screen and (max-width: 575.98px) {
   nav {
-    width: 219px;
+    width: 69px;
     overflow: auto;
     left: -250px;
   }
 
-  body.mobile-menu-open nav {
-    left: 0;
+  body.mobile-menu-open {
+    margin-left: 69px;
+
+    nav {
+      left: 0;
+    }
+
+    #topbar {
+      left: 69px;
+    }
+
+    .skeleton, #topbar {
+      width: calc(100% - 69px);
+    }
   }
 
   .nav-menu {
@@ -2216,7 +2221,7 @@ span.special-menu-icon {
   font-weight: bold;
 }
 
-@media screen and (max-width: 992px) {
+@media screen and (max-width: 575.98px) {
   .asidenav {
     margin: 0px 25px;
     max-height: 0;
@@ -2415,11 +2420,7 @@ span.special-menu-icon {
   margin-top: 20px;
 }
 
-@media screen and (max-width: 992px) {
-  body.mobile-menu-open #topbar {
-    left: 220px;
-  }
-
+@media screen and (max-width: 575.98px) {
   #topbar {
     position: absolute;
   }
@@ -2442,10 +2443,9 @@ span.special-menu-icon {
   }
 }
 
-@media screen and (max-width: 768px) {
+@media screen and (max-width: 576.98px) {
   .topbar-title {
     margin: 21px 0;
-    font-size: 12px;
     line-height: 18px;
   }
 
@@ -2494,7 +2494,7 @@ span.special-menu-icon {
 
 .skeleton--full {
   display: none;
-  padding: 61px 0 0 70px;
+  padding: 61px 0 0 69px;
 }
 
 .skeleton-aside,
@@ -2600,13 +2600,13 @@ span.special-menu-icon {
   color: #9b9b9b;
 }
 
-@media screen and (max-width: 992px) {
+@media screen and (max-width: 575.98px) {
   .skeleton {
-    padding: 80px 0 20px;
+    padding: 80px 0 0;
   }
 
   .skeleton--full {
-    padding: 61px 0 0;
+    padding: 65px 0 0;
   }
 
   .skeleton-aside,
@@ -5097,7 +5097,6 @@ body.darkside {
 }
 
 .darkside .skeleton-aside {
-  background-color: #252525;
   border-right: 1px solid #333333;
 }
 
@@ -5117,7 +5116,7 @@ body.darkside {
 .darkside .skeleton-aside,
 .darkside .skeleton-content {
   background-color: #171717;
-  box-shadow: none;
+  box-shadow: 2px 2px 6px 0 #171717;
 }
 
 .darkside table.dataTable tbody tr {
@@ -5495,13 +5494,10 @@ body.darkside.onprogress:after {
 }
 
 @media screen and (max-width: 995px) {
-  .darkside .no-data {
+  .no-data {
     margin: 0 auto;
     padding: 0;
-    height: calc(100vh - 61px);
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
+    /* height: 100%; */
   }
 }
 
@@ -5849,11 +5845,6 @@ body.darkside.onprogress:after {
   color: #fff;
 }
 
-.darkside .skeleton-aside,
-.skeleton-content {
-  box-shadow: none;
-}
-
 .darkside .skeleton-aside .box-list-item .circle {
   background-color: #1e1e1e;
 }
@@ -5902,11 +5893,6 @@ body.darkside.onprogress:after {
   background-color: #333333;
 }
 
-.darkside .skeleton-aside,
-.darkside .skeleton-content {
-  box-shadow: 2px 2px 6px 0 #171717;
-}
-
 .darkside .arp-log-list-item .circle {
   background-color: #333333;
 }
@@ -5925,11 +5911,6 @@ body.darkside.onprogress:after {
 
 .darkside .videos a {
   color: #fff;
-}
-
-.darkside .skeleton-aside,
-.skeleton-content {
-  box-shadow: none;
 }
 
 /**

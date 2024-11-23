@@ -30,11 +30,16 @@
     margin-top: 3px;
 }
 
-@media screen and (max-width: 992px) {
+@media screen and (max-width: 767.98px) {
     .skeleton-aside, .skeleton-content {
         float: none;
-        width: auto !important;
+        width: 100% !important;
+    }
+
+    .skeleton-aside{
         height: auto !important;
+        border-right: none;
+        padding: 0.5rem 0;
     }
 }
 
@@ -75,7 +80,7 @@
 
 .bypassing-resend-timeout {
     display: inline-block;
-} 
+}
 
 .bypassing-resend-text {
     display: inline-block;
@@ -318,13 +323,13 @@ textarea.input-bypassing-textarea {
     background-color: #333333;
 }
 
-.bypassing-react-style .input { 
+.bypassing-react-style .input {
     background-color: transparent;
     border: 1px solid rgba(0, 0, 0, 0.2);
     margin-bottom: 0px !important;
 }
 
-.darkside .bypassing-react-style .input { 
+.darkside .bypassing-react-style .input {
     background-color: transparent;
     border: 1px solid rgba(255, 255, 255, 0.2);
 }
@@ -354,7 +359,7 @@ textarea.input-bypassing-textarea {
 }
 
 :has(.bypassing-react-style.bypassing-input-search .input:focus) .bypassing-react-input-label-search {
-   color: #2b69e9 !important; 
+   color: #2b69e9 !important;
 }
 
 .darkside .bypassing-react-style .input:focus + .bypassing-react-input-label {
@@ -415,7 +420,7 @@ textarea.input-bypassing-textarea {
     -moz-border-radius: 4px !important;
     -o-border-radius: 4px !important;
 }
-  
+
 .button--pmp-github.mdi:before {
     margin-right: 3px;
 }
@@ -503,7 +508,7 @@ textarea.input-bypassing-textarea {
     font-size: 13px;
     font-weight: 600;
 }
-  
+
 .jconfirm .jconfirm-box.jconfirm-type-blue .jconfirm-title-c .jconfirm-icon-c {
     color: #2b69e9 !important;
 }
@@ -520,7 +525,7 @@ textarea.input-bypassing-textarea {
         border-color:#2b69e9;
     }
 }
-  
+
 .darkside .jconfirm.jconfirm-modern .jconfirm-box {
     background-color: #1e1e1e;
 }
@@ -548,7 +553,7 @@ textarea.input-bypassing-textarea {
     border-color: #e74c3c;
     background-color: rgba(231, 76, 60, 0.07);
 }
-  
+
 .button--red--outline:hover {
     background-color: rgba(231, 76, 60, 0.2);
 }
@@ -561,7 +566,7 @@ textarea.input-bypassing-textarea {
     font-size: 13px;
     text-align: left;
 }
-  
+
 .two-fa-manual-setup {
     text-transform: uppercase;
 }
@@ -573,7 +578,7 @@ textarea.input-bypassing-textarea {
 }
 
 .two-factor-code-img {
-    margin-top: 15px; 
+    margin-top: 15px;
 }
 
 .muanual-twofa-code {

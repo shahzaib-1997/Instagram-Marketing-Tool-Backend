@@ -323,8 +323,7 @@ $("body").off("click", ".js-re-connect").on("click", ".js-re-connect", function(
 Reactions.erInfo = function() {
     $("body").find(".js-check-er-info").off("click").on("click", function() {
         var _this = $(this);
-        var $form = $(".js-reactions-schedule-form");
-        var $searchinp = $form.find(":input[name='search']");
+        var $searchinp = $("input[name='search']");
         var name = _this.data("name");
         var er_value_cached = getWithExpiry("er-value-" + name);
         if (er_value_cached) {
@@ -1323,15 +1322,15 @@ Reactions.ScheduleForm = function() {
     }).trigger("change");
 
     // Like stories section
-    $form.find(":input[name='like-stories']").on("change", function() {
+    $("input[name='like-stories']").on("change", function() {
         if ($(this).is(":checked")) {
-            $form.find(".js-story-likes-settings").css("opacity", "1");
-            $form.find(".js-story-likes-settings").find(":input").prop("disabled", false);
+            $(".js-story-likes-settings").css("opacity", "1");
+            $(".js-story-likes-settings").find(":input").prop("disabled", false);
         } else {
-            $form.find(".js-story-likes-settings").css("opacity", "0.25");
-            $form.find(".js-story-likes-settings").find(":input").prop("disabled", true);
+            $(".js-story-likes-settings").css("opacity", "0.25");
+            $(".js-story-likes-settings").find(":input").prop("disabled", true);
         }
-    }).trigger("change");
+    });
 
     // Activity time section
     // $("input[name='activity-time']").on("change", function() {
@@ -1470,24 +1469,24 @@ Reactions.ScheduleForm = function() {
             $form.find(".js-massvoting-settings").find(":input").prop("disabled", true);
         }
     }).trigger("change");
-    $form.find(":input[name='view-stories']").on("change", function() {
+    $(":input[name='view-stories']").on("change", function() {
         if ($(this).is(":checked")) {
-            $form.find(".like-stories-div").css("opacity", "1");
-            $form.find(".like-stories-div").find(":input").prop("disabled", false);
+            $(".like-stories-div").css("opacity", "1");
+            $(".like-stories-div").find(":input").prop("disabled", false);
         } else {
-            $form.find(".like-stories-div").css("opacity", "0.25");
-            $form.find(".like-stories-div").find(":input").prop("disabled", true);
+            $(".like-stories-div").css("opacity", "0.25");
+            $(".like-stories-div").find(":input").prop("disabled", true);
         }
     });
-    $form.find(":input[name='like-stories']").on("change", function() {
-        if ($(this).is(":checked") || isMassvoting()) {
-            $form.find(".js-like-stories-algorithm").css("opacity", "1");
-            $form.find(".js-like-stories-algorithm").find(":input").prop("disabled", false);
+    $("input[name='like-stories']").on("change", function() {
+        if ($(this).is(":checked")) {
+            $(".js-like-stories-algorithm").css("opacity", "1");
+            $(".js-like-stories-algorithm").find(":input").prop("disabled", false);
         } else {
-            $form.find(".js-like-stories-algorithm").css("opacity", "0.25");
-            $form.find(".js-like-stories-algorithm").find(":input").prop("disabled", true);
+            $(".js-like-stories-algorithm").css("opacity", "0.25");
+            $(".js-like-stories-algorithm").find(":input").prop("disabled", true);
         }
-    }).trigger("change");
+    });
     $form.find(":input[name='emoji']").on("change", function() {
         if ($(this).is(":checked") || isMassvoting()) {
             $form.find(".js-emoji-settings").css("opacity", "1");
@@ -1671,7 +1670,7 @@ Reactions.ScheduleForm = function() {
 
         var th = randomIntFromInterval(min_hd, max_hd);
 
-        for (let d = 1; d <= 7; d++) {
+        for (let d = 0; d < 7; d++) {
             var th_day = [];
             for (let h = min_i; h <= max_i; h++) {
                 if (th > 0) {
@@ -1796,22 +1795,14 @@ Reactions.ScheduleForm = function() {
                 welcome_dm_speed: $form.find(":input[name='welcome-dm-speed']").val(),
 
                 // Stories reactions
-                is_poll: $form.find(":input[name='poll']").is(":checked") ? 1 : 0,
-                is_poll_slider: $form.find(":input[name='poll-slider']").is(":checked") ? 1 : 0,
-                is_quiz: $form.find(":input[name='quiz']").is(":checked") ? 1 : 0,
-                is_answer: $form.find(":input[name='answer']").is(":checked") ? 1 : 0,
-                is_countdown: $form.find(":input[name='countdown']").is(":checked") ? 1 : 0,
-                is_masslooking: $form.find(":input[name='masslooking']").is(":checked") ? 1 : 0,
-                is_story_likes: $form.find(":input[name='like-stories']").is(":checked") ? 1 : 0,
-                like_stories_algorithm: $form.find(":input[name='like-stories-algorithm']").val(),
-                like_stories_type: $form.find(":input[name='like-stories-type']").val(),
-                is_emoji: $form.find(":input[name='is-emoji']").is(":checked") ? 1 : 0,
-                emojis: $form.find(":input[name='emojis']").val(),
-                emoji_speed: $form.find(":input[name='emoji-speed']").val(),
+                is_masslooking: $("input[name='masslooking']").is(":checked") ? 1 : 0,
+                is_story_likes: $("input[name='like-stories']").is(":checked") ? 1 : 0,
+                like_stories_algorithm: $("input[name='like-stories-algorithm']").val(),
+                like_stories_type: $("input[name='like-stories-type']").val(),
 
                 // Activity interval
                 massvoting_interval: $form.find(":input[name='massvoting-interval']").val(),
-                like_stories_interval: $form.find(":input[name='like-stories-interval']").val(),
+                like_stories_interval: $("input[name='like-stories-interval']").val(),
                 comment_interval: $form.find(":input[name='comment-interval']").val(),
                 like_comments_interval: $form.find(":input[name='like-comments-interval']").val(),
                 like_comments_speed: $form.find(":input[name='like-comments-speed']").val(),
@@ -2337,26 +2328,20 @@ Reactions.ScheduleForm = function() {
     $("body").find(".js-copy-all-targets").off("click").on("click", function() {
         var _this = $(this);
         var button = _this.html();
-        var cached_target = [];
-        $form.find(".tags .tag").each(function() {
-            var t = {};
-                t.type = $(this).data("type");
-                t.id = $(this).data("id").toString();
-                t.value = $(this).data("value");
-
-            if (t.type !== "user_id_list") {
-                cached_target.push(t);
-            }
+        // Get the text area
+        let textToCopy = $('#target-list').val();
+        navigator.clipboard.writeText(textToCopy).then(() => {
+            _this.html(__("Copied"));
+            _this.removeClass("js-copy-all-targets");
+            _this.addClass("reactions-copyhelper-done");
+            att_copy_animation = setTimeout(function (){
+                _this.html(button);
+                _this.addClass("js-copy-all-targets");
+                _this.removeClass("reactions-copyhelper-done");
+            }, 1000);
+        }).catch(err => {
+            console.error('Failed to copy: ', err);
         });
-        localStorage.setItem("rp_cached_targets", JSON.stringify(cached_target));
-        _this.html(__("Copied"));
-        _this.removeClass("js-copy-all-targets");
-        _this.addClass("reactions-copyhelper-done");
-        att_copy_animation = setTimeout(function (){
-            _this.html(button);
-            _this.addClass("js-copy-all-targets");
-            _this.removeClass("reactions-copyhelper-done");
-        }, 1000);
     });
 
     $("body").find(".js-insert-all-targets").off("click").on("click", function() {

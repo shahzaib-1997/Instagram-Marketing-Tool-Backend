@@ -1,5 +1,5 @@
 {% load static %}
-<aside class="skeleton-aside hide-on-medium-and-down">
+<aside class="skeleton-aside">
     <div class="search-box">
         <div class="pos-r">
             <input type="search" class="input input--small leftpad rightpad" name="q" placeholder="Search...">
@@ -14,25 +14,23 @@
         <div class="aside-list">
             {% for insta_cred in insta_creds %}
             <div class="aside-list-item js-list-item" data-id="{{ insta_cred.username }}" style="cursor: pointer;">
-                <div class="clearfix">
-                    <a href="/{{url}}/{{ insta_cred.id }}/">
-                        <span class="circle"><span>{{ insta_cred.username.0 }}</span></span>
-                        <div class="inner">
-                            <div class="title">{{ insta_cred.username }}</div>
+                <a href="/{{url}}/{{ insta_cred.id }}/" class="clearfix">
+                    <span class="circle"><span>{{ insta_cred.username.0 }}</span></span>
+                    <div class="inner">
+                        <div class="title">{{ insta_cred.username }}</div>
+                    </div>
+                    <div class="options reactions-selector">
+                        <a href="javascript:void(0)" class="mdi mdi-checkbox-blank-circle-outline js-task-action-select"></a>
+                    </div>
+                    <div class="options context-menu-wrapper">
+                        <a href="javascript:void(0)" class="mdi mdi-dots-vertical"></a>
+                        <div class="context-menu reactions-context-menu">
+                            <ul>
+                                <li><a href="/accounts/">Login again</a></li>
+                            </ul>
                         </div>
-                        <div class="options reactions-selector">
-                            <a href="javascript:void(0)" class="mdi mdi-checkbox-blank-circle-outline js-task-action-select"></a>
-                        </div>
-                        <div class="options context-menu-wrapper">
-                            <a href="javascript:void(0)" class="mdi mdi-dots-vertical"></a>
-                            <div class="context-menu reactions-context-menu">
-                                <ul>
-                                    <li><a href="/accounts/">Login again</a></li>
-                                </ul>
-                            </div>
-                        </div>
-                    </a>
-                </div>
+                    </div>
+                </a>
             </div>
             {% endfor %}
         </div>

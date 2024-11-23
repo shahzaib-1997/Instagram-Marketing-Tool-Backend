@@ -30,7 +30,7 @@
         {% include 'nav.html' %}
         <div class="skeleton skeleton--full" id="reactions-pro" style="display: block;">
             <div class="clearfix">
-                <aside class="skeleton-aside hide-on-medium-and-down">
+                <aside class="skeleton-aside">
                     <div class="search-box">
                         <div class="pos-r">
                             <input type="search" class="input input--small leftpad rightpad" name="q" placeholder="Search...">
@@ -67,17 +67,9 @@
                         </div>
                     </div>
                 </aside>
-                <section class="skeleton-content" style="height: 578px;">
-                    <div class="section-header back-button-wh none">
+                <section class="skeleton-content">
+                    <div class="section-header back-button-wh">
                         <a href="{% url 'userapi:targets' %}"><span class="mdi mdi-reply"></span>Back</a>
-                    </div>
-                    <div class="react-tab-heads pb-15 clearfix">
-                        <a href="{% url 'userapi:targets' %}" class="active">Targets</a>
-                        <a href="{% url 'userapi:activity-logs' %}">Activity Logs</a>
-                        <a href="{% url 'userapi:stats' %}">Stats</a>
-                        <ic-anchor-point style="position: relative; display: inline-block; width: 77.375px;" class="intercom-namespace">
-                            <div id="tooltip-anchor-41563" aria-describedby="intercom-tooltip-41563" aria-label="Tooltip anchor" class="e63435j4 intercom-with-namespace-3pzvtu e63435j5" role="button" tabindex="0">5 Min Setup</div>
-                        </ic-anchor-point>
                     </div>
                     <form method="POST" onsubmit="return checkForm()">
                         {% csrf_token %}

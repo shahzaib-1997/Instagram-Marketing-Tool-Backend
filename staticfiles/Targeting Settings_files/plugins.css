@@ -400,10 +400,6 @@ template {
 }
 
 @media only screen and (max-width:992px) {
-    .hide-on-medium-and-down {
-        display: none !important
-    }
-
     .show-on-medium-and-down {
         display: initial !important
     }
@@ -619,7 +615,6 @@ template {
 
     .col.l6 {
         width: 48.5%;
-        margin-right: 3%
     }
 
     .col.offset-l6 {
