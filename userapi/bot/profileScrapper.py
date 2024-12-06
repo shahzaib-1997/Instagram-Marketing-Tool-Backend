@@ -19,6 +19,7 @@ def scrape_profile_data(credential, user_bot=None):
         if user_bot.check_login() is None:
             username = user_bot.login(username, password)
         data = {"insta_account": credential["id"]}
+        print(f"Scrapping data for insta credential: {credential}")
         try:
             no_of_posts = user_bot.get_posts(username)
             data["type"] = "posts"
@@ -50,6 +51,8 @@ def scrape_profile_data(credential, user_bot=None):
 
         finally:
             user_bot.stop_browser()
+    else:
+        print(f"Unable to start browser for insta credential: {credential}")
 
 
 def get_profile_data():

@@ -40,14 +40,9 @@ def get_fingerprint(os="win", resolution="1680x1050"):
     # Make the GET request
     response = requests.get(url, headers=headers, params=params)
     # Check the response
-    if response.status_code == 200:
-        # If the request was successful, you can process the response data
-        data = response.json()  # Parse the JSON response
-        return data
-    else:
-        # Handle errors
-        print(f"Error: {response.status_code} - {response.text}")
-        return response.json()
+    if response.status_code != 200:
+        print(f"Unable to get fingerprint: {response.status_code} - {response.text}")
+    return response.json()
 
 
 def create_profile(profile_name):
@@ -100,9 +95,9 @@ def create_profile(profile_name):
         "webglParams": fingerprints["webglParams"],
     }
     resp = requests.post(API_URL, headers=headers, json=profile)
-    print(resp.json())
+    print(f"Profile creation response: {resp.json()}")
+    print(f"status_code: {resp.status_code}")
     profile_id = resp.json().get("id")
-    print("profile id=", profile_id)
     return profile_id
 
 
@@ -758,7 +753,7 @@ class InstaBot:
                 ).text
                 total_likes += self.parse_count(likes)
             except:
-                print("Likes element not found for this post.")
+                print(f"Likes element not found for post: {posts.index(post)}.")
 
             try:
                 comments = post.find_element(
@@ -766,7 +761,7 @@ class InstaBot:
                 ).text
                 total_comments += self.parse_count(comments)
             except:
-                print("Comments element not found for this post.")
+                print(f"Comments element not found for post: {posts.index(post)}.")
 
         return total_likes, total_comments
 

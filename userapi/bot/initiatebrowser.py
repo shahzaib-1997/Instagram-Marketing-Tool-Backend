@@ -33,9 +33,15 @@ class initiatebrowser:
                 }
             )
             debugger_address = gl.start()
+
             service = Service(executable_path=chrome_driver_path)
+
             chrome_options = webdriver.ChromeOptions()
             chrome_options.add_experimental_option("debuggerAddress", debugger_address)
+            chrome_options.add_argument("--disable-infobars")
+            chrome_options.add_argument("--disable-extensions")
+            chrome_options.add_argument("--disable-notifications")
+
             driver = webdriver.Chrome(service=service, options=chrome_options)
             try:
                 driver.maximize_window()

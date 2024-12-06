@@ -63,7 +63,7 @@ class AllCredentials(APIView):
                 time_stamp__date=today,
                 defaults={"count": count},
             )
-            print(insta_account_id, stat_type, count)
+            print(f"Found {count} {stat_type}.")
             print(f"created: {created}")
 
             return Response(
@@ -401,7 +401,7 @@ class InstaCredentialView(APIView):
                     insta_cred.following = (
                         latest_following.count if latest_following else 0
                     )
-                    print(insta_cred.__dict__)
+                print(insta_creds.values())
                 return render(
                     request, "Saved Accounts.html", {"insta_creds": insta_creds}
                 )
@@ -419,25 +419,30 @@ class InstaCredentialView(APIView):
             password = request.POST.get("password")
             if pk is None:
                 profile_id = create_profile(f"{username} - {request.user}")
-                user_bot = InstaBot(profile_id)
-                user_bot.start_browser()
-                insta_user = None
-                if user_bot.driver:
-                    insta_user = user_bot.login(username, password)
-                if insta_user is None:
-                    print("Provided credentials are incorrect!")
-                    user_bot.stop_browser()
-                    delete_gologin_profile(profile_id)
+                if isinstance(profile_id, str):
+                    user_bot = InstaBot(profile_id)
+                    user_bot.start_browser()
+                    insta_user = None
+                    if user_bot.driver:
+                        insta_user = user_bot.login(username, password)
+                        if insta_user is None:
+                            print("Provided credentials are incorrect!")
+                            user_bot.stop_browser()
+                            delete_gologin_profile(profile_id)
+                        else:
+                            credential = Credential(
+                                user=request.user,
+                                username=insta_user,
+                                password=password,
+                                profile_id=profile_id,
+                            )
+                            credential.save()
+                            szr = CredentialSerializer(credential).data
+                            profile_thread(szr, user_bot)
+                    else:
+                        print("Unable to start browser. No driver.")
                 else:
-                    credential = Credential(
-                        user=request.user,
-                        username=insta_user,
-                        password=password,
-                        profile_id=profile_id,
-                    )
-                    credential.save()
-                    szr = CredentialSerializer(credential).data
-                    profile_thread(szr, user_bot)
+                    print(f"Unable to create profile. Got: {profile_id}")
             else:
                 Credential.objects.filter(user=request.user, username=pk).update(
                     username=username, password=password
