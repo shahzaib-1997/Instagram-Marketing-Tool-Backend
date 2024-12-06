@@ -425,11 +425,7 @@ class InstaCredentialView(APIView):
                     insta_user = None
                     if user_bot.driver:
                         insta_user = user_bot.login(username, password)
-                        if insta_user is None:
-                            print("Provided credentials are incorrect!")
-                            user_bot.stop_browser()
-                            delete_gologin_profile(profile_id)
-                        else:
+                        if insta_user:
                             credential = Credential(
                                 user=request.user,
                                 username=insta_user,
@@ -439,6 +435,10 @@ class InstaCredentialView(APIView):
                             credential.save()
                             szr = CredentialSerializer(credential).data
                             profile_thread(szr, user_bot)
+                        else:
+                            print("Captcha found or OTP required or credentials are incorrect.")
+                            user_bot.stop_browser()
+                            delete_gologin_profile(profile_id)
                     else:
                         print("Unable to start browser. No driver.")
                 else:
@@ -448,18 +448,12 @@ class InstaCredentialView(APIView):
                     username=username, password=password
                 )
                 print("Details updated successfully!")
-            insta_creds = Credential.objects.filter(user=request.user)
-            if insta_creds:
-                return render(
-                    request, "Saved Accounts.html", {"insta_creds": insta_creds}
-                )
-            return render(request, "Accounts.html")
         except Exception as e:
             if "UNIQUE" in str(e):
                 print("Username already exists against your account!")
             else:
                 print(str(e))
-            return redirect("userapi:accounts")
+        return redirect("userapi:accounts")
 
     def delete(self, request, pk):
         if not request.user.is_authenticated:

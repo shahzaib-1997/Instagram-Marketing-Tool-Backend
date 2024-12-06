@@ -95,7 +95,7 @@ def create_profile(profile_name):
         "webglParams": fingerprints["webglParams"],
     }
     resp = requests.post(API_URL, headers=headers, json=profile)
-    print(f"Profile creation response: {resp.json()}")
+    print(f"Profile creation response: {resp.text[:500]}")
     print(f"status_code: {resp.status_code}")
     profile_id = resp.json().get("id")
     return profile_id
@@ -199,7 +199,7 @@ class InstaBot:
                 ).click()
 
             except Exception as e:
-                print(f"Error in post-login process: {e}")
+                print("Not Now button not found.")
 
             username = self.check_login()
             print(f"Successfully logged in as: {username}")
