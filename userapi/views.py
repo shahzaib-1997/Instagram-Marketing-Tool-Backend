@@ -11,7 +11,9 @@ from django.contrib import messages
 from django.utils import timezone
 from .dry import BaseAPIView, RenderAPIView, szr_val_save, add_user
 from .bot.profileScrapper import profile_thread
-from .bot.instaBot import create_profile, InstaBot, delete_gologin_profile
+from .bot.gologin_operations import create_profile, delete_gologin_profile
+from .bot.instaBot import InstaBot
+from .bot_manager import bot_manager
 from .models import (
     UserData,
     ActivityTime,
@@ -412,48 +414,117 @@ class InstaCredentialView(APIView):
     def post(self, request):
         if not request.user.is_authenticated:
             messages.error(request, "You need to login first.")
-            return redirect(f"/signin/?next={request.path}")
+            return Response({
+                'success': False,
+                'message': 'You need to login first.'
+            }, status=status.HTTP_401_UNAUTHORIZED)
+            # return redirect(f"/signin/?next={request.path}")
+
+        username = request.POST.get("username")
+        password = request.POST.get("password")
+        cookies_file = request.FILES.get("cookie-file")
+
+        # Check for existing credentials
+        if Credential.objects.filter(user=request.user, username=username).exists():
+            # messages.error(request, "Username already exists against your account!")
+            return Response({
+                    'success': False,
+                    'message': 'Username already exists against your account!'
+                }, status=status.HTTP_400_BAD_REQUEST)
+            # return redirect("userapi:accounts")
+
+        # Create new credential flow
+        user_bot = None
         try:
-            pk = request.POST.get("previous_username")
-            username = request.POST.get("username")
-            password = request.POST.get("password")
-            if pk is None:
-                profile_id = create_profile(f"{username} - {request.user}")
-                if isinstance(profile_id, str):
-                    user_bot = InstaBot(profile_id)
-                    user_bot.start_browser()
-                    insta_user = None
-                    if user_bot.driver:
-                        insta_user = user_bot.login(username, password)
-                        if insta_user:
-                            credential = Credential(
-                                user=request.user,
-                                username=insta_user,
-                                password=password,
-                                profile_id=profile_id,
-                            )
-                            credential.save()
-                            szr = CredentialSerializer(credential).data
-                            profile_thread(szr, user_bot)
-                        else:
-                            print("Captcha found or OTP required or credentials are incorrect.")
-                            user_bot.stop_browser()
-                            delete_gologin_profile(profile_id)
-                    else:
-                        print("Unable to start browser. No driver.")
+            profile_id = create_profile(f"{username} - {request.user}")
+            if not isinstance(profile_id, str):
+                print(f"Unable to create profile. Got: {profile_id}")
+                return Response({
+                    'success': False,
+                    'message': 'Something went wrong. Please Try again.'
+                }, status=status.HTTP_400_BAD_REQUEST)
+                # return redirect("userapi:accounts")
+
+            user_bot = InstaBot(profile_id)
+            if cookies_file:
+                print(cookies_file.name)
+                cookies_data = cookies_file.read()
+                print(type(cookies_data))
+            else:
+                cookies_data = None
+            user_bot.start_browser(cookies_data)
+            if not user_bot.driver:
+                print(f"Unable to start_browser.")
+                # messages.error(request, "Something went wrong. Please Try again.")
+                delete_gologin_profile(profile_id)
+                return Response({
+                    'success': False,
+                    'message': 'Something went wrong. Please try again.'
+                }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+                # return redirect("userapi:accounts")
+
+            if cookies_data:
+                msg = user_bot.check_login(username.lower())
+                if msg:
+                    check = True
                 else:
-                    print(f"Unable to create profile. Got: {profile_id}")
+                    check, msg = user_bot.login(username, password)
             else:
-                Credential.objects.filter(user=request.user, username=pk).update(
-                    username=username, password=password
+                check, msg = user_bot.login(username, password)
+            if check:
+                credential = Credential.objects.create(
+                    user=request.user,
+                    username=msg,
+                    password=password,
+                    profile_id=profile_id,
                 )
-                print("Details updated successfully!")
-        except Exception as e:
-            if "UNIQUE" in str(e):
-                print("Username already exists against your account!")
+                szr = CredentialSerializer(credential).data
+                profile_thread(szr, user_bot)
+                # messages.success(request, "Account added successfully!")
+                return Response({
+                    'success': True,
+                    'message': 'Account added successfully!'
+                })
             else:
-                print(str(e))
-        return redirect("userapi:accounts")
+                if msg in ["OTP", "notifications"]:
+                    # Store authentication state for OTP/notifications flow
+                    request.session.create()  # This is safe to call even if session exists
+                    session_id = request.session.session_key
+
+                    bot_manager.store_bot(session_id, user_bot)
+
+                    # Store authentication data
+                    request.session["pending_auth"] = {
+                        "type": msg,
+                        "profile_id": profile_id,
+                        "username": username,
+                        "password": password,
+                    }
+                    return Response({
+                        'success': False,
+                        'requires_otp': True,
+                        'message': 'Please enter the verification code'
+                    })
+                    # return redirect(f'userapi:{msg.lower()}')
+                else:
+                    # messages.error(request, msg)
+                    user_bot.stop_browser()
+                    delete_gologin_profile(profile_id)
+                    return Response({
+                        'success': False,
+                        'message': msg
+                    }, status=status.HTTP_400_BAD_REQUEST)
+        except Exception as e:
+            print(f"Error in credential creation: {str(e)}")
+            if user_bot:
+                user_bot.stop_browser()
+            if "profile_id" in locals():
+                delete_gologin_profile(profile_id)
+            # messages.error(request, "Failed to add account")
+            return Response({
+                'success': False,
+                'message': 'Failed to add account'
+            }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
     def delete(self, request, pk):
         if not request.user.is_authenticated:
@@ -468,6 +539,103 @@ class InstaCredentialView(APIView):
         except Exception as e:
             print(str(e))
             return Response(status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+def handle_otp(request):
+    """View to handle OTP input"""
+    if request.method == "POST":
+        try:
+            session_id = request.session.session_key
+            user_bot = bot_manager.get_bot(session_id)
+
+            if not user_bot:
+                # messages.error(request, "Session expired!")
+                # return redirect("userapi:add-account")
+                return Response({
+                    'success': False,
+                    'message': 'Session expired!'
+                }, status=status.HTTP_400_BAD_REQUEST)
+
+            otp_code = request.data.get('otp_code')
+            if not otp_code:
+                return Response({
+                    'success': False,
+                    'message': 'OTP code is required'
+                }, status=status.HTTP_400_BAD_REQUEST)
+
+            check, msg = user_bot.handle_otp(otp_code)
+
+            if check:
+                # OTP verified, proceed with credential saving
+                auth_data = request.session["pending_auth"]
+                credential = Credential(
+                    user=request.user,
+                    username=auth_data["username"],
+                    password=auth_data["password"],
+                    profile_id=auth_data["profile_id"],
+                )
+                credential.save()
+
+                # Clean up
+                bot_manager.remove_bot(session_id)
+                del request.session["pending_auth"]
+
+                profile_thread(CredentialSerializer(credential).data, user_bot)
+                # return redirect("userapi:accounts")
+                return Response({
+                    'success': True,
+                    'message': 'Account added successfully!'
+                })
+            else:
+                # messages.error(request, msg)
+                # return redirect("userapi:otp")
+                return Response({
+                    'success': False,
+                    'message': msg
+                }, status=status.HTTP_400_BAD_REQUEST)
+        except Exception as e:
+            print(f"Error in OTP verification: {str(e)}")
+            if user_bot:
+                user_bot.stop_browser()
+            if "pending_auth" in request.session:
+                delete_gologin_profile(request.session["pending_auth"]["profile_id"])
+            # messages.error(request, "Failed to add account")
+            return Response({
+                'success': False,
+                'message': 'Failed to verify OTP.'
+            }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+def handle_notifications(request):
+    """View to handle notifications prompt"""
+    session_id = request.session.session_key
+    user_bot = bot_manager.get_bot(session_id)
+
+    if not user_bot:
+        messages.error(request, "Session expired")
+        return redirect("userapi:add-account")
+
+    check, msg = user_bot.handle_notifications()
+
+    if check:
+        # Similar success handling as OTP view
+        auth_data = request.session["pending_auth"]
+        credential = Credential(
+            user=request.user,
+            username=auth_data["username"],
+            password=auth_data["password"],
+            profile_id=auth_data["profile_id"],
+        )
+        credential.save()
+
+        bot_manager.remove_bot(session_id)
+        del request.session["pending_auth"]
+
+        profile_thread(CredentialSerializer(credential).data, user_bot)
+        return redirect("userapi:accounts")
+    else:
+        messages.error(request, msg)
+        return redirect("userapi:notifications")
 
 
 class ProfileView(APIView):
@@ -521,11 +689,11 @@ class PasswordChangeUsernameView(APIView):
 
     def post(self, request):
         value = request.POST.get("username")
-        user = User.objects.filter(Q(username=value) | Q(email=value)).first()
+        user = User.objects.filter(email=value).first()
         if user is not None:
             request.session["user"] = user.id
             return redirect("userapi:change-password")
-        messages.error(request, "Username or Email is incorrect.")
+        messages.error(request, "Email is incorrect.")
         return render(request, "userapi/forgot-password.html")
 
 
@@ -550,7 +718,7 @@ class PasswordChangeView(APIView):
                     update_session_auth_hash(request, user)
 
                     messages.success(request, "Password changed successfully.")
-                    return redirect(f"/signin/?next={request.path}")
+                    return redirect("userapi:login")
                 messages.error(request, "New Password is same as current password!")
             else:
                 for value in serializer.errors.values():

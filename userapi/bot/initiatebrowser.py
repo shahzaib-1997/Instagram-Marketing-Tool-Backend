@@ -3,26 +3,32 @@ from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
 from gologin import GoLogin
 from dotenv import load_dotenv
-
+import json
+from .gologin_operations import add_cookies_to_profile
 
 load_dotenv()
 TOKEN = os.getenv("TOKEN")
 
 chrome_driver_path = "chromedriver.exe"
-gl = None
 
 
-class initiatebrowser:
-    def stop_driver(profile_id):
+class InitiateBrowser:
+    _instances = {}  # Class variable to store GoLogin instances
+
+    @classmethod
+    def stop_driver(cls, profile_id):
         try:
-            if gl:
-                gl.stop()
+            if profile_id in cls._instances:
+                cls._instances[profile_id].stop()
+                del cls._instances[profile_id]
         except Exception as e:
             print(f"stop_driver: {e}")
 
-    def initiate_driver(profile_id):
+    @classmethod
+    def initiate_driver(cls, profile_id, cookies_data=None):
         try:
-            global gl
+            # Stop existing instance if any
+            cls.stop_driver(profile_id)
             gl = GoLogin(
                 {
                     "token": TOKEN,
@@ -32,6 +38,26 @@ class initiatebrowser:
                     "restore_last_session": True,
                 }
             )
+            if cookies_data:
+                print("Adding cookies")
+                try:
+                    # Parse JSON string to Python object
+                    if isinstance(cookies_data, (str, bytes, bytearray)):
+                        cookies = json.loads(cookies_data)
+                        print("Cookies parsed")
+                    else:
+                        cookies = cookies_data
+
+                    # Upload cookies
+                    add_cookies_to_profile(profile_id, cookies)
+                    print("Cookies added")
+                except json.JSONDecodeError as e:
+                    print(f"Invalid JSON format in file: {e}")
+                except Exception as e:
+                    print(f"Error processing cookie data: {e}")
+
+
+            cls._instances[profile_id] = gl  # Store the instance
             debugger_address = gl.start()
 
             service = Service(executable_path=chrome_driver_path)
@@ -50,4 +76,6 @@ class initiatebrowser:
             return driver
         except Exception as e:
             print(f"Error in initiate_driver: {e}")
+            # Make sure to clean up if initialization fails
+            cls.stop_driver(profile_id)
             return False

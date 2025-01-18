@@ -1,6 +1,6 @@
 import random
-import requests, os
 import time
+import traceback
 import json
 import re
 from selenium.webdriver.support.ui import WebDriverWait
@@ -8,97 +8,8 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.action_chains import ActionChains
-from .initiatebrowser import initiatebrowser
-from dotenv import load_dotenv
-
-
-load_dotenv()
-TOKEN = os.getenv("TOKEN")
-API_URL = "https://api.gologin.com/browser"
-
-# Set up the headers with your API token
-headers = {
-    "Authorization": f"Bearer {TOKEN}",  # Replace with your actual token
-    "Content-Type": "application/json",
-}
-
-
-def delete_gologin_profile(profile_id):
-    try:
-        requests.delete(f"{API_URL}/{profile_id}", headers=headers)
-    except Exception as e:
-        print(e)
-
-
-def get_fingerprint(os="win", resolution="1680x1050"):
-    # Define the API endpoint and parameters
-    url = f"{API_URL}/fingerprint"
-    params = {
-        "os": os,
-        "resolution": resolution,
-    }
-    # Make the GET request
-    response = requests.get(url, headers=headers, params=params)
-    # Check the response
-    if response.status_code != 200:
-        print(f"Unable to get fingerprint: {response.status_code} - {response.text}")
-    return response.json()
-
-
-def create_profile(profile_name):
-    fingerprints = get_fingerprint()
-    if "message" in fingerprints:
-        return fingerprints
-    fingerprints["navigator"]["language"] = "en-US,en;q=0.9"
-    profile = {
-        "name": profile_name,
-        "notes": "",
-        "browserType": "chrome",
-        "os": fingerprints["os"],
-        "googleServicesEnabled": True,
-        "lockEnabled": False,
-        "debugMode": False,
-        "navigator": fingerprints["navigator"],
-        "autoLang": False,
-        "geoProxyInfo": {},
-        "storage": {
-            "local": True,
-            "cookies": True,
-            "extensions": True,
-            "bookmarks": True,
-            "history": True,
-            "passwords": True,
-            "session": True,
-        },
-        "proxyEnabled": False,  # Specify 'false' if not using proxy
-        "proxy": {
-            "mode": "none",
-        },
-        "plugins": {"enableVulnerable": True, "enableFlash": True},
-        "timezone": {
-            "enabled": True,
-            "fillBasedOnIp": True,
-        },
-        "audioContext": {"mode": "noise", "noise": 1},
-        "canvas": {"mode": "noise"},
-        "fonts": {"families": fingerprints["fonts"]},
-        "mediaDevices": fingerprints["mediaDevices"],
-        "webRTC": {
-            "mode": "alerted",
-            "enabled": True,
-            "customize": True,
-            "localIpMasking": True,
-            "fillBasedOnIp": True,
-        },
-        "clientRects": {"mode": "noise", "noise": 0},
-        "webGL": fingerprints["webGL"],
-        "webglParams": fingerprints["webglParams"],
-    }
-    resp = requests.post(API_URL, headers=headers, json=profile)
-    print(f"Profile creation response: {resp.text[:500]}")
-    print(f"status_code: {resp.status_code}")
-    profile_id = resp.json().get("id")
-    return profile_id
+from selenium.common.exceptions import TimeoutException
+from .initiatebrowser import InitiateBrowser
 
 
 def random_sleep(min_sec=1, max_sec=3):
@@ -114,39 +25,44 @@ class InstaBot:
         self.action = None
         self.url = "https://www.instagram.com/"
 
-    def start_browser(self):
-        self.driver = initiatebrowser.initiate_driver(self.profile_id)
+    def start_browser(self, cookies_data=None):
+        self.driver = InitiateBrowser.initiate_driver(self.profile_id, cookies_data)
         if self.driver:
-            self.wait = WebDriverWait(self.driver, 15)
+            self.wait = WebDriverWait(self.driver, 10)
             self.action = ActionChains(self.driver)
             return True
         return False
 
     def stop_browser(self):
         if self.driver:
-            self.driver.close()
-        initiatebrowser.stop_driver(self.profile_id)
+            try:
+                self.driver.close()
+            except:
+                pass
+            self.driver = None
+        InitiateBrowser.stop_driver(self.profile_id)
+        time.sleep(5)
 
-    def check_login(self):
+    def check_login(self, username):
         try:
             # Verify we're on the right page
-            if self.driver.current_url != self.url:
-                self.driver.get(self.url)
+            self.driver.get(f"{self.url}{username}/")
 
-            # Get username from profile link
-            anchor_element = WebDriverWait(self.driver, 7).until(
-                EC.presence_of_element_located(
-                    ("xpath", '//span[text()="Profile"]/ancestor::a[1]')
-                )
-            )
-            username = anchor_element.get_attribute("href").strip("/").split("/")[-1]
-
-            return username
-        except Exception as e:
-            print(f"Not Logged in: {e}")
+            return self.wait.until(EC.presence_of_element_located(("xpath", f'//a/h2/span[text()="{username}"]'))).text
+        except:
+            print("Not Logged in")
         return None
 
-    def login(self, username, password):
+    def get_otp_input(self):
+        try:
+            return self.wait.until(
+                EC.presence_of_element_located((By.XPATH, "//input[@autocomplete]"))
+            )
+        except:
+            return None
+
+
+    def login(self, username: str, password: str):
         try:
             en_url = "https://www.instagram.com/?hl=en"
             self.driver.get(en_url)
@@ -189,24 +105,42 @@ class InstaBot:
                 self.action.move_to_element(login_button).click().perform()
 
             # Handle post-login scenarios
+            time.sleep(10)
+            current_url = self.driver.current_url
+            if current_url == en_url:
+                reason = self.driver.find_element("xpath", '//form/span').text
+                return False, reason
+
+            if "reactivated" in current_url:
+                self.driver.get(en_url)
+                random_sleep(2, 3)
+
+            if "/auth_platform/" in self.driver.current_url:
+                if self.get_otp_input():
+                    return False, "OTP"
+                else:
+                    return False, "notifications"
+            else:
+                print("Not on OTP page.")
+
             try:
                 # Wait for potential "Not Now" button and click if present
-                random_sleep(0.2, 0.5)
                 self.wait.until(
                     EC.presence_of_element_located(
                         ("xpath", '//div[@role="button" and text()="Not now"]')
                     )
                 ).click()
 
-            except Exception as e:
+            except:
                 print("Not Now button not found.")
 
-            username = self.check_login()
-            print(f"Successfully logged in as: {username}")
-            return username
+            username = self.check_login(username.lower())
+            if username:
+                print(f"Successfully logged in as: {username}")
+                return True, username
         except Exception as e:
             print(f"Login failed: {e}")
-        return None
+        return False, "Something went wrong. Please Try again."
 
     def story_viewer(self, username, like_story, like_option):
         try:

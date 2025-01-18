@@ -25,7 +25,7 @@
           <div class="card-body p-sm-3">
             <a href={% url "userapi:index" %}><img src="{% static '' %}media/Logo Black Font re.png" width="180" alt=""></a>
             <h4 class="fw-bold">Get Started Now</h4>
-            <strong class="mb-0">Enter your credentials to login your account</strong>
+            <p>Enter your credentials to login your account</p>
             {% include "userapi/messages_snippet.html" %}
             <div class="form-body mt-4">
               <form class="row g-3" action="{% url 'userapi:login' %}?next={{next}}" method="post">
@@ -57,7 +57,8 @@
                 </div>
                 <div class="col-12">
                   <div class="text-start">
-                    <p class="mb-0">Don't have an account yet? <a href={% url 'userapi:signup' %}>Sign up here</a>
+                    <p>
+                      Don't have an account yet? <a href={% url 'userapi:signup' %}>Sign up here</a>
                     </p>
                   </div>
                 </div>

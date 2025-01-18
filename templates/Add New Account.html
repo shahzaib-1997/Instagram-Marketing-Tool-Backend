@@ -18,15 +18,56 @@
         <link rel="stylesheet" type="text/css" href="{% static '' %}Targeting Settings_files/plugins.css">
         <link rel="stylesheet" type="text/css" href="{% static '' %}Targeting Settings_files/core.css">
         <link rel="stylesheet" type="text/css" href="{% static '' %}Targeting Settings_files/core(1).css">
+        <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" rel="stylesheet">
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
         <title>Add New Account</title>
-        <style id="popupstyles">
-            body.js-popup-opened {
-                padding-right: 5px;
-                overflow: hidden;
+        <style>
+            .error-message {
+                color: red;
+                margin-top: 5px;
             }
 
-            .js-popup {
-                overflow-y: scroll;
+            input[aria-invalid="true"] {
+                border-color: red;
+                /* Visual feedback for invalid inputs */
+            }
+
+            #loading-overlay {
+                display: flex;
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background-color: rgba(0, 0, 0, 0.5);
+                z-index: 9999;
+                justify-content: center;
+                align-items: center;
+            }
+
+            #loading-overlay > section {
+                padding: 20px;
+                border-radius: 8px;
+                text-align: center;
+            }
+
+            .loading-spinner {
+                width: 40px;
+                height: 40px;
+                border: 4px solid #f3f3f3;
+                border-top: 4px solid #3498db;
+                border-radius: 50%;
+                margin: 0 auto 15px;
+                animation: spin 1s linear infinite;
+            }
+
+            .loading-text {
+                font-size: 16px;
+            }
+
+            @keyframes spin {
+                0% { transform: rotate(0deg); }
+                100% { transform: rotate(360deg); }
             }
         </style>
     </head>
@@ -38,8 +79,7 @@
                 <a href="/accounts">
                     <span class="mdi mdi-reply"></span>Back </a>
             </div>
-            <form action="/accounts/" method="POST" autocomplete="off">
-                {% csrf_token %}
+            <form autocomplete="off" id="account-form">
                 <div class="container-1200">
                     <div class="row clearfix">
                         <div class="col s12 m8 l4 mb-20">
@@ -72,10 +112,7 @@
                                                 Password </label>
                                             <input class="input" name="password" type="password" placeholder="Enter password">
                                         </div>
-                                        <div class="mb-20">
-                                            <a href="javascript:void(0)" class="pmpa-platform-toggler pmpa-toggler-button opened"><span class="mdi icon mr-3 mdi-arrow-up"></span>Platform</a>
-                                        </div>
-                                        <div class="clearfix pmpa-platform">
+                                        <div class="clearfix">
                                             <div class="mb-10">
                                                 <label class="form-label">
                                                     Platform </label>
@@ -91,10 +128,7 @@
                                         </div>
                                         <!-- Wesley Start Mod -->
                                         <!-- Wesley End Mod -->
-                                        <div class="mb-20">
-                                            <a href="javascript:void(0)" class="pmpa-verification-toggler pmpa-toggler-button opened"><span class="mdi icon mr-3 mdi-arrow-up"></span>Verification</a>
-                                        </div>
-                                        <div class="clearfix pmpa-verification">
+                                        <div class="clearfix">
                                             <div class="mb-20">
                                                 <label class="form-label">
                                                     Verification </label>
@@ -114,79 +148,32 @@
                                         </div>
                                     </div>
                                     <div class="js-browser-extension none">
-                                        <input type="hidden" name="iacid" disabled>
                                         <div class="mb-20">
                                             <label class="form-label">
                                                 Attach Instagram Cookies </label>
                                             <ul class="field-tips-ext">
-                                                <li class="mb-5">By this link install <a href="https://chrome.google.com/webstore/detail/cookie-downloader/epldkbdhmpdcdgcolndopgkigelnmlmo" target="_blank">Cookie Downloader</a> extension for Google Chrome,
+                                                <li class="mb-5">By this link install <a href="https://chromewebstore.google.com/detail/milk-%E2%80%94-cookie-manager/haipckejfdppjfblgondaakgckohcihp" target="_blank">MILK — Cookie Manager</a> extension for Google Chrome,
                                                     Opera and Firefox.</li>
                                                 <li class="mb-5">Go to <a target="_blank" href="https://www.instagram.com/">Instagram</a> website and login to
                                                     your account.</li>
-                                                <li class="mb-5">Download cookie file by clicking <b>Download</b> button in
-                                                    extension.</li>
-                                                <li class="mb-5">Attach cookie to the form below.</li>
+                                                <li class="mb-5">Click on the extension then the settings icon(three vertical dots) Export cookies file in JSON format by clicking <b>Download</b>.</li>
+                                                <li class="mb-5">Attach that file to the form below.</li>
                                             </ul>
                                         </div>
-                                        <div class="mb-20 cookie-file-extension" style="display: none;">
+                                        <div class="mb-20 cookie-file-extension">
                                             <label class="form-label">Cookie file</label>
                                             <div class="pos-r">
-                                                <input class="input inputfile-session rightpad" name="cookie-file-extension" type="file" id="cookie-file-extension">
-                                                <label class="input cookie-file-label" for="cookie-file-extension">
-                                                    <span>Choose file username-cookie.dat</span>
+                                                <input class="input inputfile-session rightpad" name="cookie-file" type="file" id="cookie-file" style="display: none;">
+                                                <label class="input cookie-file-label" for="cookie-file">
+                                                    <span>Click to upload cookies file</span>
                                                     <span class="mdi mdi-folder field-icon--right"></span>
                                                 </label>
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="js-2fa none">
-                                        <input type="hidden" name="2faid" disabled>
-                                        <div class="js-2fa-security-code mb-20">
-                                            <label class="form-label">
-                                                Security Code <span class="compulsory-field-indicator">*</span>
-                                            </label>
-                                            <input class="input" name="twofa-security-code" type="text" placeholder="Enter security code" maxlength="8" disabled>
-                                        </div>
-                                        <div>
-                                            <div class="js-not-received-security-code">
-                                                Didn't get a security code? <a class="resend-btn" href="javascript:void(0)">
-                                                    Resend it <span class="timer" data-text="after {seconds} seconds"></span>
-                                                </a>
-                                            </div>
-                                            <div class="resend-result color-danger fz-12"></div>
-                                        </div>
-                                    </div>
-                                    <div class="js-challenge none">
-                                        <input type="hidden" name="challengeid" disabled>
-                                        <div class="js-challenge">
-                                            <div class="mb-20">
-                                                <label class="form-label">
-                                                    Security Code <span class="compulsory-field-indicator">*</span>
-                                                </label>
-                                                <input class="input js-required" name="challenge-security-code" type="text" placeholder="Enter security code" maxlength="6" disabled>
-                                            </div>
-                                            <div>
-                                                <div class="js-not-received-security-code">
-                                                    Didn't get a security code?
-                                                    <a class="resend-btn" href="javascript:void(0)">
-                                                        Resend it <span class="timer" data-text="after {seconds} seconds"></span>
-                                                    </a>
-                                                </div>
-                                                <div class="resend-result color-danger fz-12"></div>
-                                            </div>
-                                            <p class="backup-note">
-                                                You should receive the 6 digit security code sent by Instagram. </p>
-                                        </div>
-                                    </div>
                                 </div>
                                 <div class="js-login">
                                     <input class="fluid button button--footer js-login" type="submit" value="Add account">
-                                </div>
-                                <div class="js-2fa js-challenge js-browser-extension none">
-                                    <input class="fluid button button--footer" type="submit" value="Confirm">
-                                </div>
-                                <div class="js-edit-mode-fields none">
-                                    <input class="fluid button button--footer" type="submit" value="Save">
                                 </div>
                             </section>
                         </div>
@@ -199,20 +186,20 @@
                                             <p>Make sure you are logged into your Instagram account on your smartphone</p>
                                         </li>
                                         <li>
-                                            <p>Make sure that the password,email and phone numbers linked to your Instagram
+                                            <p>Make sure that the password, email and phone numbers linked to your Instagram
                                                 are correct</p>
                                         </li>
                                         <li>
                                             <p>Once you connect, select <strong>THIS WAS ME</strong>&nbsp;"We noticed a new
-                                                login from Netherlands"</p>
-                                        </li>
-                                        <li>
-                                            <p>If you did not recieve a 6 digit code via SMS, wait 60 seconds then click
-                                                RESEND</p>
+                                                login from United States"</p>
                                         </li>
                                         <li>
                                             <p>If you did not recieve a 6 digit code via EMAIL, check your SPAM and SOCIAL
                                                 tabs</p>
+                                        </li>
+                                        <li>
+                                            <p>If you did not recieve a 6 digit code via SMS, wait 60 seconds then click
+                                                RESEND</p>
                                         </li>
                                     </ol>
                                     <p><strong>CANT CONNECT?</strong></p>
@@ -343,6 +330,326 @@
         </script>
         <script type="text/javascript" src="{% static '' %}Targeting Settings_files/core.js"></script>
         <script type="text/javascript" src="{% static '' %}Targeting Settings_files/core(1).js"></script>
-    </body>
+        <script>
+            function validateForm() {
+                const username_el = document.querySelector('input[name="username"]');
+                const password_el = document.querySelector('input[name="password"]');
 
+                // If either validation fails, focus on the first invalid input
+                if (!validateUsername(username_el.value)) {
+                    username_el.focus();
+                    return false;
+                }
+
+                if (!validatePassword(password_el.value)) {
+                    password_el.focus();
+                    return false;
+                }
+                return true;
+            }
+
+            function validateUsername(username) {
+                username = username.trim().toLowerCase();
+                const usernameRegex = /^[a-zA-Z][a-zA-Z0-9._]*[a-zA-Z0-9_]$/;
+                if (username.length < 4 || username.length > 30) {
+                    showError('username-error', 'Username must be between 4 and 30 characters');
+                    return false;
+                }
+
+                // Check if it looks like an email
+                if (username.includes('@')) {
+                    showError('username-error', 'Username cannot be an email address');
+                    return false;
+                }
+
+                if (!usernameRegex.test(username)) {
+                    showError('username-error', `Invalid username format. Username must:
+                        <ul style="margin: 0;padding-left: 1rem;">
+                            <li>Start with a letter</li>
+                            <li>Only contain letters, numbers, periods, and underscores</li>
+                            <li>Not end with a period</li>
+                        </ul>
+                    `);
+                    return false;
+                }
+
+                // Check for consecutive periods
+                if (username.includes('..')) {
+                    showError('username-error', 'Username cannot contain consecutive periods');
+                    return false;
+                }
+
+                clearError('username-error');
+                return true;
+            }
+
+            function validatePassword(password) {
+                // Instagram password requirements:
+                // - At least 6 characters
+                // - Should contain letters, numbers, or special characters
+                // - Cannot be too common/simple
+
+                if (password.length < 6) {
+                    showError('password-error', 'Password must be at least 6 characters long');
+                    return false;
+                }
+
+                // Check if password contains only whitespace or common patterns
+                if (!password.trim() || /^[0-9]+$/.test(password) || /^[a-zA-Z]+$/.test(password)) {
+                    showError('password-error', 'Password must contain a mix of letters, numbers, or special characters');
+                    return false;
+                }
+
+                clearError('password-error');
+                return true;
+            }
+
+            function showError(elementId, message) {
+                let errorDiv = document.getElementById(elementId);
+                if (!errorDiv) {
+                    errorDiv = document.createElement('div');
+                    errorDiv.id = elementId;
+                    errorDiv.className = 'error-message';
+                    errorDiv.setAttribute('role', 'alert'); // For screen readers
+
+                    const input = document.querySelector(`input[name="${elementId.split('-')[0]}"]`);
+                    input.setAttribute('aria-invalid', 'true'); // Indicate invalid input
+                    input.setAttribute('aria-describedby', elementId); // Link error to input
+                    input.parentNode.insertBefore(errorDiv, input.nextSibling);
+                }
+                errorDiv.innerHTML = message;
+            }
+
+            function clearError(elementId) {
+                const errorDiv = document.getElementById(elementId);
+                if (errorDiv) {
+                    const input = document.querySelector(`input[name="${elementId.split('-')[0]}"]`);
+                    input.removeAttribute('aria-invalid');
+                    input.removeAttribute('aria-describedby');
+                    errorDiv.remove();
+                }
+            }
+
+            document.addEventListener('DOMContentLoaded', function () {
+                // Add real-time validation
+                const form = document.getElementById('account-form');
+                const formResult = document.querySelector('.form-result');
+                const csrfToken = "{{ csrf_token }}";
+                let usernameTimeout;
+                let passwordTimeout;
+
+                document.querySelector('input[name="username"]').addEventListener('input', function (e) {
+                    clearTimeout(usernameTimeout);
+                    usernameTimeout = setTimeout(() => {
+                        validateUsername(this.value);
+                    }, 300); // Wait 300ms after user stops typing
+                });
+
+                document.querySelector('input[name="password"]').addEventListener('input', function (e) {
+                    clearTimeout(passwordTimeout);
+                    passwordTimeout = setTimeout(() => {
+                        validatePassword(this.value);
+                    }, 300); // Wait 300ms after user stops typing
+                });
+
+                const showLoading = (message) => {
+                    // Loading overlay HTML
+                    const overlay = document.createElement('div');
+                    overlay.innerHTML = `
+                        <div id="loading-overlay">
+                            <section class="loading-content">
+                                <div class="loading-spinner"></div>
+                                <p class="loading-text">${message}</p>
+                            </section>
+                        </div>
+                    `;
+                    document.body.appendChild(overlay.firstElementChild);
+                };
+
+                const hideLoading = () => {
+                    document.getElementById('loading-overlay').remove();
+                };
+
+                const showOTPDialog = async () => {
+                    const isDarkMode = $('body').hasClass('darkside');
+                    const { value: otpCode } = await Swal.fire({
+                        title: 'Enter Verification Code',
+                        input: 'text',
+                        inputLabel: 'Enter the code sent to your selected verification method',
+                        inputPlaceholder: 'Enter verification code',
+                        showCancelButton: true,
+                        inputValidator: (value) => {
+                            if (!value) {
+                                return 'Please enter the verification code';
+                            }
+                        },
+                        confirmButtonText: 'Verify',
+                        cancelButtonText: 'Cancel',
+                        confirmButtonColor: isDarkMode ? "#ef4444" : "#dc2626",
+                        cancelButtonColor: isDarkMode ? "#3b82f6" : "#2563eb",
+                        allowOutsideClick: false,
+                        ...(isDarkMode && {
+                        background: '#1e1e1e',
+                        color: '#fff',
+                        // Optional: customize popup shadow in dark mode
+                        showClass: {
+                            popup: 'swal2-show shadow-[0_0_20px_rgba(0,0,0,0.4)]'
+                            }
+                        })
+                    });
+
+                    if (otpCode) {
+                        await submitOTP(otpCode);
+                    }
+                };
+
+                const submitOTP = async (otpCode) => {
+                    const isDarkMode = $('body').hasClass('darkside');
+                    const otpData = new FormData();
+                    otpData.append("otp_code", otpCode);
+
+                    showLoading('Verifying code...');
+                    try {
+                        const response = await fetch('{% url "userapi:otp" %}', {
+                            method: 'POST',
+                            headers: {
+                                'X-CSRFToken': csrfToken
+                            },
+                            body: otpData
+                        });
+
+                        const data = await response.json();
+                        hideLoading();
+
+                        if (data.success) {
+                            await Swal.fire({
+                                icon: 'success',
+                                title: 'Success!',
+                                text: 'Account added successfully!',
+                                showConfirmButton: false,
+                                timer: 1500,
+                                ...(isDarkMode && {
+                                    background: '#1e1e1e',
+                                    color: '#fff',
+                                    // Optional: customize popup shadow in dark mode
+                                    showClass: {
+                                    popup: 'swal2-show shadow-[0_0_20px_rgba(0,0,0,0.4)]'
+                                    }
+                                })
+                            });
+                            window.location.href = '{% url "userapi:accounts" %}';
+                        } else {
+                            await Swal.fire({
+                                icon: 'error',
+                                title: 'Verification Failed',
+                                text: data.message,
+                                confirmButtonText: 'Try Again',
+                                confirmButtonColor: isDarkMode ? "#ef4444" : "#dc2626",
+                                cancelButtonColor: isDarkMode ? "#3b82f6" : "#2563eb",
+                                ...(isDarkMode && {
+                                    background: '#1e1e1e',
+                                    color: '#fff',
+                                    // Optional: customize popup shadow in dark mode
+                                    showClass: {
+                                    popup: 'swal2-show shadow-[0_0_20px_rgba(0,0,0,0.4)]'
+                                    }
+                                })
+                            });
+                            showOTPDialog(); // Allow them to try again
+                        }
+                    } catch (error) {
+                        hideLoading();
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error',
+                            text: 'An error occurred while verifying the code. Please try again.',
+                            confirmButtonText: 'OK',
+                            confirmButtonColor: isDarkMode ? "#ef4444" : "#dc2626",
+                            cancelButtonColor: isDarkMode ? "#3b82f6" : "#2563eb",
+                            ...(isDarkMode && {
+                                background: '#1e1e1e',
+                                color: '#fff',
+                                // Optional: customize popup shadow in dark mode
+                                showClass: {
+                                popup: 'swal2-show shadow-[0_0_20px_rgba(0,0,0,0.4)]'
+                                }
+                            })
+                        });
+                    }
+                };
+
+                // Handle main form submission
+                form.addEventListener('submit', async function (e) {
+                    e.preventDefault();
+
+                    // Validate form
+                    if (!validateForm()) return;
+
+                    showLoading("Adding account... This may take time.");
+
+                    const formData = new FormData(this);
+                    const isDarkMode = $('body').hasClass('darkside');
+
+                    try {
+                        const response = await fetch('{% url "userapi:accounts" %}', {
+                            method: 'POST',
+                            body: formData,
+                            headers: {
+                                'X-CSRFToken': csrfToken
+                            }
+                        });
+
+                        const data = await response.json();
+                        hideLoading();
+
+                        if (data.success) {
+                            // Redirect on success
+                            window.location.href = '{% url "userapi:accounts" %}';
+                        }
+                        else if (data.requires_otp) {
+                            // Show OTP form
+                            showOTPDialog();
+                        }
+                        else {
+                            // Show error message
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Error',
+                                text: data.message,
+                                confirmButtonText: 'OK',
+                                confirmButtonColor: isDarkMode ? "#ef4444" : "#dc2626",
+                                cancelButtonColor: isDarkMode ? "#3b82f6" : "#2563eb",
+                                ...(isDarkMode && {
+                                    background: '#1e1e1e',
+                                    color: '#fff',
+                                    // Optional: customize popup shadow in dark mode
+                                    showClass: {
+                                    popup: 'swal2-show shadow-[0_0_20px_rgba(0,0,0,0.4)]'
+                                    }
+                                })
+                            });
+                        }
+                    } catch (error) {
+                        hideLoading();
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error',
+                            text: 'An error occurred. Please try again.',
+                            confirmButtonText: 'OK',
+                            confirmButtonColor: isDarkMode ? "#ef4444" : "#dc2626",
+                            cancelButtonColor: isDarkMode ? "#3b82f6" : "#2563eb",
+                            ...(isDarkMode && {
+                                background: '#1e1e1e',
+                                color: '#fff',
+                                // Optional: customize popup shadow in dark mode
+                                showClass: {
+                                popup: 'swal2-show shadow-[0_0_20px_rgba(0,0,0,0.4)]'
+                                }
+                            })
+                        });
+                    }
+                });
+            });
+        </script>
+    </body>
 </html>

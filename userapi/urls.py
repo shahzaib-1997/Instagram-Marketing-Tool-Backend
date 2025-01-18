@@ -51,6 +51,11 @@ urlpatterns = [
         views.InstaCredentialView.as_view(),
         name="instagram-account",
     ),
+    path(
+        "handle-otp/",
+        views.handle_otp,
+        name="otp",
+    ),
     path("target-edit/", views.TargetTemplateView.as_view(), name="target-edit"),
     path(
         "target-edit/<int:pk>/", views.TargetTemplateView.as_view(), name="target-edit"
