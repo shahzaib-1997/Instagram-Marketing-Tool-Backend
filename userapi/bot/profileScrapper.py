@@ -14,13 +14,16 @@ def scrape_profile_data(credential, user_bot=None):
     else:
         check = True
     if check:
-        username = credential["username"]
-        password = credential["password"]
-        if user_bot.check_login(username) is None:
-            username = user_bot.login(username, password)
-        data = {"insta_account": credential["id"]}
-        print(f"Scrapping data for insta credential: {credential}")
         try:
+            username = credential["username"]
+            password = credential["password"]
+            if user_bot.check_login(username) is None:
+                check, username = user_bot.login(username, password)
+            if not check:
+                print(f"Unable to login for credential: {credential}")
+                return
+            data = {"insta_account": credential["id"]}
+            print(f"Scrapping data for insta credential: {credential}")
             no_of_posts = user_bot.get_posts(username)
             data["type"] = "posts"
             data["count"] = no_of_posts

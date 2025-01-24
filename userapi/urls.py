@@ -51,20 +51,22 @@ urlpatterns = [
         views.InstaCredentialView.as_view(),
         name="instagram-account",
     ),
-    path(
-        "handle-otp/",
-        views.handle_otp,
-        name="otp",
-    ),
+    path("handle-otp/", views.handle_otp, name="otp"),
+    path("handle-notifications/", views.handle_notifications, name="notifications"),
+    path("close-bot/", views.close_bot, name="close-bot"),
     path("target-edit/", views.TargetTemplateView.as_view(), name="target-edit"),
     path(
         "target-edit/<int:pk>/", views.TargetTemplateView.as_view(), name="target-edit"
     ),
     path(
-        "targets/", views.user_targets, name="targets",
+        "targets/",
+        views.user_targets,
+        name="targets",
     ),
     path(
-        "targets/<int:id>/", views.user_targets, name="targets",
+        "targets/<int:id>/",
+        views.user_targets,
+        name="targets",
     ),
     path(
         "about/",
@@ -110,7 +112,11 @@ urlpatterns = [
     path("credential/", views.CredentialView.as_view(), name="credential"),
     path("credential/<int:pk>/", views.CredentialView.as_view(), name="credential"),
     path("activity-logs/", views.ActivityLogsView.as_view(), name="activity-logs"),
-    path("activity-logs/<int:id>/", views.ActivityLogsView.as_view(), name="activity-logs"),
+    path(
+        "activity-logs/<int:id>/",
+        views.ActivityLogsView.as_view(),
+        name="activity-logs",
+    ),
     path("activity-log/", views.ActivityLogView.as_view(), name="activity-log"),
     path(
         "activity-log/<int:pk>/", views.ActivityLogView.as_view(), name="activity-log"
@@ -193,20 +199,8 @@ urlpatterns = [
         TemplateView.as_view(template_name="userapi/instagram-tools.html"),
         name="instagram-tools",
     ),
-    path(
-        "accounts/new",
-        TemplateView.as_view(template_name="Add New Account.html"),
-        name="add-account",
-    ),
-    path(
-        "stats/",
-        views.DashboardView.as_view(),
-        name="stats",
-    ),
-    path(
-        "stats/<int:id>/",
-        views.DashboardView.as_view(),
-        name="stats",
-    ),
+    path("accounts/new", views.add_new_account, name="add-account"),
+    path("stats/", views.DashboardView.as_view(), name="stats"),
+    path("stats/<int:id>/", views.DashboardView.as_view(), name="stats"),
     path("target-update/", views.TargetUpdateView.as_view(), name="target-update"),
 ]

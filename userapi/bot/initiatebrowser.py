@@ -4,7 +4,7 @@ from selenium.webdriver.chrome.service import Service
 from gologin import GoLogin
 from dotenv import load_dotenv
 import json
-from .gologin_operations import add_cookies_to_profile
+
 
 load_dotenv()
 TOKEN = os.getenv("TOKEN")
@@ -49,7 +49,7 @@ class InitiateBrowser:
                         cookies = cookies_data
 
                     # Upload cookies
-                    add_cookies_to_profile(profile_id, cookies)
+                    gl.uploadCookies(profile_id, cookies)
                     print("Cookies added")
                 except json.JSONDecodeError as e:
                     print(f"Invalid JSON format in file: {e}")

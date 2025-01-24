@@ -9,6 +9,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout, update_session_auth_hash
 from django.contrib import messages
 from django.utils import timezone
+from django.http import JsonResponse
 from .dry import BaseAPIView, RenderAPIView, szr_val_save, add_user
 from .bot.profileScrapper import profile_thread
 from .bot.gologin_operations import create_profile, delete_gologin_profile
@@ -55,14 +56,11 @@ class AllCredentials(APIView):
                     {"error": "insta_account, type and count are required"}, status=400
                 )
 
-            # Get today's date
-            today = timezone.now().date()
-
             # Use update_or_create
             stat, created = Stat.objects.update_or_create(
                 insta_account_id=insta_account_id,
                 type=stat_type,
-                time_stamp__date=today,
+                time_stamp__date=timezone.now().date(),
                 defaults={"count": count},
             )
             print(f"Found {count} {stat_type}.")
@@ -368,6 +366,13 @@ class TargetTemplateView(APIView):
         #     return redirect("userapi:target-edit", pk=target.id)
 
 
+def add_new_account(request):
+    if request.user.is_authenticated:
+        return render(request, "Add New Account.html")
+    messages.error(request, "You need to login first.")
+    return redirect(f"/signin/?next={request.path}")
+
+
 class InstaCredentialView(APIView):
     def get(self, request):
         if request.user.is_authenticated:
@@ -403,7 +408,6 @@ class InstaCredentialView(APIView):
                     insta_cred.following = (
                         latest_following.count if latest_following else 0
                     )
-                print(insta_creds.values())
                 return render(
                     request, "Saved Accounts.html", {"insta_creds": insta_creds}
                 )
@@ -418,20 +422,17 @@ class InstaCredentialView(APIView):
                 'success': False,
                 'message': 'You need to login first.'
             }, status=status.HTTP_401_UNAUTHORIZED)
-            # return redirect(f"/signin/?next={request.path}")
 
-        username = request.POST.get("username")
+        username = request.POST.get("username").lower()
         password = request.POST.get("password")
         cookies_file = request.FILES.get("cookie-file")
 
         # Check for existing credentials
         if Credential.objects.filter(user=request.user, username=username).exists():
-            # messages.error(request, "Username already exists against your account!")
             return Response({
                     'success': False,
                     'message': 'Username already exists against your account!'
                 }, status=status.HTTP_400_BAD_REQUEST)
-            # return redirect("userapi:accounts")
 
         # Create new credential flow
         user_bot = None
@@ -443,7 +444,6 @@ class InstaCredentialView(APIView):
                     'success': False,
                     'message': 'Something went wrong. Please Try again.'
                 }, status=status.HTTP_400_BAD_REQUEST)
-                # return redirect("userapi:accounts")
 
             user_bot = InstaBot(profile_id)
             if cookies_file:
@@ -455,13 +455,11 @@ class InstaCredentialView(APIView):
             user_bot.start_browser(cookies_data)
             if not user_bot.driver:
                 print(f"Unable to start_browser.")
-                # messages.error(request, "Something went wrong. Please Try again.")
                 delete_gologin_profile(profile_id)
                 return Response({
                     'success': False,
                     'message': 'Something went wrong. Please try again.'
                 }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-                # return redirect("userapi:accounts")
 
             if cookies_data:
                 msg = user_bot.check_login(username.lower())
@@ -471,6 +469,7 @@ class InstaCredentialView(APIView):
                     check, msg = user_bot.login(username, password)
             else:
                 check, msg = user_bot.login(username, password)
+            print(check, msg)
             if check:
                 credential = Credential.objects.create(
                     user=request.user,
@@ -502,12 +501,10 @@ class InstaCredentialView(APIView):
                     }
                     return Response({
                         'success': False,
-                        'requires_otp': True,
-                        'message': 'Please enter the verification code'
+                        'requires_otp': True if msg == "OTP" else False,
+                        'message': user_bot.driver.find_element("xpath", "//h2/span").text
                     })
-                    # return redirect(f'userapi:{msg.lower()}')
                 else:
-                    # messages.error(request, msg)
                     user_bot.stop_browser()
                     delete_gologin_profile(profile_id)
                     return Response({
@@ -520,7 +517,6 @@ class InstaCredentialView(APIView):
                 user_bot.stop_browser()
             if "profile_id" in locals():
                 delete_gologin_profile(profile_id)
-            # messages.error(request, "Failed to add account")
             return Response({
                 'success': False,
                 'message': 'Failed to add account'
@@ -544,33 +540,34 @@ class InstaCredentialView(APIView):
 def handle_otp(request):
     """View to handle OTP input"""
     if request.method == "POST":
+        auth_data = request.session["pending_auth"]
+        print(auth_data)
         try:
             session_id = request.session.session_key
             user_bot = bot_manager.get_bot(session_id)
 
             if not user_bot:
-                # messages.error(request, "Session expired!")
-                # return redirect("userapi:add-account")
-                return Response({
+                return JsonResponse({
                     'success': False,
                     'message': 'Session expired!'
-                }, status=status.HTTP_400_BAD_REQUEST)
+                }, status=400)
 
-            otp_code = request.data.get('otp_code')
+            otp_code = request.POST.get('otp_code')
             if not otp_code:
-                return Response({
+                return JsonResponse({
                     'success': False,
                     'message': 'OTP code is required'
-                }, status=status.HTTP_400_BAD_REQUEST)
+                }, status=400)
 
-            check, msg = user_bot.handle_otp(otp_code)
+            username = auth_data["username"]
+            profile_id = auth_data["profile_id"]
+            check = user_bot.handle_otp(otp_code, username)
 
             if check:
                 # OTP verified, proceed with credential saving
-                auth_data = request.session["pending_auth"]
                 credential = Credential(
                     user=request.user,
-                    username=auth_data["username"],
+                    username=username,
                     password=auth_data["password"],
                     profile_id=auth_data["profile_id"],
                 )
@@ -581,61 +578,93 @@ def handle_otp(request):
                 del request.session["pending_auth"]
 
                 profile_thread(CredentialSerializer(credential).data, user_bot)
-                # return redirect("userapi:accounts")
-                return Response({
+                return JsonResponse({
                     'success': True,
                     'message': 'Account added successfully!'
                 })
             else:
-                # messages.error(request, msg)
-                # return redirect("userapi:otp")
-                return Response({
+                # Clean up
+                user_bot.stop_browser()
+                delete_gologin_profile(profile_id)
+                bot_manager.remove_bot(session_id)
+                del request.session["pending_auth"]
+
+                return JsonResponse({
                     'success': False,
-                    'message': msg
-                }, status=status.HTTP_400_BAD_REQUEST)
+                    'message': f"Incorrect verification code: {otp_code}"
+                }, status=400)
         except Exception as e:
             print(f"Error in OTP verification: {str(e)}")
             if user_bot:
                 user_bot.stop_browser()
-            if "pending_auth" in request.session:
-                delete_gologin_profile(request.session["pending_auth"]["profile_id"])
-            # messages.error(request, "Failed to add account")
-            return Response({
+            if "profile_id" in auth_data:
+                delete_gologin_profile(auth_data["profile_id"])
+            return JsonResponse({
                 'success': False,
                 'message': 'Failed to verify OTP.'
-            }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            }, status=500)
 
 
 def handle_notifications(request):
     """View to handle notifications prompt"""
+    if request.method == "POST":
+        auth_data = request.session["pending_auth"]
+        print(auth_data)
+        try:
+            session_id = request.session.session_key
+            user_bot = bot_manager.get_bot(session_id)
+
+            if not user_bot:
+                messages.error(request, "Session expired")
+                return redirect("userapi:add-account")
+
+            username = auth_data["username"]
+            check = user_bot.handle_notifications(username)
+
+            if check:
+                # Similar success handling as OTP view
+                credential = Credential(
+                    user=request.user,
+                    username=username,
+                    password=auth_data["password"],
+                    profile_id=auth_data["profile_id"],
+                )
+                credential.save()
+
+                bot_manager.remove_bot(session_id)
+                del request.session["pending_auth"]
+
+                profile_thread(CredentialSerializer(credential).data, user_bot)
+                return JsonResponse({
+                    'success': True,
+                })
+            else:
+                return JsonResponse({
+                    'success': False,
+                }, status=400)
+        except Exception as e:
+            print(f"Error in handle_notifications: {str(e)}")
+            if user_bot:
+                user_bot.stop_browser()
+            if "profile_id" in auth_data:
+                delete_gologin_profile(auth_data["profile_id"])
+            return JsonResponse({
+                'success': False,
+            }, status=500)
+
+
+def close_bot(request):
     session_id = request.session.session_key
     user_bot = bot_manager.get_bot(session_id)
+    auth_data = request.session["pending_auth"]
 
-    if not user_bot:
-        messages.error(request, "Session expired")
-        return redirect("userapi:add-account")
-
-    check, msg = user_bot.handle_notifications()
-
-    if check:
-        # Similar success handling as OTP view
-        auth_data = request.session["pending_auth"]
-        credential = Credential(
-            user=request.user,
-            username=auth_data["username"],
-            password=auth_data["password"],
-            profile_id=auth_data["profile_id"],
-        )
-        credential.save()
-
+    if user_bot:
+        user_bot.stop_browser()
+        # Clean up
         bot_manager.remove_bot(session_id)
         del request.session["pending_auth"]
-
-        profile_thread(CredentialSerializer(credential).data, user_bot)
-        return redirect("userapi:accounts")
-    else:
-        messages.error(request, msg)
-        return redirect("userapi:notifications")
+    delete_gologin_profile(auth_data["profile_id"])
+    return JsonResponse({"message": "Bot closed successfully."})
 
 
 class ProfileView(APIView):

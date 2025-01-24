@@ -73,7 +73,6 @@ def create_profile(profile_name):
         "proxy": {
             "mode": "none",
         },
-        "plugins": {"enableVulnerable": True, "enableFlash": True},
         "timezone": {
             "enabled": True,
             "fillBasedOnIp": True,
@@ -83,11 +82,10 @@ def create_profile(profile_name):
         "fonts": {"families": fingerprints["fonts"]},
         "mediaDevices": fingerprints["mediaDevices"],
         "webRTC": {
-            "mode": "alerted",
-            "enabled": True,
-            "customize": True,
+            "mode": "disabled",
+            "enabled": False,
+            "customize": False,
             "localIpMasking": True,
-            "fillBasedOnIp": True,
         },
         "clientRects": {"mode": "noise", "noise": 0},
         "webGL": fingerprints["webGL"],

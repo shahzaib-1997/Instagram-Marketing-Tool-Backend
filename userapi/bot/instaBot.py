@@ -23,7 +23,7 @@ class InstaBot:
         self.driver = None
         self.wait = None
         self.action = None
-        self.url = "https://www.instagram.com/"
+        self.url = "https://www.instagram.com"
 
     def start_browser(self, cookies_data=None):
         self.driver = InitiateBrowser.initiate_driver(self.profile_id, cookies_data)
@@ -44,11 +44,15 @@ class InstaBot:
         time.sleep(5)
 
     def check_login(self, username):
+        """Verify login status for given username"""
         try:
-            # Verify we're on the right page
-            self.driver.get(f"{self.url}{username}/")
+            self.driver.get(f"{self.url}/{username}/?hl=en")
 
-            return self.wait.until(EC.presence_of_element_located(("xpath", f'//a/h2/span[text()="{username}"]'))).text
+            return self.wait.until(
+                EC.presence_of_element_located(
+                    ("xpath", f'//a/h2/span[text()="{username}"]')
+                )
+            ).text
         except:
             print("Not Logged in")
         return None
@@ -61,12 +65,65 @@ class InstaBot:
         except:
             return None
 
+    def click_not_now(self):
+        try:
+            print("Checking for Not Now button")
+            # Wait for potential "Not Now" button and click if present
+            self.wait.until(
+                EC.presence_of_element_located(
+                    ("xpath", '//div[@role="button" and text()="Not now"]')
+                )
+            ).click()
+            print("Clicked on Not Now button")
+        except:
+            print("Not Now button not found.")
+
+    def handle_notifications(self, username):
+        try:
+            time.sleep(10)
+            return self.handle_post_login(username)
+        except:
+            traceback.print_exc()
+            return None
+
+    def handle_otp(self, otp_code, username):
+        try:
+            otp_input = self.get_otp_input()
+            otp_input.send_keys(otp_code)
+            otp_input.send_keys(Keys.ENTER)
+            time.sleep(10)
+            current_url = self.driver.current_url
+            if "/auth_platform/" in current_url or "/two_factor" in current_url:
+                return None
+            return self.handle_post_login(username)
+        except:
+            traceback.print_exc()
+            return None
+
+    def handle_cookies(self):
+        try:
+            print("Checking cookies")
+            self.wait.until(
+                EC.presence_of_element_located(
+                    ("xpath", '//div[@role="dialog"]/div/button')
+                )
+            ).click()
+            print("Clicked on cookies button")
+        except:
+            print("cookies dialog not found")
+
+    def handle_post_login(self, username):
+        self.click_not_now()
+        return self.check_login(username)
 
     def login(self, username: str, password: str):
+        """Enhanced login with human-like behavior and better error handling"""
         try:
-            en_url = "https://www.instagram.com/?hl=en"
+            en_url = f"{self.url}/?hl=en"
             self.driver.get(en_url)
             random_sleep(1, 2)  # Wait for page load
+
+            self.handle_cookies()
 
             # Wait for username field and move mouse to it naturally
             username_element = self.wait.until(
@@ -95,7 +152,6 @@ class InstaBot:
                 random_sleep(0.05, 0.15)
 
             # Submit login
-            random_sleep(0.2, 0.5)
             if random.random() < 0.7:  # 70% chance to use Enter
                 password_element.send_keys(Keys.ENTER)
             else:
@@ -108,43 +164,37 @@ class InstaBot:
             time.sleep(10)
             current_url = self.driver.current_url
             if current_url == en_url:
-                reason = self.driver.find_element("xpath", '//form/span').text
+                reason = self.driver.find_element("xpath", "//form/span").text
                 return False, reason
 
             if "reactivated" in current_url:
                 self.driver.get(en_url)
                 random_sleep(2, 3)
 
-            if "/auth_platform/" in self.driver.current_url:
-                if self.get_otp_input():
+            current_url = self.driver.current_url
+            print(current_url)
+            # Check for 2FA/OTP
+            if "/auth_platform/" in current_url or "/two_factor" in current_url:
+                print("Verification page detected.")
+                otp_input = self.get_otp_input()
+                if otp_input:
                     return False, "OTP"
-                else:
-                    return False, "notifications"
+                return False, "notifications"
             else:
                 print("Not on OTP page.")
 
-            try:
-                # Wait for potential "Not Now" button and click if present
-                self.wait.until(
-                    EC.presence_of_element_located(
-                        ("xpath", '//div[@role="button" and text()="Not now"]')
-                    )
-                ).click()
-
-            except:
-                print("Not Now button not found.")
-
-            username = self.check_login(username.lower())
+            username = self.handle_post_login(username)
             if username:
                 print(f"Successfully logged in as: {username}")
                 return True, username
         except Exception as e:
             print(f"Login failed: {e}")
-        return False, "Something went wrong. Please Try again."
+            return False, "Something went wrong. Please Try again."
+        return False, "Login failed."
 
     def story_viewer(self, username, like_story, like_option):
         try:
-            self.driver.get(f"https://www.instagram.com/stories/{username}")
+            self.driver.get(f"{self.url}/stories/{username}/?hl=en")
             if "stories" in self.driver.current_url:
                 stories = self.wait.until(
                     EC.presence_of_all_elements_located(
@@ -196,8 +246,9 @@ class InstaBot:
                     except Exception as e:
                         print(f"No next story")
                         break
-        except Exception as e:
-            print(f"There is an {e}. Please Retry!")
+        except:
+            print(f"Error in story_viewer")
+            traceback.print_exc()
 
     def like_function(self):
         try:
@@ -208,12 +259,13 @@ class InstaBot:
             )
             self.driver.execute_script("arguments[0].parentNode.click();", like_button)
         except Exception as e:
-            print(f"Failed to like story: {e}")
+            print("Error in like_function")
+            traceback.print_exc()
 
     def feed_storyViewer(self, numberof_stories):
         try:
             count = 0
-            self.driver.get("https://www.instagram.com/")
+            self.driver.get(f"{self.url}/?hl=en")
             self.wait.until(
                 EC.presence_of_element_located(
                     ("xpath", "//button[contains(@aria-label,'Story')]")
@@ -247,7 +299,7 @@ class InstaBot:
         try:
             likers_names = []
             random_number = random.randint(0, 5)
-            self.driver.get("https://www.instagram.com/" + username)
+            self.driver.get(f"{self.url}/{username}/?hl=en")
             self.wait.until(
                 EC.presence_of_all_elements_located(("xpath", '//div[@class="_aagu"]'))
             )
@@ -277,7 +329,7 @@ class InstaBot:
         try:
 
             followers_names = []
-            self.driver.get("https://www.instagram.com/" + username)
+            self.driver.get(f"{self.url}/{username}/?hl=en")
             follow_button = self.wait.until(
                 EC.presence_of_element_located(
                     (
@@ -307,7 +359,7 @@ class InstaBot:
 
     def feed_scroller(self):
         try:
-            self.driver.get("https://www.instagram.com/")
+            self.driver.get(f"{self.url}/?hl=en")
             time.sleep(3)
             for i in range(15):
                 self.driver.execute_script("window.scrollBy(0, 1000);")
@@ -317,7 +369,7 @@ class InstaBot:
 
     def highlights_viewer(self, username):
         try:
-            self.driver.get("https://www.instagram.com/" + username)
+            self.driver.get(f"{self.url}/{username}/?hl=en")
             highlight = self.wait.until(
                 EC.presence_of_element_located(
                     (
@@ -339,9 +391,7 @@ class InstaBot:
                 if "#" in user_input:
                     if user_input[0] == "#":
                         link = user_input.replace("#", "")
-                        self.driver.get(
-                            "https://www.instagram.com/explore/tags/" + link
-                        )
+                        self.driver.get(f"{self.url}/explore/tags/{link}/?hl=en")
                         self.wait.until(
                             EC.presence_of_all_elements_located(
                                 ("xpath", '//div[@class="_aagu"]')
@@ -384,7 +434,7 @@ class InstaBot:
 
     def comment_liker(self, username):
         try:
-            self.driver.get("https://www.instagram.com/" + username)
+            self.driver.get(f"{self.url}/{username}/?hl=en")
             posts_list = self.wait.until(
                 EC.presence_of_all_elements_located(("xpath", '//div[@class="_aagu"]'))
             )
@@ -413,51 +463,49 @@ class InstaBot:
 
     def hashtag_postLiker(self, user_input):
         try:
-            link = user_input.replace("#", "")
-            self.driver.get(
-                f"https://www.instagram.com/explore/search/keyword/?q=%23{link}"
-            )
+            link = user_input.replace("#", "").replace(" ", "")
+            self.driver.get(f"{self.url}/explore/search/keyword/?q=%23{link}&hl=en")
             link_list = self.wait.until(
                 EC.presence_of_all_elements_located(("xpath", '//div[@class="_aagu"]'))
             )
             if link_list:
                 random_number = random.randint(0, (len(link_list) - 1))
-                link_list[random_number].click()
+                self.action.move_to_element(link_list[random_number]).click().perform()
                 self.like_function()
                 time.sleep(2.5)
             return True
         except Exception as e:
-            print(f"Error: {e}")
+            print(f"Error in hashtag_postLiker.")
+            traceback.print_exc()
             return False
 
     def hashtag_postCommenter(self, user_input, comment):
         try:
-            link = user_input.replace("#", "")
-            self.driver.get(
-                f"https://www.instagram.com/explore/search/keyword/?q=%23{link}"
-            )
+            link = user_input.replace("#", "").replace(" ", "")
+            self.driver.get(f"{self.url}/explore/search/keyword/?q=%23{link}&hl=en")
             link_list = self.wait.until(
                 EC.presence_of_all_elements_located(("xpath", '//div[@class="_aagu"]'))
             )
             if link_list:
                 random_number = random.randint(0, (len(link_list) - 1))
                 link_list[random_number].click()
-                commenter = self.wait.until(
+                comment_box = self.wait.until(
                     EC.presence_of_element_located(
                         ("xpath", "//textarea[contains(@aria-label,'Add a comment')]")
                     )
                 )
-                self.action.send_keys_to_element(
-                    commenter, comment + Keys.ENTER
+                self.action.move_to_element(comment_box).send_keys(
+                    comment, Keys.ENTER
                 ).perform()
             return True
         except Exception as e:
-            print(f"Error: {e}")
+            print(f"Error in hashtag_postCommenter.")
+            traceback.print_exc()
             return False
 
     def post_liker(self, username):
         try:
-            self.driver.get("https://www.instagram.com/" + username)
+            self.driver.get(f"{self.url}/{username}/?hl=en")
             link_list = self.wait.until(
                 EC.presence_of_all_elements_located(("xpath", '//div[@class="_aagu"]'))
             )
@@ -468,12 +516,13 @@ class InstaBot:
                 time.sleep(3)
             return True
         except Exception as e:
-            print(f"Error: {e}")
+            print(f"Error in post_liker.")
+            traceback.print_exc()
             return False
 
     def post_liker_url(self, url):
         try:
-            self.driver.get(url)
+            self.driver.get(f"{url}/?hl=en")
             time.sleep(5)
             self.like_function()
             return True
@@ -483,7 +532,7 @@ class InstaBot:
 
     def post_comment_url(self, url, comment):
         try:
-            self.driver.get(url)
+            self.driver.get(f"{url}/?hl=en")
             time.sleep(5)
             commenter = self.wait.until(
                 EC.presence_of_element_located(
@@ -498,7 +547,7 @@ class InstaBot:
 
     def post_commenter(self, username, comment):
         try:
-            self.driver.get("https://www.instagram.com/" + username)
+            self.driver.get(f"{self.url}/{username}/?hl=en")
             link_list = self.wait.until(
                 EC.presence_of_all_elements_located(("xpath", '//div[@class="_aagu"]'))
             )
@@ -522,7 +571,7 @@ class InstaBot:
 
     def reel_viewer(self, username):
         try:
-            self.driver.get(f"https://www.instagram.com/{username}/reels")
+            self.driver.get(f"{self.url}/{username}/reels/?hl=en")
             link_list = self.wait.until(
                 EC.presence_of_all_elements_located(("xpath", '//div[@class="_aajy"]'))
             )
@@ -537,7 +586,7 @@ class InstaBot:
 
     def reel_viewer_url(self, url):
         try:
-            self.driver.get(url)
+            self.driver.get(f"{url}/?hl=en")
             time.sleep(5)
             return True
         except Exception as e:
@@ -546,7 +595,7 @@ class InstaBot:
 
     def reel_liker(self, username):
         try:
-            self.driver.get(f"https://www.instagram.com/{username}/reels")
+            self.driver.get(f"{self.url}/{username}/reels/?hl=en")
             link_list = self.wait.until(
                 EC.presence_of_all_elements_located(("xpath", '//div[@class="_aajy"]'))
             )
@@ -562,7 +611,7 @@ class InstaBot:
 
     def reel_commenter(self, username, comment):
         try:
-            self.driver.get(f"https://www.instagram.com/{username}/reels")
+            self.driver.get(f"{self.url}/{username}/reels/?hl=en")
             self.wait.until(
                 EC.presence_of_all_elements_located(("xpath", '//div[@class="_aajy"]'))
             )
@@ -586,7 +635,7 @@ class InstaBot:
 
     def reel_commenter_url(self, url, comment):
         try:
-            self.driver.get(url)
+            self.driver.get(f"{url}/?hl=en")
             time.sleep(5)
             commenter = self.wait.until(
                 EC.presence_of_element_located(
@@ -601,7 +650,7 @@ class InstaBot:
 
     def single_reel_liker(self, url):
         try:
-            self.driver.get(url)
+            self.driver.get(f"{url}/?hl=en")
             time.sleep(5)
             self.like_function()
             return True
@@ -611,7 +660,7 @@ class InstaBot:
 
     def get_username(self, url):
         try:
-            self.driver.get(url)
+            self.driver.get(f"{url}/?hl=en")
             username = self.wait.until(
                 EC.presence_of_element_located(
                     ("xpath", "//a[contains(@class,'notranslate')]")
@@ -624,7 +673,7 @@ class InstaBot:
 
     def load_profile_page(self, username):
         """Load the profile page for the given username, only if not already loaded."""
-        url = f"https://www.instagram.com/{username}"
+        url = f"{self.url}/{username}/?hl=en"
         if self.driver.current_url != url:
             self.driver.get(url)
 

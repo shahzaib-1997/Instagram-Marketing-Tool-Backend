@@ -47,7 +47,8 @@ def main(user):
                             if check:
                                 username = target["insta_user"]["username"]
                                 password = target["insta_user"]["password"]
-                                user_bot.login(username, password)
+                                if user_bot.check_login(username) is None:
+                                    user_bot.login(username, password)
                                 current_target = target["target_type"]
                                 urls = target["url"].split("\r\n")
                                 for url in urls:
@@ -145,12 +146,14 @@ def main(user):
                                     if target["view_story"]:
                                         if any(sub in url for sub in ["/reel/", "/p/", "/reels/"]):
                                             username = user_bot.get_username(url)
-                                        else:
+                                        elif "/" in username:
                                             username = url.split("/")
                                             if username[-1] == "":
                                                 username = username[-2]
                                             else:
                                                 username = username[-1]
+                                        else:
+                                            username = url
                                         if username:
                                             user_bot.story_viewer(
                                                 username,

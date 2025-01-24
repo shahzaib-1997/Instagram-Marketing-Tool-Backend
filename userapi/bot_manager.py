@@ -40,7 +40,7 @@ class BotManager:
                 expired = [
                     session_id for session_id, last_access
                     in self._last_access.items()
-                    if current_time - last_access > self._cleanup_timeout
+                    if current_time - last_access > timeout
                 ]
 
                 # Clean up expired sessions

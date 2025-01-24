@@ -45,7 +45,7 @@
                 align-items: center;
             }
 
-            #loading-overlay > section {
+            #loading-overlay>section {
                 padding: 20px;
                 border-radius: 8px;
                 text-align: center;
@@ -66,8 +66,13 @@
             }
 
             @keyframes spin {
-                0% { transform: rotate(0deg); }
-                100% { transform: rotate(360deg); }
+                0% {
+                    transform: rotate(0deg);
+                }
+
+                100% {
+                    transform: rotate(360deg);
+                }
             }
         </style>
     </head>
@@ -128,7 +133,7 @@
                                         </div>
                                         <!-- Wesley Start Mod -->
                                         <!-- Wesley End Mod -->
-                                        <div class="clearfix">
+                                        <div class="clearfix none">
                                             <div class="mb-20">
                                                 <label class="form-label">
                                                     Verification </label>
@@ -190,43 +195,42 @@
                                                 are correct</p>
                                         </li>
                                         <li>
-                                            <p>Once you connect, select <strong>THIS WAS ME</strong>&nbsp;"We noticed a new
-                                                login from United States"</p>
+                                            <p>If 2fa is enabled on your account then make sure you have access to the selected security method.</p>
+                                        </li>
+                                        <!-- <li>
+                                            <p>If you get "We Detected An Unusual Login Attempt", select <strong>THIS WAS ME</strong>.</p>
+                                        </li> -->
+                                        <li>
+                                            <p>If you did not recieve a 6 digit code via EMAIL, check your SPAM and SOCIAL tabs.</p>
                                         </li>
                                         <li>
-                                            <p>If you did not recieve a 6 digit code via EMAIL, check your SPAM and SOCIAL
-                                                tabs</p>
-                                        </li>
-                                        <li>
-                                            <p>If you did not recieve a 6 digit code via SMS, wait 60 seconds then click
-                                                RESEND</p>
+                                            <p>If you did not recieve a 6 digit code via SMS, wait about 60 seconds.</p>
                                         </li>
                                     </ol>
                                     <p><strong>CANT CONNECT?</strong></p>
                                     <ol>
                                         <li>
-                                            <p>Delete your accounts recent login activity.&nbsp;&nbsp;<a href="https://help.instagram.com/2761108904184084" target="_blank">Check
-                                                    out this guide</a> from Instagram</p>
-                                        </li>
-                                        <li>
-                                            <p>Change your Instagram password and reconnect your account, this resets the
-                                                API</p>
-                                        </li>
-                                        <li>
-                                            <p>If you are still unable to connect, come back in a couple hours and try again
+                                            <p>
+                                                Delete your accounts recent login activity.&nbsp;
+                                                <a href="https://help.instagram.com/2761108904184084" target="_blank">Check out this guide</a> from Instagram.
                                             </p>
                                         </li>
                                         <li>
-                                            <p>You can also turn off 2FA. <a href="https://help.instagram.com/1124604297705184" target="_blank">Check
-                                                    out this guide</a> from Instagram</p>
+                                            <p>Change your Instagram password and reconnect your account, this resets the API</p>
                                         </li>
                                         <li>
-                                            <p>If you are still having problems, please contact live chat or&nbsp;<a href="mailto:support@stellationmedia.com?subject=I%20Can%27t%20Connect%20My%20Account&amp;body=Hey%20Support%20Team%2C%0A%0AI%20am%20having%20trouble%20connecting%20my%20account.%20%0A%0ACan%20you%20please%20help%20me%20out%3F%0A%0AThanks">email
-                                                    us</a>.&nbsp;</p>
+                                            <p>If you are still unable to connect, come back in a couple hours and try again.</p>
+                                        </li>
+                                        <li>
+                                            <p>You can also turn off 2FA.
+                                                <a href="https://help.instagram.com/1124604297705184" target="_blank">Check out this guide</a> from Instagram.
+                                            </p>
+                                        </li>
+                                        <li>
+                                            <p>If you are still having problems, please contact live chat or <a href="mailto:support@stellationmedia.com?subject=I%20Can%27t%20Connect%20My%20Account&amp;body=Hey%20Support%20Team%2C%0A%0AI%20am%20having%20trouble%20connecting%20my%20account.%20%0A%0ACan%20you%20please%20help%20me%20out%3F%0A%0AThanks">email
+                                                    us</a>.</p>
                                         </li>
                                     </ol>
-                                    <div>
-                                    </div>
                                 </div>
                             </section>
                         </div>
@@ -435,6 +439,15 @@
                 const form = document.getElementById('account-form');
                 const formResult = document.querySelector('.form-result');
                 const csrfToken = "{{ csrf_token }}";
+                // Common fetch options
+                const fetchOptions = {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': csrfToken
+                    },
+                    credentials: 'same-origin'
+                };
                 let usernameTimeout;
                 let passwordTimeout;
 
@@ -442,14 +455,14 @@
                     clearTimeout(usernameTimeout);
                     usernameTimeout = setTimeout(() => {
                         validateUsername(this.value);
-                    }, 300); // Wait 300ms after user stops typing
+                    }, 500); // Wait 500ms after user stops typing
                 });
 
                 document.querySelector('input[name="password"]').addEventListener('input', function (e) {
                     clearTimeout(passwordTimeout);
                     passwordTimeout = setTimeout(() => {
                         validatePassword(this.value);
-                    }, 300); // Wait 300ms after user stops typing
+                    }, 500); // Wait 500ms after user stops typing
                 });
 
                 const showLoading = (message) => {
@@ -470,12 +483,12 @@
                     document.getElementById('loading-overlay').remove();
                 };
 
-                const showOTPDialog = async () => {
+                const showOTPDialog = async (message) => {
                     const isDarkMode = $('body').hasClass('darkside');
                     const { value: otpCode } = await Swal.fire({
                         title: 'Enter Verification Code',
                         input: 'text',
-                        inputLabel: 'Enter the code sent to your selected verification method',
+                        inputLabel: `${message}`,
                         inputPlaceholder: 'Enter verification code',
                         showCancelButton: true,
                         inputValidator: (value) => {
@@ -489,17 +502,20 @@
                         cancelButtonColor: isDarkMode ? "#3b82f6" : "#2563eb",
                         allowOutsideClick: false,
                         ...(isDarkMode && {
-                        background: '#1e1e1e',
-                        color: '#fff',
-                        // Optional: customize popup shadow in dark mode
-                        showClass: {
-                            popup: 'swal2-show shadow-[0_0_20px_rgba(0,0,0,0.4)]'
+                            background: '#1e1e1e',
+                            color: '#fff',
+                            // Optional: customize popup shadow in dark mode
+                            showClass: {
+                                popup: 'swal2-show shadow-[0_0_20px_rgba(0,0,0,0.4)]'
                             }
                         })
                     });
 
                     if (otpCode) {
                         await submitOTP(otpCode);
+                    } else {
+                        // User clicked Cancel or closed the dialog
+                        await fetch('{% url "userapi:close-bot" %}', fetchOptions);
                     }
                 };
 
@@ -533,7 +549,7 @@
                                     color: '#fff',
                                     // Optional: customize popup shadow in dark mode
                                     showClass: {
-                                    popup: 'swal2-show shadow-[0_0_20px_rgba(0,0,0,0.4)]'
+                                        popup: 'swal2-show shadow-[0_0_20px_rgba(0,0,0,0.4)]'
                                     }
                                 })
                             });
@@ -551,18 +567,18 @@
                                     color: '#fff',
                                     // Optional: customize popup shadow in dark mode
                                     showClass: {
-                                    popup: 'swal2-show shadow-[0_0_20px_rgba(0,0,0,0.4)]'
+                                        popup: 'swal2-show shadow-[0_0_20px_rgba(0,0,0,0.4)]'
                                     }
                                 })
                             });
-                            showOTPDialog(); // Allow them to try again
+                            // showOTPDialog(); // Allow them to try again
                         }
                     } catch (error) {
                         hideLoading();
                         Swal.fire({
                             icon: 'error',
                             title: 'Error',
-                            text: 'An error occurred while verifying the code. Please try again.',
+                            text: 'Something went wrong while verifying the code. Please try again.',
                             confirmButtonText: 'OK',
                             confirmButtonColor: isDarkMode ? "#ef4444" : "#dc2626",
                             cancelButtonColor: isDarkMode ? "#3b82f6" : "#2563eb",
@@ -571,9 +587,63 @@
                                 color: '#fff',
                                 // Optional: customize popup shadow in dark mode
                                 showClass: {
-                                popup: 'swal2-show shadow-[0_0_20px_rgba(0,0,0,0.4)]'
+                                    popup: 'swal2-show shadow-[0_0_20px_rgba(0,0,0,0.4)]'
                                 }
                             })
+                        });
+                    }
+                };
+
+                const showNotificationsDialog = async (message) => {
+                    const isDarkMode = $('body').hasClass('darkside');
+                    try {
+                        const result = await Swal.fire({
+                            title: `${message}`,
+                            icon: "warning",
+                            html: "Go to Instagram app on your mobile and there you will receive notification <b>We Detected An Unusual Login Attempt</b>. Select <b>This was me</b> then come back here and click on Approved button.",
+                            showCloseButton: true,
+                            showCancelButton: true,
+                            confirmButtonText: 'Approved',
+                            cancelButtonText: 'Cancel',
+                            confirmButtonColor: isDarkMode ? "#3b82f6" : "#2563eb",
+                            cancelButtonColor: isDarkMode ? "#ef4444" : "#dc2626",
+                            allowOutsideClick: false,
+                            ...(isDarkMode && {
+                                background: '#1e1e1e',
+                                color: '#fff',
+                                showClass: {
+                                    popup: 'swal2-show shadow-[0_0_20px_rgba(0,0,0,0.4)]'
+                                }
+                            })
+                        });
+
+                        if (result.isConfirmed) {
+                            // User clicked "Approved"
+                            const notificationsResponse = await fetch('{% url "userapi:notifications" %}', fetchOptions);
+
+                            if (!notificationsResponse.ok) {
+                                throw new Error('Failed to process notifications approval.');
+                            }
+
+                            // Show success message
+                            await Swal.fire({
+                                title: 'Success!',
+                                icon: 'success',
+                                text: 'Account added successfully!',
+                                confirmButtonColor: isDarkMode ? "#3b82f6" : "#2563eb"
+                            });
+                        } else {
+                            // User clicked Cancel or closed the dialog
+                            await fetch('{% url "userapi:close-bot" %}', fetchOptions);
+                        }
+                    } catch (error) {
+                        console.error('Error:', error);
+                        // Show error message
+                        await Swal.fire({
+                            title: 'Error',
+                            icon: 'error',
+                            text: 'An error occurred while processing your request',
+                            confirmButtonColor: isDarkMode ? "#ef4444" : "#dc2626"
                         });
                     }
                 };
@@ -608,7 +678,11 @@
                         }
                         else if (data.requires_otp) {
                             // Show OTP form
-                            showOTPDialog();
+                            showOTPDialog(data.message);
+                        }
+                        else if (data.requires_otp == false) {
+                            // Show Notifications form
+                            showNotificationsDialog(data.message);
                         }
                         else {
                             // Show error message
@@ -624,7 +698,7 @@
                                     color: '#fff',
                                     // Optional: customize popup shadow in dark mode
                                     showClass: {
-                                    popup: 'swal2-show shadow-[0_0_20px_rgba(0,0,0,0.4)]'
+                                        popup: 'swal2-show shadow-[0_0_20px_rgba(0,0,0,0.4)]'
                                     }
                                 })
                             });
@@ -643,7 +717,7 @@
                                 color: '#fff',
                                 // Optional: customize popup shadow in dark mode
                                 showClass: {
-                                popup: 'swal2-show shadow-[0_0_20px_rgba(0,0,0,0.4)]'
+                                    popup: 'swal2-show shadow-[0_0_20px_rgba(0,0,0,0.4)]'
                                 }
                             })
                         });
