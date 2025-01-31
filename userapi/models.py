@@ -38,6 +38,9 @@ class UserData(models.Model):
     country = models.CharField(max_length=255)
     image = models.ImageField(upload_to="User/", default="User/dummy.jpg")
 
+    def __str__(self):
+        return f"{self.user} - {self.country}"
+
 
 class ActivityTime(models.Model):
     """
